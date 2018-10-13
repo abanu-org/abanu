@@ -1,5 +1,5 @@
 diff --git a/Source/Mosa.ClassLib/Mosa.ClassLib.csproj b/Source/Mosa.ClassLib/Mosa.ClassLib.csproj
-index 4fbbfc97c..77170bd9f 100644
+index 4fbbfc97c..014ee3723 100644
 --- a/Source/Mosa.ClassLib/Mosa.ClassLib.csproj
 +++ b/Source/Mosa.ClassLib/Mosa.ClassLib.csproj
 @@ -14,7 +14,7 @@
@@ -7,12 +7,12 @@ index 4fbbfc97c..77170bd9f 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Compiler.Common/Mosa.Compiler.Common.csproj b/Source/Mosa.Compiler.Common/Mosa.Compiler.Common.csproj
-index 54ec435b8..d049e888a 100644
+index 54ec435b8..e77a89f5b 100644
 --- a/Source/Mosa.Compiler.Common/Mosa.Compiler.Common.csproj
 +++ b/Source/Mosa.Compiler.Common/Mosa.Compiler.Common.csproj
 @@ -10,7 +10,7 @@
@@ -20,12 +20,12 @@ index 54ec435b8..d049e888a 100644
      <RootNamespace>Mosa.Compiler.Common</RootNamespace>
      <AssemblyName>Mosa.Compiler.Common</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
    </PropertyGroup>
 diff --git a/Source/Mosa.Compiler.Framework.xUnit/Mosa.Compiler.Framework.xUnit.csproj b/Source/Mosa.Compiler.Framework.xUnit/Mosa.Compiler.Framework.xUnit.csproj
-index 86cd037b0..3eaa9946f 100644
+index 86cd037b0..754fdbde3 100644
 --- a/Source/Mosa.Compiler.Framework.xUnit/Mosa.Compiler.Framework.xUnit.csproj
 +++ b/Source/Mosa.Compiler.Framework.xUnit/Mosa.Compiler.Framework.xUnit.csproj
 @@ -17,7 +17,7 @@
@@ -33,12 +33,12 @@ index 86cd037b0..3eaa9946f 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj b/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
-index 2de34d906..51a3d309f 100644
+index 2de34d906..90d0ebb12 100644
 --- a/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
 +++ b/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
 @@ -14,7 +14,7 @@
@@ -46,12 +46,12 @@ index 2de34d906..51a3d309f 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <RootNamespace>Mosa.Compiler.Framework</RootNamespace>
      <FileUpgradeFlags>
 diff --git a/Source/Mosa.Compiler.MosaTypeSystem/Mosa.Compiler.MosaTypeSystem.csproj b/Source/Mosa.Compiler.MosaTypeSystem/Mosa.Compiler.MosaTypeSystem.csproj
-index aac52423e..4a1a3fe05 100644
+index aac52423e..db611a37a 100644
 --- a/Source/Mosa.Compiler.MosaTypeSystem/Mosa.Compiler.MosaTypeSystem.csproj
 +++ b/Source/Mosa.Compiler.MosaTypeSystem/Mosa.Compiler.MosaTypeSystem.csproj
 @@ -14,7 +14,7 @@
@@ -59,12 +59,12 @@ index aac52423e..4a1a3fe05 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <RootNamespace>Mosa.Compiler.MosaTypeSystem</RootNamespace>
      <FileUpgradeFlags>
 diff --git a/Source/Mosa.Compiler.Pdb/Mosa.Compiler.Pdb.csproj b/Source/Mosa.Compiler.Pdb/Mosa.Compiler.Pdb.csproj
-index 64667151c..bf32b8cdf 100644
+index 64667151c..acecd27e9 100644
 --- a/Source/Mosa.Compiler.Pdb/Mosa.Compiler.Pdb.csproj
 +++ b/Source/Mosa.Compiler.Pdb/Mosa.Compiler.Pdb.csproj
 @@ -10,7 +10,7 @@
@@ -72,12 +72,12 @@ index 64667151c..bf32b8cdf 100644
      <RootNamespace>Mosa.Compiler.Pdb</RootNamespace>
      <AssemblyName>Mosa.Compiler.Pdb</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
    </PropertyGroup>
 diff --git a/Source/Mosa.CoolWorld.x86/Mosa.CoolWorld.x86.csproj b/Source/Mosa.CoolWorld.x86/Mosa.CoolWorld.x86.csproj
-index 1190203d7..476e1ecf6 100644
+index 1190203d7..6233750bb 100644
 --- a/Source/Mosa.CoolWorld.x86/Mosa.CoolWorld.x86.csproj
 +++ b/Source/Mosa.CoolWorld.x86/Mosa.CoolWorld.x86.csproj
 @@ -14,7 +14,7 @@
@@ -85,12 +85,12 @@ index 1190203d7..476e1ecf6 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Exe</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.DeviceDriver/Mosa.DeviceDriver.csproj b/Source/Mosa.DeviceDriver/Mosa.DeviceDriver.csproj
-index 6b8fe1a46..085b0c9c0 100644
+index 6b8fe1a46..4e8ff4c3a 100644
 --- a/Source/Mosa.DeviceDriver/Mosa.DeviceDriver.csproj
 +++ b/Source/Mosa.DeviceDriver/Mosa.DeviceDriver.csproj
 @@ -14,7 +14,7 @@
@@ -98,12 +98,12 @@ index 6b8fe1a46..085b0c9c0 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.DeviceSystem/Mosa.DeviceSystem.csproj b/Source/Mosa.DeviceSystem/Mosa.DeviceSystem.csproj
-index 48077c37f..64884c6ac 100644
+index 48077c37f..44937fcf9 100644
 --- a/Source/Mosa.DeviceSystem/Mosa.DeviceSystem.csproj
 +++ b/Source/Mosa.DeviceSystem/Mosa.DeviceSystem.csproj
 @@ -14,7 +14,7 @@
@@ -111,12 +111,12 @@ index 48077c37f..64884c6ac 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <RootNamespace>Mosa.DeviceSystem</RootNamespace>
      <FileUpgradeFlags>
 diff --git a/Source/Mosa.FileSystem/Mosa.FileSystem.csproj b/Source/Mosa.FileSystem/Mosa.FileSystem.csproj
-index 8e5d7c729..9bc03af13 100644
+index 8e5d7c729..b8a174e97 100644
 --- a/Source/Mosa.FileSystem/Mosa.FileSystem.csproj
 +++ b/Source/Mosa.FileSystem/Mosa.FileSystem.csproj
 @@ -14,7 +14,7 @@
@@ -124,12 +124,12 @@ index 8e5d7c729..9bc03af13 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.HelloWorld.x86/Mosa.HelloWorld.x86.csproj b/Source/Mosa.HelloWorld.x86/Mosa.HelloWorld.x86.csproj
-index ac23a4d6b..36b06ee1a 100644
+index ac23a4d6b..b4709b8ae 100644
 --- a/Source/Mosa.HelloWorld.x86/Mosa.HelloWorld.x86.csproj
 +++ b/Source/Mosa.HelloWorld.x86/Mosa.HelloWorld.x86.csproj
 @@ -14,7 +14,7 @@
@@ -137,12 +137,12 @@ index ac23a4d6b..36b06ee1a 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Exe</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Kernel.ARMv6/Mosa.Kernel.ARMv6.csproj b/Source/Mosa.Kernel.ARMv6/Mosa.Kernel.ARMv6.csproj
-index 11aed3858..c3a60a654 100644
+index 11aed3858..cfd8111b1 100644
 --- a/Source/Mosa.Kernel.ARMv6/Mosa.Kernel.ARMv6.csproj
 +++ b/Source/Mosa.Kernel.ARMv6/Mosa.Kernel.ARMv6.csproj
 @@ -14,7 +14,7 @@
@@ -150,12 +150,12 @@ index 11aed3858..c3a60a654 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj b/Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj
-index a3c68c1fc..fa1ce4cc2 100644
+index a3c68c1fc..04c3a0877 100644
 --- a/Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj
 +++ b/Source/Mosa.Kernel.x86/Mosa.Kernel.x86.csproj
 @@ -14,7 +14,7 @@
@@ -163,12 +163,12 @@ index a3c68c1fc..fa1ce4cc2 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Korlib/Mosa.Korlib.csproj b/Source/Mosa.Korlib/Mosa.Korlib.csproj
-index 49087d43b..b81682d5e 100644
+index 5695958b4..1f4a3023a 100644
 --- a/Source/Mosa.Korlib/Mosa.Korlib.csproj
 +++ b/Source/Mosa.Korlib/Mosa.Korlib.csproj
 @@ -9,7 +9,7 @@
@@ -176,12 +176,12 @@ index 49087d43b..b81682d5e 100644
      <AssemblyName>mscorlib</AssemblyName>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <RootNamespace>System</RootNamespace>
      <NoWarn>0169;0649;1685</NoWarn>
 diff --git a/Source/Mosa.Platform.ARMv6/Mosa.Platform.ARMv6.csproj b/Source/Mosa.Platform.ARMv6/Mosa.Platform.ARMv6.csproj
-index 563457a34..12a1cb117 100644
+index 563457a34..8395f3fcd 100644
 --- a/Source/Mosa.Platform.ARMv6/Mosa.Platform.ARMv6.csproj
 +++ b/Source/Mosa.Platform.ARMv6/Mosa.Platform.ARMv6.csproj
 @@ -14,7 +14,7 @@
@@ -189,12 +189,12 @@ index 563457a34..12a1cb117 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Platform.x64/Mosa.Platform.x64.csproj b/Source/Mosa.Platform.x64/Mosa.Platform.x64.csproj
-index 672d8d915..05930c514 100644
+index 672d8d915..e773bac93 100644
 --- a/Source/Mosa.Platform.x64/Mosa.Platform.x64.csproj
 +++ b/Source/Mosa.Platform.x64/Mosa.Platform.x64.csproj
 @@ -14,7 +14,7 @@
@@ -202,12 +202,12 @@ index 672d8d915..05930c514 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj b/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
-index 74cadb891..ea399ffa4 100644
+index 74cadb891..400734e60 100644
 --- a/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
 +++ b/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
 @@ -14,7 +14,7 @@
@@ -215,12 +215,12 @@ index 74cadb891..ea399ffa4 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Runtime.ARMv6/Mosa.Runtime.ARMv6.csproj b/Source/Mosa.Runtime.ARMv6/Mosa.Runtime.ARMv6.csproj
-index 2aff1a6ab..16a38191d 100644
+index 2aff1a6ab..d669ba8ec 100644
 --- a/Source/Mosa.Runtime.ARMv6/Mosa.Runtime.ARMv6.csproj
 +++ b/Source/Mosa.Runtime.ARMv6/Mosa.Runtime.ARMv6.csproj
 @@ -14,7 +14,7 @@
@@ -228,12 +228,12 @@ index 2aff1a6ab..16a38191d 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj b/Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj
-index 4658f7720..cac68657b 100644
+index 4658f7720..ca25484b1 100644
 --- a/Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj
 +++ b/Source/Mosa.Runtime.x86/Mosa.Runtime.x86.csproj
 @@ -14,7 +14,7 @@
@@ -241,12 +241,12 @@ index 4658f7720..cac68657b 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Runtime/Mosa.Runtime.csproj b/Source/Mosa.Runtime/Mosa.Runtime.csproj
-index 5ba4e4e75..5a39581ef 100644
+index 5ba4e4e75..623ff8139 100644
 --- a/Source/Mosa.Runtime/Mosa.Runtime.csproj
 +++ b/Source/Mosa.Runtime/Mosa.Runtime.csproj
 @@ -14,7 +14,7 @@
@@ -254,12 +254,12 @@ index 5ba4e4e75..5a39581ef 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.TestWorld.ARMv6/Mosa.TestWorld.ARMv6.csproj b/Source/Mosa.TestWorld.ARMv6/Mosa.TestWorld.ARMv6.csproj
-index 595deb9e0..9c14c550c 100644
+index 595deb9e0..55c786ce9 100644
 --- a/Source/Mosa.TestWorld.ARMv6/Mosa.TestWorld.ARMv6.csproj
 +++ b/Source/Mosa.TestWorld.ARMv6/Mosa.TestWorld.ARMv6.csproj
 @@ -14,7 +14,7 @@
@@ -267,12 +267,12 @@ index 595deb9e0..9c14c550c 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Exe</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.TestWorld.x86/Mosa.TestWorld.x86.csproj b/Source/Mosa.TestWorld.x86/Mosa.TestWorld.x86.csproj
-index e2ecec16d..3d950fd1a 100644
+index e2ecec16d..7b32ea5d9 100644
 --- a/Source/Mosa.TestWorld.x86/Mosa.TestWorld.x86.csproj
 +++ b/Source/Mosa.TestWorld.x86/Mosa.TestWorld.x86.csproj
 @@ -14,7 +14,7 @@
@@ -280,12 +280,12 @@ index e2ecec16d..3d950fd1a 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Exe</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Tool.Bootstrap/Mosa.Tool.Bootstrap.csproj b/Source/Mosa.Tool.Bootstrap/Mosa.Tool.Bootstrap.csproj
-index 053c2abf2..3fe355363 100644
+index 053c2abf2..306b6093d 100644
 --- a/Source/Mosa.Tool.Bootstrap/Mosa.Tool.Bootstrap.csproj
 +++ b/Source/Mosa.Tool.Bootstrap/Mosa.Tool.Bootstrap.csproj
 @@ -14,7 +14,7 @@
@@ -293,12 +293,12 @@ index 053c2abf2..3fe355363 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>WinExe</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Tool.Compiler/Mosa.Tool.Compiler.csproj b/Source/Mosa.Tool.Compiler/Mosa.Tool.Compiler.csproj
-index 4fbe95d25..c6395d5d9 100644
+index 4fbe95d25..13ad0222e 100644
 --- a/Source/Mosa.Tool.Compiler/Mosa.Tool.Compiler.csproj
 +++ b/Source/Mosa.Tool.Compiler/Mosa.Tool.Compiler.csproj
 @@ -14,7 +14,7 @@
@@ -306,12 +306,12 @@ index 4fbe95d25..c6395d5d9 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Exe</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Tool.CreateBootImage/Mosa.Tool.CreateBootImage.csproj b/Source/Mosa.Tool.CreateBootImage/Mosa.Tool.CreateBootImage.csproj
-index 29543d4af..66cd3235c 100644
+index 29543d4af..b59be5133 100644
 --- a/Source/Mosa.Tool.CreateBootImage/Mosa.Tool.CreateBootImage.csproj
 +++ b/Source/Mosa.Tool.CreateBootImage/Mosa.Tool.CreateBootImage.csproj
 @@ -10,7 +10,7 @@
@@ -319,12 +319,12 @@ index 29543d4af..66cd3235c 100644
      <RootNamespace>Mosa.Tool.CreateBootImage</RootNamespace>
      <AssemblyName>Mosa.Tool.CreateBootImage</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <StartupObject>Mosa.Tool.CreateBootImage.Program</StartupObject>
      <FileUpgradeFlags>
 diff --git a/Source/Mosa.Tool.Disassembler.Intel/Mosa.Tool.Disassembler.Intel.csproj b/Source/Mosa.Tool.Disassembler.Intel/Mosa.Tool.Disassembler.Intel.csproj
-index 9a00517c1..2f144f613 100644
+index 9a00517c1..a026f7b41 100644
 --- a/Source/Mosa.Tool.Disassembler.Intel/Mosa.Tool.Disassembler.Intel.csproj
 +++ b/Source/Mosa.Tool.Disassembler.Intel/Mosa.Tool.Disassembler.Intel.csproj
 @@ -10,7 +10,7 @@
@@ -332,12 +332,12 @@ index 9a00517c1..2f144f613 100644
      <RootNamespace>Mosa.Tool.Disassembler.Intel</RootNamespace>
      <AssemblyName>Mosa.Tool.Disassembler.Intel</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <PublishUrl>publish\</PublishUrl>
      <Install>true</Install>
 diff --git a/Source/Mosa.Tool.Explorer/Mosa.Tool.Explorer.csproj b/Source/Mosa.Tool.Explorer/Mosa.Tool.Explorer.csproj
-index cff66c441..da76cbb13 100644
+index cff66c441..132660065 100644
 --- a/Source/Mosa.Tool.Explorer/Mosa.Tool.Explorer.csproj
 +++ b/Source/Mosa.Tool.Explorer/Mosa.Tool.Explorer.csproj
 @@ -10,7 +10,7 @@
@@ -345,12 +345,12 @@ index cff66c441..da76cbb13 100644
      <RootNamespace>Mosa.Tool.Explorer</RootNamespace>
      <AssemblyName>Mosa.Tool.Explorer</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
      <IsWebBootstrapper>false</IsWebBootstrapper>
 diff --git a/Source/Mosa.Tool.GDBDebugger/Mosa.Tool.GDBDebugger.csproj b/Source/Mosa.Tool.GDBDebugger/Mosa.Tool.GDBDebugger.csproj
-index d595e9cd4..06c7d57a6 100644
+index d595e9cd4..d233bc8ec 100644
 --- a/Source/Mosa.Tool.GDBDebugger/Mosa.Tool.GDBDebugger.csproj
 +++ b/Source/Mosa.Tool.GDBDebugger/Mosa.Tool.GDBDebugger.csproj
 @@ -9,7 +9,7 @@
@@ -358,12 +358,12 @@ index d595e9cd4..06c7d57a6 100644
      <RootNamespace>Mosa.Tool.GDBDebugger</RootNamespace>
      <AssemblyName>Mosa.Tool.GDBDebugger</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <TargetFrameworkProfile>
      </TargetFrameworkProfile>
      <FileAlignment>512</FileAlignment>
 diff --git a/Source/Mosa.Tool.Launcher/Mosa.Tool.Launcher.csproj b/Source/Mosa.Tool.Launcher/Mosa.Tool.Launcher.csproj
-index de26a3927..66e2116a7 100644
+index de26a3927..06873267e 100644
 --- a/Source/Mosa.Tool.Launcher/Mosa.Tool.Launcher.csproj
 +++ b/Source/Mosa.Tool.Launcher/Mosa.Tool.Launcher.csproj
 @@ -9,7 +9,7 @@
@@ -371,12 +371,12 @@ index de26a3927..66e2116a7 100644
      <RootNamespace>Mosa.Tool.Launcher</RootNamespace>
      <AssemblyName>Mosa.Tool.Launcher</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <TargetFrameworkProfile>
      </TargetFrameworkProfile>
      <FileAlignment>512</FileAlignment>
 diff --git a/Source/Mosa.Tools.Package/Mosa.Tools.Package.csproj b/Source/Mosa.Tools.Package/Mosa.Tools.Package.csproj
-index ccf689dad..ead5797ec 100644
+index ccf689dad..e5b748aff 100644
 --- a/Source/Mosa.Tools.Package/Mosa.Tools.Package.csproj
 +++ b/Source/Mosa.Tools.Package/Mosa.Tools.Package.csproj
 @@ -9,7 +9,7 @@
@@ -384,12 +384,12 @@ index ccf689dad..ead5797ec 100644
      <RootNamespace>Mosa.Tools.Package</RootNamespace>
      <AssemblyName>Mosa.Tools.Package</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <TargetFrameworkProfile>
      </TargetFrameworkProfile>
      <FileAlignment>512</FileAlignment>
 diff --git a/Source/Mosa.UnitTests.x86/Mosa.UnitTests.x86.csproj b/Source/Mosa.UnitTests.x86/Mosa.UnitTests.x86.csproj
-index 61f4f2012..a18c071b0 100644
+index 61f4f2012..b96daedcf 100644
 --- a/Source/Mosa.UnitTests.x86/Mosa.UnitTests.x86.csproj
 +++ b/Source/Mosa.UnitTests.x86/Mosa.UnitTests.x86.csproj
 @@ -14,7 +14,7 @@
@@ -397,12 +397,12 @@ index 61f4f2012..a18c071b0 100644
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Exe</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.UnitTests/Mosa.UnitTests.csproj b/Source/Mosa.UnitTests/Mosa.UnitTests.csproj
-index c03efb0af..79d26a13c 100644
+index c03efb0af..ad215f1d1 100644
 --- a/Source/Mosa.UnitTests/Mosa.UnitTests.csproj
 +++ b/Source/Mosa.UnitTests/Mosa.UnitTests.csproj
 @@ -10,7 +10,7 @@
@@ -410,12 +410,12 @@ index c03efb0af..79d26a13c 100644
      <RootNamespace>Mosa.UnitTests</RootNamespace>
      <AssemblyName>Mosa.UnitTests</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <FileUpgradeFlags>
      </FileUpgradeFlags>
 diff --git a/Source/Mosa.Utility.BootImage/Mosa.Utility.BootImage.csproj b/Source/Mosa.Utility.BootImage/Mosa.Utility.BootImage.csproj
-index 6b4cacf97..004da467d 100644
+index 6b4cacf97..32a24fd13 100644
 --- a/Source/Mosa.Utility.BootImage/Mosa.Utility.BootImage.csproj
 +++ b/Source/Mosa.Utility.BootImage/Mosa.Utility.BootImage.csproj
 @@ -10,7 +10,7 @@
@@ -423,12 +423,12 @@ index 6b4cacf97..004da467d 100644
      <RootNamespace>Mosa.Utility.BootImage</RootNamespace>
      <AssemblyName>Mosa.Utility.BootImage</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <StartupObject>
      </StartupObject>
 diff --git a/Source/Mosa.Utility.CodeCompiler/Mosa.Utility.CodeCompiler.csproj b/Source/Mosa.Utility.CodeCompiler/Mosa.Utility.CodeCompiler.csproj
-index baa649933..19ecdb839 100644
+index baa649933..38e178029 100644
 --- a/Source/Mosa.Utility.CodeCompiler/Mosa.Utility.CodeCompiler.csproj
 +++ b/Source/Mosa.Utility.CodeCompiler/Mosa.Utility.CodeCompiler.csproj
 @@ -11,7 +11,7 @@
@@ -436,12 +436,12 @@ index baa649933..19ecdb839 100644
      <AssemblyName>Mosa.Utility.CodeCompiler</AssemblyName>
      <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Utility.DebugEngine/Mosa.Utility.DebugEngine.csproj b/Source/Mosa.Utility.DebugEngine/Mosa.Utility.DebugEngine.csproj
-index 1c416a1e4..d84edd448 100644
+index 1c416a1e4..c19f21b64 100644
 --- a/Source/Mosa.Utility.DebugEngine/Mosa.Utility.DebugEngine.csproj
 +++ b/Source/Mosa.Utility.DebugEngine/Mosa.Utility.DebugEngine.csproj
 @@ -9,7 +9,7 @@
@@ -449,12 +449,12 @@ index 1c416a1e4..d84edd448 100644
      <RootNamespace>Mosa.Utility.DebugEngine</RootNamespace>
      <AssemblyName>Mosa.Utility.DebugEngine</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <ProjectGuid>{5B810793-78E2-413C-AA05-FCDD12B7DB04}</ProjectGuid>
      <TargetFrameworkProfile />
 diff --git a/Source/Mosa.Utility.GUI.Common/Mosa.Utility.GUI.Common.csproj b/Source/Mosa.Utility.GUI.Common/Mosa.Utility.GUI.Common.csproj
-index 6c0287258..34cde7497 100644
+index 6c0287258..a32394b81 100644
 --- a/Source/Mosa.Utility.GUI.Common/Mosa.Utility.GUI.Common.csproj
 +++ b/Source/Mosa.Utility.GUI.Common/Mosa.Utility.GUI.Common.csproj
 @@ -9,7 +9,7 @@
@@ -462,12 +462,12 @@ index 6c0287258..34cde7497 100644
      <RootNamespace>Mosa.Utility.GUI.Common</RootNamespace>
      <AssemblyName>Mosa.Utility.GUI.Common</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <ProjectGuid>{5A813793-78E2-413C-AA05-FCDD12B7DB04}</ProjectGuid>
      <TargetFrameworkProfile />
 diff --git a/Source/Mosa.Utility.Launcher/Mosa.Utility.Launcher.csproj b/Source/Mosa.Utility.Launcher/Mosa.Utility.Launcher.csproj
-index 697f4aa9f..2ed0e70ea 100644
+index 697f4aa9f..fde5476a6 100644
 --- a/Source/Mosa.Utility.Launcher/Mosa.Utility.Launcher.csproj
 +++ b/Source/Mosa.Utility.Launcher/Mosa.Utility.Launcher.csproj
 @@ -9,7 +9,7 @@
@@ -475,12 +475,12 @@ index 697f4aa9f..2ed0e70ea 100644
      <RootNamespace>Mosa.Utility.Launcher</RootNamespace>
      <AssemblyName>Mosa.Utility.Launcher</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <TargetFrameworkProfile>
      </TargetFrameworkProfile>
      <FileAlignment>512</FileAlignment>
 diff --git a/Source/Mosa.Utility.RSP/Mosa.Utility.RSP.csproj b/Source/Mosa.Utility.RSP/Mosa.Utility.RSP.csproj
-index 21f9abe5d..39abb612b 100644
+index 21f9abe5d..88be3bb4e 100644
 --- a/Source/Mosa.Utility.RSP/Mosa.Utility.RSP.csproj
 +++ b/Source/Mosa.Utility.RSP/Mosa.Utility.RSP.csproj
 @@ -9,7 +9,7 @@
@@ -488,12 +488,12 @@ index 21f9abe5d..39abb612b 100644
      <RootNamespace>Mosa.Utility.RSP</RootNamespace>
      <AssemblyName>Mosa.Utility.RSP</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <ProjectGuid>{5B810793-78E2-413C-CC05-FCDD12B7DB04}</ProjectGuid>
      <TargetFrameworkProfile />
 diff --git a/Source/Mosa.Utility.SourceCodeGenerator/Mosa.Utility.SourceCodeGenerator.csproj b/Source/Mosa.Utility.SourceCodeGenerator/Mosa.Utility.SourceCodeGenerator.csproj
-index b1cb4be9c..1c6382fa8 100644
+index b1cb4be9c..e25babf7c 100644
 --- a/Source/Mosa.Utility.SourceCodeGenerator/Mosa.Utility.SourceCodeGenerator.csproj
 +++ b/Source/Mosa.Utility.SourceCodeGenerator/Mosa.Utility.SourceCodeGenerator.csproj
 @@ -9,7 +9,7 @@
@@ -501,12 +501,12 @@ index b1cb4be9c..1c6382fa8 100644
      <RootNamespace>Mosa.Utility.SourceCodeGenerator</RootNamespace>
      <AssemblyName>Mosa.Utility.SourceCodeGenerator</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
    </PropertyGroup>
 diff --git a/Source/Mosa.Utility.UnitTests/Mosa.Utility.UnitTests.csproj b/Source/Mosa.Utility.UnitTests/Mosa.Utility.UnitTests.csproj
-index 19c1c23ca..1ad4a5dfe 100644
+index 19c1c23ca..12cccf8c6 100644
 --- a/Source/Mosa.Utility.UnitTests/Mosa.Utility.UnitTests.csproj
 +++ b/Source/Mosa.Utility.UnitTests/Mosa.Utility.UnitTests.csproj
 @@ -9,7 +9,7 @@
@@ -514,12 +514,12 @@ index 19c1c23ca..1ad4a5dfe 100644
      <RootNamespace>Mosa.Utility.UnitTests</RootNamespace>
      <AssemblyName>Mosa.Utility.UnitTests</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
    </PropertyGroup>
 diff --git a/Source/Mosa.VBEWorld.x86/Mosa.VBEWorld.x86.csproj b/Source/Mosa.VBEWorld.x86/Mosa.VBEWorld.x86.csproj
-index f1daf1840..bbcf5af3b 100644
+index f1daf1840..91c356803 100644
 --- a/Source/Mosa.VBEWorld.x86/Mosa.VBEWorld.x86.csproj
 +++ b/Source/Mosa.VBEWorld.x86/Mosa.VBEWorld.x86.csproj
 @@ -9,7 +9,7 @@
@@ -527,12 +527,12 @@ index f1daf1840..bbcf5af3b 100644
      <RootNamespace>Mosa.VBEWorld.x86</RootNamespace>
      <AssemblyName>Mosa.VBEWorld.x86</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
    </PropertyGroup>
    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 diff --git a/Source/Mosa.VisualStudio.Template/Mosa.VisualStudio.Template.csproj b/Source/Mosa.VisualStudio.Template/Mosa.VisualStudio.Template.csproj
-index 998a67a5e..389c7cbd1 100644
+index 998a67a5e..8f5f7f34c 100644
 --- a/Source/Mosa.VisualStudio.Template/Mosa.VisualStudio.Template.csproj
 +++ b/Source/Mosa.VisualStudio.Template/Mosa.VisualStudio.Template.csproj
 @@ -9,7 +9,7 @@
@@ -540,12 +540,12 @@ index 998a67a5e..389c7cbd1 100644
      <RootNamespace>Mosa.VisualStudio.Template</RootNamespace>
      <AssemblyName>Mosa.VisualStudio.Template</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
    </PropertyGroup>
 diff --git a/Source/Mosa.Workspace.Experiment.Debug/Mosa.Workspace.Experiment.Debug.csproj b/Source/Mosa.Workspace.Experiment.Debug/Mosa.Workspace.Experiment.Debug.csproj
-index c1dc4fe36..ea3d466dd 100644
+index c1dc4fe36..d44c4a995 100644
 --- a/Source/Mosa.Workspace.Experiment.Debug/Mosa.Workspace.Experiment.Debug.csproj
 +++ b/Source/Mosa.Workspace.Experiment.Debug/Mosa.Workspace.Experiment.Debug.csproj
 @@ -9,7 +9,7 @@
@@ -553,12 +553,12 @@ index c1dc4fe36..ea3d466dd 100644
      <RootNamespace>Mosa.Workspace.Experiment.Debug</RootNamespace>
      <AssemblyName>Mosa.Workspace.Experiment.Debug</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
    </PropertyGroup>
 diff --git a/Source/Mosa.Workspace.FileSystem.Debug/Mosa.Workspace.FileSystem.Debug.csproj b/Source/Mosa.Workspace.FileSystem.Debug/Mosa.Workspace.FileSystem.Debug.csproj
-index 8ac046b7c..c80397f89 100644
+index 2ac3a523b..72704384d 100644
 --- a/Source/Mosa.Workspace.FileSystem.Debug/Mosa.Workspace.FileSystem.Debug.csproj
 +++ b/Source/Mosa.Workspace.FileSystem.Debug/Mosa.Workspace.FileSystem.Debug.csproj
 @@ -9,7 +9,7 @@
@@ -566,12 +566,12 @@ index 8ac046b7c..c80397f89 100644
      <RootNamespace>Mosa.Workspace.FileSystem.Debug</RootNamespace>
      <AssemblyName>Mosa.Workspace.FileSystem.Debug</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
    </PropertyGroup>
 diff --git a/Source/Mosa.Workspace.GDB.Debug/Mosa.Workspace.GDB.Debug.csproj b/Source/Mosa.Workspace.GDB.Debug/Mosa.Workspace.GDB.Debug.csproj
-index 2048e6f24..0306e2fb9 100644
+index 2048e6f24..226b7fff5 100644
 --- a/Source/Mosa.Workspace.GDB.Debug/Mosa.Workspace.GDB.Debug.csproj
 +++ b/Source/Mosa.Workspace.GDB.Debug/Mosa.Workspace.GDB.Debug.csproj
 @@ -9,7 +9,7 @@
@@ -579,7 +579,7 @@ index 2048e6f24..0306e2fb9 100644
      <RootNamespace>Mosa.Workspace.GDB.Debug</RootNamespace>
      <AssemblyName>Mosa.Workspace.GDB.Debug</AssemblyName>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <FileAlignment>512</FileAlignment>
      <TargetFrameworkProfile />
      <PublishUrl>publish\</PublishUrl>

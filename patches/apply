@@ -7,4 +7,4 @@ SRC=`pwd`
 cd ../external/MOSA-Project
 
 git apply $OPT $SRC/0001-patch-framework-version.diff
-git apply $OPT $SRC/0002-patch-packages.diff
+#git apply $OPT $SRC/0002-patch-packages.diff
