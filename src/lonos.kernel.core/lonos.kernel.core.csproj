@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>lonos.kernel.core</RootNamespace>
     <AssemblyName>lonos.kernel.core</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
