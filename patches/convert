@@ -1,11 +1,13 @@
 #<TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
 
-dir=MOSA-Project
+cd $(dirname $0)
+SRC=`pwd`
+cd ../external/MOSA-Project
 
 old=v4.7.2
-new=v4.6.2
-grep -rl $old $dir | xargs sed -i s/$old/$new/g
+new=v4.6.1
+grep -rl $old . | xargs sed -i s/$old/$new/g
 
 #old=Microsoft.CSHARP.Targets
 #new=Microsoft.CSharp.targets
-#grep -rl $old $dir | xargs sed -i s@$old@$new@g
+#grep -rl $old . | xargs sed -i s@$old@$new@g
