@@ -1,0 +1,11 @@
+#<TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+
+dir=MOSA-Project
+
+old=v4.7.2
+new=v4.6.2
+grep -rl $old $dir | xargs sed -i s/$old/$new/g
+
+#old=Microsoft.CSHARP.Targets
+#new=Microsoft.CSharp.targets
+#grep -rl $old $dir | xargs sed -i s@$old@$new@g

@@ -1,0 +1,175 @@
+diff --git a/Source/Mosa.Tool.Compiler/packages.config b/Source/Mosa.Tool.Compiler/packages.config
+index 838d739ee..5038f632e 100644
+--- a/Source/Mosa.Tool.Compiler/packages.config
++++ b/Source/Mosa.Tool.Compiler/packages.config
+@@ -5,13 +5,13 @@
+   <package id="System.Console" version="4.3.1" targetFramework="net461" />
+   <package id="System.Diagnostics.Debug" version="4.3.0" targetFramework="net461" />
+   <package id="System.Globalization" version="4.3.0" targetFramework="net461" />
+-  <package id="System.IO" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Reflection" version="4.3.0" targetFramework="net461" />
++  <package id="System.IO" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Reflection" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+   <package id="System.Reflection.Extensions" version="4.3.0" targetFramework="net461" />
+   <package id="System.Reflection.TypeExtensions" version="4.5.1" targetFramework="net472" />
+   <package id="System.Resources.ResourceManager" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" />
++  <package id="System.Runtime" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+ </packages>
+\ No newline at end of file
+diff --git a/Source/Mosa.Tool.CreateBootImage/packages.config b/Source/Mosa.Tool.CreateBootImage/packages.config
+index 838d739ee..5038f632e 100644
+--- a/Source/Mosa.Tool.CreateBootImage/packages.config
++++ b/Source/Mosa.Tool.CreateBootImage/packages.config
+@@ -5,13 +5,13 @@
+   <package id="System.Console" version="4.3.1" targetFramework="net461" />
+   <package id="System.Diagnostics.Debug" version="4.3.0" targetFramework="net461" />
+   <package id="System.Globalization" version="4.3.0" targetFramework="net461" />
+-  <package id="System.IO" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Reflection" version="4.3.0" targetFramework="net461" />
++  <package id="System.IO" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Reflection" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+   <package id="System.Reflection.Extensions" version="4.3.0" targetFramework="net461" />
+   <package id="System.Reflection.TypeExtensions" version="4.5.1" targetFramework="net472" />
+   <package id="System.Resources.ResourceManager" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" />
++  <package id="System.Runtime" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+ </packages>
+\ No newline at end of file
+diff --git a/Source/Mosa.Tool.Disassembler.Intel/packages.config b/Source/Mosa.Tool.Disassembler.Intel/packages.config
+index 7c98940e8..6b35db23c 100644
+--- a/Source/Mosa.Tool.Disassembler.Intel/packages.config
++++ b/Source/Mosa.Tool.Disassembler.Intel/packages.config
+@@ -6,13 +6,13 @@
+   <package id="System.Console" version="4.3.1" targetFramework="net461" />
+   <package id="System.Diagnostics.Debug" version="4.3.0" targetFramework="net461" />
+   <package id="System.Globalization" version="4.3.0" targetFramework="net461" />
+-  <package id="System.IO" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Reflection" version="4.3.0" targetFramework="net461" />
++  <package id="System.IO" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Reflection" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+   <package id="System.Reflection.Extensions" version="4.3.0" targetFramework="net461" />
+   <package id="System.Reflection.TypeExtensions" version="4.5.1" targetFramework="net472" />
+   <package id="System.Resources.ResourceManager" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" />
++  <package id="System.Runtime" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+ </packages>
+\ No newline at end of file
+diff --git a/Source/Mosa.Tool.Explorer/packages.config b/Source/Mosa.Tool.Explorer/packages.config
+index 7c98940e8..6b35db23c 100644
+--- a/Source/Mosa.Tool.Explorer/packages.config
++++ b/Source/Mosa.Tool.Explorer/packages.config
+@@ -6,13 +6,13 @@
+   <package id="System.Console" version="4.3.1" targetFramework="net461" />
+   <package id="System.Diagnostics.Debug" version="4.3.0" targetFramework="net461" />
+   <package id="System.Globalization" version="4.3.0" targetFramework="net461" />
+-  <package id="System.IO" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Reflection" version="4.3.0" targetFramework="net461" />
++  <package id="System.IO" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Reflection" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+   <package id="System.Reflection.Extensions" version="4.3.0" targetFramework="net461" />
+   <package id="System.Reflection.TypeExtensions" version="4.5.1" targetFramework="net472" />
+   <package id="System.Resources.ResourceManager" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" />
++  <package id="System.Runtime" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+ </packages>
+\ No newline at end of file
+diff --git a/Source/Mosa.Tool.GDBDebugger/packages.config b/Source/Mosa.Tool.GDBDebugger/packages.config
+index 3b0e368a3..cbaff8a9e 100644
+--- a/Source/Mosa.Tool.GDBDebugger/packages.config
++++ b/Source/Mosa.Tool.GDBDebugger/packages.config
+@@ -8,13 +8,13 @@
+   <package id="System.Console" version="4.3.1" targetFramework="net461" />
+   <package id="System.Diagnostics.Debug" version="4.3.0" targetFramework="net461" />
+   <package id="System.Globalization" version="4.3.0" targetFramework="net461" />
+-  <package id="System.IO" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Reflection" version="4.3.0" targetFramework="net461" />
++  <package id="System.IO" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Reflection" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+   <package id="System.Reflection.Extensions" version="4.3.0" targetFramework="net461" />
+   <package id="System.Reflection.TypeExtensions" version="4.5.1" targetFramework="net472" />
+   <package id="System.Resources.ResourceManager" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" />
++  <package id="System.Runtime" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+ </packages>
+\ No newline at end of file
+diff --git a/Source/Mosa.Tool.Launcher/packages.config b/Source/Mosa.Tool.Launcher/packages.config
+index dc70fe61a..130ab87f0 100644
+--- a/Source/Mosa.Tool.Launcher/packages.config
++++ b/Source/Mosa.Tool.Launcher/packages.config
+@@ -6,13 +6,13 @@
+   <package id="System.Console" version="4.3.1" targetFramework="net461" />
+   <package id="System.Diagnostics.Debug" version="4.3.0" targetFramework="net461" />
+   <package id="System.Globalization" version="4.3.0" targetFramework="net461" />
+-  <package id="System.IO" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Reflection" version="4.3.0" targetFramework="net461" />
++  <package id="System.IO" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Reflection" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+   <package id="System.Reflection.Extensions" version="4.3.0" targetFramework="net461" />
+   <package id="System.Reflection.TypeExtensions" version="4.5.1" targetFramework="net472" />
+   <package id="System.Resources.ResourceManager" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" />
++  <package id="System.Runtime" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+ </packages>
+\ No newline at end of file
+diff --git a/Source/Mosa.Utility.Launcher/packages.config b/Source/Mosa.Utility.Launcher/packages.config
+index 7c98940e8..6b35db23c 100644
+--- a/Source/Mosa.Utility.Launcher/packages.config
++++ b/Source/Mosa.Utility.Launcher/packages.config
+@@ -6,13 +6,13 @@
+   <package id="System.Console" version="4.3.1" targetFramework="net461" />
+   <package id="System.Diagnostics.Debug" version="4.3.0" targetFramework="net461" />
+   <package id="System.Globalization" version="4.3.0" targetFramework="net461" />
+-  <package id="System.IO" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Reflection" version="4.3.0" targetFramework="net461" />
++  <package id="System.IO" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Linq.Expressions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Reflection" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+   <package id="System.Reflection.Extensions" version="4.3.0" targetFramework="net461" />
+   <package id="System.Reflection.TypeExtensions" version="4.5.1" targetFramework="net472" />
+   <package id="System.Resources.ResourceManager" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime" version="4.3.0" targetFramework="net461" />
+-  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" />
++  <package id="System.Runtime" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
++  <package id="System.Runtime.Extensions" version="4.3.0" targetFramework="net461" requireReinstallation="true" />
+ </packages>
+\ No newline at end of file
