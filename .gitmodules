@@ -1,0 +1,3 @@
+[submodule "MOSA-Project"]
+	path = external/MOSA-Project
+	url = https://github.com/mosa/MOSA-Project.git
