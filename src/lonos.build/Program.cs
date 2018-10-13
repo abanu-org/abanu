@@ -9,7 +9,14 @@ namespace lonos.build
 		private static void Main()
 		{
 			Console.WriteLine("Starting Build...");
-			var engine = new LonosBuilder();
+
+			var file = "";
+
+			file = "Mosa.HelloWorld.x86.exe";
+			//file = "lonos.kernel.core.exe";
+			//file = "Mosa.UnitTests.x86.exe";
+
+			var engine = new LonosBuilder(file);
 			engine.LaunchVirtualMachine();
 			System.Console.WriteLine("ready");
 			System.Console.ReadLine();

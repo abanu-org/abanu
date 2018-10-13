@@ -19,7 +19,7 @@ namespace lonos.build
 		public Options Options { get; }
 		public string TestAssemblyPath { get; set; }
 		public string Platform { get; set; }
-		public string TestSuiteFile { get; set; }
+		public string InputAssembly { get; set; }
 		public AppLocations AppLocations { get; set; }
 
 		public TypeSystem TypeSystem { get; internal set; }
@@ -31,10 +31,9 @@ namespace lonos.build
 
 		private Thread ProcessThread;
 
-		public LonosBuilder()
+		public LonosBuilder(string inputAssembly)
 		{
-			Options = new Options()
-			{
+			Options = new Options() {
 				EnableSSA = true,
 				EnableIROptimizations = true,
 				EnableSparseConditionalConstantPropagation = true,
@@ -77,18 +76,18 @@ namespace lonos.build
 
 			AppLocations.FindApplications();
 
+			InputAssembly = inputAssembly;
+
 			Initialize();
 		}
 
 		private void Initialize()
 		{
-			if (Platform == null)
-			{
+			if (Platform == null) {
 				Platform = "x86";
 			}
 
-			if (TestAssemblyPath == null)
-			{
+			if (TestAssemblyPath == null) {
 #if __MonoCS__
 				TestAssemblyPath = AppDomain.CurrentDomain.BaseDirectory;
 #else
@@ -96,9 +95,6 @@ namespace lonos.build
 #endif
 			}
 
-				TestSuiteFile = "Mosa.HelloWorld.x86.exe";
-			  //TestSuiteFile = "lonos.kernel.core.exe";
-			//TestSuiteFile = "Mosa.UnitTests.x86.exe";
 			Compile();
 
 		}
@@ -106,7 +102,7 @@ namespace lonos.build
 		public bool Compile()
 		{
 			Options.Paths.Add(TestAssemblyPath);
-			Options.SourceFile = Path.Combine(TestAssemblyPath, TestSuiteFile);
+			Options.SourceFile = Path.Combine(TestAssemblyPath, InputAssembly);
 
 			var builder = new Builder(Options, AppLocations, this);
 
@@ -123,8 +119,7 @@ namespace lonos.build
 
 		public bool LaunchVirtualMachine()
 		{
-			if (Starter == null)
-			{
+			if (Starter == null) {
 				Options.ImageFile = ImageFile;
 				Starter = new Starter(Options, AppLocations, this);
 			}
@@ -138,18 +133,15 @@ namespace lonos.build
 
 		public bool StartEngine()
 		{
-					Console.Write("Starting Engine...");
+			Console.Write("Starting Engine...");
 
-					if (StartEngineEx())
-					{
-						Console.WriteLine();
-						return true;
-					}
-					else
-					{
-					}
+			if (StartEngineEx()) {
+				Console.WriteLine();
+				return true;
+			} else {
+			}
 
-					Thread.Sleep(250);
+			Thread.Sleep(250);
 			return true;
 		}
 
@@ -157,7 +149,7 @@ namespace lonos.build
 		{
 			if (!LaunchVirtualMachine())
 				return false;
-				
+
 			return true;
 		}
 
@@ -167,12 +159,11 @@ namespace lonos.build
 			Console.WriteLine(status);
 		}
 
-		DateTime date=DateTime.UtcNow;
+		DateTime date = DateTime.UtcNow;
 		void IBuilderEvent.UpdateProgress(int total, int at)
 		{
 			var d = DateTime.UtcNow;
-			if (d.Second != date.Second)
-			{
+			if (d.Second != date.Second) {
 				Console.WriteLine(total + " / " + at);
 			}
 			date = d;

@@ -8,8 +8,8 @@ namespace lonos.kernel.core
 	{
 		public static void Main()
 		{
-			RawWrite(0, 0, 'X', 0);
-			while (true){} ;
+			RawWrite(0, 0, 'A', 0);
+			while (true) { };
 		}
 
 		public const uint Columns = 80;
