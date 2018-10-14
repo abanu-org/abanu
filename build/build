@@ -1,0 +1,4 @@
+mono Mosa.Tool.Compiler.exe -a x86 -o hello.bin Mosa.HelloWorld.x86.exe
+mono Mosa.Tool.CreateBootImage.exe createbootimage.conf test.img
+qemu-system-i386 -L /usr/share/seabios -cpu qemu32,+sse4.1 -serial tcp:127.0.0.1:10001,server,nowait -hda test.img
+

@@ -8,8 +8,18 @@ namespace lonos.kernel.core
 	{
 		public static void Main()
 		{
-			RawWrite(0, 0, 'A', 0);
+			System.Collections.Generic.List<int> m = new System.Collections.Generic.List<int>();
+			RawWrite(0, 0, 'A', 1);
 			while (true) { };
+		}
+
+		private static void Dummy(){
+            //This is a dummy call, that get never executed.
+            //Its requied, because we need a real reference to Mosa.Runtime.x86
+            //Without that, the .NET compiler will optimize that reference away
+            //if its nowhere used. Than the Compiler dosnt know about that Refernce
+            //and the Compilation will fail
+			Mosa.Runtime.x86.Internal.GetStackFrame(0);
 		}
 
 		public const uint Columns = 80;
