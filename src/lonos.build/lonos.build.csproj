@@ -71,6 +71,10 @@
       <Project>{65F7691A-B355-4D98-BB97-0B19F13E2190}</Project>
       <Name>Mosa.Utility.BootImage</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Platform.x64\Mosa.Platform.x64.csproj">
+      <Project>{F445DB8E-E25A-41EF-A158-C742F14E94E4}</Project>
+      <Name>Mosa.Platform.x64</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

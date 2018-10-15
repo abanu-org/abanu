@@ -42,7 +42,7 @@ namespace lonos.build
 				EnableValueNumbering = true,
 				TwoPassOptimizations = true,
 
-				Emulator = EmulatorType.Qemu,
+				Emulator = EmulatorType.Bochs,
 				ImageFormat = ImageFormat.IMG,
 				BootFormat = BootFormat.Multiboot_0_7,
 				PlatformType = PlatformType.X86,

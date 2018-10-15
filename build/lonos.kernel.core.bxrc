@@ -1,0 +1,9 @@
+megs: 128
+ata0: enabled=1,ioaddr1=0x1f0,ioaddr2=0x3f0,irq=14
+cpuid: mmx=1,sep=1,sse=sse4_2,apic=xapic,aes=1,movbe=1,xsave=1
+boot: cdrom,disk
+log: /tmp/MOSA-UnitTest/lonos.kernel.core-bochs.log
+romimage: file=/usr/share/bochs/BIOS-bochs-latest
+vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest
+ata0-master: type=disk,path=/tmp/MOSA-UnitTest/lonos.kernel.core.img,biosdetect=none,cylinders=0,heads=0,spt=0
+display_library: x, options="gui_debug"

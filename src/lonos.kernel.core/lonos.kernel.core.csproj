@@ -19,6 +19,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <NoStdLib>true</NoStdLib>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -27,9 +28,24 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <NoStdLib>true</NoStdLib>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MyClass.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Memory\Memory.cs" />
+    <Compile Include="test.cs" />
+    <Compile Include="MultiBoot.cs" />
+    <Compile Include="GDT.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Assert.cs" />
+    <Compile Include="Panic.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="ScreenColors.cs" />
+    <Compile Include="IDT.cs" />
+    <Compile Include="Memory\Adresse.cs" />
+    <Compile Include="IDTStack.cs" />
+    <Compile Include="PIC.cs" />
+    <Compile Include="StringBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
@@ -44,6 +60,13 @@
       <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
       <Name>Mosa.Runtime.x86</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Platform.x86\Mosa.Platform.x86.csproj">
+      <Project>{DE30CBE9-50F3-4A3E-BCC9-A8A36348530E}</Project>
+      <Name>Mosa.Platform.x86</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Memory\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
