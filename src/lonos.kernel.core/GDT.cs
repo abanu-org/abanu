@@ -44,7 +44,7 @@ namespace lonos.kernel.core
             Set(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // Code segment
             Set(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // Data segment
 
-			Panic.DumpMemory(Address.GDTTable);
+			//Panic.DumpMemory(Address.GDTTable);
 
             //Native.Lgdt(Address.GDTTable);
         }

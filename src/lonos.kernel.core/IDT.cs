@@ -9,7 +9,7 @@ using lonos.kernel.core;
 //TODO: Name in compiler
 namespace Mosa.Kernel.x86
 {
-    /// <summary>
+	/// <summary>
     /// IDT
     /// </summary>
     public static class IDT
@@ -35,7 +35,7 @@ namespace Mosa.Kernel.x86
         public static void Setup()
         {
             // Setup IDT table
-            Mosa.Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable), 6);
+            Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable), 6);
             Intrinsic.Store16(new IntPtr(Address.IDTTable), (Offset.TotalSize * 256) - 1);
             Intrinsic.Store32(new IntPtr(Address.IDTTable), 2, Address.IDTTable + 6);
 
@@ -73,7 +73,7 @@ namespace Mosa.Kernel.x86
         private static void SetTableEntries()
         {
             // Clear out idt table
-            Mosa.Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable) + 6, Offset.TotalSize * 256);
+            Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable) + 6, Offset.TotalSize * 256);
 
             // Note: GetIDTJumpLocation parameter must be a constant and not a variable
             Set(0, Native.GetIDTJumpLocation(0), 0x08, 0x8E);
@@ -410,7 +410,7 @@ namespace Mosa.Kernel.x86
                         break;
                     }
 
-                    /*var physicalpage = PageFrameAllocator.Allocate();
+                    var physicalpage = PageFrameAllocator.Allocate();
 
                     if (physicalpage == IntPtr.Zero)
                     {
@@ -419,7 +419,7 @@ namespace Mosa.Kernel.x86
                     }
 
                     PageTable.MapVirtualAddressToPhysical(cr2, (uint)physicalpage.ToInt32());
-*/
+
                     break;
 
                 case 16:
@@ -429,19 +429,19 @@ namespace Mosa.Kernel.x86
                 case 19:
                     Error(stack, "SIMD Floating-Point Exception");
                     break;
-                    /*
-                case Scheduler.ClockIRQ:
-                    Interrupt?.Invoke(stack->Interrupt, stack->ErrorCode);
-                    Scheduler.ClockInterrupt(new IntPtr(stackStatePointer));
-                    break;
 
-                case Scheduler.ThreadTerminationSignalIRQ:
-                    Scheduler.TerminateCurrentThread();
-                    break;
-*/
+                //case Scheduler.ClockIRQ:
+                //    Interrupt?.Invoke(stack->Interrupt, stack->ErrorCode);
+                //    Scheduler.ClockInterrupt(new IntPtr(stackStatePointer));
+                //    break;
+
+                //case Scheduler.ThreadTerminationSignalIRQ:
+                    //Scheduler.TerminateCurrentThread();
+                    //break;
+
                 default:
                     {
-  //                      Interrupt?.Invoke(stack->Interrupt, stack->ErrorCode);
+                        Interrupt?.Invoke(stack->Interrupt, stack->ErrorCode);
                         break;
                     }
             }

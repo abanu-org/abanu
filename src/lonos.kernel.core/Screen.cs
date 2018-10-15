@@ -129,19 +129,19 @@ namespace lonos.kernel.core
         /// Writes the string to the screen.
         /// </summary>
         /// <param name="value">The string value to write to the screen.</param>
-        public static void Write(StringBuffer value)
-        {
-            for (int index = 0; index < value.Length; index++)
-            {
-                char chr = value[index];
-                Write(chr);
-            }
-        }
+        //public static void Write(StringBuffer value)
+        //{
+        //    for (int index = 0; index < value.Length; index++)
+        //    {
+        //        char chr = value[index];
+        //        Write(chr);
+        //    }
+        //}
 
-		public static void Write(uint val, string format)
-        {
-            Write(new StringBuffer(val, format));
-        }
+		//public static void Write(uint val, string format)
+        //{
+        //    Write(new StringBuffer(val, format));
+        //}
 
         /// <summary>
         /// Goto the top.

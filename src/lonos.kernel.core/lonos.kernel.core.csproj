@@ -46,6 +46,8 @@
     <Compile Include="IDTStack.cs" />
     <Compile Include="PIC.cs" />
     <Compile Include="StringBuffer.cs" />
+    <Compile Include="PageFrameAllocator.cs" />
+    <Compile Include="PageTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

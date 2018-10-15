@@ -10,9 +10,10 @@ namespace lonos.kernel.core
 
 		public static void Main()
 		{
+			RawWrite(0, 7, 'U', 1);
 			IDT.SetInterruptHandler(null);
 			//Panic.Setup();
-			PIC.Setup();
+			//PIC.Setup();
 			IDT.Setup();
 			//Multiboot.Setup();
 
