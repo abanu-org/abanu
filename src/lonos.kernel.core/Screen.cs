@@ -6,7 +6,7 @@ using System;
 
 namespace lonos.kernel.core
 {
-    /// <summary>
+	/// <summary>
     /// Screen
     /// </summary>
     public static class Screen
@@ -124,24 +124,6 @@ namespace lonos.kernel.core
                 Write(chr);
             }
         }
-
-		/// <summary>
-        /// Writes the string to the screen.
-        /// </summary>
-        /// <param name="value">The string value to write to the screen.</param>
-        //public static void Write(StringBuffer value)
-        //{
-        //    for (int index = 0; index < value.Length; index++)
-        //    {
-        //        char chr = value[index];
-        //        Write(chr);
-        //    }
-        //}
-
-		//public static void Write(uint val, string format)
-        //{
-        //    Write(new StringBuffer(val, format));
-        //}
 
         /// <summary>
         /// Goto the top.

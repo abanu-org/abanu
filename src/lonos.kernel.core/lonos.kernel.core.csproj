@@ -32,22 +32,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
-    <Compile Include="Memory\Memory.cs" />
-    <Compile Include="test.cs" />
     <Compile Include="MultiBoot.cs" />
-    <Compile Include="GDT.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="Panic.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenColors.cs" />
     <Compile Include="IDT.cs" />
-    <Compile Include="Memory\Adresse.cs" />
     <Compile Include="IDTStack.cs" />
     <Compile Include="PIC.cs" />
-    <Compile Include="StringBuffer.cs" />
     <Compile Include="PageFrameAllocator.cs" />
     <Compile Include="PageTable.cs" />
+    <Compile Include="Adresse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
@@ -66,9 +61,6 @@
       <Project>{DE30CBE9-50F3-4A3E-BCC9-A8A36348530E}</Project>
       <Name>Mosa.Platform.x86</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Memory\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

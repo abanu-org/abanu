@@ -10,20 +10,16 @@ namespace lonos.kernel.core
 
 		public static void Main()
 		{
+            //U is written
 			RawWrite(0, 7, 'U', 1);
 			IDT.SetInterruptHandler(null);
-			//Panic.Setup();
-			//PIC.Setup();
+
+			RawWrite(0, 9, 'U', 1);
 			IDT.Setup();
-			//Multiboot.Setup();
 
-			//Panic.DumpMemory(Address.GDTTable);
-
-			//Memory.Init();
-			         
-
+			//it never gets here:
 			RawWrite(0, 0, 'A', 1);
-			USize size = 5;
+			byte size = 5;
 			RawWrite(0, size, 'B', 1);
 			RawWrite(0, 2, 'C', 1);
 			while (true) {
