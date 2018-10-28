@@ -17,7 +17,7 @@ using Mosa.Runtime;
 namespace lonos.kernel.core
 {
 
-	public static class GDT
+	public static class GDT_
     {
         #region Data Members
 
@@ -46,7 +46,7 @@ namespace lonos.kernel.core
 
 			//Panic.DumpMemory(Address.GDTTable);
 
-            //Native.Lgdt(Address.GDTTable);
+            Native.Lgdt(Address.GDTTable);
         }
 
         private static void Set(uint index, uint address, uint limit, byte access, byte granularity)
@@ -72,7 +72,7 @@ namespace lonos.kernel.core
     }
 
 
-	unsafe public static class GDT_
+	unsafe public static class GDT
     {
 		private static uint gdtTableAddress = Address.GDTTable;
         private static DescriptorTable* table;
@@ -110,7 +110,11 @@ namespace lonos.kernel.core
 
 			Flush();
 
-			//Panic.Error("hhhhhh");
+			lonos.kernel.core.Boot.RawWrite(4, 1, 'K', ScreenColor.Brown);
+
+
+			//Panic.;
+			while (true) { Native.Nop(); };
 
         }
 

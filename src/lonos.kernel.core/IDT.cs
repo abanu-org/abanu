@@ -42,7 +42,9 @@ namespace Mosa.Kernel.x86
             SetTableEntries();
 
             Native.Lidt(Address.IDTTable);
+			lonos.kernel.core.Boot.RawWrite(3, 1, 'J', ScreenColor.Yellow);
             Native.Sti();
+			lonos.kernel.core.Boot.RawWrite(3, 2, 'J', ScreenColor.Yellow);
         }
 
         public static void SetInterruptHandler(InterruptHandler interruptHandler)
@@ -334,6 +336,8 @@ namespace Mosa.Kernel.x86
             Set(255, Native.GetIDTJumpLocation(255), 0x08, 0x8E);
         }
 
+		private static uint cnt;
+
         /// <summary>
         /// Interrupts the handler.
         /// </summary>
@@ -341,7 +345,10 @@ namespace Mosa.Kernel.x86
         private unsafe static void ProcessInterrupt(uint stackStatePointer)
         {
             var stack = (IDTStack*)stackStatePointer;
-
+			cnt++;
+			Screen.Goto(2, cnt);
+			Screen.Color = ScreenColor.LightRed;
+			Screen.Write('D');
             //Debugger.Process(stack);
 
             switch (stack->Interrupt)

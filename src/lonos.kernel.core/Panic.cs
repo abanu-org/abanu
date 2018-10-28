@@ -37,7 +37,12 @@ namespace lonos.kernel.core
         {
             IDT.SetInterruptHandler(null);
 
-            Screen.BackgroundColor = ScreenColor.Blue;
+			Screen.Goto(0, 0);
+			Screen.Color = 11;
+			Screen.Write(message);
+			while(true){ Native.Nop(); };
+			return;
+			Screen.BackgroundColor = ScreenColor.Green;
 
             Screen.Clear();
             Screen.Goto(1, 0);
@@ -120,6 +125,7 @@ namespace lonos.kernel.core
 
         private static void DumpStackTrace(uint depth)
         {
+			return;
             while (true)
             {
                 var entry = Internal.GetStackTraceEntry(depth, new IntPtr(EBP), new IntPtr(EIP));

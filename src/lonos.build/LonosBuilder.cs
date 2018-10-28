@@ -50,7 +50,7 @@ namespace lonos.build
 				EmulatorMemoryInMB = 128,
 				DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"),
 				FileSystem = FileSystem.FAT16,
-				UseMultiThreadingCompiler = true,
+				UseMultiThreadingCompiler = false,
 				InlinedIRMaximum = 12,
 				BootLoader = BootLoader.Syslinux_3_72,
 				VBEVideo = false,
@@ -71,6 +71,22 @@ namespace lonos.build
 				GenerateMapFile = false,
 				GenerateDebugFile = false,
 			};
+
+			Options.GenerateNASMFile = true;
+			Options.GenerateASMFile = true;
+			Options.GenerateMapFile = true;
+			Options.GenerateDebugFile = true;
+			Options.EmitRelocations =  true;
+			Options.EmitSymbols =  true;
+			Options.Emitx86IRQMethods = true;
+
+			Options.EnableSSA = false;
+			Options.EnableIROptimizations = false;
+			Options.EnableSparseConditionalConstantPropagation = false;
+			Options.EnableInlinedMethods = false;
+			Options.EnableIRLongExpansion = false;
+			Options.EnableValueNumbering = false;
+			Options.TwoPassOptimizations = false;
 
 			AppLocations = new AppLocations();
 
