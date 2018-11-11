@@ -34,13 +34,33 @@ namespace lonos.kernel.core
                 return true;
             var bytes1 = this.Bytes;
             var bytes2 = value->Bytes;
-            for (var i = 0; i < len1;i++){
+            for (var i = 0; i < len1; i++)
+            {
                 if (bytes1[i] != bytes2[i])
                     return false;
             }
             return true;
         }
 
+        public bool Equals(string value)
+        {
+            var len1 = GetLength();
+            var len2 = 0;
+            if (value != null)
+                len2 = value.Length;
+            if (len1 != len2)
+                return false;
+            if (len1 == 0)
+                return true;
+            var bytes1 = this.Bytes;
+            for (var i = 0; i < len1; i++)
+            {
+                if (bytes1[i] != (byte)value[i])
+                    return false;
+            }
+            return true;
+        }
+    
     }
 
 }

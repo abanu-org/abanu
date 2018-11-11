@@ -45,12 +45,10 @@ namespace lonos.kernel.core
 
             Multiboot.Setup();
 
-            var esh = Multiboot.multiBootInfo->ElfSectionHeader;
+            KernelElf.Setup();
+            NativeCalls.Setup();
 
-            Debug.WriteLineHex(KernelElf.StringTableSectionHeader->Name);
-            Debug.WriteLineHex(KernelElf.StringTableSectionHeader->Addr);
-
-            Debug.WriteLine(KernelElf.GetStringByOffset(2));
+            NativeCalls.proc2();
 
             Debug.Break();
 

@@ -68,6 +68,7 @@ namespace lonos.kernel.core
 
         public static void Break()
         {
+            Debug.Write("BREAK");
             while (true)
             {
                 Native.Nop();

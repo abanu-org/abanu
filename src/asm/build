@@ -1,0 +1,4 @@
+cd $(dirname $0)
+
+nasm -f elf32 native.s
+cp native.o ../../bin

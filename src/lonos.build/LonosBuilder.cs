@@ -98,12 +98,12 @@ namespace lonos.build
                 {
                     new Section
                     {
-                        Name = "asm",
+                        Name = "native",
                         Type = SectionType.ProgBits,
-                        AddressAlignment = 4096,
+                        AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes("asm.bin");
+                            var data = File.ReadAllBytes("native.o");
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
