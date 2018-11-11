@@ -15,10 +15,15 @@ namespace Mosa.Kernel.x86
         /// </summary>
         public const uint MultibootMagic = 0x2BADB002;
 
-        private static MultiBootInfo* multiBootInfo = null;
+        public static MultiBootInfo* multiBootInfo = null;
         private static uint memoryMapCount = 0;
 
         public static uint MultibootAddress = 0x0;
+
+        public static uint ElfSectionHeaderCount => multiBootInfo->Syms1;
+        public static uint ElfSectionHeaderSize => multiBootInfo->Syms2;
+        public static uint ElfSectionHeaderAddr => multiBootInfo->Syms3;
+        public static uint ElfSectionHeaderShndx => multiBootInfo->Syms4;
 
         /// <summary>
         /// Gets the memory map count.
@@ -347,6 +352,24 @@ namespace Mosa.Kernel.x86
         public uint VbeInterfaceSeg;
         public uint VbeInterfaceOff;
         public uint VbeInterfaceLength;
+ 
+        public MultiBootInfoElfSectionHeader* ElfSectionHeader {
+            get{
+                fixed (uint* ptr = &Syms1)
+                {
+                    return (MultiBootInfoElfSectionHeader*)ptr;
+                }
+            }
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    unsafe public struct MultiBootInfoElfSectionHeader
+    {
+        public uint Count;
+        public uint Size;
+        public uint Addr;
+        public uint Shndx;
     }
 
     [StructLayout(LayoutKind.Sequential)]

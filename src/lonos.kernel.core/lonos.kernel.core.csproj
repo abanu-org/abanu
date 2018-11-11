@@ -48,6 +48,9 @@
     <Compile Include="StringBuffer.cs" />
     <Compile Include="PageFrameAllocator.cs" />
     <Compile Include="PageTable.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="Elf.cs" />
+    <Compile Include="Types.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

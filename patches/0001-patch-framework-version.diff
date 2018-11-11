@@ -12,7 +12,7 @@ index 4fbbfc97c..014ee3723 100644
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Compiler.Common/Mosa.Compiler.Common.csproj b/Source/Mosa.Compiler.Common/Mosa.Compiler.Common.csproj
-index 54ec435b8..e77a89f5b 100644
+index 56b309fe4..a02dae496 100644
 --- a/Source/Mosa.Compiler.Common/Mosa.Compiler.Common.csproj
 +++ b/Source/Mosa.Compiler.Common/Mosa.Compiler.Common.csproj
 @@ -10,7 +10,7 @@
@@ -25,7 +25,7 @@ index 54ec435b8..e77a89f5b 100644
      <TargetFrameworkProfile />
    </PropertyGroup>
 diff --git a/Source/Mosa.Compiler.Framework.xUnit/Mosa.Compiler.Framework.xUnit.csproj b/Source/Mosa.Compiler.Framework.xUnit/Mosa.Compiler.Framework.xUnit.csproj
-index 86cd037b0..754fdbde3 100644
+index 011c1d915..5260e1400 100644
 --- a/Source/Mosa.Compiler.Framework.xUnit/Mosa.Compiler.Framework.xUnit.csproj
 +++ b/Source/Mosa.Compiler.Framework.xUnit/Mosa.Compiler.Framework.xUnit.csproj
 @@ -17,7 +17,7 @@
@@ -38,7 +38,7 @@ index 86cd037b0..754fdbde3 100644
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj b/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
-index 2de34d906..90d0ebb12 100644
+index 90bb5e53e..c5f43cda2 100644
 --- a/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
 +++ b/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
 @@ -14,7 +14,7 @@
@@ -142,9 +142,22 @@ index ac23a4d6b..b4709b8ae 100644
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Kernel.ARMv6/Mosa.Kernel.ARMv6.csproj b/Source/Mosa.Kernel.ARMv6/Mosa.Kernel.ARMv6.csproj
-index 11aed3858..cfd8111b1 100644
+index 56e4cca51..91aa238c2 100644
 --- a/Source/Mosa.Kernel.ARMv6/Mosa.Kernel.ARMv6.csproj
 +++ b/Source/Mosa.Kernel.ARMv6/Mosa.Kernel.ARMv6.csproj
+@@ -14,7 +14,7 @@
+     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+     <DefaultTargetSchema>IE50</DefaultTargetSchema>
+     <DelaySign>false</DelaySign>
+-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+     <OutputType>Library</OutputType>
+     <AppDesignerFolder>
+     </AppDesignerFolder>
+diff --git a/Source/Mosa.Kernel.x64/Mosa.Kernel.x64.csproj b/Source/Mosa.Kernel.x64/Mosa.Kernel.x64.csproj
+index 3dfd06bb9..33fcf1d7a 100644
+--- a/Source/Mosa.Kernel.x64/Mosa.Kernel.x64.csproj
++++ b/Source/Mosa.Kernel.x64/Mosa.Kernel.x64.csproj
 @@ -14,7 +14,7 @@
      <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -193,8 +206,21 @@ index 563457a34..8395f3fcd 100644
      <OutputType>Library</OutputType>
      <AppDesignerFolder>
      </AppDesignerFolder>
+diff --git a/Source/Mosa.Platform.Intel/Mosa.Platform.Intel.csproj b/Source/Mosa.Platform.Intel/Mosa.Platform.Intel.csproj
+index dff60aa02..12d41e2e7 100644
+--- a/Source/Mosa.Platform.Intel/Mosa.Platform.Intel.csproj
++++ b/Source/Mosa.Platform.Intel/Mosa.Platform.Intel.csproj
+@@ -14,7 +14,7 @@
+     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+     <DefaultTargetSchema>IE50</DefaultTargetSchema>
+     <DelaySign>false</DelaySign>
+-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+     <OutputType>Library</OutputType>
+     <AppDesignerFolder>
+     </AppDesignerFolder>
 diff --git a/Source/Mosa.Platform.x64/Mosa.Platform.x64.csproj b/Source/Mosa.Platform.x64/Mosa.Platform.x64.csproj
-index 672d8d915..e773bac93 100644
+index bf6e1ada8..3f3444e10 100644
 --- a/Source/Mosa.Platform.x64/Mosa.Platform.x64.csproj
 +++ b/Source/Mosa.Platform.x64/Mosa.Platform.x64.csproj
 @@ -14,7 +14,7 @@
@@ -207,13 +233,13 @@ index 672d8d915..e773bac93 100644
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj b/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
-index 74cadb891..400734e60 100644
+index 8dac7b403..e3f73f892 100644
 --- a/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
 +++ b/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
-@@ -14,7 +14,7 @@
+@@ -13,7 +13,7 @@
+     <DefaultClientScript>JScript</DefaultClientScript>
      <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
-     <DelaySign>false</DelaySign>
 -    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
 +    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
      <OutputType>Library</OutputType>
@@ -223,6 +249,19 @@ diff --git a/Source/Mosa.Runtime.ARMv6/Mosa.Runtime.ARMv6.csproj b/Source/Mosa.R
 index 2aff1a6ab..d669ba8ec 100644
 --- a/Source/Mosa.Runtime.ARMv6/Mosa.Runtime.ARMv6.csproj
 +++ b/Source/Mosa.Runtime.ARMv6/Mosa.Runtime.ARMv6.csproj
+@@ -14,7 +14,7 @@
+     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+     <DefaultTargetSchema>IE50</DefaultTargetSchema>
+     <DelaySign>false</DelaySign>
+-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+     <OutputType>Library</OutputType>
+     <AppDesignerFolder>
+     </AppDesignerFolder>
+diff --git a/Source/Mosa.Runtime.x64/Mosa.Runtime.x64.csproj b/Source/Mosa.Runtime.x64/Mosa.Runtime.x64.csproj
+index c0217d23b..76fd1cbef 100644
+--- a/Source/Mosa.Runtime.x64/Mosa.Runtime.x64.csproj
++++ b/Source/Mosa.Runtime.x64/Mosa.Runtime.x64.csproj
 @@ -14,7 +14,7 @@
      <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -262,6 +301,19 @@ diff --git a/Source/Mosa.TestWorld.ARMv6/Mosa.TestWorld.ARMv6.csproj b/Source/Mo
 index 595deb9e0..55c786ce9 100644
 --- a/Source/Mosa.TestWorld.ARMv6/Mosa.TestWorld.ARMv6.csproj
 +++ b/Source/Mosa.TestWorld.ARMv6/Mosa.TestWorld.ARMv6.csproj
+@@ -14,7 +14,7 @@
+     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+     <DefaultTargetSchema>IE50</DefaultTargetSchema>
+     <DelaySign>false</DelaySign>
+-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+     <OutputType>Exe</OutputType>
+     <AppDesignerFolder>
+     </AppDesignerFolder>
+diff --git a/Source/Mosa.TestWorld.x64/Mosa.TestWorld.x64.csproj b/Source/Mosa.TestWorld.x64/Mosa.TestWorld.x64.csproj
+index 2297104f0..acf5bb5e2 100644
+--- a/Source/Mosa.TestWorld.x64/Mosa.TestWorld.x64.csproj
++++ b/Source/Mosa.TestWorld.x64/Mosa.TestWorld.x64.csproj
 @@ -14,7 +14,7 @@
      <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
      <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -337,7 +389,7 @@ index 9a00517c1..a026f7b41 100644
      <PublishUrl>publish\</PublishUrl>
      <Install>true</Install>
 diff --git a/Source/Mosa.Tool.Explorer/Mosa.Tool.Explorer.csproj b/Source/Mosa.Tool.Explorer/Mosa.Tool.Explorer.csproj
-index cff66c441..132660065 100644
+index 005bc3bb5..cb5fa531f 100644
 --- a/Source/Mosa.Tool.Explorer/Mosa.Tool.Explorer.csproj
 +++ b/Source/Mosa.Tool.Explorer/Mosa.Tool.Explorer.csproj
 @@ -10,7 +10,7 @@
