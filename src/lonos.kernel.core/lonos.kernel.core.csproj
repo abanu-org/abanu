@@ -33,7 +33,6 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="Memory\Memory.cs" />
-    <Compile Include="test.cs" />
     <Compile Include="MultiBoot.cs" />
     <Compile Include="GDT.cs" />
     <Compile Include="Extensions.cs" />
@@ -49,8 +48,14 @@
     <Compile Include="PageFrameAllocator.cs" />
     <Compile Include="PageTable.cs" />
     <Compile Include="Debug.cs" />
-    <Compile Include="Elf.cs" />
-    <Compile Include="Types.cs" />
+    <Compile Include="Structs\NullTerminatedString.cs" />
+    <Compile Include="Structs\USize.cs" />
+    <Compile Include="Elf\KernelElf.cs" />
+    <Compile Include="Elf\ElfHeader.cs" />
+    <Compile Include="Elf\ElfSectionHeader.cs" />
+    <Compile Include="Elf\ElfSymbol.cs" />
+    <Compile Include="Elf\ElfHelper.cs" />
+    <Compile Include="Elf\NativeCalls.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
@@ -72,6 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Memory\" />
+    <Folder Include="Structs\" />
+    <Folder Include="Elf\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

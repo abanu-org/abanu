@@ -49,6 +49,7 @@ namespace lonos.kernel.core
             NativeCalls.Setup();
 
             NativeCalls.proc2();
+            NativeCalls.proc1();
 
             Debug.Break();
 
