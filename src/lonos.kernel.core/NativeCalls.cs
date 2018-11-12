@@ -18,12 +18,12 @@ namespace lonos.kernel.core
 
         public static void proc1()
         {
-            Native.Jmp(prog1Addr);
+            Native.Call(prog1Addr);
         }
 
         public static void proc2()
         {
-            Native.Jmp(prog2Addr);
+            Native.Call(prog2Addr);
         }
 
     }

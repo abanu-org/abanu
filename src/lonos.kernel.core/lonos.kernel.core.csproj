@@ -67,10 +67,6 @@
       <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
       <Name>Mosa.Runtime.x86</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Platform.x86\Mosa.Platform.x86.csproj">
-      <Project>{DE30CBE9-50F3-4A3E-BCC9-A8A36348530E}</Project>
-      <Name>Mosa.Platform.x86</Name>
-    </ProjectReference>
     <ProjectReference Include="..\lonos.kernel.lib\lonos.kernel.lib.csproj">
       <Project>{2D21AF60-8366-430A-9579-1B0CCD31910F}</Project>
       <Name>lonos.kernel.lib</Name>

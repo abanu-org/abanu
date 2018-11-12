@@ -103,7 +103,7 @@ namespace lonos.build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes("native.o");
+                            var data = File.ReadAllBytes("lonos.native.o");
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }

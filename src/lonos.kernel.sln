@@ -1,0 +1,54 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.core", "lonos.kernel.core\lonos.kernel.core.csproj", "{A72ED046-DE1C-4688-981B-6086C091047F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.core.classlib", "lonos.core.classlib\lonos.core.classlib.csproj", "{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mosa-Project", "Mosa-Project", "{2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Korlib", "..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj", "{631BC4F3-E2D8-4319-814C-13904CAA17CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Runtime", "..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj", "{77961864-DB33-4189-804F-D774022C96E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Runtime.x86", "..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj", "{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.lib", "lonos.kernel.lib\lonos.kernel.lib.csproj", "{2D21AF60-8366-430A-9579-1B0CCD31910F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A72ED046-DE1C-4688-981B-6086C091047F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A72ED046-DE1C-4688-981B-6086C091047F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A72ED046-DE1C-4688-981B-6086C091047F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A72ED046-DE1C-4688-981B-6086C091047F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{631BC4F3-E2D8-4319-814C-13904CAA17CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{631BC4F3-E2D8-4319-814C-13904CAA17CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{631BC4F3-E2D8-4319-814C-13904CAA17CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{631BC4F3-E2D8-4319-814C-13904CAA17CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77961864-DB33-4189-804F-D774022C96E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77961864-DB33-4189-804F-D774022C96E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77961864-DB33-4189-804F-D774022C96E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77961864-DB33-4189-804F-D774022C96E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D21AF60-8366-430A-9579-1B0CCD31910F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D21AF60-8366-430A-9579-1B0CCD31910F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D21AF60-8366-430A-9579-1B0CCD31910F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D21AF60-8366-430A-9579-1B0CCD31910F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{631BC4F3-E2D8-4319-814C-13904CAA17CE} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+		{77961864-DB33-4189-804F-D774022C96E2} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+		{A47B7998-4EE8-4AF8-9373-C664FDEDDC65} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+	EndGlobalSection
+EndGlobal
