@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A72ED046-DE1C-4688-981B-6086C091047F}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>lonos.kernel.core</RootNamespace>
-    <AssemblyName>lonos.kernel.core</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>lonos.kernel</RootNamespace>
+    <AssemblyName>lonos.kernel.lib</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <ProjectGuid>{2D21AF60-8366-430A-9579-1B0CCD31910F}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,30 +31,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="Memory\Memory.cs" />
-    <Compile Include="MultiBoot.cs" />
-    <Compile Include="GDT.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Assert.cs" />
-    <Compile Include="Panic.cs" />
-    <Compile Include="Screen.cs" />
-    <Compile Include="ScreenColors.cs" />
-    <Compile Include="IDT.cs" />
-    <Compile Include="Memory\Adresse.cs" />
-    <Compile Include="IDTStack.cs" />
-    <Compile Include="PIC.cs" />
-    <Compile Include="StringBuffer.cs" />
-    <Compile Include="PageFrameAllocator.cs" />
-    <Compile Include="PageTable.cs" />
-    <Compile Include="Debug.cs" />
-    <Compile Include="Structs\NullTerminatedString.cs" />
-    <Compile Include="Structs\USize.cs" />
-    <Compile Include="Elf\ElfHelper.cs" />
-    <Compile Include="Elf\KernelElf.cs" />
-    <Compile Include="NativeCalls.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
@@ -71,14 +47,13 @@
       <Project>{DE30CBE9-50F3-4A3E-BCC9-A8A36348530E}</Project>
       <Name>Mosa.Platform.x86</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lonos.kernel.lib\lonos.kernel.lib.csproj">
-      <Project>{2D21AF60-8366-430A-9579-1B0CCD31910F}</Project>
-      <Name>lonos.kernel.lib</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Memory\" />
-    <Folder Include="Structs\" />
+    <Compile Include="Elf\ElfHeader.cs" />
+    <Compile Include="Elf\ElfSectionHeader.cs" />
+    <Compile Include="Elf\ElfSymbol.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Elf\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
