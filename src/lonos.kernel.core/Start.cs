@@ -7,33 +7,7 @@ using Mosa.Runtime.x86;
 namespace lonos.kernel.core
 {
 
-    public static class KernelMemory
-    {
-        static private uint heapStart = Address.GCInitialMemory;
-        static private uint heapSize = 0x02000000;
-        static private uint heapUsed = 0;
-
-        [Plug("Mosa.Runtime.GC::AllocateMemory")]
-        static unsafe private IntPtr _AllocateMemory(uint size)
-        {
-            return AllocateMemory(size);
-        }
-
-        private static uint addr;
-        private static uint cnt;
-        static public IntPtr AllocateMemory(uint size)
-        {
-            cnt++;
-            Screen.Goto(1, cnt);
-            Screen.Color = 4;
-            Screen.Write("X");
-            while (true) { Native.Nop(); };
-
-            addr += size;
-            return (IntPtr)(((uint)Address.GCInitialMemory) + addr);
-        }
-    }
-    public static class Boot
+    internal static class Start
     {
 
         public static uint testValue = 0xAABB;
@@ -50,8 +24,6 @@ namespace lonos.kernel.core
 
             NativeCalls.proc2();
             NativeCalls.proc1();
-
-            Debug.Break();
 
             RawWrite(0, 6, '6', 1);
             GDT.Setup();
@@ -75,10 +47,8 @@ namespace lonos.kernel.core
             USize size = 5;
             RawWrite(0, size, 'B', 1);
             RawWrite(0, 11, 'C', 1);
-            while (true)
-            {
-                Mosa.Runtime.Intrinsic.Load8(IntPtr.Zero);
-            };
+
+            Debug.Break();
         }
 
         private static void Dummy()

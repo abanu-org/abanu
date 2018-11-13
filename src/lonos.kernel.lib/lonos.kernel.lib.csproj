@@ -48,9 +48,14 @@
     <Compile Include="Elf\ElfHeader.cs" />
     <Compile Include="Elf\ElfSectionHeader.cs" />
     <Compile Include="Elf\ElfSymbol.cs" />
+    <Compile Include="StringBuffer.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Structs\NullTerminatedString.cs" />
+    <Compile Include="Structs\USize.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />
+    <Folder Include="Structs\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

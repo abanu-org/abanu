@@ -109,13 +109,6 @@ namespace lonos.kernel.core
             table->AddEntry(dataEntry);
 
 			Flush();
-
-			lonos.kernel.core.Boot.RawWrite(4, 1, 'K', ScreenColor.Brown);
-
-
-			//Panic.;
-			while (true) { Native.Nop(); };
-
         }
 
         /// <summary>

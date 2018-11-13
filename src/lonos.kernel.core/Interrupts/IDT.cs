@@ -42,9 +42,7 @@ namespace Mosa.Kernel.x86
             SetTableEntries();
 
             Native.Lidt(Address.IDTTable);
-			lonos.kernel.core.Boot.RawWrite(3, 1, 'J', ScreenColor.Yellow);
             Native.Sti();
-			lonos.kernel.core.Boot.RawWrite(3, 2, 'J', ScreenColor.Yellow);
         }
 
         public static void SetInterruptHandler(InterruptHandler interruptHandler)

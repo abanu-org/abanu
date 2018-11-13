@@ -55,7 +55,6 @@ namespace lonos.kernel.core
 			var end = start +1000;
 			var ptr = start;
 			uint i = 0;
-			Boot.RawWrite(0, 1, 'X', 2);
 
 			while (ptr < end)
 			{

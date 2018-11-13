@@ -31,28 +31,25 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
+    <Compile Include="Start.cs" />
     <Compile Include="Memory\Memory.cs" />
-    <Compile Include="MultiBoot.cs" />
-    <Compile Include="GDT.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Assert.cs" />
-    <Compile Include="Panic.cs" />
-    <Compile Include="Screen.cs" />
-    <Compile Include="ScreenColors.cs" />
-    <Compile Include="IDT.cs" />
     <Compile Include="Memory\Adresse.cs" />
-    <Compile Include="IDTStack.cs" />
-    <Compile Include="PIC.cs" />
-    <Compile Include="StringBuffer.cs" />
-    <Compile Include="PageFrameAllocator.cs" />
-    <Compile Include="PageTable.cs" />
-    <Compile Include="Debug.cs" />
-    <Compile Include="Structs\NullTerminatedString.cs" />
-    <Compile Include="Structs\USize.cs" />
     <Compile Include="Elf\ElfHelper.cs" />
     <Compile Include="Elf\KernelElf.cs" />
-    <Compile Include="NativeCalls.cs" />
+    <Compile Include="Memory\KernelMemory.cs" />
+    <Compile Include="Console\Screen.cs" />
+    <Compile Include="Console\ScreenColors.cs" />
+    <Compile Include="Interrupts\IDT.cs" />
+    <Compile Include="Interrupts\IDTStack.cs" />
+    <Compile Include="Memory\PageFrameAllocator.cs" />
+    <Compile Include="Memory\PageTable.cs" />
+    <Compile Include="Boot\MultiBoot.cs" />
+    <Compile Include="Memory\GDT.cs" />
+    <Compile Include="Debug\Panic.cs" />
+    <Compile Include="Debug\Debug.cs" />
+    <Compile Include="Interrupts\PIC.cs" />
+    <Compile Include="External\NativeCalls.cs" />
+    <Compile Include="Debug\Assert.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
@@ -74,8 +71,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Memory\" />
-    <Folder Include="Structs\" />
     <Folder Include="Elf\" />
+    <Folder Include="Console\" />
+    <Folder Include="Interrupts\" />
+    <Folder Include="Boot\" />
+    <Folder Include="Debug\" />
+    <Folder Include="External\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
