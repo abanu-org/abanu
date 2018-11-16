@@ -4,19 +4,17 @@ using Mosa.Runtime;
 using Mosa.Runtime.x86;
 using System;
 
-using lonos.kernel.core;
-
 //TODO: Name in compiler
-namespace Mosa.Kernel.x86
+namespace lonos.kernel.core
 {
-	/// <summary>
+
+    public unsafe delegate void InterruptHandler(IDTStack* stack);
+
+    /// <summary>
     /// IDT
     /// </summary>
-    public static class IDT
+    public unsafe static class IDTManager
     {
-        public delegate void InterruptHandler(uint irq, uint error);
-
-        private static InterruptHandler Interrupt;
 
         #region Data Members
 
@@ -32,40 +30,58 @@ namespace Mosa.Kernel.x86
 
         #endregion Data Members
 
+        internal static InterruptHandler[] handlers;
+
         public static void Setup()
         {
+
+
             // Setup IDT table
-            Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable), 6);
+            Mosa.Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable), 6);
             Intrinsic.Store16(new IntPtr(Address.IDTTable), (Offset.TotalSize * 256) - 1);
             Intrinsic.Store32(new IntPtr(Address.IDTTable), 2, Address.IDTTable + 6);
 
             SetTableEntries();
 
+            handlers = new InterruptHandler[256];
+            for (var i = 0; i <= 255; i++)
+            {
+                handlers[i] = UndefinedHandler;
+            }
+
+            SetInterruptHandler(KnownInterrupt.DivideError, InterruptsHandlers.DivideError);
+            SetInterruptHandler(KnownInterrupt.ArithmeticOverflowException, InterruptsHandlers.ArithmeticOverflowException);
+            SetInterruptHandler(KnownInterrupt.BoundCheckError, InterruptsHandlers.BoundCheckError);
+            SetInterruptHandler(KnownInterrupt.InvalidOpcode, InterruptsHandlers.InvalidOpcode);
+            SetInterruptHandler(KnownInterrupt.CoProcessorNotAvailable, InterruptsHandlers.CoProcessorNotAvailable);
+            SetInterruptHandler(KnownInterrupt.DoubleFault, InterruptsHandlers.DoubleFault);
+            SetInterruptHandler(KnownInterrupt.CoProcessorSegmentOverrun, InterruptsHandlers.CoProcessorSegmentOverrun);
+            SetInterruptHandler(KnownInterrupt.InvalidTSS, InterruptsHandlers.InvalidTSS);
+            SetInterruptHandler(KnownInterrupt.SegmentNotPresent, InterruptsHandlers.SegmentNotPresent);
+            SetInterruptHandler(KnownInterrupt.StackException, InterruptsHandlers.StackException);
+            SetInterruptHandler(KnownInterrupt.GeneralProtectionException, InterruptsHandlers.GeneralProtectionException);
+            SetInterruptHandler(KnownInterrupt.PageFault, InterruptsHandlers.PageFault);
+            SetInterruptHandler(KnownInterrupt.CoProcessorError, InterruptsHandlers.CoProcessorError);
+            SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptsHandlers.SIMDFloatinPointException);
+            SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
+
             Native.Lidt(Address.IDTTable);
             Native.Sti();
         }
 
-        public static void SetInterruptHandler(InterruptHandler interruptHandler)
+        private static void UndefinedHandler(IDTStack* stack)
         {
-            Interrupt = interruptHandler;
+            NativeCalls.BochsDebug();
         }
 
-        /// <summary>
-        /// Sets the specified index.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="address">The address.</param>
-        /// <param name="select">The select.</param>
-        /// <param name="flags">The flags.</param>
-        private static void Set(uint index, uint address, ushort select, byte flags)
+        internal static void SetInterruptHandler(KnownInterrupt interrupt, InterruptHandler interruptHandler)
         {
-            var entry = new IntPtr(Address.IDTTable + 6 + (index * Offset.TotalSize));
-            Intrinsic.Store16(entry, Offset.BaseLow, (ushort)(address & 0xFFFF));
-            Intrinsic.Store16(entry, Offset.BaseHigh, (ushort)((address >> 16) & 0xFFFF));
-            Intrinsic.Store16(entry, Offset.Select, select);
-            Intrinsic.Store8(entry, Offset.Always0, 0);
-            Intrinsic.Store8(entry, Offset.Flags, flags);
+            if (interruptHandler == null)
+                interruptHandler = UndefinedHandler;
+            handlers[(uint)interrupt] = interruptHandler;
         }
+
+        #region SetTable Entries
 
         /// <summary>
         /// Sets the IDT.
@@ -73,7 +89,7 @@ namespace Mosa.Kernel.x86
         private static void SetTableEntries()
         {
             // Clear out idt table
-            Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable) + 6, Offset.TotalSize * 256);
+            Mosa.Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable) + 6, Offset.TotalSize * 256);
 
             // Note: GetIDTJumpLocation parameter must be a constant and not a variable
             Set(0, Native.GetIDTJumpLocation(0), 0x08, 0x8E);
@@ -334,144 +350,27 @@ namespace Mosa.Kernel.x86
             Set(255, Native.GetIDTJumpLocation(255), 0x08, 0x8E);
         }
 
-		private static uint cnt;
-
         /// <summary>
-        /// Interrupts the handler.
+        /// Sets the specified index.
         /// </summary>
-        /// <param name="stackStatePointer">The stack state pointer.</param>
-        private unsafe static void ProcessInterrupt(uint stackStatePointer)
+        /// <param name="index">The index.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="select">The select.</param>
+        /// <param name="flags">The flags.</param>
+        private static void Set(uint index, uint address, ushort select, byte flags)
         {
-            var stack = (IDTStack*)stackStatePointer;
-			cnt++;
-			Screen.Goto(2, cnt);
-			Screen.Color = ScreenColor.LightRed;
-			Screen.Write('D');
-            //Debugger.Process(stack);
-
-            switch (stack->Interrupt)
-            {
-                case 0:
-                    Error(stack, "Divide Error");
-                    break;
-
-                case 4:
-                    Error(stack, "Arithmetic Overflow Exception");
-                    break;
-
-                case 5:
-                    Error(stack, "Bound Check Error");
-                    break;
-
-                case 6:
-                    Error(stack, "Invalid Opcode");
-                    break;
-
-                case 7:
-                    Error(stack, "Co-processor Not Available");
-                    break;
-
-                case 8:
-
-                    //TODO: Analyze the double fault
-                    Error(stack, "Double Fault");
-                    break;
-
-                case 9:
-                    Error(stack, "Co-processor Segment Overrun");
-                    break;
-
-                case 10:
-                    Error(stack, "Invalid TSS");
-                    break;
-
-                case 11:
-                    Error(stack, "Segment Not Present");
-                    break;
-
-                case 12:
-                    Error(stack, "Stack Exception");
-                    break;
-
-                case 13:
-                    Error(stack, "General Protection Exception");
-                    break;
-
-                case 14:
-
-                    // Check if Null Pointer Exception
-                    // Otherwise handle as Page Fault
-
-                    var cr2 = Native.GetCR2();
-
-                    if ((cr2 >> 5) < 0x1000)
-                    {
-                        Error(stack, "Null Pointer Exception");
-                    }
-
-                    if (cr2 >= 0xF0000000u)
-                    {
-                        Error(stack, "Invalid Access Above 0xF0000000");
-                        break;
-                    }
-
-                    var physicalpage = PageFrameAllocator.Allocate();
-
-                    if (physicalpage == IntPtr.Zero)
-                    {
-                        Error(stack, "Out of Memory");
-                        break;
-                    }
-
-                    PageTable.MapVirtualAddressToPhysical(cr2, (uint)physicalpage.ToInt32());
-
-                    break;
-
-                case 16:
-                    Error(stack, "Co-processor Error");
-                    break;
-
-                case 19:
-                    Error(stack, "SIMD Floating-Point Exception");
-                    break;
-
-                //case Scheduler.ClockIRQ:
-                //    Interrupt?.Invoke(stack->Interrupt, stack->ErrorCode);
-                //    Scheduler.ClockInterrupt(new IntPtr(stackStatePointer));
-                //    break;
-
-                //case Scheduler.ThreadTerminationSignalIRQ:
-                    //Scheduler.TerminateCurrentThread();
-                    //break;
-
-                default:
-                    {
-                        Interrupt?.Invoke(stack->Interrupt, stack->ErrorCode);
-                        break;
-                    }
-            }
-
-            PIC.SendEndOfInterrupt(stack->Interrupt);
+            var entry = new IntPtr(Address.IDTTable + 6 + (index * Offset.TotalSize));
+            Intrinsic.Store16(entry, Offset.BaseLow, (ushort)(address & 0xFFFF));
+            Intrinsic.Store16(entry, Offset.BaseHigh, (ushort)((address >> 16) & 0xFFFF));
+            Intrinsic.Store16(entry, Offset.Select, select);
+            Intrinsic.Store8(entry, Offset.Always0, 0);
+            Intrinsic.Store8(entry, Offset.Flags, flags);
         }
 
-        private unsafe static void Error(IDTStack* stack, string message)
-        {
-            Panic.ESP = stack->ESP;
-            Panic.EBP = stack->EBP;
-            Panic.EIP = stack->EIP;
-            Panic.EAX = stack->EAX;
-            Panic.EBX = stack->EBX;
-            Panic.ECX = stack->ECX;
-            Panic.EDX = stack->EDX;
-            Panic.EDI = stack->EDI;
-            Panic.ESI = stack->ESI;
-            Panic.CS = stack->CS;
-            Panic.ErrorCode = stack->ErrorCode;
-            Panic.EFLAGS = stack->EFLAGS;
-            Panic.Interrupt = stack->Interrupt;
-            Panic.CR2 = Native.GetCR2();
-            Panic.FS = Native.GetFS();
-            Panic.Error(message);
-        }
+        #endregion
+
+        internal static uint RaisedCount;
+
     }
+
 }

@@ -8,7 +8,7 @@ namespace lonos.kernel.core
     /// IDT Stack
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
-    internal struct IDTStack
+    public struct IDTStack
     {
         [FieldOffset(0x00)]
         public uint EDI;

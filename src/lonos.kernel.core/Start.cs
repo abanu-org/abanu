@@ -24,18 +24,17 @@ namespace lonos.kernel.core
 
             NativeCalls.proc2();
             NativeCalls.proc1();
+            NativeCalls.BochsDebug();
 
             RawWrite(0, 6, '6', 1);
             GDT.Setup();
 
             RawWrite(0, 1, '1', 1);
-            IDT.SetInterruptHandler(null);
-            RawWrite(0, 2, '2', 1);
             Panic.Setup();
             RawWrite(0, 3, '3', 1);
             PIC.Setup();
             RawWrite(0, 4, '4', 1);
-            IDT.Setup();
+            IDTManager.Setup();
             RawWrite(0, 5, '5', 1);
 
             //Panic.DumpMemory(Address.GDTTable);

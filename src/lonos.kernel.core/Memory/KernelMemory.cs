@@ -27,7 +27,7 @@ namespace lonos.kernel.core
             Screen.Goto(1, cnt);
             Screen.Color = 4;
             Screen.Write("X");
-            while (true) { Native.Nop(); };
+            //while (true) { Native.Nop(); };
 
             addr += size;
             return (IntPtr)(((uint)Address.GCInitialMemory) + addr);

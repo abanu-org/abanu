@@ -38,7 +38,7 @@ index 011c1d915..5260e1400 100644
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj b/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
-index 90bb5e53e..c5f43cda2 100644
+index 159341c23..c23db7ffc 100644
 --- a/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
 +++ b/Source/Mosa.Compiler.Framework/Mosa.Compiler.Framework.csproj
 @@ -14,7 +14,7 @@
@@ -233,7 +233,7 @@ index bf6e1ada8..3f3444e10 100644
      <AppDesignerFolder>
      </AppDesignerFolder>
 diff --git a/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj b/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
-index 8dac7b403..e3f73f892 100644
+index 91ea8afd3..a04fb9c74 100644
 --- a/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
 +++ b/Source/Mosa.Platform.x86/Mosa.Platform.x86.csproj
 @@ -13,7 +13,7 @@

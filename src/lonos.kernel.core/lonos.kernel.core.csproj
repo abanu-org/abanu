@@ -39,7 +39,7 @@
     <Compile Include="Memory\KernelMemory.cs" />
     <Compile Include="Console\Screen.cs" />
     <Compile Include="Console\ScreenColors.cs" />
-    <Compile Include="Interrupts\IDT.cs" />
+    <Compile Include="Interrupts\IDTMosa.cs" />
     <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Memory\PageFrameAllocator.cs" />
     <Compile Include="Memory\PageTable.cs" />
@@ -50,6 +50,9 @@
     <Compile Include="Interrupts\PIC.cs" />
     <Compile Include="External\NativeCalls.cs" />
     <Compile Include="Debug\Assert.cs" />
+    <Compile Include="Interrupts\InterruptHandlers.cs" />
+    <Compile Include="Interrupts\Interrupt.cs" />
+    <Compile Include="Interrupts\IDTManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

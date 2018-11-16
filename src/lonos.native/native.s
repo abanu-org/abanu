@@ -11,3 +11,8 @@ mov eax, 0x0b8002      ; note 32 bit offset
 mov word [ds:eax], bx
 ret
 ;jmp $
+
+bochs_debug:
+xchg ebx, ebx
+;xchg bx, bx
+ret
