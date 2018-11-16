@@ -6,4 +6,4 @@
 - Building the Operating System Disk, with Grub as Bootloader
 
 ## License
-This software includes third party open source software components. Each of these software components have their own license.
+Lonos is published under the GNU General Public License. This software includes third party open source software components. Each of these software components have their own license. All sourcecode is open source.
