@@ -1,3 +1,13 @@
+## Build instructions
+```
+git clone --recursive https://github.com/Arakis/lonos.git
+cd lonos 
+./lonosctl configure patch apply
+./lonosctl configure mosa
+./lonosctl build all
+```
+Run it with `./lonosctl run qemu` or `./lonosctl run bochs`
+
 ## How the image is build
 
 - Building the compiler. It's pure C#. Requies Mono (Linux) or .NET framework ()

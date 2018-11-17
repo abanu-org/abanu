@@ -9,8 +9,8 @@
 
 [Oo]bj/
 [Bb]in/
-[Dd]ebug/
-[Rr]elease/
+#[Dd]ebug/
+#[Rr]elease/
 [b]in - Copy/
 [b]in2/
 
