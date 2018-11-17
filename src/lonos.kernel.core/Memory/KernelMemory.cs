@@ -19,7 +19,7 @@ namespace lonos.kernel.core
             return AllocateMemory(size);
         }
 
-        private static uint addr;
+        private static uint nextAddr;
         private static uint cnt;
         static public IntPtr AllocateMemory(uint size)
         {
@@ -29,8 +29,9 @@ namespace lonos.kernel.core
             Screen.Write("X");
             //while (true) { Native.Nop(); };
 
-            addr += size;
-            return (IntPtr)(((uint)Address.GCInitialMemory) + addr);
+            var retAddr = nextAddr;
+            nextAddr += size;
+            return (IntPtr)(((uint)Address.GCInitialMemory) + retAddr);
         }
     }
    }

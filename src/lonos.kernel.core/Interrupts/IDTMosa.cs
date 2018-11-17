@@ -26,12 +26,22 @@ namespace Mosa.Kernel.x86
 
             var stack = (IDTStack*)stackStatePointer;
             var irq = stack->Interrupt;
+
+            //Screen.Goto(2, IDTManager.RaisedCount * 3);
+            Screen.Goto(2, 10);
+            Screen.Write(irq,3,-1);
+
             if (irq < 0 || irq > 255)
                 Panic.Error("Invalid Interrupt");
 
             var handler = IDTManager.handlers[irq];
             if (handler == null)
-                Panic.Error("Handlr is null");
+            {
+                //Panic.Error("Handlr is null");
+            }
+            else{
+
+            }
 
             handler(stack);
 
