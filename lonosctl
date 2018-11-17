@@ -3,6 +3,42 @@
 cd $(dirname $0)
 source env/default
 
+function configure {
+	case $1 in
+		all)
+			configure patch apply
+			;;
+
+		patch)
+			patch ${@:2}
+			;;
+
+		mosa)
+			external/MOSA-Project/Source/Compile.sh
+			;;
+
+		*)
+			echo $"Usage: lonosctl configure {patch|mosa}"
+			exit 1
+	esac
+}
+
+function patch {
+	case $1 in
+		apply)
+			patches/apply
+			;;
+
+		revert)
+			patches/apply --reverse
+			;;
+
+		*)
+			echo $"Usage: lonosctl configure patch {apply|revert}"
+			exit 1
+	esac
+}
+
 function build {
 	case $1 in
 		all)
@@ -42,6 +78,10 @@ function run {
 }
 
 case $1 in
+	configure)
+		configure ${@:2}
+		;;
+		
 	build)
 		build ${@:2}
 		;;
@@ -51,7 +91,7 @@ case $1 in
 		;;
 
 	*)
-		echo $"Usage: lonosctl {build|run}"
+		echo $"Usage: lonosctl {configure|build|run}"
 		exit 1
 esac
 
