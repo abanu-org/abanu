@@ -37,6 +37,14 @@ namespace lonos.kernel.core
             IDTManager.Setup();
             RawWrite(0, 5, '5', 1);
 
+            Serial.SetupPort(Serial.COM1);
+            Serial.Write(Serial.COM1, 70);
+            Serial.Write(Serial.COM1, 71);
+            Serial.Write(Serial.COM1, 72);
+            Serial.Write(Serial.COM1, 13);
+            Serial.Write(Serial.COM1, 10);
+
+
             //Panic.DumpMemory(Address.GDTTable);
 
             //Memory.Init();

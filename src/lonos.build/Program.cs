@@ -1,25 +1,51 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using System;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace lonos.build
 {
-	internal static class Program
-	{
-		private static void Main()
-		{
- 			Console.WriteLine("Starting Build...");
+    internal static class Program
+    {
 
-			var file = "";
+        public static string GetEnv(string name)
+        {
+            var value = Environment.GetEnvironmentVariable(name);
+            if (string.IsNullOrEmpty(value))
+            {
+                switch (name)
+                {
+                    case "LONOS_PROJECT_ROOT":
+                        value = Path.GetDirectoryName( Path.GetDirectoryName(new Uri(typeof(Program).Assembly.Location).AbsolutePath));
+                        break;
+                }
+            }
 
-			//file = "Mosa.HelloWorld.x86.exe";
-			file = "lonos.kernel.core.exe";
-			//file = "Mosa.UnitTests.x86.exe";
+            if (string.IsNullOrEmpty(value))
+                return "";
 
-			var engine = new LonosBuilder(file);
-			engine.LaunchVirtualMachine();
-			System.Console.WriteLine("ready");
-			System.Console.ReadLine();
-		}
-	}
+            var regex = new Regex(@"\$\{(\w+)\}", RegexOptions.RightToLeft);
+            foreach (Match m in regex.Matches(value))
+                value = value.Replace(m.Value, GetEnv(m.Groups[1].Value));
+            return value;
+        }
+
+        private static void Main(string[] args)
+        {
+            Console.WriteLine("Starting Build...");
+
+            var file = "";
+
+            //file = "Mosa.HelloWorld.x86.exe";
+            var dir = Environment.CurrentDirectory;
+
+            file = GetEnv("LONOS_EXE");
+
+            var engine = new LonosBuilder(file);
+            engine.LaunchVirtualMachine();
+            System.Console.WriteLine("ready");
+            //System.Console.ReadLine();
+        }
+    }
 }

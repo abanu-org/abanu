@@ -1,0 +1,15 @@
+#!/bin/bash
+
+export LONOS_PROJDIR=$(
+cd $(dirname "$BASH_SOURCE")
+cd .. 
+pwd
+)
+
+export LONOS_EXE=${LONOS_PROJDIR}/bin/lonos.kernel.core.exe
+export LONOS_OSDIR=${LONOS_PROJDIR}/os
+export LONOS_NATIVE_FILES=${LONOS_PROJDIR}/bin/lonos.native.o
+export LONOS_LOGDIR=${LONOS_PROJDIR}/logs
+
+mkdir -p $LONOS_OSDIR
+mkdir -p $LONOS_LOGDIR

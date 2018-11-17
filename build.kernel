@@ -1,6 +1,0 @@
-#!/bin/bash
-
-cd $(dirname $0)
-
-(cd src && msbuild lonos.kernel.sln /p:Configuration=Debug)
-./src/lonos.native/build

@@ -53,6 +53,7 @@
     <Compile Include="Interrupts\InterruptHandlers.cs" />
     <Compile Include="Interrupts\Interrupt.cs" />
     <Compile Include="Interrupts\IDTManager.cs" />
+    <Compile Include="Serial.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

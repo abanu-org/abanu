@@ -52,7 +52,7 @@ namespace lonos.build
                 PlatformType = PlatformType.X86,
                 LinkerFormatType = LinkerFormatType.Elf32,
                 EmulatorMemoryInMB = 128,
-                DestinationDirectory = Path.Combine(Path.GetTempPath(), "MOSA-UnitTest"),
+                DestinationDirectory = Program.GetEnv("LONOS_OSDIR"),
                 FileSystem = FileSystem.FAT16,
                 UseMultiThreadingCompiler = false,
                 InlinedIRMaximum = 12,
@@ -76,7 +76,7 @@ namespace lonos.build
                 GenerateDebugFile = false,
             };
 
-            Options.GenerateNASMFile = true;
+            //Options.GenerateNASMFile = true;
             Options.GenerateASMFile = true;
             Options.GenerateMapFile = true;
             Options.GenerateDebugFile = true;
@@ -103,7 +103,7 @@ namespace lonos.build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes("lonos.native.o");
+                            var data = File.ReadAllBytes(Program.GetEnv("LONOS_NATIVE_FILES"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
@@ -168,9 +168,9 @@ namespace lonos.build
 
             Options.SerialConnectionPort++;
 
-            Process = Starter.Launch();
-
-            return Process != null || !Process.HasExited;
+            //Process = Starter.Launch();
+            //return Process != null || !Process.HasExited;
+            return true;
         }
 
         public bool StartEngine()

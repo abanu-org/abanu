@@ -1,0 +1,57 @@
+#!/bin/bash
+
+cd $(dirname $0)
+source env/default
+
+function build {
+	case $1 in
+		all)
+			build builder
+			build assembly
+			build disk
+			;;
+
+		builder)
+			(cd src && msbuild lonos.build.sln /p:Configuration=Release)
+			;;
+
+		assembly)
+			(cd src && msbuild lonos.kernel.sln /p:Configuration=Debug)
+			;;
+			
+		disk)
+			(cd bin && mono ./lonos.build.exe)
+			;;
+
+		*)
+			echo $"Usage: lonosctl build {builder|assembly|disk}"
+			exit 1
+	esac
+}
+
+function run {
+	case $1 in
+		bochs)
+			bochs -f "${LONOS_PROJDIR}/conf/bochs.bxrc" -rc "${LONOS_PROJDIR}/conf/bochs.rc"
+			;;
+
+		*)
+			echo $"Usage: lonosctl run {bochs}"
+			exit 1
+	esac
+}
+
+case $1 in
+	build)
+		build ${@:2}
+		;;
+
+	run)
+		run ${@:2}
+		;;
+
+	*)
+		echo $"Usage: lonosctl {build|run}"
+		exit 1
+esac
+
