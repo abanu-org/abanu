@@ -44,6 +44,7 @@ function build {
 		all)
 			build builder
 			build assembly
+			build native
 			build disk
 			;;
 
@@ -54,13 +55,17 @@ function build {
 		assembly)
 			(cd src && msbuild lonos.kernel.sln /p:Configuration=Debug)
 			;;
+
+		native)
+			src/lonos.native/build
+			;;
 			
 		disk)
 			(cd bin && mono ./lonos.build.exe)
 			;;
 
 		*)
-			echo $"Usage: lonosctl build {builder|assembly|disk}"
+			echo $"Usage: lonosctl build {builder|assembly|native|disk}"
 			exit 1
 	esac
 }
