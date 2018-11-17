@@ -6,7 +6,7 @@ cd lonos
 ./lonosctl configure mosa
 ./lonosctl build all
 ```
-Run it with `./lonosctl run qemu` or `./lonosctl run bochs`
+Run it with `./lonosctl run bochs`
 
 ## How the image is build
 
