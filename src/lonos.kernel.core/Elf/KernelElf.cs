@@ -13,6 +13,7 @@ namespace lonos.kernel.core
 
         public static void Setup()
         {
+            KernelMessage.WriteLine("Setup ELF Headers");
             Main = new ElfHelper
             {
                 SectionHeaderArray = (ElfSectionHeader*)Multiboot.multiBootInfo->ElfSectionHeader->Addr,

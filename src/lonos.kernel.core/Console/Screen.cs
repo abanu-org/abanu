@@ -11,6 +11,13 @@ namespace lonos.kernel.core
     /// </summary>
     public static class Screen
     {
+
+        public static void Setup()
+        {
+            Rows = 25;
+            Columns = 80;
+        }
+
         private static StringBuffer tmpLine;
         private static uint ScreenAddress = 0x0B8000;
 
@@ -21,12 +28,12 @@ namespace lonos.kernel.core
         /// <summary>
         /// The columns
         /// </summary>
-        public const uint Columns = 80;
+        public static uint Columns = 40;
 
         /// <summary>
         /// The rows
         /// </summary>
-        public const uint Rows = 40;
+        public static uint Rows = 25;
 
         /// <summary>
         /// Gets or sets the column.
@@ -167,7 +174,8 @@ namespace lonos.kernel.core
             {
                 Memory.Copy(ScreenAddress + Columns * 2, ScreenAddress, (Rows - 1) * Columns * 2);
             }
-            else {
+            else
+            {
                 Row++;
             }
             UpdateCursor();
@@ -251,19 +259,22 @@ namespace lonos.kernel.core
         /// Writes the specified value.
         /// </summary>
         /// <param name="val">The val.</param>
-        /// <param name="digits">The digits.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="digits">Number base. Use 10 for decimal, 16 for hex</param>
         public static void Write(uint val, byte digits)
         {
             Write(val, digits, -1);
         }
 
+        /// <summary>
+        /// Writes the specified value.
+        /// </summary>
+        /// <param name="val">The val.</param>
+        /// <param name="digits">Number base. Use 10 for decimal, 16 for hex</param>
+        /// <param name="size">Size of value. Used for Padding / filling with zeros</param>
         public static void Write(uint val, byte digits, int size)
         {
             tmpLine.Clear();
-            //tmpLine.Write(val, digits, size);
-            //tmpLine.Append((int)val, "");
-            tmpLine.Append("<LLLLLL>");
+            tmpLine.Append(val, digits, size);
             Write(tmpLine);
         }
 

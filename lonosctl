@@ -82,6 +82,22 @@ function run {
 	esac
 }
 
+function logs {
+	case $1 in
+		kernel)
+			less +F "${LONOS_PROJDIR}/logs/kernel.log"
+			;;
+
+		emulator)
+			less +F "${LONOS_PROJDIR}/logs/emulator.log"
+			;;
+
+		*)
+			echo $"Usage: lonosctl logs {kernel|emulator}"
+			exit 1
+	esac
+}
+
 case $1 in
 	configure)
 		configure ${@:2}
@@ -95,8 +111,12 @@ case $1 in
 		run ${@:2}
 		;;
 
+	logs)
+		logs ${@:2}
+		;;
+
 	*)
-		echo $"Usage: lonosctl {configure|build|run}"
+		echo $"Usage: lonosctl {configure|build|run|logs}"
 		exit 1
 esac
 

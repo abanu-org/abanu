@@ -172,8 +172,8 @@ namespace lonos.kernel.core
         /// </summary>
         public static void ClockTimer(IDTStack* stack)
         {
-            Screen.Goto(15, 5);
-            Screen.Write(IDTManager.RaisedCount);
+            //Screen.Goto(15, 5);
+            //Screen.Write(IDTManager.RaisedCount);
         }
 
     }

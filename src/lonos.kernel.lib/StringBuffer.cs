@@ -15,20 +15,15 @@ namespace lonos.kernel.core
     /// Represents a string as struct, so it can used before memory and runtime initialization.
     /// Use only where needed. Do not incease the struct size more as needed. A good limit would be the maximum horizontal text resolution.
     /// </summary>
-    [StructLayout(LayoutKind.Explicit, Size = 132 * 2 + 4)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct StringBuffer
     {
-        [FieldOffset(0)]
         private int length;
 
-        //[FieldOffset(4)]
-        //private byte isSet; //Compiler crash!
-
         public const int MaxLength = 132;
-        public const int EntrySize = 132 * 2 + 4;
+        public const int EntrySize = MaxLength * 2 + 4;
 
-        //[FieldOffset(4)]
-        //unsafe private char* chars;
+        unsafe private fixed char chars[MaxLength];
 
         unsafe public static StringBuffer CreateFromNullTerminatedString(uint start)
         {
@@ -45,22 +40,6 @@ namespace lonos.kernel.core
             return buf;
         }
 
-        private unsafe char* firstChar()
-        {
-            //Does not work!
-            //return (char*)((uint)(Mosa.Internal.Intrinsic.GetValueTypeAddress(this)) + 4);
-
-            //Compiler crash
-            //fixed (void* ptr = &this)
-            //return (char*)(((uint)ptr) + 4);
-
-            //Workarround
-            uint ui;
-            fixed (void* ptr = &this)
-                ui = (uint)ptr;
-            return (char*)(ui + 4);
-        }
-
         /// <summary>
         /// Acces a char at a specific index
         /// </summary>
@@ -70,15 +49,18 @@ namespace lonos.kernel.core
         {
             get
             {
-                if (index >= Length) //TODO: Error
+                if (index < 0 || index >= Length) //TODO: Error
                     return '\x0';
-                return firstChar()[index];
+
+                fixed (char* ptr = chars)
+                    return ptr[index];
             }
             set
             {
-                if (index >= Length) //TODO: Error
+                if (index < 0 || index >= Length) //TODO: Error
                     return;
-                firstChar()[index] = value;
+                fixed (char* ptr = chars)
+                    ptr[index] = value;
             }
         }
 
@@ -88,13 +70,15 @@ namespace lonos.kernel.core
             {
                 if (index >= Length) //TODO: Error
                     return '\x0';
-                return firstChar()[index];
+                fixed (char* ptr = chars)
+                    return ptr[index];
             }
             set
             {
                 if (index >= Length) //TODO: Error
                     return;
-                firstChar()[index] = value;
+                fixed (char* ptr = chars)
+                    ptr[index] = value;
             }
         }
 
@@ -176,6 +160,17 @@ namespace lonos.kernel.core
                 Append(value[i]);
         }
 
+        /// <summary>
+        /// Appends a string
+        /// </summary>
+        /// <param name="value"></param>
+        public unsafe void Append(NullTerminatedString* value)
+        {
+            var len = value->GetLength();
+            for (var i = 0; i < len; i++)
+                Append(value->Bytes[i]);
+        }
+
         public void Append(string value, int start)
         {
             if (value == null) return;
@@ -240,7 +235,12 @@ namespace lonos.kernel.core
         /// <param name="format"></param>
         public void Append(uint value, string format)
         {
-            Append(value, false, true);
+            Append(value, false, format.Length == 1 && format[0] == 'X');
+        }
+
+        public void Append(uint value, StringBuffer format)
+        {
+            Append(value, false, format.Length == 1 && format[0] == 'X');
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace lonos.kernel.core
             Append(u, true, true);
         }
 
-        unsafe internal void Append(uint value, bool signed, bool hex)
+        unsafe private void Append(uint value, bool signed, bool hex)
         {
             int offset = 0;
 
@@ -281,7 +281,11 @@ namespace lonos.kernel.core
             }
             while (temp != 0);
 
-            var first = (firstChar() + this.length);
+            char* first;
+            fixed (char* ptr = chars)
+            {
+                first = (ptr + this.length);
+            }
 
             len = count;
             Length += len;
@@ -306,7 +310,88 @@ namespace lonos.kernel.core
             }
         }
 
-        public void Write(uint val, byte digits, int size)
+        public unsafe void Append(string format, uint arg0)
+        {
+            Append(format, arg0, 0, 0);
+        }
+
+        public unsafe void Append(string format, uint arg0, uint arg1)
+        {
+            Append(format, arg0, arg1, 0);
+        }
+
+        public unsafe void Append(string format, uint arg0, uint arg1, uint arg2)
+        {
+            var indexBuffer = new StringBuffer();
+            indexBuffer.length = 0;
+            var argsBuffer = new StringBuffer();
+            argsBuffer.length = 0;
+
+            var inParam = false;
+            var inArg = false;
+            for (var i = 0; i < format.Length; i++)
+            {
+
+                if (format[i] == '{')
+                {
+                    inParam = true;
+                    inArg = false;
+                    continue;
+                }
+
+                if (format[i] == '}')
+                {
+                    inParam = false;
+                    inArg = false;
+
+                    switch (indexBuffer[0])
+                    {
+                        case '0':
+                            Append(arg0, argsBuffer);
+                            break;
+                        case '1':
+                            Append(arg1, argsBuffer);
+                            break;
+                        case '2':
+                            Append(arg2, argsBuffer);
+                            break;
+                    }
+
+                    inParam = false;
+                    inArg = false;
+
+                    continue;
+                }
+
+                if (inParam)
+                {
+                    if (format[i] == ':')
+                    {
+                        inArg = true;
+                        continue;
+                    }
+
+                    if (inArg)
+                        argsBuffer.Append(format[i]);
+                    else
+                        indexBuffer.Append(format[i]);
+                    continue;
+                }
+                else
+                {
+                    Append(format[i]);
+                    continue;
+                }
+
+            }
+        }
+
+        public void Append(uint val, byte digits)
+        {
+            Append(val, digits, -1);
+        }
+
+        public void Append(uint val, byte digits, int size)
         {
             uint count = 0;
             uint temp = val;
@@ -322,7 +407,7 @@ namespace lonos.kernel.core
 
 
             uint charIdx = 0;
-            var origPos = (uint)Length - 1;
+            var origPos = (uint)Length;
             Length += (int)count;
             for (uint i = 0; i < count; i++)
             {

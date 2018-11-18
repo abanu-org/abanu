@@ -82,6 +82,7 @@ namespace lonos.kernel.core
         /// </summary>
         public static void Setup()
         {
+            KernelMessage.WriteLine("Setup GDT");
             table = (DescriptorTable*)gdtTableAddress;
             table->Clear();
             table->AdressOfEntries = gdtTableAddress + DescriptorTable.StructSize;

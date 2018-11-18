@@ -12,24 +12,20 @@ namespace lonos.kernel.core
 
         public unsafe static void Main()
         {
+            Screen.Setup();
             KernelMessage.Setup();
-            KernelMessage.WriteLine("Booting...");
+            KernelMessage.WriteLine("Booting Lonos Kernel...");
 
             Multiboot.Setup();
 
             KernelElf.Setup();
             NativeCalls.Setup();
 
-            NativeCalls.proc2();
-            NativeCalls.proc1();
-            NativeCalls.BochsDebug();
-
             GDT.Setup();
 
             Panic.Setup();
             PIC.Setup();
             IDTManager.Setup();
-
 
             Debug.Break();
         }

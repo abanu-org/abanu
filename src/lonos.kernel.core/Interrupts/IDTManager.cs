@@ -30,11 +30,11 @@ namespace lonos.kernel.core
 
         #endregion Data Members
 
-        internal static InterruptHandler[] handlers;
+        internal static InterruptInfo[] handlers;
 
         public static void Setup()
         {
-
+            KernelMessage.WriteLine("Setup IDT");
 
             // Setup IDT table
             Mosa.Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable), 6);
@@ -43,10 +43,22 @@ namespace lonos.kernel.core
 
             SetTableEntries();
 
-            handlers = new InterruptHandler[256];
+            handlers = new InterruptInfo[256];
             for (var i = 0; i <= 255; i++)
             {
-                handlers[i] = UndefinedHandler;
+                var info = new InterruptInfo
+                {
+                    Interrupt = i,
+                    CountStatistcs = true,
+                    Trace = true,
+                    Handler = UndefinedHandler
+                };
+                if (i == (int)KnownInterrupt.ClockTimer)
+                {
+                    info.Trace = false;
+                    info.CountStatistcs = false;
+                }
+                handlers[i] = info;
             }
 
             SetInterruptHandler(KnownInterrupt.DivideError, InterruptsHandlers.DivideError);
@@ -78,7 +90,7 @@ namespace lonos.kernel.core
         {
             if (interruptHandler == null)
                 interruptHandler = UndefinedHandler;
-            handlers[(uint)interrupt] = interruptHandler;
+            handlers[(uint)interrupt].Handler = interruptHandler;
         }
 
         #region SetTable Entries
@@ -370,6 +382,7 @@ namespace lonos.kernel.core
         #endregion
 
         internal static uint RaisedCount;
+        internal static uint RaisedCountCustom;
 
     }
 

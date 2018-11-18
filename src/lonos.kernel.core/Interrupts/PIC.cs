@@ -31,6 +31,7 @@ namespace lonos.kernel.core
 
         public static void Setup()
         {
+            KernelMessage.WriteLine("Setup PIC");
             byte masterMask = Native.In8(PIC1_Data);
             byte slaveMask = Native.In8(PIC2_Data);
 

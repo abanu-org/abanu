@@ -2,6 +2,7 @@
 
 using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
+using lonos.kernel.core;
 
 namespace Mosa.Kernel.x86
 {
@@ -190,6 +191,7 @@ namespace Mosa.Kernel.x86
         /// </summary>
         public static void Setup()
         {
+            KernelMessage.WriteLine("Setup Multiboot");
             uint magic = Native.GetMultibootEAX();
             uint address = Native.GetMultibootEBX();
 
