@@ -82,6 +82,22 @@ namespace lonos.kernel.core
             }
         }
 
+        unsafe public char this[uint index]
+        {
+            get
+            {
+                if (index >= Length) //TODO: Error
+                    return '\x0';
+                return firstChar()[index];
+            }
+            set
+            {
+                if (index >= Length) //TODO: Error
+                    return;
+                firstChar()[index] = value;
+            }
+        }
+
         public void Clear()
         {
             length = 0;
@@ -287,6 +303,36 @@ namespace lonos.kernel.core
                     *(first + offset + count - 1 - i) = (char)('A' + remainder - 10);
 
                 uvalue /= divisor;
+            }
+        }
+
+        public void Write(uint val, byte digits, int size)
+        {
+            uint count = 0;
+            uint temp = val;
+
+            do
+            {
+                temp /= digits;
+                count++;
+            } while (temp != 0);
+
+            if (size != -1)
+                count = (uint)size;
+
+
+            uint charIdx = 0;
+            var origPos = (uint)Length - 1;
+            Length += (int)count;
+            for (uint i = 0; i < count; i++)
+            {
+                uint digit = val % digits;
+                charIdx = count - 1 - i;
+                if (digit < 10)
+                    this[origPos + charIdx] = (char)('0' + digit);
+                else
+                    this[origPos + charIdx] = (char)('A' + digit - 10);
+                val /= digits;
             }
         }
 

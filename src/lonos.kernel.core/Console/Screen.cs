@@ -11,6 +11,9 @@ namespace lonos.kernel.core
     /// </summary>
     public static class Screen
     {
+        private static StringBuffer tmpLine;
+        private static uint ScreenAddress = 0x0B8000;
+
         public static uint column = 0;
         public static uint row = 0;
         private static byte color = 23;
@@ -70,8 +73,7 @@ namespace lonos.kernel.core
 
             if (Column >= Columns)
             {
-                Column = 0;
-                Row++;
+                NextLine();
             }
         }
 
@@ -91,7 +93,9 @@ namespace lonos.kernel.core
         /// <param name="chr">The character.</param>
         public static void RawWrite(uint row, uint column, char chr, byte color)
         {
-            IntPtr address = new IntPtr(0x0B8000 + ((row * Columns + column) * 2));
+            Assert.True(row < Rows);
+            Assert.True(column < Columns);
+            IntPtr address = new IntPtr(ScreenAddress + ((row * Columns + column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
@@ -103,7 +107,7 @@ namespace lonos.kernel.core
         /// <param name="chr">The character.</param>
         public static void Write(char chr)
         {
-            IntPtr address = new IntPtr(0x0B8000 + ((Row * Columns + Column) * 2));
+            IntPtr address = new IntPtr(ScreenAddress + ((Row * Columns + Column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
@@ -125,20 +129,20 @@ namespace lonos.kernel.core
             }
         }
 
-		/// <summary>
+        /// <summary>
         /// Writes the string to the screen.
         /// </summary>
         /// <param name="value">The string value to write to the screen.</param>
-        //public static void Write(StringBuffer value)
-        //{
-        //    for (int index = 0; index < value.Length; index++)
-        //    {
-        //        char chr = value[index];
-        //        Write(chr);
-        //    }
-        //}
+        public static void Write(StringBuffer value)
+        {
+            for (int index = 0; index < value.Length; index++)
+            {
+                char chr = value[index];
+                Write(chr);
+            }
+        }
 
-		//public static void Write(uint val, string format)
+        //public static void Write(uint val, string format)
         //{
         //    Write(new StringBuffer(val, format));
         //}
@@ -159,7 +163,13 @@ namespace lonos.kernel.core
         public static void NextLine()
         {
             Column = 0;
-            Row++;
+            if (row >= Rows - 1)
+            {
+                Memory.Copy(ScreenAddress + Columns * 2, ScreenAddress, (Rows - 1) * Columns * 2);
+            }
+            else {
+                Row++;
+            }
             UpdateCursor();
         }
 
@@ -243,7 +253,21 @@ namespace lonos.kernel.core
         /// <param name="val">The val.</param>
         /// <param name="digits">The digits.</param>
         /// <param name="size">The size.</param>
+        public static void Write(uint val, byte digits)
+        {
+            Write(val, digits, -1);
+        }
+
         public static void Write(uint val, byte digits, int size)
+        {
+            tmpLine.Clear();
+            //tmpLine.Write(val, digits, size);
+            //tmpLine.Append((int)val, "");
+            tmpLine.Append("<LLLLLL>");
+            Write(tmpLine);
+        }
+
+        public static void Write_(uint val, byte digits, int size)
         {
             uint count = 0;
             uint temp = val;

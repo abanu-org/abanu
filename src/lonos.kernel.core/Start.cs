@@ -10,12 +10,10 @@ namespace lonos.kernel.core
     internal static class Start
     {
 
-        public static uint testValue = 0xAABB;
-
         public unsafe static void Main()
         {
-            Debug.Setup();
-            Debug.WriteLine("Booting...");
+            KernelMessage.Setup();
+            KernelMessage.WriteLine("Booting...");
 
             Multiboot.Setup();
 
@@ -26,34 +24,12 @@ namespace lonos.kernel.core
             NativeCalls.proc1();
             NativeCalls.BochsDebug();
 
-            RawWrite(0, 6, '6', 1);
             GDT.Setup();
 
-            RawWrite(0, 1, '1', 1);
             Panic.Setup();
-            RawWrite(0, 3, '3', 1);
             PIC.Setup();
-            RawWrite(0, 4, '4', 1);
             IDTManager.Setup();
-            RawWrite(0, 5, '5', 1);
 
-            Serial.SetupPort(Serial.COM1);
-            Serial.Write(Serial.COM1, 70);
-            Serial.Write(Serial.COM1, 71);
-            Serial.Write(Serial.COM1, 72);
-            Serial.Write(Serial.COM1, 13);
-            Serial.Write(Serial.COM1, 10);
-
-
-            //Panic.DumpMemory(Address.GDTTable);
-
-            //Memory.Init();
-
-
-            RawWrite(0, 10, 'A', 1);
-            USize size = 5;
-            RawWrite(0, size, 'B', 1);
-            RawWrite(0, 11, 'C', 1);
 
             Debug.Break();
         }

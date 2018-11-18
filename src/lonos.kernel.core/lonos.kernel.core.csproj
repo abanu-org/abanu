@@ -54,6 +54,8 @@
     <Compile Include="Interrupts\Interrupt.cs" />
     <Compile Include="Interrupts\IDTManager.cs" />
     <Compile Include="Serial.cs" />
+    <Compile Include="Debug\KernelMessage.cs" />
+    <Compile Include="Terminal\Terminal.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
@@ -81,6 +83,7 @@
     <Folder Include="Boot\" />
     <Folder Include="Debug\" />
     <Folder Include="External\" />
+    <Folder Include="Terminal\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
