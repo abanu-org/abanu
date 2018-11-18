@@ -77,7 +77,7 @@ function run {
 			;;
 
 		qemu)
-			qemu-system-i386 -L /usr/share/seabios -cpu qemu32,+sse4.1  -hda ${LONOS_OSDIR}/lonos.kernel.core.img -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+			qemu-system-i386 -L /usr/share/seabios -cpu qemu32,+sse4.1  -hda ${LONOS_OSDIR}/lonos.kernel.core.img -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
 			;;
 
 		*)
