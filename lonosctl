@@ -59,7 +59,7 @@ function build {
 		native)
 			src/lonos.native/build
 			;;
-			
+
 		disk)
 			(cd bin && mono ./lonos.build.exe)
 			;;
@@ -76,8 +76,12 @@ function run {
 			bochs -f "${LONOS_PROJDIR}/conf/bochs.bxrc" -rc "${LONOS_PROJDIR}/conf/bochs.rc"
 			;;
 
+		qemu)
+			qemu-system-i386 -L /usr/share/seabios -cpu qemu32,+sse4.1  -hda ${LONOS_OSDIR}/lonos.kernel.core.img -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+			;;
+
 		*)
-			echo $"Usage: lonosctl run {bochs}"
+			echo $"Usage: lonosctl run {qemu|bochs}"
 			exit 1
 	esac
 }
@@ -102,7 +106,7 @@ case $1 in
 	configure)
 		configure ${@:2}
 		;;
-		
+
 	build)
 		build ${@:2}
 		;;
