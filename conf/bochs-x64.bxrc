@@ -1,6 +1,6 @@
 megs: 128
 ata0: enabled=1,ioaddr1=0x1f0,ioaddr2=0x3f0,irq=14
-cpuid: mmx=1,sep=1,sse=sse4_2,apic=xapic,aes=1,movbe=1,xsave=1
+cpu: model=p4_prescott_celeron_336
 boot: cdrom,disk
 log: "$LONOS_LOGDIR/emulator.log"
 romimage: file="/usr/share/bochs/BIOS-bochs-latest"

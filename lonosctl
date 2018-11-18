@@ -73,17 +73,65 @@ function build {
 function run {
 	case $1 in
 		bochs)
-			bochs -f "${LONOS_PROJDIR}/conf/bochs.bxrc" -rc "${LONOS_PROJDIR}/conf/bochs.rc"
+			_bochs ${@:2}
 			;;
 
 		qemu)
-			qemu-system-i386 -L /usr/share/seabios -cpu qemu32,+sse4.1  -hda ${LONOS_OSDIR}/lonos.kernel.core.img -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+			_qemu ${@:2}
 			;;
 
 		*)
 			echo $"Usage: lonosctl run {qemu|bochs}"
 			exit 1
 	esac
+}
+
+function _bochs {
+	case $1 in
+		x86)
+			arch=x86
+			;;
+
+		x64)
+			arch=x64
+			;;
+
+		*)
+			echo $"Usage: lonosctl run qemu {x86|x64|host}"
+			exit 1
+	esac
+
+	bochsrc="${LONOS_PROJDIR}/conf/bochs-${arch}.bxrc"
+	bochs -f ${bochsrc} -rc "${LONOS_PROJDIR}/conf/bochs.rc"
+}
+
+function _qemu {
+	case $1 in
+		x86)
+			arch=x86
+			qemubin=qemu-system-i386
+			cpu=qemu32,+sse4.1
+			;;
+
+		x64)
+			arch=x64
+			qemubin=qemu-system-x86_64
+			cpu=qemu64
+			;;
+
+		host)
+			arch=x64
+			qemubin=qemu-system-x86_64
+			cpu=host
+			kvmargs=-enable-kvm
+			;;
+
+		*)
+			echo $"Usage: lonosctl run qemu {x86|x64|host}"
+			exit 1
+	esac
+
+	${qemubin} -L /usr/share/seabios ${kvmargs} -cpu ${cpu}  -hda ${LONOS_OSDIR}/lonos.kernel.core.img -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
 }
 
 function logs {
