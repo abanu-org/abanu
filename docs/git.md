@@ -1,4 +1,4 @@
-This document contains some notes for Arakis.
+This document contains some notes/snipptes for Arakis.
 
 ```
 git remote -v
