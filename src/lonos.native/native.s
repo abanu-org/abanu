@@ -13,6 +13,5 @@ ret
 ;jmp $
 
 bochs_debug:
-xchg ebx, ebx
-;xchg bx, bx
+xchg bx, bx
 ret
