@@ -19,7 +19,8 @@ Prerequisites:
 ```
 git clone --recursive https://github.com/Arakis/lonos.git
 cd lonos 
-./lonosctl configure patch apply # Some patches are requied, because Mono does not support .NET Framework v4.7.2 yet
+./lonosctl configure patch apply # Some patches are requied, because Mono does not support
+                                 # .NET Framework v4.7.2 yet
 ./lonosctl configure mosa        # Build the Mosa-Compiler
 ./lonosctl build all             # Builds the lonos kernel and creates a disk image
 ```
