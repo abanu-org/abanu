@@ -18,7 +18,7 @@ function configure {
 			;;
 
 		*)
-			echo $"Usage: lonosctl configure {patch|mosa}"
+			echo $"Usage: lonosctl configure {all|patch|mosa}"
 			exit 1
 	esac
 }
@@ -65,7 +65,7 @@ function build {
 			;;
 
 		*)
-			echo $"Usage: lonosctl build {builder|assembly|native|disk}"
+			echo $"Usage: lonosctl build {all|builder|assembly|native|disk}"
 			exit 1
 	esac
 }
@@ -131,7 +131,7 @@ function _qemu {
 			exit 1
 	esac
 
-	${qemubin} -L /usr/share/seabios ${kvmargs} -cpu ${cpu}  -hda ${LONOS_OSDIR}/lonos.kernel.core.img -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+	${qemubin} -L /usr/share/seabios ${kvmargs} -cpu ${cpu} -hda ${LONOS_OSDIR}/lonos.kernel.core.img -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
 }
 
 function logs {
