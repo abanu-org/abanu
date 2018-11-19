@@ -1,3 +1,5 @@
+This documents contains some notes for Arakis.
+
 ```
 git remote -v
 shoul be:
