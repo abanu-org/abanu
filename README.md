@@ -1,3 +1,14 @@
+[![License][github-license]][github-license-link]  [![Issues][github-issues]][github-issues-link]  [![Stars][github-stars]][github-stars-link]  [![Forks][github-forks]][github-forks-link]
+
+[github-forks]: https://img.shields.io/github/forks/arakis/lonos.svg
+[github-forks-link]: https://github.com/arakis/lonos/network
+[github-stars]: https://img.shields.io/github/stars/arakis/lonos.svg
+[github-stars-link]: https://github.com/arakis/lonos/stargazers
+[github-issues]: https://img.shields.io/github/issues/arakis/lonos.svg
+[github-issues-link]: https://github.com/arakis/lonos/issues
+[github-license]: https://img.shields.io/badge/license-GPL-blue.svg
+[github-license-link]: https://raw.githubusercontent.com/arakis/lonos/master/LICENSE.txt
+
 ## Build instructions
 
 Prerequisites:
