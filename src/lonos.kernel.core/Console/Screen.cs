@@ -12,10 +12,21 @@ namespace lonos.kernel.core
     public static class Screen
     {
 
-        public static void Setup()
+        public static void EarlyInitialization()
         {
             Rows = 25;
             Columns = 80;
+        }
+
+        public static void ApplyMode(){
+            ApplyMode(Mosa.Kernel.x86.Multiboot.VBEMode);
+        }
+
+        public static void ApplyMode(uint mode){
+            KernelMessage.WriteLine("Screen VBE Mode: {0:d}", mode);
+            //switch(mode){
+            //    case 
+            //}
         }
 
         private static StringBuffer tmpLine;
