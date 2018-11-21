@@ -1,13 +1,13 @@
 [![License][github-license]][github-license-link]  [![Issues][github-issues]][github-issues-link]  [![Stars][github-stars]][github-stars-link]  [![Forks][github-forks]][github-forks-link]
 
-[github-forks]: https://img.shields.io/github/forks/arakis/lonos.svg
-[github-forks-link]: https://github.com/arakis/lonos/network
-[github-stars]: https://img.shields.io/github/stars/arakis/lonos.svg
-[github-stars-link]: https://github.com/arakis/lonos/stargazers
-[github-issues]: https://img.shields.io/github/issues/arakis/lonos.svg
-[github-issues-link]: https://github.com/arakis/lonos/issues
+[github-forks]: https://img.shields.io/github/forks/lonos-project/lonos.svg
+[github-forks-link]: https://github.com/lonos-project/lonos/network
+[github-stars]: https://img.shields.io/github/stars/lonos-project/lonos.svg
+[github-stars-link]: https://github.com/lonos-project/lonos/stargazers
+[github-issues]: https://img.shields.io/github/issues/lonos-project/lonos.svg
+[github-issues-link]: https://github.com/lonos-project/lonos/issues
 [github-license]: https://img.shields.io/badge/license-GPL-blue.svg
-[github-license-link]: https://raw.githubusercontent.com/arakis/lonos/master/LICENSE.txt
+[github-license-link]: https://raw.githubusercontent.com/lonos-project/lonos/master/LICENSE.txt
 
 ## Build instructions
 
@@ -17,7 +17,7 @@ Prerequisites:
 - Optional: qemu or bochs for emulation.
 
 ```
-git clone --recursive https://github.com/Arakis/lonos.git
+git clone --recursive https://github.com/lonos-project/lonos.git
 cd lonos 
 ./lonosctl configure patch apply # Some patches are requied, because Mono does not support
                                  # .NET Framework v4.7.2 yet
