@@ -9,6 +9,10 @@ function configure {
 			configure patch apply
 			;;
 
+		external)
+			git clone --recursive git@github.com:lonos-project/lonos-tools.git tools
+			;;
+
 		patch)
 			patch ${@:2}
 			;;
@@ -62,6 +66,7 @@ function build {
 
 		disk)
 			(cd bin && mono ./lonos.build.exe)
+			create_efi_disk
 			;;
 
 		*)
@@ -106,6 +111,8 @@ function _bochs {
 }
 
 function _qemu {
+	disk=${LONOS_OSDIR}/lonos.kernel.core.img
+	
 	case $1 in
 		x86)
 			arch=x86
@@ -119,6 +126,8 @@ function _qemu {
 			qemubin=qemu-system-i386
 			cpu=qemu32,+sse4.1
 			bios="-bios ${LONOS_PROJDIR}/tools/efi/OVMF-pure-efi.fd"
+
+			disk=${LONOS_OSDIR}/lonos.kernel.core.x86-efi.disk.img
 			;;
 
 		x64)
@@ -141,7 +150,7 @@ function _qemu {
 			exit 1
 	esac
 
-	${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda ${LONOS_OSDIR}/lonos.kernel.core.img -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+	${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
 }
 
 #function create_chroot {
@@ -154,7 +163,7 @@ function _qemu {
 #}
 
 function create_efi_disk {
-	disk=fat2.img
+	disk=${LONOS_OSDIR}/lonos.kernel.core.x86-efi.disk.img
 	size=20440 #kb
 	let "block=((size * 1024) / (512 * 16 * 16)) - 1"
 	echo $block
