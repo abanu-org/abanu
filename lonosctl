@@ -111,12 +111,21 @@ function _qemu {
 			arch=x86
 			qemubin=qemu-system-i386
 			cpu=qemu32,+sse4.1
+			bios="-L /usr/share/seabios"
+			;;
+
+		x86-efi)
+			arch=x86
+			qemubin=qemu-system-i386
+			cpu=qemu32,+sse4.1
+			bios="-bios ${LONOS_PROJDIR}/tools/efi/OVMF-pure-efi.fd"
 			;;
 
 		x64)
 			arch=x64
 			qemubin=qemu-system-x86_64
 			cpu=qemu64
+			bios="-L /usr/share/seabios"
 			;;
 
 		host)
@@ -124,6 +133,7 @@ function _qemu {
 			qemubin=qemu-system-x86_64
 			cpu=host
 			kvmargs=-enable-kvm
+			bios="-L /usr/share/seabios"
 			;;
 
 		*)
@@ -131,7 +141,39 @@ function _qemu {
 			exit 1
 	esac
 
-	${qemubin} -L /usr/share/seabios ${kvmargs} -cpu ${cpu} -hda ${LONOS_OSDIR}/lonos.kernel.core.img -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+	${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda ${LONOS_OSDIR}/lonos.kernel.core.img -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+}
+
+#function create_chroot {
+	#wget ${alpine_mirror}/latest-stable/main/x86_64/apk-tools-static-${alpine_version}.apk
+	#tar -xzf apk-tools-static-*.apk	
+	#wget https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/v0.9.0/alpine-chroot-install \
+    #&& echo 'e5dfbbdc0c4b3363b99334510976c86bfa6cb251  alpine-chroot-install' | sha1sum -c \
+    #|| exit 1
+	#chmod +x alpine-chroot-install
+#}
+
+function create_efi_disk {
+	disk=fat2.img
+	size=20440 #kb
+	let "block=((size * 1024) / (512 * 16 * 16)) - 1"
+	echo $block
+	dd if=/dev/zero of=$disk bs=1k count=$size
+	mformat -i $disk -h 16 -t 16 -s $block ::
+
+	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi/efi ::/
+	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi/boot ::/
+	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi/NvVars ::/
+	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi/.disk ::/
+	mcopy -i $disk -s $LONOS_OSDIR/lonos.kernel.core.bin ::/lonos.bin
+
+#mkdir -p $LONOS_ISODIR/EFI/BOOT
+
+#cp /usr/lib/SYSLINUX.EFI/efi32/syslinux.efi $LONOS_ISODIR/EFI/BOOT/SYSLINUX.EFI 
+#cp $LONOS_OSDIR/lonos.kernel.core.bin $LONOS_ISODIR
+ 
+#mkisofs-o bootcd.iso $LONOS_ISODIR
+
 }
 
 function logs {
@@ -165,6 +207,11 @@ case $1 in
 
 	logs)
 		logs ${@:2}
+		;;
+
+	f1)
+		create_efi_disk ${@:2}
+		#create_chroot
 		;;
 
 	*)
