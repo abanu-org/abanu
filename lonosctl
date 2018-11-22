@@ -125,7 +125,7 @@ function _qemu {
 			arch=x86
 			qemubin=qemu-system-i386
 			cpu=qemu32,+sse4.1
-			bios="-bios ${LONOS_PROJDIR}/tools/efi/OVMF-pure-efi.fd"
+			bios="-bios ${LONOS_PROJDIR}/tools/ovmf-ia32/OVMF-pure-efi.fd"
 
 			disk=${LONOS_OSDIR}/lonos.kernel.core.x86-efi.disk.img
 			;;
@@ -146,7 +146,7 @@ function _qemu {
 			;;
 
 		*)
-			echo $"Usage: lonosctl run qemu {x86|x64|host}"
+			echo $"Usage: lonosctl run qemu {x86|x86-efi|x64|host}"
 			exit 1
 	esac
 
