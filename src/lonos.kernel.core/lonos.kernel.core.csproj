@@ -91,6 +91,7 @@
     <Folder Include="Debug\" />
     <Folder Include="External\" />
     <Folder Include="Terminal\" />
+    <Folder Include="Devices\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

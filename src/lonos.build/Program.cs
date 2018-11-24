@@ -42,8 +42,8 @@ namespace lonos.build
 
             file = GetEnv("LONOS_EXE");
 
-            var engine = new LonosBuilder(file);
-            engine.LaunchVirtualMachine();
+            var builder = new LonosBuilder(file);
+            builder.Build();
             System.Console.WriteLine("ready");
             //System.Console.ReadLine();
         }

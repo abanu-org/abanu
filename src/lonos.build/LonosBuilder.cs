@@ -92,7 +92,7 @@ namespace lonos.build
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
 
-            //Options.VBEVideo = true;
+            Options.VBEVideo = true;
 
             Options.CreateExtraSections = () =>
             {
@@ -118,32 +118,11 @@ namespace lonos.build
             AppLocations.FindApplications();
 
             InputAssembly = inputAssembly;
-
-            Initialize();
         }
 
-        private void Initialize()
+        public bool Build()
         {
-            if (Platform == null)
-            {
-                Platform = "x86";
-            }
-
-            if (TestAssemblyPath == null)
-            {
-#if __MonoCS__
-				TestAssemblyPath = AppDomain.CurrentDomain.BaseDirectory;
-#else
-                TestAssemblyPath = AppContext.BaseDirectory;
-#endif
-            }
-
-            Compile();
-
-        }
-
-        public bool Compile()
-        {
+            TestAssemblyPath = AppContext.BaseDirectory;
             Options.Paths.Add(TestAssemblyPath);
             Options.SourceFile = Path.Combine(TestAssemblyPath, InputAssembly);
 
@@ -159,47 +138,6 @@ namespace lonos.build
 
             return !builder.HasCompileError;
         }
-
-        public bool LaunchVirtualMachine()
-        {
-            if (Starter == null)
-            {
-                Options.ImageFile = ImageFile;
-                Starter = new Starter(Options, AppLocations, this);
-            }
-
-            Options.SerialConnectionPort++;
-
-            //Process = Starter.Launch();
-            //return Process != null || !Process.HasExited;
-            return true;
-        }
-
-        public bool StartEngine()
-        {
-            Console.Write("Starting Engine...");
-
-            if (StartEngineEx())
-            {
-                Console.WriteLine();
-                return true;
-            }
-            else
-            {
-            }
-
-            Thread.Sleep(250);
-            return true;
-        }
-
-        private bool StartEngineEx()
-        {
-            if (!LaunchVirtualMachine())
-                return false;
-
-            return true;
-        }
-
 
         void IBuilderEvent.NewStatus(string status)
         {

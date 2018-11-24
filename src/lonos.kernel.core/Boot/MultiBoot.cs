@@ -169,6 +169,11 @@ namespace Mosa.Kernel.x86
             get { return ((Flags & (1 << 11)) == (1 << 11)); }
         }
 
+        public static bool FBPresent
+        {
+            get { return ((Flags & (1 << 12)) == (1 << 12)); }
+        }
+
         /// <summary>
         /// Gets the VBE mode info structure.
         /// </summary>
@@ -225,6 +230,24 @@ namespace Mosa.Kernel.x86
             KernelMessage.Path("multiboot", "Flags={0:X}", multiBootInfo->Flags);
             KernelMessage.Write("MB Strukture: ");
             KernelMemory.DumpToConsoleLine(address, 124);
+
+            if (VBEPresent)
+            {
+                KernelMessage.Path("multiboot", "VBE preset");
+            }
+            else
+            {
+                KernelMessage.Path("multiboot", "VBE not preset");
+            }
+
+            if (FBPresent)
+            {
+                KernelMessage.Path("multiboot", "Framebuffer preset");
+            }
+            else
+            {
+                KernelMessage.Path("multiboot", "Framebuffer not preset");
+            }
 
             CountMemoryMap();
             PrintMemoryMap();
