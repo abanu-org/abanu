@@ -37,8 +37,6 @@
     <Compile Include="Elf\ElfHelper.cs" />
     <Compile Include="Elf\KernelElf.cs" />
     <Compile Include="Memory\KernelMemory.cs" />
-    <Compile Include="Console\Screen.cs" />
-    <Compile Include="Console\ScreenColors.cs" />
     <Compile Include="Interrupts\IDTMosa.cs" />
     <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Memory\PageFrameAllocator.cs" />
@@ -53,16 +51,18 @@
     <Compile Include="Interrupts\InterruptHandlers.cs" />
     <Compile Include="Interrupts\Interrupt.cs" />
     <Compile Include="Interrupts\IDTManager.cs" />
-    <Compile Include="Serial.cs" />
     <Compile Include="Debug\KernelMessage.cs" />
-    <Compile Include="Terminal\Terminal.cs" />
     <Compile Include="Interrupts\InterruptInfo.cs" />
-    <Compile Include="ApiHost.cs" />
-    <Compile Include="Console\ScreenDevice.cs" />
-    <Compile Include="Console\SerialDevice.cs" />
-    <Compile Include="Console\KernelMessageDevice.cs" />
-    <Compile Include="Devices.cs" />
-    <Compile Include="Console\NullDevice.cs" />
+    <Compile Include="Devices\Console\Screen.cs" />
+    <Compile Include="Devices\Console\ScreenColors.cs" />
+    <Compile Include="Devices\Console\ScreenDevice.cs" />
+    <Compile Include="Devices\Serial\Serial.cs" />
+    <Compile Include="Devices\Serial\SerialDevice.cs" />
+    <Compile Include="Devices\NullDevice.cs" />
+    <Compile Include="Debug\KernelMessageDevice.cs" />
+    <Compile Include="Devices\Terminal\Terminal.cs" />
+    <Compile Include="Devices\Devices.cs" />
+    <Compile Include="Api\ApiHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
@@ -85,13 +85,15 @@
   <ItemGroup>
     <Folder Include="Memory\" />
     <Folder Include="Elf\" />
-    <Folder Include="Console\" />
     <Folder Include="Interrupts\" />
     <Folder Include="Boot\" />
     <Folder Include="Debug\" />
     <Folder Include="External\" />
-    <Folder Include="Terminal\" />
     <Folder Include="Devices\" />
+    <Folder Include="Devices\Console\" />
+    <Folder Include="Devices\Serial\" />
+    <Folder Include="Devices\Terminal\" />
+    <Folder Include="Api\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
