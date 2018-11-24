@@ -57,6 +57,12 @@
     <Compile Include="Debug\KernelMessage.cs" />
     <Compile Include="Terminal\Terminal.cs" />
     <Compile Include="Interrupts\InterruptInfo.cs" />
+    <Compile Include="ApiHost.cs" />
+    <Compile Include="Console\ScreenDevice.cs" />
+    <Compile Include="Console\SerialDevice.cs" />
+    <Compile Include="Console\KernelMessageDevice.cs" />
+    <Compile Include="Devices.cs" />
+    <Compile Include="Console\NullDevice.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

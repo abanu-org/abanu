@@ -12,14 +12,15 @@ namespace lonos.kernel.core
 
         public unsafe static void Main()
         {
-            Screen.EarlyInitialization();
+            ApiContext.Current = new ApiHost();
+            Devices.InitStage1();
+            Devices.InitStage2();
+
             KernelMessage.Setup();
             KernelMessage.WriteLine("<CONSOLE:BEGIN>");
             KernelMessage.WriteLine("Booting Lonos Kernel...");
 
             Multiboot.Setup();
-
-            Screen.ApplyMode();
 
             KernelElf.Setup();
             NativeCalls.Setup();

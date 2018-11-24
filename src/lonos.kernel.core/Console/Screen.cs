@@ -16,6 +16,8 @@ namespace lonos.kernel.core
         {
             Rows = 25;
             Columns = 80;
+            Clear();
+            Goto(0, 0);
         }
 
         public static void ApplyMode()

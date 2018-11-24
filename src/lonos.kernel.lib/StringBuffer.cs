@@ -1,13 +1,5 @@
-﻿/*
- * (c) 2014 MOSA - The Managed Operating System Alliance
- *
- * Licensed under the terms of the New BSD License.
- *
- * Authors:
- *  Sebastian Loncar (Arakis) <sebastian.loncar@gmail.com>
- */
-
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using System;
 
 namespace lonos.kernel.core
 {
@@ -18,7 +10,7 @@ namespace lonos.kernel.core
     [StructLayout(LayoutKind.Sequential)]
     public struct StringBuffer
     {
-        private int length;
+        private uint length;
 
         public const int MaxLength = 132;
         public const int EntrySize = MaxLength * 2 + 4;
@@ -193,16 +185,16 @@ namespace lonos.kernel.core
                 Append(value[i]);
         }
 
-        public void Append(StringBuffer value, int start)
+        public void Append(StringBuffer value, uint start)
         {
             if (value.length == 0) return;
             Append(value, start, value.Length - start);
         }
 
-        public void Append(StringBuffer value, int start, int length)
+        public void Append(StringBuffer value, uint start, uint length)
         {
             if (value.length == 0) return;
-            for (var i = 0; i < length; i++)
+            for (uint i = 0; i < length; i++)
                 Append(value[i + start]);
         }
 
@@ -312,8 +304,8 @@ namespace lonos.kernel.core
 
             uint uvalue = (uint)value;
             ushort divisor = hex ? (ushort)16 : (ushort)10;
-            int len = 0;
-            int count = 0;
+            uint len = 0;
+            uint count = 0;
             uint temp;
             bool negative = false;
 
@@ -462,7 +454,7 @@ namespace lonos.kernel.core
 
             uint charIdx = 0;
             var origPos = (uint)Length;
-            Length += (int)count;
+            Length += count;
             for (uint i = 0; i < count; i++)
             {
                 uint digit = val % digits;
@@ -483,7 +475,7 @@ namespace lonos.kernel.core
         /// <value>
         /// The length.
         /// </value>
-        public int Length
+        public uint Length
         {
             get { return length; }
             set
@@ -511,9 +503,9 @@ namespace lonos.kernel.core
             return IndexOfImpl(value, 0, this.length);
         }
 
-        private int IndexOfImpl(string value, int startIndex, int count)
+        private int IndexOfImpl(string value, uint startIndex, uint count)
         {
-            for (int i = startIndex; i < count; i++)
+            for (int i = (int)startIndex; i < count; i++)
             {
                 bool found = true;
                 for (int n = 0; n < value.Length; n++)
@@ -525,10 +517,28 @@ namespace lonos.kernel.core
                     }
                 }
                 if (found)
-                    return i;
+                    return (int)i;
             }
 
             return -1;
         }
+
+        public void WriteTo(StringBuffer sb)
+        {
+            sb.Append(this);
+        }
+
+        public unsafe void WriteTo(IFile handle)
+        {
+            fixed (char* ptr = chars)
+            {
+                for (var i = 0; i < length; i++)
+                {
+                    handle.Write(ptr[i]);
+                }
+            }
+        }
+
     }
+
 }

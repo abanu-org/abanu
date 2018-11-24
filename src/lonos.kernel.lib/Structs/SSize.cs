@@ -10,35 +10,35 @@ using System;
 namespace lonos.kernel.core
 {
     [Serializable]
-    public struct USize
+    public struct SSize
     {
         private unsafe void* _value; // Do not rename (binary serialization)
 
-        public static readonly USize Zero;  
+        public static readonly SSize Zero;  
 
         [NonVersionable]
-		public unsafe USize(uint value)
+		public unsafe SSize(uint value)
         {
             _value = (void*)value;
         }
 
         [NonVersionable]
-		public unsafe USize(ulong value)
+		public unsafe SSize(ulong value)
         {
             _value = (void*)((uint)value);
         }
 
         [NonVersionable]
-		public unsafe USize(void* value)
+		public unsafe SSize(void* value)
         {
             _value = value;
         }
 
         public unsafe override bool Equals(Object obj)
         {
-			if (obj is USize)
+			if (obj is SSize)
             {
-				return (_value == ((USize)obj)._value);
+				return (_value == ((SSize)obj)._value);
             }
             return false;
         }
@@ -61,75 +61,75 @@ namespace lonos.kernel.core
         }
 
         [NonVersionable]
-		public static implicit operator USize(uint value)
+		public static implicit operator SSize(uint value)
         {
-			return new USize(value);
+			return new SSize(value);
         }
 
         [NonVersionable]
-		public static implicit operator USize(ulong value)
+		public static implicit operator SSize(ulong value)
         {
-			return new USize(value);
+			return new SSize(value);
         }
 
         [NonVersionable]
-		public static unsafe implicit operator USize(void* value)
+		public static unsafe implicit operator SSize(void* value)
         {
-            return new USize(value);
+            return new SSize(value);
         }
 
         [NonVersionable]
-		public static unsafe implicit operator void* (USize value)
+		public static unsafe implicit operator void* (SSize value)
         {
             return value._value;
         }
 
         [NonVersionable]
-		public static unsafe implicit operator uint(USize value)
+		public static unsafe implicit operator uint(SSize value)
         {
             return (uint)value._value;
         }
 
         [NonVersionable]
-		public static unsafe implicit operator ulong(USize value)
+		public static unsafe implicit operator ulong(SSize value)
         {
             return (ulong)value._value;
         }
 
         [NonVersionable]
-        public static unsafe bool operator ==(USize value1, USize value2)
+        public static unsafe bool operator ==(SSize value1, SSize value2)
         {
             return value1._value == value2._value;
         }
 
         [NonVersionable]
-        public static unsafe bool operator !=(USize value1, USize value2)
+        public static unsafe bool operator !=(SSize value1, SSize value2)
         {
             return value1._value != value2._value;
         }
 
         [NonVersionable]
-        public static USize Add(USize pointer, int offset)
+        public static SSize Add(SSize pointer, int offset)
         {
             return pointer + offset;
         }
 
         [NonVersionable]
-        public static unsafe USize operator +(USize pointer, int offset)
+        public static unsafe SSize operator +(SSize pointer, int offset)
         {
-            return new USize((ulong)((long)pointer._value + offset));
+            return new SSize((ulong)((long)pointer._value + offset));
         }
 
         [NonVersionable]
-        public static USize Subtract(USize pointer, int offset)
+        public static SSize Subtract(SSize pointer, int offset)
         {
             return pointer - offset;
         }
 
         [NonVersionable]
-        public static unsafe USize operator -(USize pointer, int offset)
+        public static unsafe SSize operator -(SSize pointer, int offset)
         {
-            return new USize((ulong)((long)pointer._value - offset));
+            return new SSize((ulong)((long)pointer._value - offset));
         }
 
         public static unsafe int Size
