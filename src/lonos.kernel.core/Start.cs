@@ -14,6 +14,7 @@ namespace lonos.kernel.core
         {
             Screen.EarlyInitialization();
             KernelMessage.Setup();
+            KernelMessage.WriteLine("<CONSOLE:BEGIN>");
             KernelMessage.WriteLine("Booting Lonos Kernel...");
 
             Multiboot.Setup();

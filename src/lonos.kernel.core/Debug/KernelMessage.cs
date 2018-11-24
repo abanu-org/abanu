@@ -26,6 +26,13 @@ namespace lonos.kernel.core
             Screen.Write(value);
         }
 
+        public static void Write(char value)
+        {
+            Screen.Write(value);
+            if(WriteToSerial)
+                Serial.Write(Serial.COM1, (byte)value);
+        }
+
         public static void WriteLine(string value)
         {
             Screen.Write(value);
@@ -37,10 +44,70 @@ namespace lonos.kernel.core
             }
         }
 
+        public static void Path(string prefix, string value )
+        {
+            Write(prefix);
+            Write(": ");
+            WriteLine(value);
+        }
+
+        public static void Path(string prefix, string format, uint arg0)
+        {
+            Write(prefix);
+            Write(": ");
+            WriteLine(format, arg0);
+        }
+
+        public static void Path(string prefix, string format, uint arg0, uint arg1)
+        {
+            Write(prefix);
+            Write(": ");
+            WriteLine(format, arg0, arg1);
+        }
+
+        public static void Path(string prefix, string format, uint arg0, uint arg1, uint arg2)
+        {
+            Write(prefix);
+            Write(": ");
+            WriteLine(format, arg0, arg1, arg2);
+        }
+
         public static void WriteLine(string format, uint arg1)
         {
             var buf = new StringBuffer();
             buf.Append(format, arg1);
+            Screen.Write(buf);
+            Screen.NextLine();
+            if (WriteToSerial)
+            {
+                for (var i = 0; i < buf.Length; i++)
+                {
+                    Serial.Write(Serial.COM1, (byte)buf[i]);
+                }
+                Serial.Write(Serial.COM1, 10);
+            }
+        }
+
+        public static void WriteLine(string format, uint arg0, uint arg1)
+        {
+            var buf = new StringBuffer();
+            buf.Append(format, arg0, arg1);
+            Screen.Write(buf);
+            Screen.NextLine();
+            if (WriteToSerial)
+            {
+                for (var i = 0; i < buf.Length; i++)
+                {
+                    Serial.Write(Serial.COM1, (byte)buf[i]);
+                }
+                Serial.Write(Serial.COM1, 10);
+            }
+        }
+
+        public static void WriteLine(string format, uint arg0, uint arg1, uint arg2)
+        {
+            var buf = new StringBuffer();
+            buf.Append(format, arg0, arg1, arg2);
             Screen.Write(buf);
             Screen.NextLine();
             if (WriteToSerial)
@@ -131,6 +198,18 @@ namespace lonos.kernel.core
                     Serial.Write(Serial.COM1, (byte)buf[i]);
                 }
             }
+        }
+
+        public static void Write(StringBuffer sb){
+            for (var i = 0; i < sb.Length;i++){
+                Write(sb[i]);
+            }
+        }
+
+        public static void WriteLine(StringBuffer sb)
+        {
+            Write(sb);
+            Write('\n');
         }
 
     }

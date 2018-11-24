@@ -92,6 +92,8 @@ namespace lonos.build
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
 
+            Options.VBEVideo = true;
+
             Options.CreateExtraSections = () =>
             {
                 return new List<Section>

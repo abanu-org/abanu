@@ -195,6 +195,8 @@ namespace Mosa.Kernel.x86
             uint magic = Native.GetMultibootEAX();
             uint address = Native.GetMultibootEBX();
 
+            KernelMessage.Path("multiboot", "EAX={0:X}, EBX={1:X}", magic, address);
+
             SetMultibootLocation(address, magic);
         }
 
@@ -220,8 +222,29 @@ namespace Mosa.Kernel.x86
             MultibootAddress = address;
             multiBootInfo = (MultiBootInfo*)address;
 
+            KernelMessage.Path("multiboot", "Flags={0:X}", multiBootInfo->Flags);
+            KernelMessage.Write("MB Strukture: ");
+            KernelMemory.DumpToConsoleLine(address, 124);
+
             CountMemoryMap();
+            PrintMemoryMap();
         }
+
+        private static void PrintMemoryMap()
+        {
+            KernelMessage.Path("multiboot", "MemoryMap");
+            var count = MemoryMapCount;
+            KernelMessage.Path("multiboot", "MemoryMapCount={0:X8}", count);
+            for (uint i = 0; i < count; i++)
+            {
+                KernelMessage.Path("multiboot", "Start={0:X8}, Length={1:X8}, Type={2:D2}",
+                                   GetMemoryMapBase(i),
+                                   GetMemoryMapLength(i),
+                                   GetMemoryMapType(i)
+                                  );
+            }
+        }
+
 
         /// <summary>
         /// Counts the memory map.
@@ -327,36 +350,54 @@ namespace Mosa.Kernel.x86
         public uint MemoryPhysicalLocation => _info->PhysBase;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     unsafe public struct MultiBootInfo
     {
-        public uint Flags;              //required
-        public uint MemLower;           //if bit 0 in flags are set
-        public uint MemUpper;           //if bit 0 in flags are set
-        public uint BootDevice;       //if bit 1 in flags are set
-        public uint CommandLine;        //if bit 2 in flags are set
-        public uint ModuleCount;        //if bit 3 in flags are set
-        public uint ModuleAddress;  //if bit 3 in flags are set
+        public uint Flags;         //required
+
+        public uint MemLower;      //if bit 0 in flags are set
+        public uint MemUpper;      //if bit 0 in flags are set
+
+        public uint BootDevice;    //if bit 1 in flags are set
+        public uint CommandLine;   //if bit 2 in flags are set
+
+        public uint ModuleCount;   //if bit 3 in flags are set
+        public uint ModuleAddress; //if bit 3 in flags are set
+
         public uint Syms1; //if bits 4 or 5 in flags are set
         public uint Syms2; //if bits 4 or 5 in flags are set
         public uint Syms3; //if bits 4 or 5 in flags are set
         public uint Syms4; //if bits 4 or 5 in flags are set
-        public uint MemMapLength;       //if bit 6 in flags is set
+
+        public uint MemMapLength;   //if bit 6 in flags is set
         public uint MemMapAddress;  //if bit 6 in flags is set
-        public uint DrivesLength;       //if bit 7 in flags is set
+
+        public uint DrivesLength;   //if bit 7 in flags is set
         public uint DrivesAddress;  //if bit 7 in flags is set
-        public uint ConfigTable;        //if bit 8 in flags is set
-        public uint BootLoaderName;
-        public uint ApmTable;               //if bit 9 in flags is set
-        public uint VbeControlInfo; //if bit 10 in flags is set
-        public uint VbeModeInfo;        //if bit 11 in flags is set
-        public uint VbeMode;                // all vbe_* set if bit 12 in flags are set
-        public uint VbeInterfaceSeg;
-        public uint VbeInterfaceOff;
-        public uint VbeInterfaceLength;
- 
-        public MultiBootInfoElfSectionHeader* ElfSectionHeader {
-            get{
+
+        public uint ConfigTable;    //if bit 8 in flags is set
+        public uint BootLoaderName; //if bit 9 in flags is set
+        public uint ApmTable;       //if bit 10 in flags is set        
+
+        public uint VbeControlInfo;     //if bit 11 in flags is set
+        public uint VbeModeInfo;        // "    
+        public ushort VbeMode;            // "      
+        public ushort VbeInterfaceSeg;    // "
+        public ushort VbeInterfaceOff;    // "
+        public ushort VbeInterfaceLength; // "
+
+        public ulong FbAddr;   //if bit 12 in flags is set
+        public uint FbPitch;   // "
+        public uint FbWidth;   // "
+        public uint FbHeight;  // "
+        public byte FbBpp;     // "
+        public byte FbType;    // "
+        public uint ColorInfo; // Union
+
+        public MultiBootInfoElfSectionHeader* ElfSectionHeader
+        {
+            get
+            {
                 fixed (uint* ptr = &Syms1)
                 {
                     return (MultiBootInfoElfSectionHeader*)ptr;

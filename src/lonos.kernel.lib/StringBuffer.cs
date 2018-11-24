@@ -235,12 +235,64 @@ namespace lonos.kernel.core
         /// <param name="format"></param>
         public void Append(uint value, string format)
         {
-            Append(value, false, format.Length == 1 && format[0] == 'X');
+            var sb = new StringBuffer(format);
+            Append(value, sb);
         }
 
         public void Append(uint value, StringBuffer format)
         {
-            Append(value, false, format.Length == 1 && format[0] == 'X');
+            if (format.length == 0)
+            {
+                Append(value, 10, -1);
+                return;
+            }
+
+            if (format.length >= 1 && format[0] == 'X')
+            {
+                if (format.length == 1)
+                {
+                    Append(value, 16, -1);
+                    return;
+                }
+                if (format.length == 2)
+                {
+                    Append(value, 16, CharDigitToInt(format[1]));
+                    return;
+                }
+            }
+
+            if (format.length >= 1 && format[0] == 'D')
+            {
+                if (format.length == 1)
+                {
+                    Append(value, 10, -1);
+                    return;
+                }
+                if (format.length == 2)
+                {
+                    Append(value, 10, CharDigitToInt(format[1]));
+                    return;
+                }
+            }
+
+            Append("UNSUPPORTED FORMAT: ");
+            Append(format);
+        }
+
+        private static int CharDigitToInt(char digit)
+        {
+            var num = ((byte)digit) - ((byte)'0');
+            if (num < 0 || num > 9)
+                return -1;
+            return num;
+        }
+
+        private static uint CharDigitToUInt(char digit)
+        {
+            var num = ((byte)digit) - ((byte)'0');
+            if (num < 0 || num > 9)
+                return uint.MaxValue;
+            return (uint)num;
         }
 
         /// <summary>
@@ -359,6 +411,8 @@ namespace lonos.kernel.core
 
                     inParam = false;
                     inArg = false;
+                    indexBuffer.Clear();
+                    argsBuffer.Clear();
 
                     continue;
                 }

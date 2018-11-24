@@ -18,12 +18,14 @@ namespace lonos.kernel.core
             Columns = 80;
         }
 
-        public static void ApplyMode(){
+        public static void ApplyMode()
+        {
             ApplyMode(Mosa.Kernel.x86.Multiboot.VBEMode);
         }
 
-        public static void ApplyMode(uint mode){
-            KernelMessage.WriteLine("Screen VBE Mode: {0:d}", mode);
+        public static void ApplyMode(uint mode)
+        {
+            KernelMessage.WriteLine("Screen VBE Mode: {0}", mode);
             //switch(mode){
             //    case 
             //}
@@ -125,6 +127,12 @@ namespace lonos.kernel.core
         /// <param name="chr">The character.</param>
         public static void Write(char chr)
         {
+            if (chr == 10)
+            {
+                NextLine();
+                return;
+            }
+
             IntPtr address = new IntPtr(ScreenAddress + ((Row * Columns + Column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
@@ -143,7 +151,14 @@ namespace lonos.kernel.core
             for (int index = 0; index < value.Length; index++)
             {
                 char chr = value[index];
-                Write(chr);
+                if (chr == 10)
+                {
+                    NextLine();
+                }
+                else
+                {
+                    Write(chr);
+                }
             }
         }
 

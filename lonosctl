@@ -150,7 +150,8 @@ function _qemu {
 			exit 1
 	esac
 
-	${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+	echo ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+	     ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
 }
 
 #function create_chroot {
@@ -170,10 +171,10 @@ function create_efi_disk {
 	dd if=/dev/zero of=$disk bs=1k count=$size
 	mformat -i $disk -h 16 -t 16 -s $block ::
 
-	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi/efi ::/
-	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi/boot ::/
-	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi/NvVars ::/
-	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi/.disk ::/
+	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/efi ::/
+	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/boot ::/
+	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/NvVars ::/
+	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/.disk ::/
 	mcopy -i $disk -s $LONOS_OSDIR/lonos.kernel.core.bin ::/lonos.bin
 
 #mkdir -p $LONOS_ISODIR/EFI/BOOT

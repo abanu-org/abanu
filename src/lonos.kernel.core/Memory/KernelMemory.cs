@@ -42,5 +42,31 @@ namespace lonos.kernel.core
 
             return (IntPtr)(((uint)Address.GCInitialMemory) + retAddr);
         }
+
+        public static void DumpToConsoleLine(uint addr, uint length)
+        {
+            DumpToConsole(addr, length);
+            KernelMessage.Write('\n');
+        }
+
+        public static void DumpToConsole(uint addr, uint length)
+        {
+            var sb = new StringBuffer();
+            sb.Append("{0:X}+{1:D} ", addr, length);
+            KernelMessage.Write(sb);
+            sb.Clear();
+
+            for (uint a = addr; a < addr + length; a++)
+            {
+                sb.Clear();
+
+                if (a != addr)
+                    sb.Append(" ");
+                var m = Native.Get8(a);
+                sb.Append(m, 16, 2);
+                KernelMessage.Write(sb);
+            }
+        }
+
     }
-   }
+}
