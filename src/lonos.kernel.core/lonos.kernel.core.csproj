@@ -63,6 +63,8 @@
     <Compile Include="Devices\Terminal\Terminal.cs" />
     <Compile Include="Devices\Devices.cs" />
     <Compile Include="Api\ApiHost.cs" />
+    <Compile Include="Devices\Console\ConsoleDevice.cs" />
+    <Compile Include="Devices\FrameBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

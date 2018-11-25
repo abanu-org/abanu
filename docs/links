@@ -10,3 +10,6 @@ z.b. https://www.lowlevel.eu/wiki/Multiboot
 
 # Memory structure of linux
 http://www.informit.com/articles/article.aspx?p=29961&seqNum=2
+
+#kmallic impl:
+http://minirighi.sourceforge.net/html/kmalloc_8c-source.html

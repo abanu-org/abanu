@@ -17,10 +17,6 @@ namespace lonos.kernel.core
             }
         }
 
-        public static void Setup()
-        {
-        }
-
         public static void Write(string value)
         {
             Dev.Write(value);

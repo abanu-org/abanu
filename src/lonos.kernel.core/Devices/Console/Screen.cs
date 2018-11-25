@@ -200,7 +200,14 @@ namespace lonos.kernel.core
             Column = 0;
             if (row >= Rows - 1)
             {
+                // Copy All rows one line up
+                // TODO: Normally, Reading from mapped ROM is much slower
+                // than reading from normal RAM. Consider using Offscreen Buffer
                 Memory.Copy(ScreenAddress + Columns * 2, ScreenAddress, (Rows - 1) * Columns * 2);
+
+                //Blank last line
+                for (uint c = 0; c < Columns; c++)
+                    RawWrite(row, c, ' ', color);
             }
             else
             {

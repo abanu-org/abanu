@@ -98,12 +98,16 @@ function _bochs {
 			arch=x86
 			;;
 
+		x86-grub-vbe)
+			arch=x86-grub-vbe
+			;;
+
 		x64)
 			arch=x64
 			;;
 
 		*)
-			echo $"Usage: lonosctl run qemu {x86|x64|host}"
+			echo $"Usage: lonosctl run bochs {x86|x86-grub-vbe|x64|host}"
 			exit 1
 	esac
 

@@ -13,24 +13,49 @@ namespace lonos.kernel.core
         public unsafe static void Main()
         {
             ApiContext.Current = new ApiHost();
+
+            // Setup some pseudo devices
             Devices.InitStage1();
+
+            //Setup Output and Debug devices
             Devices.InitStage2();
 
-            KernelMessage.Setup();
+            // Write first output
             KernelMessage.WriteLine("<CONSOLE:BEGIN>");
             KernelMessage.WriteLine("Booting Lonos Kernel...");
 
+            // Detect environment (Memory Maps, Video Mode, etc.)
             Multiboot.Setup();
 
+            // Read own ELF-Headers and Sections
             KernelElf.Setup();
+
+            // Initialize the embedded code (actually only a little proof of conecept code)
             NativeCalls.Setup();
 
+            // Setup Global Descriptor Table
             GDT.Setup();
 
-            Panic.Setup();
+            // Now we enable Paging. It's important that we do not cause a Page Fault Exception,
+            // Because IDT is not setup yet, that could handle this kind of exception.
+
+            PageFrameAllocator.Setup();
+            PageTable.Setup();
+
+
+            Devices.InitFrameBuffer();
+
+            // Now we are in virtual Adress Space !
+            // Not requied yet, but maybe some re-initialization of should be done now.
+
+            // Setup Programmable Interrupt Table
             PIC.Setup();
+
+            // Setup Interrupt Descriptor Table
+            // Important Note: IDT depends on GDT. Never setup IDT before GDT.
             IDTManager.Setup();
 
+            // We have nothing todo (yet). So let's stop.
             Debug.Break();
         }
 

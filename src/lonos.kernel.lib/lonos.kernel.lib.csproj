@@ -58,6 +58,7 @@
     <Compile Include="ApiContext.cs" />
     <Compile Include="IFile.cs" />
     <Compile Include="FileExtensions.cs" />
+    <Compile Include="Structs\Addr.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />

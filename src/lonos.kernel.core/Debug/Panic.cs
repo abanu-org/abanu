@@ -29,10 +29,6 @@ namespace lonos.kernel.core
         public static uint CR2 = 0;
         public static uint FS = 0;
 
-        public static void Setup()
-        {
-        }
-
         public static void Error(string message)
         {
 

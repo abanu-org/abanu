@@ -243,6 +243,10 @@ namespace Mosa.Kernel.x86
             if (FBPresent)
             {
                 KernelMessage.Path("multiboot", "Framebuffer preset");
+                //TODO: ulong!=uint !
+                KernelMessage.Path("multiboot", "FBAddr: {0:X9}, Pitch: {1:D}", (uint)multiBootInfo->FbAddr, multiBootInfo->FbPitch);
+                KernelMessage.Path("multiboot", "Width: {0:D}, Height: {1:D}, BPP: {2:D}", multiBootInfo->FbWidth, multiBootInfo->FbHeight, multiBootInfo->FbBpp);
+                KernelMessage.Path("multiboot", "VBE Type: {0:D}", multiBootInfo->FbType);
             }
             else
             {

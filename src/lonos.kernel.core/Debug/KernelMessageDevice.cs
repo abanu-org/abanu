@@ -12,24 +12,24 @@ namespace lonos.kernel.core
 
         public unsafe SSize Write(byte* buf, USize count)
         {
-            var devSerial = Devices.COM1;
-            var devScreen = Devices.Screen;
+            var devSerial = Devices.Serial1;
+            var devConsole = Devices.Console;
 
-            if (devSerial == null && devScreen == null)
+            if (devSerial == null && devConsole == null)
                 return 0;
 
             if (devSerial == null)
-                return devScreen.Write(buf, count);
+                return devConsole.Write(buf, count);
 
-            if (devScreen == null)
+            if (devConsole == null)
                 return devSerial.Write(buf, count);
 
             var writtenSerial = devSerial.Write(buf, count);
-            var writtenScreen = devScreen.Write(buf, count);
-            if (writtenSerial < writtenScreen)
+            var writtenConsole = devConsole.Write(buf, count);
+            if (writtenSerial < writtenConsole)
                 return writtenSerial;
             else
-                return writtenScreen;
+                return writtenConsole;
         }
 
     }
