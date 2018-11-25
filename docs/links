@@ -10,3 +10,6 @@ z.b. https://www.lowlevel.eu/wiki/Multiboot
 
 # Memory structure of linux
 http://www.informit.com/articles/article.aspx?p=29961&seqNum=2
+
+# Linux boot process
+https://www.ibm.com/developerworks/library/l-linuxboot/index.html
