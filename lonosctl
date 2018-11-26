@@ -117,7 +117,7 @@ function _bochs {
 
 function _qemu {
 	disk=${LONOS_OSDIR}/lonos.kernel.core.img
-	
+
 	case $1 in
 		x86)
 			arch=x86
@@ -170,7 +170,7 @@ function _qemu {
 
 #function create_chroot {
 	#wget ${alpine_mirror}/latest-stable/main/x86_64/apk-tools-static-${alpine_version}.apk
-	#tar -xzf apk-tools-static-*.apk	
+	#tar -xzf apk-tools-static-*.apk
 	#wget https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/v0.9.0/alpine-chroot-install \
     #&& echo 'e5dfbbdc0c4b3363b99334510976c86bfa6cb251  alpine-chroot-install' | sha1sum -c \
     #|| exit 1

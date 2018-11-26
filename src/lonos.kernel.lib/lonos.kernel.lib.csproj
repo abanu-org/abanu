@@ -59,10 +59,13 @@
     <Compile Include="IFile.cs" />
     <Compile Include="FileExtensions.cs" />
     <Compile Include="Structs\Addr.cs" />
+    <Compile Include="Fonts\PSF2Header.cs" />
+    <Compile Include="Fonts\PSF1Header.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />
     <Folder Include="Structs\" />
+    <Folder Include="Fonts\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

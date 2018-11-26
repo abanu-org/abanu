@@ -59,11 +59,11 @@ namespace lonos.kernel.core
             //memory.Write8(GetOffset(x, y), (byte)color);
             ((uint*)addr)[GetOffset(x, y)] = (uint)color;
 
-            KernelMessage.WriteLine("DEBUG: {0:X9}", GetOffset(x, y));
+            /*KernelMessage.WriteLine("DEBUG: {0:X9}", GetOffset(x, y));
             KernelMessage.WriteLine("DEBUG: {0:X9}", GetByteOffset(x, y));
             KernelMessage.WriteLine("DEBUG2: {0:D}", color);
             KernelMessage.WriteLine("DEBUG3: {0:X9}", (uint)addr);
-
+*/
         }
 
         public unsafe void FillRectangle(uint color, uint x, uint y, uint w, uint h)

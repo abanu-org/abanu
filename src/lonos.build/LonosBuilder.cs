@@ -109,6 +109,30 @@ namespace lonos.build
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
+                    },
+                    new Section
+                    {
+                        Name = "consolefont.regular",
+                        Type = SectionType.ProgBits,
+                        AddressAlignment = 0x1000,
+                        EmitMethod = (section, writer) =>
+                        {
+                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-Terminus14.psf"));
+                            writer.Write(data);
+                            section.Size = (uint)data.Length;
+                        }
+                    },
+                    new Section
+                    {
+                        Name = "consolefont.bold",
+                        Type = SectionType.ProgBits,
+                        AddressAlignment = 0x1000,
+                        EmitMethod = (section, writer) =>
+                        {
+                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-TerminusBold14.psf"));
+                            writer.Write(data);
+                            section.Size = (uint)data.Length;
+                        }
                     }
                 };
             };
