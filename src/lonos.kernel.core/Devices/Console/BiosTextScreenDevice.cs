@@ -3,10 +3,10 @@
 namespace lonos.kernel.core
 {
 
-    public class ScreenDevice : IFile
+    public class BiosTextScreenDevice : IFile
     {
  
-        public ScreenDevice()
+        public BiosTextScreenDevice()
         {
         }
 

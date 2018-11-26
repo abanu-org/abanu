@@ -55,7 +55,7 @@
     <Compile Include="Interrupts\InterruptInfo.cs" />
     <Compile Include="Devices\Console\Screen.cs" />
     <Compile Include="Devices\Console\ScreenColors.cs" />
-    <Compile Include="Devices\Console\ScreenDevice.cs" />
+    <Compile Include="Devices\Console\BiosTextScreenDevice.cs" />
     <Compile Include="Devices\Serial\Serial.cs" />
     <Compile Include="Devices\Serial\SerialDevice.cs" />
     <Compile Include="Devices\NullDevice.cs" />
@@ -65,6 +65,7 @@
     <Compile Include="Api\ApiHost.cs" />
     <Compile Include="Devices\Console\ConsoleDevice.cs" />
     <Compile Include="Devices\FrameBuffer.cs" />
+    <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

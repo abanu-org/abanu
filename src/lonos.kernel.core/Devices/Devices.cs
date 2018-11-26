@@ -10,8 +10,9 @@ namespace lonos.kernel.core
     {
 
         public static IFile Serial1;
-        public static IFile Screen;
-        public static IFile Console;
+        private static IFile BiosTextScreen;
+        private static IFile FrameBufferTextScreen;
+        public static ConsoleDevice Console;
         public static IFile Null;
         public static IFile KMsg;
 
@@ -35,9 +36,9 @@ namespace lonos.kernel.core
             Serial1 = new SerialDevice(Serial.COM1);
 
             lonos.kernel.core.Screen.EarlyInitialization();
-            Screen = new ScreenDevice();
+            BiosTextScreen = new BiosTextScreenDevice();
 
-            Console = new ConsoleDevice();
+            Console = new ConsoleDevice(BiosTextScreen);
         }
 
         /// <summary>
@@ -47,41 +48,9 @@ namespace lonos.kernel.core
         {
             fb = new FrameBuffer(Multiboot.multiBootInfo->FbAddr, Multiboot.multiBootInfo->FbWidth, Multiboot.multiBootInfo->FbHeight, Multiboot.multiBootInfo->FbPitch, 8);
             fb.Init();
-            test_DrawChar(fb, 0, 0, 0);
-            test_DrawChar(fb, 1, 1, 1);
-            test_DrawChar(fb, 2, 2, 2);
-        }
 
-        private unsafe static void test_DrawChar(FrameBuffer fb, uint screenX, uint screenY, uint charIdx)
-        {
-            var fontSec = KernelElf.Main.GetSectionHeader("consolefont.regular");
-            var fontSecAddr = KernelElf.Main.GetSectionPhysAddr(fontSec);
-
-            var fontHeader = (PSF1Header*)fontSecAddr;
-
-            KernelMemory.DumpToConsole(fontSecAddr, 20);
-
-            var rows = fontHeader->charsize;
-            var bytesPerRow = 1; //14 bits --> 2 bytes + 2fill bits
-            uint columns = 8;
-
-            var charSize = bytesPerRow * rows;
-
-            var charMem = (byte*)(fontSecAddr + sizeof(PSF1Header));
-            KernelMemory.DumpToConsole((uint)charMem, 20);
-
-            for (uint y = 0; y < rows; y++)
-            {
-                for (uint x = 0; x < columns; x++)
-                {
-                    var bt = BitHelper.IsBitSet(charMem[charSize * charIdx + (y * bytesPerRow + (x / 8))], (byte)(7-(x % 8)));
-                    if (bt)
-                    {
-                        fb.SetPixel(int.MaxValue / 2, screenX * columns + x, screenY * rows + y);
-                    }
-                }
-            }
-
+            FrameBufferTextScreen = new FrameBufferTextScreenDevice(fb);
+            Console.SetOutputDevice(FrameBufferTextScreen);
         }
 
         public static IFile GetDevice(string devName)
