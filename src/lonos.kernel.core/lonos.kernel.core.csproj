@@ -66,6 +66,8 @@
     <Compile Include="Devices\Console\ConsoleDevice.cs" />
     <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
+    <Compile Include="Memory\PageTable2.cs" />
+    <Compile Include="Memory\PageTable3.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
