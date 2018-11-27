@@ -2,12 +2,14 @@
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
+using System.Runtime.InteropServices;
+
 namespace lonos.kernel.core
 {
-	/// <summary>
+    /// <summary>
     /// Page Table
     /// </summary>
-    public static class PageTable
+    public unsafe static class PageTable
     {
         /// <summary>
         /// Sets up the PageTable
@@ -17,13 +19,27 @@ namespace lonos.kernel.core
             // Setup Page Directory
             for (int index = 0; index < 1024; index++)
             {
-                Intrinsic.Store32(new IntPtr(Address.PageDirectory), index << 2, (uint)(Address.PageTable + (index * 4096) | 0x04 | 0x02 | 0x01));
+                //Intrinsic.Store32(new IntPtr(Address.PageDirectory), index << 2, (uint)(Address.PageTable + (index * 4096) | 0x04 | 0x02 | 0x01));
+
+                PageDirectoryEntry* pte = (PageDirectoryEntry*)Address.PageDirectory;
+                pte[index] = new PageDirectoryEntry();
+                pte[index].Present = true;
+                pte[index].Writable = true;
+                pte[index].User = true;
+                pte[index].PageTableEntry = (PageTableEntry*)(uint)(Address.PageTable + (index * 4096));
             }
 
             // Map the first 128MB of memory (32786 4K pages) (why 128MB?)
             for (int index = 0; index < 1024 * 32; index++)
             {
-                Intrinsic.Store32(new IntPtr(Address.PageTable), index << 2, (uint)(index * 4096) | 0x04 | 0x02 | 0x01);
+                //Intrinsic.Store32(new IntPtr(Address.PageTable), index << 2, (uint)(index * 4096) | 0x04 | 0x02 | 0x01);
+
+                PageTableEntry* pte = (PageTableEntry*)Address.PageTable;
+                pte[index] = new PageTableEntry();
+                pte[index].Present = true;
+                pte[index].Writable = true;
+                pte[index].User = true;
+                pte[index].PhysicalAddress = (uint)(index * 4096);
             }
 
             // Unmap the first page for null pointer exceptions
@@ -59,5 +75,196 @@ namespace lonos.kernel.core
             //FUTURE: traverse page directory from CR3 --- do not assume page table is linearly allocated
             return Intrinsic.Load32(new IntPtr(Address.PageTable), (((uint)virtualAddress.ToInt32() & 0xFFFFF000u) >> 10)) + ((uint)virtualAddress.ToInt32() & 0xFFFu);
         }
+
+
+        [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 4)]
+        unsafe public struct PageDirectoryEntry
+        {
+            [FieldOffset(0)]
+            private uint data;
+
+            public const byte EntrySize = 4;
+
+            private class Offset
+            {
+                public const byte Present = 0;
+                public const byte Readonly = 1;
+                public const byte User = 2;
+                public const byte WriteThrough = 3;
+                public const byte DisableCache = 4;
+                public const byte Accessed = 5;
+                private const byte UNKNOWN6 = 6;
+                public const byte PageSize4Mib = 7;
+                private const byte IGNORED8 = 8;
+                public const byte Custom = 9;
+                public const byte Address = 12;
+            }
+
+            private const byte AddressBitSize = 20;
+            private const uint AddressMask = 0xFFFFF000;
+
+            private uint PageTableAddress
+            {
+                get { return data & AddressMask; }
+                set
+                {
+                    Assert.True(value << AddressBitSize == 0, "PageDirectoryEntry.Address needs to be 4k aligned");
+                    data = data.SetBits(Offset.Address, AddressBitSize, value, Offset.Address);
+                }
+            }
+
+            internal PageTableEntry* PageTableEntry
+            {
+                get { return (PageTableEntry*)PageTableAddress; }
+                set { PageTableAddress = (uint)value; }
+            }
+
+            public bool Present
+            {
+                get { return data.IsBitSet(Offset.Present); }
+                set { data = data.SetBit(Offset.Present, value); }
+            }
+
+            public bool Writable
+            {
+                get { return data.IsBitSet(Offset.Readonly); }
+                set { data = data.SetBit(Offset.Readonly, value); }
+            }
+
+            public bool User
+            {
+                get { return data.IsBitSet(Offset.User); }
+                set { data = data.SetBit(Offset.User, value); }
+            }
+
+            public bool WriteThrough
+            {
+                get { return data.IsBitSet(Offset.WriteThrough); }
+                set { data = data.SetBit(Offset.WriteThrough, value); }
+            }
+
+            public bool DisableCache
+            {
+                get { return data.IsBitSet(Offset.DisableCache); }
+                set { data = data.SetBit(Offset.DisableCache, value); }
+            }
+
+            public bool Accessed
+            {
+                get { return data.IsBitSet(Offset.Accessed); }
+                set { data = data.SetBit(Offset.Accessed, value); }
+            }
+
+            public bool PageSize4Mib
+            {
+                get { return data.IsBitSet(Offset.PageSize4Mib); }
+                set { data = data.SetBit(Offset.PageSize4Mib, value); }
+            }
+
+            public byte Custom
+            {
+                get { return (byte)data.GetBits(Offset.Custom, 2); }
+                set { data = data.SetBits(Offset.Custom, 2, value); }
+            }
+        }
+
+
+
+        [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 4)]
+        public struct PageTableEntry
+        {
+            [FieldOffset(0)]
+            private uint Value;
+
+            public const byte EntrySize = 4;
+
+            private class Offset
+            {
+                public const byte Present = 0;
+                public const byte Readonly = 1;
+                public const byte User = 2;
+                public const byte WriteThrough = 3;
+                public const byte DisableCache = 4;
+                public const byte Accessed = 5;
+                public const byte Dirty = 6;
+                private const byte SIZE0 = 7;
+                public const byte Global = 8;
+                public const byte Custom = 9;
+                public const byte Address = 12;
+            }
+
+            private const byte AddressBitSize = 20;
+            private const uint AddressMask = 0xFFFFF000;
+
+            /// <summary>
+            /// 4k aligned physical address
+            /// </summary>
+            public uint PhysicalAddress
+            {
+                get { return Value & AddressMask; }
+                set
+                {
+                    Assert.True(value << AddressBitSize == 0, "PageTableEntry.PhysicalAddress needs to be 4k aligned");
+                    Value = Value.SetBits(Offset.Address, AddressBitSize, value, Offset.Address);
+                }
+            }
+
+            public bool Present
+            {
+                get { return Value.IsBitSet(Offset.Present); }
+                set { Value = Value.SetBit(Offset.Present, value); }
+            }
+
+            public bool Writable
+            {
+                get { return Value.IsBitSet(Offset.Readonly); }
+                set { Value = Value.SetBit(Offset.Readonly, value); }
+            }
+
+            public bool User
+            {
+                get { return Value.IsBitSet(Offset.User); }
+                set { Value = Value.SetBit(Offset.User, value); }
+            }
+
+            public bool WriteThrough
+            {
+                get { return Value.IsBitSet(Offset.WriteThrough); }
+                set { Value = Value.SetBit(Offset.WriteThrough, value); }
+            }
+
+            public bool DisableCache
+            {
+                get { return Value.IsBitSet(Offset.DisableCache); }
+                set { Value = Value.SetBit(Offset.DisableCache, value); }
+            }
+
+            public bool Accessed
+            {
+                get { return Value.IsBitSet(Offset.Accessed); }
+                set { Value = Value.SetBit(Offset.Accessed, value); }
+            }
+
+            public bool Global
+            {
+                get { return Value.IsBitSet(Offset.Global); }
+                set { Value = Value.SetBit(Offset.Global, value); }
+            }
+
+            public bool Dirty
+            {
+                get { return Value.IsBitSet(Offset.Dirty); }
+                set { Value = Value.SetBit(Offset.Dirty, value); }
+            }
+
+            public byte Custom
+            {
+                get { return (byte)Value.GetBits(Offset.Custom, 2); }
+                set { Value = Value.SetBits(Offset.Custom, 2, value); }
+            }
+
+        }
     }
+
+
 }
