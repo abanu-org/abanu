@@ -539,6 +539,19 @@ namespace lonos.kernel.core
             }
         }
 
+        public unsafe void WriteTo(Addr addr)
+        {
+            var ptr2 = (byte*)addr;
+
+            fixed (char* ptr = chars)
+            {
+                for (var i = 0; i < length; i++)
+                {
+                    ptr2[i] = (byte)ptr[i];
+                }
+            }
+        }
+
     }
 
 }

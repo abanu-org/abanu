@@ -41,7 +41,8 @@ namespace lonos.kernel.core
 
             PageFrameAllocator.Setup();
             PageTable.Setup();
-
+            PageFrameAllocator.Setup();
+            Memory.Setup();
 
             Devices.InitFrameBuffer();
 
@@ -54,6 +55,11 @@ namespace lonos.kernel.core
             // Setup Interrupt Descriptor Table
             // Important Note: IDT depends on GDT. Never setup IDT before GDT.
             IDTManager.Setup();
+
+            var ptr = Memory.Allocate(1024, GFP.GFP_KERNEL);
+            KernelMessage.WriteLine(ptr);
+            var sb = new StringBuffer("ABCDEFGHIJKLMNOPQRSTU");
+            sb.WriteTo(ptr);
 
             // We have nothing todo (yet). So let's stop.
             Debug.Break();

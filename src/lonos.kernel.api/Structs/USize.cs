@@ -34,6 +34,18 @@ namespace lonos.kernel.core
             _value = value;
         }
 
+        [NonVersionable]
+        public unsafe Addr(IntPtr value)
+        {
+            _value = (void*)value;
+        }
+
+        [NonVersionable]
+        public unsafe Addr(UIntPtr value)
+        {
+            _value = (void*)value;
+        }
+
         public unsafe override bool Equals(Object obj)
         {
 			if (obj is Addr)
@@ -73,6 +85,18 @@ namespace lonos.kernel.core
         }
 
         [NonVersionable]
+        public static implicit operator Addr(IntPtr value)
+        {
+            return new Addr(value);
+        }
+
+        [NonVersionable]
+        public static implicit operator Addr(UIntPtr value)
+        {
+            return new Addr(value);
+        }
+
+        [NonVersionable]
 		public static unsafe implicit operator Addr(void* value)
         {
             return new Addr(value);
@@ -94,6 +118,18 @@ namespace lonos.kernel.core
 		public static unsafe implicit operator ulong(Addr value)
         {
             return (ulong)value._value;
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator IntPtr(Addr value)
+        {
+            return (IntPtr)value._value;
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator UIntPtr(Addr value)
+        {
+            return (UIntPtr)value._value;
         }
 
         [NonVersionable]

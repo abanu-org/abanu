@@ -57,7 +57,7 @@ namespace lonos.kernel.core
         /// </summary>
         /// <param name="virtualAddress">The virtual address.</param>
         /// <param name="physicalAddress">The physical address.</param>
-        public static void MapVirtualAddressToPhysical(uint virtualAddress, uint physicalAddress, bool present = true)
+        public static void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true)
         {
             //FUTURE: traverse page directory from CR3 --- do not assume page table is linearly allocated
 

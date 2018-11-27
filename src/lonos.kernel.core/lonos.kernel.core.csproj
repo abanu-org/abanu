@@ -68,6 +68,7 @@
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
     <Compile Include="Memory\PageTable2.cs" />
     <Compile Include="Memory\PageTable3.cs" />
+    <Compile Include="Memory\Page.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
@@ -85,6 +86,14 @@
     <ProjectReference Include="..\lonos.kernel.lib\lonos.kernel.lib.csproj">
       <Project>{2D21AF60-8366-430A-9579-1B0CCD31910F}</Project>
       <Name>lonos.kernel.lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lonos.kernel.unixapi\lonos.kernel.unixapi.csproj">
+      <Project>{1DAF7D31-54DC-4B15-A14E-15206073C579}</Project>
+      <Name>lonos.kernel.unixapi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lonos.kernel.api\lonos.kernel.api.csproj">
+      <Project>{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}</Project>
+      <Name>lonos.kernel.api</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
