@@ -19,8 +19,6 @@ namespace lonos.kernel.core
             // Setup Page Directory
             for (int index = 0; index < 1024; index++)
             {
-                //Intrinsic.Store32(new IntPtr(Address.PageDirectory), index << 2, (uint)(Address.PageTable + (index * 4096) | 0x04 | 0x02 | 0x01));
-
                 PageDirectoryEntry* pte = (PageDirectoryEntry*)Address.PageDirectory;
                 pte[index] = new PageDirectoryEntry();
                 pte[index].Present = true;
@@ -32,8 +30,6 @@ namespace lonos.kernel.core
             // Map the first 128MB of memory (32786 4K pages) (why 128MB?)
             for (int index = 0; index < 1024 * 32; index++)
             {
-                //Intrinsic.Store32(new IntPtr(Address.PageTable), index << 2, (uint)(index * 4096) | 0x04 | 0x02 | 0x01);
-
                 PageTableEntry* pte = (PageTableEntry*)Address.PageTable;
                 pte[index] = new PageTableEntry();
                 pte[index].Present = true;
@@ -52,6 +48,10 @@ namespace lonos.kernel.core
             Native.SetCR0(Native.GetCR0() | 0x80000000);
         }
 
+        private static PageTableEntry* GetTableEntry(uint forVirtualAddress){
+            return (PageTableEntry*)(Address.PageTable+ ((forVirtualAddress & 0xFFFFF000u) >> 10));
+        }
+
         /// <summary>
         /// Maps the virtual address to physical.
         /// </summary>
@@ -61,8 +61,17 @@ namespace lonos.kernel.core
         {
             //FUTURE: traverse page directory from CR3 --- do not assume page table is linearly allocated
 
-            //Native.Set32(Address.PageTable + ((virtualAddress & 0xFFC00000u) >> 10), physicalAddress & 0xFFC00000u | 0x04u | 0x02u | (present ? 0x1u : 0x0u));
-            Intrinsic.Store32(new IntPtr(Address.PageTable), ((virtualAddress & 0xFFFFF000u) >> 10), physicalAddress & 0xFFFFF000u | 0x04u | 0x02u | (present ? 0x1u : 0x0u));
+            //Intrinsic.Store32(new IntPtr(Address.PageTable), ((virtualAddress & 0xFFFFF000u) >> 10), physicalAddress & 0xFFFFF000u | 0x04u | 0x02u | (present ? 0x1u : 0x0u));
+
+            // Hint: TableEntries are  not initialized. So set every field
+            // Hint: All Table Entries have a known location (yet).
+            // FUTURE: Change this! Allocate dynamicly
+
+            var entry = GetTableEntry(virtualAddress);
+            entry->PhysicalAddress = physicalAddress;
+            entry->Present = true;
+            entry->Writable = true;
+            entry->User = true;
         }
 
         /// <summary>
