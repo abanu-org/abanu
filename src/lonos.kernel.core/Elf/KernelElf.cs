@@ -14,6 +14,9 @@ namespace lonos.kernel.core
         public static void Setup()
         {
             KernelMessage.WriteLine("Setup ELF Headers");
+            KernelMessage.WriteLine("Image Header:");
+            KernelMemory.DumpToConsoleLine(0x500000, 124);
+
             Main = new ElfHelper
             {
                 SectionHeaderArray = (ElfSectionHeader*)Multiboot.multiBootInfo->ElfSectionHeader->Addr,
@@ -27,6 +30,8 @@ namespace lonos.kernel.core
 
             var nativeElf = (ElfHeader*)nativeElfAddr;
             var str = (NullTerminatedString*)nativeElfAddr;
+
+            KernelMessage.WriteLine("Found embedded ELF at {0:X8}", nativeElfAddr);
 
             Native = new ElfHelper
             {

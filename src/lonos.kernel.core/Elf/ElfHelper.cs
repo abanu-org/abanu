@@ -113,7 +113,7 @@ namespace lonos.kernel.core
             var idx = GetSectionHeaderIndexByName(name);
             if (idx == -1)
             {
-                KernelMessage.WriteLine(name);
+                KernelMessage.WriteLine("Section not found: {0}", name);
                 return (ElfSectionHeader*)0;
             }
             return GetSectionHeader((uint)idx);

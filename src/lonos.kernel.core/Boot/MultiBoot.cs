@@ -228,7 +228,7 @@ namespace Mosa.Kernel.x86
             multiBootInfo = (MultiBootInfo*)address;
 
             KernelMessage.Path("multiboot", "Flags={0:X}", multiBootInfo->Flags);
-            KernelMessage.Write("MB Strukture: ");
+            KernelMessage.Write("MB Structure: ");
             KernelMemory.DumpToConsoleLine(address, 124);
 
             if (VBEPresent)

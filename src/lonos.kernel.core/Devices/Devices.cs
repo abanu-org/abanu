@@ -46,6 +46,9 @@ namespace lonos.kernel.core
         /// </summary>
         public unsafe static void InitFrameBuffer()
         {
+            if (!Multiboot.VBEPresent)
+                return;
+
             fb = new FrameBuffer(Multiboot.multiBootInfo->FbAddr, Multiboot.multiBootInfo->FbWidth, Multiboot.multiBootInfo->FbHeight, Multiboot.multiBootInfo->FbPitch, 8);
             fb.Init();
 

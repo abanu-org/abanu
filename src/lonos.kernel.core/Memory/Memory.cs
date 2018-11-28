@@ -19,6 +19,8 @@ namespace lonos.kernel.core
             _nextVirtAddr = _startVirtAddr;
 
             _kmalloc_Next = RequestRawVirtalMemory(10 * 1024 * 1024);
+
+            KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameAllocator.PagesAvailable*4096)/1024/1024);
         }
 
         /// <summary>

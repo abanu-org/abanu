@@ -136,5 +136,14 @@ namespace lonos.kernel.core
 		/// Retrieves the amount of number of physical pages in use.
 		/// </summary>
 		public static uint TotalPagesInUse { get { return totalUsedPages; } }
-	}
+
+    
+        public static uint PagesAvailable
+        {
+            get {
+                return TotalPages - TotalPagesInUse;
+            }
+        }
+
+    }
 }

@@ -231,6 +231,22 @@ namespace lonos.kernel.core
             Append(value, sb);
         }
 
+        private void Append(Argument value, StringBuffer format)
+        {
+            switch (value.type)
+            {
+                case ArgumentType._uint:
+                    Append(value._uint, format);
+                    break;
+                case ArgumentType._string:
+                    Append(value._string);
+                    break;
+                default:
+                    Append("Unkown ArgumentType");
+                    break;
+            }
+        }
+
         public void Append(uint value, StringBuffer format)
         {
             if (format.length == 0)
@@ -359,12 +375,42 @@ namespace lonos.kernel.core
             Append(format, arg0, 0, 0);
         }
 
+        public unsafe void Append(string format, string arg0)
+        {
+            Append(format, new Argument { _string = arg0, type = ArgumentType._string },
+                   new Argument(),
+                   new Argument());
+        }
+
         public unsafe void Append(string format, uint arg0, uint arg1)
         {
             Append(format, arg0, arg1, 0);
         }
 
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2)
+        {
+            Append(format,
+                   new Argument { _uint = arg0, type = ArgumentType._uint },
+                   new Argument { _uint = arg1, type = ArgumentType._uint },
+                   new Argument { _uint = arg2, type = ArgumentType._uint }
+                  );
+        }
+
+        private struct Argument
+        {
+            public uint _uint;
+            public string _string;
+            public ArgumentType type;
+        }
+
+        private enum ArgumentType
+        {
+            _none = 0,
+            _uint = 1,
+            _string = 2
+        }
+
+        private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2)
         {
             var indexBuffer = new StringBuffer();
             indexBuffer.length = 0;

@@ -65,7 +65,7 @@ function build {
 			;;
 
 		disk)
-			(cd bin && mono ./lonos.build.exe)
+			(cd bin && mono -O=all ./lonos.build.exe)
 			create_efi_disk
 			create_grub_hybrid_disk
 			;;
