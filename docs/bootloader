@@ -1,0 +1,14 @@
+Goal: Building image.elf without recompiling bootloader.elf every time, when kernel.elf has changed.
+
+build kernel.elf with base address 0x801000
+build bootloader.elf
+with a empty section “kernel.elf (maybe not required)
+empty program header for kernel.elf (contains zeroes)
+
+concate bootloader.elf + kernel.elf (binary concate) to image.elf
+set program header for kernel.elf (fileoffset=begin of kernel.elf in file, set length, phys=virt address=0x0x800000, set as PROGBITS, so even qemu -kernel will load this data)
+set section kernel.elf (optional?)
+
+Multiboot will now load all bootloader sections for itself, and loads kernel.elf to 0x800000.
+
+0x800000 / 0x801000 is just a example. It needs to be higher because of big size of bootloader itself. In final goal is to load the kernel in high virtual address space (@3GB)
