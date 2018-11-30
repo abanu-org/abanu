@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{7691F114-85A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{4C2366D3-CB74-46BE-9E35-494F017D7F96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.loader", "lonos.kernel.loader\lonos.kernel.loader.csproj", "{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{631BC4F3-E2D8-4319-814C-13904CAA17CE} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}

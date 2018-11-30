@@ -49,6 +49,7 @@ function build {
 			build builder
 			build assembly
 			build native
+			build loader
 			build disk
 			;;
 
@@ -64,10 +65,16 @@ function build {
 			src/lonos.native/build
 			;;
 
+		loader)
+			(cd bin && mono -O=all ./lonos.build.exe --image=loader)
+			;;
+
+		kernel)
+			(cd bin && mono -O=all ./lonos.build.exe --image=kernel)
+			;;
+
 		disk)
-			(cd bin && mono -O=all ./lonos.build.exe)
-			create_efi_disk
-			create_grub_hybrid_disk
+			_disk
 			;;
 
 		*)
@@ -90,6 +97,20 @@ function run {
 			echo $"Usage: lonosctl run {qemu|bochs}"
 			exit 1
 	esac
+}
+
+function _disk {
+	#image=$LONOS_OSDIR/lonos.kernel.image.bin
+	#loader=$LONOS_PROJDIR/os/lonos.kernel.loader.bin
+	#kernel=$LONOS_PROJDIR/os/lonos.kernel.core.bin
+	#rm -f $image
+	#cat $loader $kernel > $image
+	#printf '\x31\xc0\xc3' | dd of=$image bs=1 seek=3 count=3 conv=notrunc
+	
+	(cd bin && mono -O=all ./lonos.build.exe --image=image)
+	
+	create_efi_disk
+	create_grub_hybrid_disk
 }
 
 function _bochs {
@@ -189,14 +210,14 @@ function create_efi_disk {
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/boot ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/NvVars ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/.disk ::/
-	mcopy -i $disk -s $LONOS_OSDIR/lonos.kernel.core.bin ::/lonos.bin
+	mcopy -i $disk -s $LONOS_OSDIR/lonos.kernel.image.bin ::/lonos.bin
 }
 
 function create_grub_hybrid_disk {
 	disk=${LONOS_OSDIR}/lonos.kernel.core.x86-grub-hybrid.disk.img
 	isodir=$LONOS_PROJDIR/tmp/iso-grub-hybrid
 	mkdir -p $isodir;
-	cp $LONOS_OSDIR/lonos.kernel.core.bin $isodir/lonos.bin
+	cp $LONOS_OSDIR/lonos.kernel.image.bin $isodir/lonos.bin
 	mkdir -p $isodir/boot/grub
 	cp $LONOS_TOOLSDIR/grub-efi-x86/boot/grub/grub.cfg $isodir/boot/grub
 	grub-mkrescue -o $disk $isodir

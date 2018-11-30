@@ -55,9 +55,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LonosBuilder.cs" />
+    <Compile Include="LonosBuilder_Kernel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LonosBuilder_Loader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Utility.Launcher\Mosa.Utility.Launcher.csproj">

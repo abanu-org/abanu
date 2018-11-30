@@ -17,7 +17,7 @@ using Mosa.Compiler.Common;
 
 namespace lonos.build
 {
-    public class LonosBuilder : IBuilderEvent, IStarterEvent
+    public class LonosBuilder_Loader : IBuilderEvent, IStarterEvent
     {
         public Options Options { get; }
         public string TestAssemblyPath { get; set; }
@@ -34,17 +34,17 @@ namespace lonos.build
 
         private Thread ProcessThread;
 
-        public LonosBuilder(string inputAssembly)
+        public LonosBuilder_Loader(string inputAssembly)
         {
             Options = new Options()
             {
-                EnableSSA = true,
-                EnableIROptimizations = true,
-                EnableSparseConditionalConstantPropagation = true,
-                EnableInlinedMethods = true,
-                EnableIRLongExpansion = true,
-                EnableValueNumbering = true,
-                TwoPassOptimizations = true,
+                EnableSSA = false,
+                EnableIROptimizations = false,
+                EnableSparseConditionalConstantPropagation = false,
+                EnableInlinedMethods = false,
+                EnableIRLongExpansion = false,
+                EnableValueNumbering = false,
+                TwoPassOptimizations = false,
 
                 Emulator = EmulatorType.Bochs,
                 ImageFormat = ImageFormat.IMG,
@@ -58,42 +58,20 @@ namespace lonos.build
                 InlinedIRMaximum = 12,
                 BootLoader = BootLoader.Syslinux_3_72,
                 VBEVideo = false,
-                Width = 640,
-                Height = 480,
-                Depth = 32,
                 BaseAddress = 0x00500000,
                 EmitRelocations = false,
                 EmitSymbols = false,
-                Emitx86IRQMethods = true,
+                Emitx86IRQMethods = false,
                 //SerialConnectionOption = SerialConnectionOption.Pipe,
-                SerialConnectionPort = 9999,
-                SerialConnectionHost = "127.0.0.1",
-                SerialPipeName = "MOSA",
                 ExitOnLaunch = true,
                 GenerateNASMFile = false,
                 GenerateASMFile = false,
-                GenerateMapFile = false,
+                GenerateMapFile = true,
                 GenerateDebugFile = false,
             };
 
-            //Options.GenerateNASMFile = true;
-            Options.GenerateASMFile = true;
-            Options.GenerateMapFile = true;
-            Options.GenerateDebugFile = true;
-            Options.EmitRelocations = true;
-            Options.EmitSymbols = true;
-            Options.Emitx86IRQMethods = true;
 
-            Options.EnableSSA = false;
-            Options.EnableIROptimizations = false;
-            Options.EnableSparseConditionalConstantPropagation = false;
-            Options.EnableInlinedMethods = false;
-            Options.EnableIRLongExpansion = false;
-            Options.EnableValueNumbering = false;
-            Options.TwoPassOptimizations = false;
-
-            //Options.VBEVideo = true;
-
+            Section sect = null;
             Options.CreateExtraSections = () =>
             {
                 return new List<Section>
@@ -110,32 +88,55 @@ namespace lonos.build
                             section.Size = (uint)data.Length;
                         }
                     },
-                    new Section
+                    /*new Section
                     {
-                        Name = "consolefont.regular",
+                        Name = "boot.data",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,
+                        Address = 0x4FF000,
+                        Size=0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-Terminus14.psf"));
-                            writer.Write(data);
-                            section.Size = (uint)data.Length;
+                            sect = section; //TODO: Could set outsite
+                            writer.Write(new byte[]{1,2,3,4,5,6,7,8,9});
+                            section.Size=0x1000;
                         }
-                    },
-                    new Section
-                    {
-                        Name = "consolefont.bold",
-                        Type = SectionType.ProgBits,
-                        AddressAlignment = 0x1000,
-                        EmitMethod = (section, writer) =>
-                        {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-TerminusBold14.psf"));
-                            writer.Write(data);
-                            section.Size = (uint)data.Length;
-                        }
-                    }
+                    }*/
                 };
             };
+
+            Options.CreateExtraProgramHeaders = () =>
+             {
+                 return new List<ProgramHeader>
+                 {
+                    /*new ProgramHeader
+                    {
+                        Alignment = sect.AddressAlignment,
+                        Offset = sect.Offset,
+                        VirtualAddress = sect.Address,
+                        PhysicalAddress = sect.Address,
+                        FileSize = 0x1000,
+                        MemorySize = 0x1000,
+                        Type = ProgramHeaderType.Load,
+                        Flags = ProgramHeaderFlags.Read
+                    }*/
+
+                    // ELF Header. Reusing existing Region in File.
+                    // This is allowed (overlapping Sections)
+                    new ProgramHeader
+                    {
+                        Alignment = 0x1000,
+                        Offset = 0x12345678,
+                        FileSize = 0x12345678,
+                        MemorySize = 0x100000,
+                        PhysicalAddress = 0x04100000, //Multiboot will load section here
+                        VirtualAddress = 0x04100000, 
+                        Type = ProgramHeaderType.Load,
+                        Flags = ProgramHeaderFlags.Read
+                    }
+
+                 };
+             };
 
             AppLocations = new AppLocations();
 

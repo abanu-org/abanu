@@ -61,3 +61,4 @@ Mosa-Project/
 os/
 logs/
 /tools/
+*.hexer

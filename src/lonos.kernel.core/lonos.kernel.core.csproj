@@ -34,7 +34,6 @@
     <Compile Include="Start.cs" />
     <Compile Include="Memory\Memory.cs" />
     <Compile Include="Memory\Adresse.cs" />
-    <Compile Include="Elf\ElfHelper.cs" />
     <Compile Include="Elf\KernelElf.cs" />
     <Compile Include="Memory\KernelMemory.cs" />
     <Compile Include="Interrupts\IDTMosa.cs" />

@@ -1,11 +1,9 @@
 ﻿using System;
 using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
-using Mosa.Kernel.x86;
 
 namespace lonos.kernel.core
 {
-
 
     public unsafe struct ElfHelper
     {
@@ -113,7 +111,7 @@ namespace lonos.kernel.core
             var idx = GetSectionHeaderIndexByName(name);
             if (idx == -1)
             {
-                KernelMessage.WriteLine("Section not found: {0}", name);
+                //KernelMessage.WriteLine("Section not found: {0}", name);
                 return (ElfSectionHeader*)0;
             }
             return GetSectionHeader((uint)idx);

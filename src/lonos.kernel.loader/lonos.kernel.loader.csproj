@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>lonos.kernel</RootNamespace>
-    <AssemblyName>lonos.kernel.lib</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>lonos.kernel.core</RootNamespace>
+    <AssemblyName>lonos.kernel.loader</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <ProjectGuid>{2D21AF60-8366-430A-9579-1B0CCD31910F}</ProjectGuid>
+    <ProjectGuid>{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +31,15 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Start.cs" />
+    <Compile Include="MultiBoot.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="KernelMemory.cs" />
+    <Compile Include="Adresse.cs" />
+    <Compile Include="Serial.cs" />
+    <Compile Include="KernelMessage.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
@@ -43,32 +52,10 @@
       <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
       <Name>Mosa.Runtime.x86</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lonos.kernel.api\lonos.kernel.api.csproj">
-      <Project>{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}</Project>
-      <Name>lonos.kernel.api</Name>
+    <ProjectReference Include="..\lonos.kernel.lib\lonos.kernel.lib.csproj">
+      <Project>{2D21AF60-8366-430A-9579-1B0CCD31910F}</Project>
+      <Name>lonos.kernel.lib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lonos.kernel.unixapi\lonos.kernel.unixapi.csproj">
-      <Project>{1DAF7D31-54DC-4B15-A14E-15206073C579}</Project>
-      <Name>lonos.kernel.unixapi</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Elf\ElfHeader.cs" />
-    <Compile Include="Elf\ElfSectionHeader.cs" />
-    <Compile Include="Elf\ElfSymbol.cs" />
-    <Compile Include="StringBuffer.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="ApiContext.cs" />
-    <Compile Include="FileExtensions.cs" />
-    <Compile Include="Fonts\PSF2Header.cs" />
-    <Compile Include="Fonts\PSF1Header.cs" />
-    <Compile Include="KMath.cs" />
-    <Compile Include="Elf\ElfHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Elf\" />
-    <Folder Include="Fonts\" />
-    <Folder Include="Structs\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
