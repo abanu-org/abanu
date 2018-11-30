@@ -22,3 +22,6 @@ http://www.win.tue.nl/~aeb/linux/kbd/font-formats-1.html
 
 # Linuxel Kernel API
 https://mchehab.fedorapeople.org/kernel_docs/core-api/kernel-api.html
+
+# PCI Devices
+https://www.oreilly.com/library/view/linux-device-drivers/0596005903/ch12.html
