@@ -41,7 +41,7 @@ namespace lonos.kernel.core
             SetupBootInfo();
             SetupVideoInfo();
             SetupMemoryMap();
-            uint kernelEntry = Address.KernelBasePhys + 0x30;
+            uint kernelEntry = Address.KernelBaseVirt + 0x30;
             Native.Call(kernelEntry);
             Debug.Break();
         }
