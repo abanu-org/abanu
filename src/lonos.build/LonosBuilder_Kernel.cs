@@ -62,7 +62,7 @@ namespace lonos.build
                 Height = 480,
                 Depth = 32,
                 //BaseAddress = 0x00500000,
-                BaseAddress = 0x04100000,
+                BaseAddress = Address.KernelBasePhys,
                 EmitRelocations = false,
                 EmitSymbols = false,
                 Emitx86IRQMethods = true,

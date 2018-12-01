@@ -67,7 +67,7 @@
     <Compile Include="Boot\BootInfoHeader.cs" />
     <Compile Include="Boot\BootInfoMemory.cs" />
     <Compile Include="Boot\BootInfoMemoryType.cs" />
-    <Compile Include="Adress.cs" />
+    <Compile Include="Address.cs" />
     <Compile Include="Boot\BiosMemoryType.cs" />
   </ItemGroup>
   <ItemGroup>

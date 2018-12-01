@@ -39,8 +39,10 @@ namespace lonos.kernel.core
             DumpElfInfo();
             SetupKernelSection();
             SetupBootInfo();
+            SetupVideoInfo();
             SetupMemoryMap();
-            Native.Call(0x04100000 + 0x30);
+            uint kernelEntry = Address.KernelBasePhys + 0x30;
+            Native.Call(kernelEntry);
             Debug.Break();
         }
 
@@ -48,7 +50,7 @@ namespace lonos.kernel.core
 
         private static void SetupOriginalKernelElf()
         {
-            uint kernelElfHeaderAddr = 0x05000000;
+            uint kernelElfHeaderAddr = Address.OriginalKernelElfSection;
             var kernelElfHeader = (ElfHeader*)kernelElfHeaderAddr;
             OriginalKernelElf = new ElfHelper
             {
@@ -75,6 +77,21 @@ namespace lonos.kernel.core
             BootInfo->Magic = lonos.kernel.core.BootInfoHeader.BootInfoMagic;
             BootInfo->HeapStart = KMath.AlignValueCeil(Address.OriginalKernelElfSection + OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->HeapSize = 0;
+        }
+
+        static void SetupVideoInfo()
+        {
+            BootInfo->VBEPresent = Multiboot.VBEPresent;
+            BootInfo->VBEMode = Multiboot.VBEMode;
+
+            BootInfo->FbInfo = new BootInfoFramebufferInfo();
+            BootInfo->FbInfo.FbAddr = Multiboot.multiBootInfo->FbAddr;
+            BootInfo->FbInfo.FbPitch = Multiboot.multiBootInfo->FbPitch;
+            BootInfo->FbInfo.FbWidth = Multiboot.multiBootInfo->FbWidth;
+            BootInfo->FbInfo.FbHeight = Multiboot.multiBootInfo->FbHeight;
+            BootInfo->FbInfo.FbBpp = Multiboot.multiBootInfo->FbBpp;
+            BootInfo->FbInfo.FbType = Multiboot.multiBootInfo->FbType;
+            BootInfo->FbInfo.ColorInfo = Multiboot.multiBootInfo->ColorInfo;
         }
 
         static void SetupMemoryMap()
@@ -160,15 +177,7 @@ namespace lonos.kernel.core
             }
         }
 
-        private const uint addr = 0x04100000 + 0x1000 + 0x30;
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        private static void jump()
-        {
-            Native.Jmp(addr);
-        }
-
-        private static void Dummy()
+        static void Dummy()
         {
             //This is a dummy call, that get never executed.
             //Its requied, because we need a real reference to Mosa.Runtime.x86

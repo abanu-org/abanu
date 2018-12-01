@@ -50,6 +50,7 @@ function build {
 			build assembly
 			build native
 			build loader
+			build kernel
 			build disk
 			;;
 

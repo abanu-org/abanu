@@ -35,7 +35,6 @@
     <Compile Include="MultiBoot.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="KernelMemory.cs" />
-    <Compile Include="Adresse.cs" />
     <Compile Include="Serial.cs" />
     <Compile Include="KernelMessage.cs" />
     <Compile Include="Memory.cs" />

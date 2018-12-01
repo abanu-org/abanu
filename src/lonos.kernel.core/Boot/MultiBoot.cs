@@ -9,7 +9,7 @@ namespace Mosa.Kernel.x86
     /// <summary>
     /// Static class of helpful memory functions
     /// </summary>
-    unsafe public static class Multiboot
+    unsafe public static class Multiboot_
     {
         /// <summary>
         /// Magic value that indicates that kernel was loaded by a Multiboot-compliant boot loader

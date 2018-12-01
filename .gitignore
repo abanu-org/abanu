@@ -65,3 +65,5 @@ logs/
 
 #Emacs files
 \#*\#
+
+.gdb_history

@@ -200,13 +200,6 @@ namespace Mosa.Kernel.x86
             uint address = Native.GetMultibootEBX();
 
             SetMultibootLocation(address, magic);
-
-            byte* addr = (byte*)0x04100000;
-
-            KernelMessage.WriteLine(addr[0]);
-            KernelMessage.WriteLine(addr[1]);
-            KernelMessage.WriteLine(addr[2]);
-
         }
 
         /// <summary>

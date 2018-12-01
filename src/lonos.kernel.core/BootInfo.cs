@@ -6,8 +6,6 @@ namespace lonos.kernel.core
 
         public unsafe static BootInfoHeader* Header;
 
-        public static bool VBEPresent { get; set; } = false;
-
         public static bool Present;
 
         public static void Setup()

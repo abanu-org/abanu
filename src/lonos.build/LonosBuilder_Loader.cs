@@ -70,6 +70,7 @@ namespace lonos.build
                 GenerateDebugFile = false,
             };
 
+            Options.VBEVideo = true;
 
             Section sect = null;
             Options.CreateExtraSections = () =>
@@ -109,28 +110,16 @@ namespace lonos.build
              {
                  return new List<ProgramHeader>
                  {
-                    /*new ProgramHeader
-                    {
-                        Alignment = sect.AddressAlignment,
-                        Offset = sect.Offset,
-                        VirtualAddress = sect.Address,
-                        PhysicalAddress = sect.Address,
-                        FileSize = 0x1000,
-                        MemorySize = 0x1000,
-                        Type = ProgramHeaderType.Load,
-                        Flags = ProgramHeaderFlags.Read
-                    }*/
-
                     // ELF Header. Reusing existing Region in File.
                     // This is allowed (overlapping Sections)
                     new ProgramHeader
                     {
                         Alignment = 0x1000,
-                        Offset = 0x12345678,
-                        FileSize = 0x12345678,
-                        MemorySize = 0x100000,
-                        PhysicalAddress = 0x05000000, //Multiboot will load section here
-                        VirtualAddress = 0x05000000, 
+                        Offset =   0x12345678, // Will be replaced in Link Disk stage
+                        FileSize = 0x12345678, // Will be replaced in Link Disk stage
+                        MemorySize = 0x12345678,
+                        PhysicalAddress = Address.OriginalKernelElfSection, //Multiboot will load section here
+                        VirtualAddress = Address.OriginalKernelElfSection, 
                         Type = ProgramHeaderType.Load,
                         Flags = ProgramHeaderFlags.Read
                     }

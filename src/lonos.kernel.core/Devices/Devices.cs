@@ -46,12 +46,14 @@ namespace lonos.kernel.core
         /// </summary>
         public unsafe static void InitFrameBuffer()
         {
-            if (!BootInfo.VBEPresent)
-                return;
+            if (!BootInfo.Header->VBEPresent)
+            {
+                KernelMessage.Path("fb", "not present");
+            }
 
             KernelMessage.WriteLine("InitFrameBuffer");
 
-            fb = new FrameBuffer(Multiboot.multiBootInfo->FbAddr, Multiboot.multiBootInfo->FbWidth, Multiboot.multiBootInfo->FbHeight, Multiboot.multiBootInfo->FbPitch, 8);
+            fb = new FrameBuffer(BootInfo.Header->FbInfo.FbAddr, BootInfo.Header->FbInfo.FbWidth, BootInfo.Header->FbInfo.FbHeight, BootInfo.Header->FbInfo.FbPitch, 8);
             fb.Init();
 
             FrameBufferTextScreen = new FrameBufferTextScreenDevice(fb);

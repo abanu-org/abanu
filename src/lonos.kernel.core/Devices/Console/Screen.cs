@@ -20,9 +20,9 @@ namespace lonos.kernel.core
             Goto(0, 0);
         }
 
-        public static void ApplyMode()
+        public unsafe static void ApplyMode()
         {
-            ApplyMode(Mosa.Kernel.x86.Multiboot.VBEMode);
+            ApplyMode(BootInfo.Header->VBEMode);
         }
 
         public static void ApplyMode(uint mode)

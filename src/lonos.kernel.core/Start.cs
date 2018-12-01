@@ -25,7 +25,6 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Booting Lonos Kernel...");
 
             // Detect environment (Memory Maps, Video Mode, etc.)
-            Multiboot.Setup();
             BootInfo.Setup();
 
             // Read own ELF-Headers and Sections
