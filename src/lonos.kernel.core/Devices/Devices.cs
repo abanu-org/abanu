@@ -49,6 +49,7 @@ namespace lonos.kernel.core
             if (!BootInfo.Header->VBEPresent)
             {
                 KernelMessage.Path("fb", "not present");
+                return;
             }
 
             KernelMessage.WriteLine("InitFrameBuffer");

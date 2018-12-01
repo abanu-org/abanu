@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Runtime.x64", "..\exte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Platform.Intel", "..\external\MOSA-Project\Source\Mosa.Platform.Intel\Mosa.Platform.Intel.csproj", "{17CE4F09-7CBF-49E9-84A7-178DB2CBD7C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.config", "lonos.kernel.config\lonos.kernel.config.csproj", "{317E8C4B-089B-469B-8789-D76EB2F87504}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{17CE4F09-7CBF-49E9-84A7-178DB2CBD7C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17CE4F09-7CBF-49E9-84A7-178DB2CBD7C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17CE4F09-7CBF-49E9-84A7-178DB2CBD7C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{317E8C4B-089B-469B-8789-D76EB2F87504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{317E8C4B-089B-469B-8789-D76EB2F87504}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{317E8C4B-089B-469B-8789-D76EB2F87504}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{317E8C4B-089B-469B-8789-D76EB2F87504}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{75A12A8A-8C8F-4D1E-801B-689D8F781BF4} = {36A674B9-1871-4391-BFA7-AA9D6B1C189F}

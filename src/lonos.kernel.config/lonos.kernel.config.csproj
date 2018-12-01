@@ -5,9 +5,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <RootNamespace>lonos.kernel</RootNamespace>
-    <AssemblyName>lonos.kernel.lib</AssemblyName>
+    <AssemblyName>lonos.kernel.config</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <ProjectGuid>{2D21AF60-8366-430A-9579-1B0CCD31910F}</ProjectGuid>
+    <ProjectGuid>{317E8C4B-089B-469B-8789-D76EB2F87504}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,27 +53,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Elf\ElfHeader.cs" />
-    <Compile Include="Elf\ElfSectionHeader.cs" />
-    <Compile Include="Elf\ElfSymbol.cs" />
-    <Compile Include="StringBuffer.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="ApiContext.cs" />
-    <Compile Include="FileExtensions.cs" />
-    <Compile Include="Fonts\PSF2Header.cs" />
-    <Compile Include="Fonts\PSF1Header.cs" />
-    <Compile Include="KMath.cs" />
-    <Compile Include="Elf\ElfHelper.cs" />
-    <Compile Include="Boot\BootInfoHeader.cs" />
-    <Compile Include="Boot\BootInfoMemory.cs" />
-    <Compile Include="Boot\BootInfoMemoryType.cs" />
-    <Compile Include="Boot\BiosMemoryType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Elf\" />
-    <Folder Include="Fonts\" />
-    <Folder Include="Structs\" />
-    <Folder Include="Boot\" />
+    <Compile Include="Address.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

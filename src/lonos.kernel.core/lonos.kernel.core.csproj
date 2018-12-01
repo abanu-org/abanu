@@ -94,6 +94,10 @@
       <Project>{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}</Project>
       <Name>lonos.kernel.api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\lonos.kernel.config\lonos.kernel.config.csproj">
+      <Project>{317E8C4B-089B-469B-8789-D76EB2F87504}</Project>
+      <Name>lonos.kernel.config</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Memory\" />

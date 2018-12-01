@@ -15,6 +15,8 @@ using System.Threading;
 using Mosa.Compiler.Framework.Linker.Elf;
 using Mosa.Compiler.Common;
 
+using lonos.kernel.core;
+
 namespace lonos.build
 {
     public class LonosBuilder_Loader : IBuilderEvent, IStarterEvent
@@ -58,7 +60,7 @@ namespace lonos.build
                 InlinedIRMaximum = 12,
                 BootLoader = BootLoader.Syslinux_3_72,
                 VBEVideo = false,
-                BaseAddress = 0x00500000,
+                BaseAddress = Address.LoaderBasePhys,
                 EmitRelocations = false,
                 EmitSymbols = false,
                 Emitx86IRQMethods = false,
