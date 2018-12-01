@@ -14,8 +14,8 @@ namespace lonos.kernel.core
         public static void Setup()
         {
             KernelMessage.WriteLine("Setup Native Calls");
-            prog1Addr = KernelElf.Native.GetPhysAddrOfSymbol("proc1");
-            prog2Addr = KernelElf.Native.GetPhysAddrOfSymbol("proc2");
+            prog1Addr = KernelElf.Native.GetPhysAddrOfSymbol("test_proc1");
+            prog2Addr = KernelElf.Native.GetPhysAddrOfSymbol("test_proc2");
             bochsDebugAddr = KernelElf.Native.GetPhysAddrOfSymbol("bochs_debug");
         }
 
