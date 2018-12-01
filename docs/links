@@ -14,8 +14,11 @@ http://www.informit.com/articles/article.aspx?p=29961&seqNum=2
 #kmallic impl:
 http://minirighi.sourceforge.net/html/kmalloc_8c-source.html
 
-# Linux boot process
+# Linux boot process (overview)
 https://www.ibm.com/developerworks/library/l-linuxboot/index.html
+
+# Linux boot process and internals (very detailed, like a book)
+https://0xax.gitbooks.io/linux-insides/content/Booting/linux-bootstrap-2.html
 
 # Console Fons
 http://www.win.tue.nl/~aeb/linux/kbd/font-formats-1.html

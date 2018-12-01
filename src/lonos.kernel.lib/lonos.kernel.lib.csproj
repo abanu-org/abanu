@@ -64,11 +64,17 @@
     <Compile Include="Fonts\PSF1Header.cs" />
     <Compile Include="KMath.cs" />
     <Compile Include="Elf\ElfHelper.cs" />
+    <Compile Include="Boot\BootInfoHeader.cs" />
+    <Compile Include="Boot\BootInfoMemory.cs" />
+    <Compile Include="Boot\BootInfoMemoryType.cs" />
+    <Compile Include="Adress.cs" />
+    <Compile Include="Boot\BiosMemoryType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />
     <Folder Include="Fonts\" />
     <Folder Include="Structs\" />
+    <Folder Include="Boot\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

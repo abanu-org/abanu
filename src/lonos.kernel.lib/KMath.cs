@@ -6,6 +6,16 @@ namespace lonos.kernel
     public static class KMath
     {
 
+        public static uint AlignValueCeil(uint value, uint dividor)
+        {
+            return (value / dividor) * dividor + dividor;
+        }
+
+        public static uint AlignValueFloor(uint value, uint dividor)
+        {
+            return (value / dividor) * dividor;
+        }
+
         public static uint DivCeil(uint value, uint dividor)
         {
             return (value - 1) / dividor + 1;

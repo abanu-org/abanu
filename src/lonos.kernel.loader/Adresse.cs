@@ -2,7 +2,7 @@
 
 namespace lonos.kernel.core
 {
-    public static class Address
+    public static class Address_
     {
         public const uint InitialStack = 0x000F0000; // ???KB (stack grows down)
 

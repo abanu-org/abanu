@@ -62,3 +62,6 @@ os/
 logs/
 /tools/
 *.hexer
+
+#Emacs files
+\#*\#

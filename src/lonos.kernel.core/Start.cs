@@ -26,6 +26,7 @@ namespace lonos.kernel.core
 
             // Detect environment (Memory Maps, Video Mode, etc.)
             Multiboot.Setup();
+            BootInfo.Setup();
 
             // Read own ELF-Headers and Sections
             KernelElf.Setup();
@@ -45,7 +46,7 @@ namespace lonos.kernel.core
             // Now we are in virtual Adress Space !
             // Not requied yet, but maybe some re-initialization of should be done now.
 
-            PageFrameAllocator.Setup();
+            //PageFrameAllocator.Setup();
             Memory.Setup();
 
             // Now Memory Sub System is working. At this point it's valid

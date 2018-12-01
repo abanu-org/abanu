@@ -129,8 +129,8 @@ namespace lonos.build
                         Offset = 0x12345678,
                         FileSize = 0x12345678,
                         MemorySize = 0x100000,
-                        PhysicalAddress = 0x04100000, //Multiboot will load section here
-                        VirtualAddress = 0x04100000, 
+                        PhysicalAddress = 0x05000000, //Multiboot will load section here
+                        VirtualAddress = 0x05000000, 
                         Type = ProgramHeaderType.Load,
                         Flags = ProgramHeaderFlags.Read
                     }

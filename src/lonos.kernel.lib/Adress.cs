@@ -17,8 +17,11 @@ namespace lonos.kernel.core
         public const uint GCInitialMemory = 0x03000000;  // 48MB [Size=16MB]
         public const uint GCInitialMemory_BootLoader = 0x02000000;  // 32MB [Size=16MB]
 
-        public const uint KernelElfPhys = 0x04100000;  // 65MB
-        public const uint KernelElfVirt = 0xC0100000;  // 3GB+1MB
+        public const uint KernelBasePhys = 0x04100000;  // 65MB
+        public const uint KernelBaseVirt = 0xC0100000;  // 3GB+1MB
+        public const uint KernelElfSection = 0x04100000 - 0x1000;  // 65MB
+        public const uint OriginalKernelElfSection = 0x05000000;  //80MB
+        public const uint KernelBootInfo = OriginalKernelElfSection - 0x1000;
         public const uint VirtuaMemory = 0x06000000;  // 96MB
 
         public const uint ReserveMemory = 0x06000000;  // 96MB

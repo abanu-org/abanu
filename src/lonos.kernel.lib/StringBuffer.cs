@@ -135,6 +135,12 @@ namespace lonos.kernel.core
             Append(value, format);
         }
 
+        public unsafe StringBuffer(NullTerminatedString* value)
+            : this()
+        {
+            Append(value);
+        }
+
         #endregion Constructor
 
         #region Append
@@ -160,7 +166,7 @@ namespace lonos.kernel.core
         {
             var len = value->GetLength();
             for (var i = 0; i < len; i++)
-                Append(value->Bytes[i]);
+                Append((char)value->Bytes[i]);
         }
 
         public void Append(string value, int start)

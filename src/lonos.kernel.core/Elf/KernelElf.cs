@@ -15,34 +15,55 @@ namespace lonos.kernel.core
         {
             KernelMessage.WriteLine("Setup ELF Headers");
             KernelMessage.WriteLine("Image Header:");
-            KernelMemory.DumpToConsoleLine(0x500000, 124);
+            KernelMemory.DumpToConsoleLine(Address.KernelElfSection, 124);
 
-            Main = new ElfHelper
-            {
-                SectionHeaderArray = (ElfSectionHeader*)Multiboot.multiBootInfo->ElfSectionHeader->Addr,
-                StringTableSectionHeaderIndex = Multiboot.multiBootInfo->ElfSectionHeader->Shndx,
-                SectionHeaderCount = Multiboot.multiBootInfo->ElfSectionHeader->Count
-            };
-            Main.Init();
-
-            var nativeSec = Main.GetSectionHeader("native");
-            var nativeElfAddr = Main.GetSectionPhysAddr(nativeSec);
-
-            var nativeElf = (ElfHeader*)nativeElfAddr;
-            var str = (NullTerminatedString*)nativeElfAddr;
-
-            KernelMessage.WriteLine("Found embedded ELF at {0:X8}", nativeElfAddr);
-
-            Native = new ElfHelper
-            {
-                PhyOffset = nativeElfAddr,
-                SectionHeaderArray = (ElfSectionHeader*)(nativeElfAddr + nativeElf->ShOff),
-                SectionHeaderCount = nativeElf->ShNum,
-                StringTableSectionHeaderIndex = nativeElf->ShStrNdx
-            };
-            Native.Init();
-
+            Main = FromAddress(Address.KernelElfSection);
+            Native = FromSectionName("native");
         }
+
+        /// <summary>
+        /// Currently unused, because Kernel is loaded via from kernel.loader
+        /// </summary>
+        unsafe static ElfHelper FromMultiBootInfo(MultiBootInfo* multiBootInfo)
+        {
+            var helper = new ElfHelper
+            {
+                SectionHeaderArray = (ElfSectionHeader*)multiBootInfo->ElfSectionHeader->Addr,
+                StringTableSectionHeaderIndex = multiBootInfo->ElfSectionHeader->Shndx,
+                SectionHeaderCount = multiBootInfo->ElfSectionHeader->Count
+            };
+            helper.Init();
+            return helper;
+        }
+
+        unsafe static ElfHelper FromAddress(Addr elfStart)
+        {
+            var elfHeader = (ElfHeader*)elfStart;
+
+            if (elfHeader->Ident1 != ElfHeader.Magic1)
+            {
+                KernelMessage.WriteLine("No valid ELF found at {0:X8}", elfStart);
+                // TODO: Throw Excetion
+            }
+            var helper = new ElfHelper
+            {
+                PhyOffset = elfStart,
+                SectionHeaderArray = (ElfSectionHeader*)(elfStart + elfHeader->ShOff),
+                SectionHeaderCount = elfHeader->ShNum,
+                StringTableSectionHeaderIndex = elfHeader->ShStrNdx
+            };
+            helper.Init();
+            return helper;
+        }
+
+        unsafe static ElfHelper FromSectionName(string name)
+        {
+            var sec = Main.GetSectionHeader(name);
+            var addr = Main.GetSectionPhysAddr(sec);
+            KernelMessage.WriteLine("Found embedded ELF at {0:X8}", addr);
+            return FromAddress(addr);
+        }
+
     }
 
 }

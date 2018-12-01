@@ -216,6 +216,10 @@ namespace Mosa.Kernel.x86
             {
                 SetMultibootLocation(address);
             }
+            else
+            {
+                KernelMessage.Path("multiboot", "not present");
+            }
         }
 
         /// <summary>

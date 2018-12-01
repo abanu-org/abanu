@@ -125,6 +125,15 @@ namespace lonos.kernel.core
                 return section->Addr + PhyOffset;
         }
 
+        public uint TotalFileSize
+        {
+            get
+            {
+                var lastSection = SectionHeaderCount - 1;
+                return SectionHeaderArray[lastSection].Offset + SectionHeaderArray[lastSection].Size;
+            }
+        }
+
     }
 
 }

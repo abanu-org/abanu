@@ -15,6 +15,7 @@ namespace lonos.kernel.core
 
         public static void Break()
         {
+            KernelMessage.WriteLine("<BREAK>");
             while (true)
             {
                 Native.Nop();

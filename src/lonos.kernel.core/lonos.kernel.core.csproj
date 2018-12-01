@@ -33,7 +33,6 @@
   <ItemGroup>
     <Compile Include="Start.cs" />
     <Compile Include="Memory\Memory.cs" />
-    <Compile Include="Memory\Adresse.cs" />
     <Compile Include="Elf\KernelElf.cs" />
     <Compile Include="Memory\KernelMemory.cs" />
     <Compile Include="Interrupts\IDTMosa.cs" />
@@ -68,6 +67,7 @@
     <Compile Include="Memory\PageTable2.cs" />
     <Compile Include="Memory\PageTable3.cs" />
     <Compile Include="Memory\Page.cs" />
+    <Compile Include="BootInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
