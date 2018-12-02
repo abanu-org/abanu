@@ -83,6 +83,7 @@
     <Compile Include="Screen.cs" />
     <Compile Include="MemoryOperation.cs" />
     <Compile Include="ScreenColors.cs" />
+    <Compile Include="Debug.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />

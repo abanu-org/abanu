@@ -7,36 +7,29 @@ using Mosa.Runtime.x86;
 namespace lonos.kernel.core
 {
 
-    internal unsafe static class Start
+    unsafe static class Start
     {
 
         public static void Main()
         {
-            //Native.Nop();
-            //Native.Nop();
-            //jump();
-
-            //Native.Nop();
-            //Native.Nop();
-
+            // Setup Kernel Log
             var kmsgHandler = new KernelMessageWriter();
             KernelMessage.SetHandler(kmsgHandler);
             KernelMessage.WriteLine("<Lonos Kernel Loader>");
 
+            // Parse Boot Informations
             Multiboot.Setup();
 
-            // Detect environment (Memory Maps, Video Mode, etc.)
-            //Multiboot.Setup();
-
-
-            // Setup Global Descriptor Table
-            //GDT.Setup();
-
-            //PageTable.Setup();
-
+            // Parse Kernel ELF section
             SetupOriginalKernelElf();
+
+            // Print all section of Kernel ELF (for information only)
             DumpElfInfo();
+
+            // Copy Section to a final destination
             SetupKernelSection();
+
+            // Collection informations we need to pass to the kernel
             SetupBootInfo();
             SetupVideoInfo();
             SetupMemoryMap();
@@ -49,16 +42,19 @@ namespace lonos.kernel.core
 
             PageTable.Setup();
 
+            // Because Kernel is compiled in virtual address space, we need to remap the pages
             MapKernelImage();
 
-            // Now we are in virtual Adress Space !
-            // Not requied yet, but maybe some re-initialization of should be done now.
-
+            // Get Entry Point of Kernel
             uint kernelEntry = GetKernelStartAddr();
-
             KernelMessage.WriteLine("Call Kernel Start at {0:X8}", kernelEntry);
+
+            // Start Kernel.
             CallAddress(kernelEntry);
 
+            // If we hit this code location, the Kernel Main method returned.
+            // This would be a general fault. Normally, this code section will overwritten
+            // by the kernel, so normally, it can never reach this code position.
             KernelMessage.WriteLine("Unexpected return from Kernel Start");
 
             Debug.Break();
@@ -85,14 +81,14 @@ namespace lonos.kernel.core
             return sym->Value;
         }
 
-        private static void CallAddress(uint addr)
+        static void CallAddress(uint addr)
         {
             Native.Call(addr);
         }
 
-        private static ElfHelper OriginalKernelElf;
+        static ElfHelper OriginalKernelElf;
 
-        private static void SetupOriginalKernelElf()
+        static void SetupOriginalKernelElf()
         {
             uint kernelElfHeaderAddr = Address.OriginalKernelElfSection;
             var kernelElfHeader = (ElfHeader*)kernelElfHeaderAddr;

@@ -1,6 +1,5 @@
 ﻿using System;
 using Mosa.Runtime;
-using Mosa.Kernel.x86;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
 
@@ -15,7 +14,7 @@ namespace lonos.kernel.core
 
         public static void Break()
         {
-            KernelMessage.WriteLine("<BREAK>");
+            KernelMessage.Write("<BREAK>");
             while (true)
             {
                 Native.Nop();

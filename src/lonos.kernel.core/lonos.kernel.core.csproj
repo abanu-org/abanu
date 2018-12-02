@@ -38,7 +38,6 @@
     <Compile Include="Interrupts\IDTMosa.cs" />
     <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Debug\Panic.cs" />
-    <Compile Include="Debug\Debug.cs" />
     <Compile Include="Interrupts\PIC.cs" />
     <Compile Include="External\NativeCalls.cs" />
     <Compile Include="Interrupts\InterruptHandlers.cs" />
