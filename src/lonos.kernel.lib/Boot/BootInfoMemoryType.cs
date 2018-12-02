@@ -16,9 +16,12 @@ namespace lonos.kernel.core
         GDT = 10,
         PageDirectory = 11,
         PageTable = 12,
+        InitialStack = 13,
+        InitialGCMemory = 14,
 
         // Kernel side
 
-        KernelMemoryMap = 13
+        KernelMemoryMap = 15,
+        PageFrameAllocator = 16,
     }
 }

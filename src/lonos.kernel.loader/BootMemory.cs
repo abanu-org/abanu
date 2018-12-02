@@ -13,6 +13,7 @@ namespace lonos.kernel.core
         public static void Setup()
         {
             PageStartAddr = Address.InitialDynamicPage;
+            //PageStartAddr = Address.GCInitialMemory;
         }
 
         [Plug("Mosa.Runtime.GC::AllocateMemory")]

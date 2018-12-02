@@ -27,7 +27,7 @@ namespace lonos.kernel.core
         /// </summary>
         public static void Setup(Addr addr)
         {
-            KernelMessage.WriteLine("Setup GDT");
+            KernelMessage.Write("Setup GDT...");
 
             gdtTableAddress = addr;
 
@@ -58,6 +58,8 @@ namespace lonos.kernel.core
             table->AddEntry(dataEntry);
 
 			Flush();
+
+            KernelMessage.WriteLine("Done");
         }
 
         public static void KernelSetup(Addr gdtAddr) {

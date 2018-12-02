@@ -37,7 +37,7 @@ namespace lonos.kernel.core
 
         static void SetupMemoryMap()
         {
-            uint customMaps = 4;
+            uint customMaps = 6;
             var mbMapCount = Multiboot.MemoryMapCount;
             BootInfo->MemoryMapLength = mbMapCount + customMaps;
             BootInfo->MemoryMapArray = (BootInfoMemory*)MallocBootInfoData((USize)(sizeof(MultiBootMemoryMap) * MemoryMapReserve));
@@ -92,6 +92,17 @@ namespace lonos.kernel.core
             BootInfo->MemoryMapArray[idx].Start = BootInfo->HeapStart;
             BootInfo->MemoryMapArray[idx].Size = 0x1000; //TODO: Recaluclate after Setup all Infos
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeap;
+
+            idx++;
+            uint stackSize = 0x100000; // 1MB 
+            BootInfo->MemoryMapArray[idx].Start = Address.InitialStack - stackSize;
+            BootInfo->MemoryMapArray[idx].Size = stackSize;
+            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialStack;
+
+            idx++;
+            BootInfo->MemoryMapArray[idx].Start = Address.GCInitialMemory;
+            BootInfo->MemoryMapArray[idx].Size = 0x100000; // 1MB
+            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialGCMemory;
         }
 
         public static void AddMap(BootInfoMemory map)

@@ -20,13 +20,17 @@ namespace lonos.kernel.core
         private static uint totalPages;
         private static uint totalUsedPages;
 
+        static KernelMemoryMap kmap;
+
         /// <summary>
         /// Setup the physical page manager
         /// </summary>
         public static void Setup()
         {
-            map = new IntPtr(Address.PageFrameAllocator);
-            at = new IntPtr(Address.PageFrameAllocator);
+            kmap = KernelMemoryMapManager.Allocate(4 * 1024 * 1024, BootInfoMemoryType.PageFrameAllocator);
+
+            map = new IntPtr((uint)kmap.Start);
+            at = new IntPtr((uint)kmap.Start);
             totalPages = 0;
             totalUsedPages = 0;
             SetupFreeMemory();
@@ -61,7 +65,7 @@ namespace lonos.kernel.core
         /// <param name="size">The size.</param>
         private static void AddFreeMemory(uint cnt, uint start, uint size)
         {
-            KernelMessage.Path("PageFrameAllocator","Add Start={0:X8}, Size:{1:X8}", start, size);
+            KernelMessage.Path("PageFrameAllocator", "Add Start={0:X8}, Size:{1:X8}", start, size);
             if ((start > Address.MaximumMemory) || (start + size < Address.ReserveMemory))
                 return;
 

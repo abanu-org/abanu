@@ -9,23 +9,13 @@ namespace lonos.kernel.core
         /// </summary>
         public static readonly string KernelEntryName = "System.Void lonos.kernel.core.Start::Main()";
 
-        public const uint InitialStack = 0x000F0000; // ???KB (stack grows down)
+        public const uint InitialStack = 0xA00000; // 10MB (stack grows down)
 
-        private const uint TempShift = 0x1000000;
+        private const uint InitialAllocStart = 0x4000000;
 
-        public const uint InitialDynamicPage = TempShift + 0x00B00000;  // 12MB [Size=4KB]
+        public const uint GCInitialMemory = InitialAllocStart;
 
-        //public const uint PageDirectory = TempShift + 0x00B00000;  // 12MB [Size=4KB]
-        //public const uint GDTTable = TempShift + 0x00B10000;  // 12MB+ [Size=1KB]
-        //public const uint IDTTable = TempShift + 0x00B05000;  // 12MB+ [Size=1KB]
-
-        public const uint PageFrameAllocator = TempShift + 0x00C00000;  // 13MB [Size=4MB]
-        //public const uint PageTable = TempShift + 0x01000000;  // 16MB [Size=4MB]
-        //public const uint VirtualPageAllocator = TempShift + 0x01400000;  // 20MB [Size=32KB]
-
-        public const uint GCInitialMemory = TempShift + 0x03000000;  // 48MB [Size=16MB]
-        public const uint GCInitialMemory_BootLoader = TempShift + 0x02000000;  // 32MB [Size=16MB]
-
+        public const uint InitialDynamicPage = InitialAllocStart + 1024 * 1024;
         public const uint LoaderBasePhys = 0x00200000;  // 3MB
 
         public const uint KernelBasePhys = 0x01400000;  // 27MB
@@ -36,7 +26,7 @@ namespace lonos.kernel.core
         public const uint KernelBootInfo = OriginalKernelElfSection - 0x1000;
         public const uint VirtuaMemory = 0x04000000;
 
-        public const uint ReserveMemory = TempShift + 0x04000000;  // 
+        public const uint ReserveMemory = 1024 * 1024;  // 
         //public const uint ReserveMemory = 0x05000000;  // 80MB
         public const uint MaximumMemory = 0xFFFFFFFF;  // 4GB
 
