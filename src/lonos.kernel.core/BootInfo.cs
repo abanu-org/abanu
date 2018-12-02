@@ -44,7 +44,7 @@ namespace lonos.kernel.core
         static Addr GetAddrOfMapType(BootInfoMemoryType type)
         {
             var mapLen = Header->MemoryMapLength;
-            KernelMessage.WriteLine("Maps: {0}", mapLen);
+            //KernelMessage.WriteLine("Maps: {0}", mapLen);
             for (uint i = 0; i < mapLen; i++)
             {
                 if (Header->MemoryMapArray[i].Type == type)

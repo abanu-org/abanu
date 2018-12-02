@@ -111,11 +111,11 @@ namespace lonos.kernel.core
         public KernelMemoryMapArray SystemUsable;
     }
 
-    public unsafe class KernelMemoryMapManager
+    public static unsafe class KernelMemoryMapManager
     {
 
         static KernelMemoryMap InitialMap;
-        static KernelMemoryMapHeader* Header;
+        public static KernelMemoryMapHeader* Header;
 
         public static void Setup()
         {

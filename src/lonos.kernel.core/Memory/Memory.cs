@@ -18,9 +18,13 @@ namespace lonos.kernel.core
             _startVirtAddr = 0x40000000; //1gb
             _nextVirtAddr = _startVirtAddr;
 
-            _kmalloc_Next = RequestRawVirtalMemory(10 * 1024 * 1024);
+            uint reserveMem = 10 * 1024 * 1024;
 
-            KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameAllocator.PagesAvailable*4096)/1024/1024);
+            KernelMessage.WriteLine("Request {0} MB for MemoryAllocator", reserveMem / 1024 / 1024);
+
+            _kmalloc_Next = RequestRawVirtalMemory(reserveMem);
+
+            KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameAllocator.PagesAvailable * 4096) / 1024 / 1024);
         }
 
         /// <summary>
@@ -116,7 +120,8 @@ namespace lonos.kernel.core
 
         public struct pgprot_t { }
 
-        public unsafe static Addr MapVirtualPages(Page* pages, uint count, ulong flags, pgprot_t protection) {
+        public unsafe static Addr MapVirtualPages(Page* pages, uint count, ulong flags, pgprot_t protection)
+        {
             return Addr.Zero;
         }
 

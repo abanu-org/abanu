@@ -14,6 +14,8 @@ namespace lonos.kernel.core
             BootInfo->HeapStart = KMath.AlignValueCeil(Address.OriginalKernelElfSection + Start.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->HeapSize = 0;
 
+            BootInfo->InstalledPhysicalMemory = 128 * 1024 * 1024;
+
             SetupVideoInfo();
             SetupMemoryMap();
         }

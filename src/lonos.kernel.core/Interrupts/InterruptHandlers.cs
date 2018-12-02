@@ -142,13 +142,13 @@ namespace lonos.kernel.core
 
             var physicalpage = PageFrameAllocator.Allocate();
 
-            if (physicalpage == IntPtr.Zero)
+            if (physicalpage == Addr.Invalid)
             {
                 Error(stack, "Out of Memory");
                 return;
             }
 
-            PageTable.MapVirtualAddressToPhysical(cr2, (uint)physicalpage.ToInt32());
+            PageTable.MapVirtualAddressToPhysical(cr2, (uint)physicalpage);
         }
 
         /// <summary>

@@ -6,19 +6,17 @@ using Mosa.Runtime;
 
 namespace lonos.kernel.core
 {
+
     /// <summary>
     /// A physical page allocator.
     /// </summary>
-    public static class PageFrameAllocator
+    public unsafe static class PageFrameAllocator
     {
-        // Start of memory map
-        private static IntPtr map;
 
-        // Current position in map data structure
-        private static IntPtr at;
+        static uint PagesUsed;
 
-        private static uint totalPages;
-        private static uint totalUsedPages;
+        static Page* PageArray;
+        static uint PageCount;
 
         static KernelMemoryMap kmap;
 
@@ -27,13 +25,28 @@ namespace lonos.kernel.core
         /// </summary>
         public static void Setup()
         {
-            kmap = KernelMemoryMapManager.Allocate(4 * 1024 * 1024, BootInfoMemoryType.PageFrameAllocator);
+            uint physMem = BootInfo.Header->InstalledPhysicalMemory;
+            PageCount = physMem / PageSize;
+            kmap = KernelMemoryMapManager.Allocate(PageCount * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
+            PageArray = (Page*)kmap.Start;
+            lastAllocatedPage = PageArray;
 
-            map = new IntPtr((uint)kmap.Start);
-            at = new IntPtr((uint)kmap.Start);
-            totalPages = 0;
-            totalUsedPages = 0;
+            MemoryOperation.Clear4(kmap.Start, kmap.Size);
+
+            for (uint i = 0; i < PageCount; i++)
+            {
+                PageArray[i].PhysicalAddress = i * PageSize;
+                if (i != 0)
+                    PageArray[i-1].Next = &PageArray[i];
+            }
+
             SetupFreeMemory();
+
+            for (uint i = 0; i < PageCount; i++)
+            {
+                if (!PageArray[i].Used)
+                    PageArray[i].Status = PageStatus.Free;
+            }
         }
 
         /// <summary>
@@ -44,73 +57,66 @@ namespace lonos.kernel.core
             if (!BootInfo.Present)
                 return;
 
-            uint cnt = 0;
-
-            for (uint index = 0; index < BootInfo.Header->MemoryMapLength; index++)
+            for (var i = 0; i < KernelMemoryMapManager.Header->Used.Count; i++)
             {
-                var mm = &BootInfo.Header->MemoryMapArray[index];
-
-                if (mm->Type == BootInfoMemoryType.SystemUsable)
-                {
-                    AddFreeMemory(cnt++, mm->Start, mm->Size);
-                }
+                var map = KernelMemoryMapManager.Header->Used.Items[i];
+                GetPage(map.Start)->Status = PageStatus.Used;
+                PagesUsed++;
             }
         }
 
-        /// <summary>
-        /// Adds the free memory.
-        /// </summary>
-        /// <param name="cnt">The count.</param>
-        /// <param name="start">The start.</param>
-        /// <param name="size">The size.</param>
-        private static void AddFreeMemory(uint cnt, uint start, uint size)
+        public static Page* GetPage(Addr addr)
         {
-            KernelMessage.Path("PageFrameAllocator", "Add Start={0:X8}, Size:{1:X8}", start, size);
-            if ((start > Address.MaximumMemory) || (start + size < Address.ReserveMemory))
-                return;
-
-            // Normalize
-            uint normstart = (start + PageSize - 1) & ~(PageSize - 1);
-            uint normend = (start + size) & ~(PageSize - 1);
-            uint normsize = normend - normstart;
-
-            // Adjust if memory below is reserved
-            if (normstart < Address.ReserveMemory)
-            {
-                if ((normstart + normsize) < Address.ReserveMemory)
-                    return;
-
-                normsize = (normstart + normsize) - Address.ReserveMemory;
-                normstart = Address.ReserveMemory;
-            }
-
-            // Populate free table
-            for (uint mem = normstart; mem < normstart + normsize; mem = mem + PageSize, at = at + 4)
-            {
-                Intrinsic.Store32(at, mem);
-            }
-
-            at -= 4;
-            totalPages += (normsize / PageSize);
+            return &PageArray[(uint)addr / PageSize];
         }
+
+        //static uint _nextAllocacationSearchIndex;
+        private static Page* lastAllocatedPage;
 
         /// <summary>
         /// Allocate a physical page from the free list
         /// </summary>
         /// <returns>The page</returns>
-        public static IntPtr Allocate()
+        public static Addr Allocate()
         {
-            if (at == map)
-                return IntPtr.Zero; // out of memory
+            var cnt = 0;
+            Page* p = lastAllocatedPage->Next;
+            while (true)
+            {
+                if (p == null)
+                    p = PageArray;
+                if (p->Status == PageStatus.Free)
+                    break;
+                p = p->Next;
+                if (++cnt > PageCount)
+                    break;
+            }
 
-            totalUsedPages++;
-            var avail = Intrinsic.LoadPointer(at);
-            at -= 4;
+            //for (uint i = _nextAllocacationSearchIndex; i < PageCount; i++)
+            //{
+            //    if (PageArray[i].Free)
+            //    {
+            //        p = &PageArray[i];
+            //        _nextAllocacationSearchIndex = i + 1;
+            //    }
+            //}
+            //for (uint i = 0; i < _nextAllocacationSearchIndex; i++)
+            //{
+            //    if (PageArray[i].Free)
+            //    {
+            //        p = &PageArray[i];
+            //        _nextAllocacationSearchIndex = i + 1;
+            //    }
+            //}
+            if (p == null || p->Status != PageStatus.Free)
+            {
+                return Addr.Invalid;
+            }
 
-            // Clear out memory
-            Mosa.Runtime.Internal.MemoryClear(avail, PageSize);
-
-            return avail;
+            p->Status = PageStatus.Used;
+            PagesUsed++;
+            lastAllocatedPage = p;
+            return p->PhysicalAddress;
         }
 
         /// <summary>
@@ -119,9 +125,11 @@ namespace lonos.kernel.core
         /// <param name="address">The address.</param>
         public static void Free(IntPtr address)
         {
-            totalUsedPages--;
-            at += 4;
-            Intrinsic.Store32(at, address.ToInt32());
+            var p = GetPage(address);
+            if (p->Free)
+                return;
+            p->Status = PageStatus.Free;
+            PagesUsed--;
         }
 
         /// <summary>
@@ -129,22 +137,11 @@ namespace lonos.kernel.core
         /// </summary>
         public static uint PageSize { get { return 4096; } }
 
-        /// <summary>
-        /// Retrieves the amount of total physical memory pages available in the system.
-        /// </summary>
-        public static uint TotalPages { get { return totalPages; } }
-
-        /// <summary>
-        /// Retrieves the amount of number of physical pages in use.
-        /// </summary>
-        public static uint TotalPagesInUse { get { return totalUsedPages; } }
-
-
         public static uint PagesAvailable
         {
             get
             {
-                return TotalPages - TotalPagesInUse;
+                return PageCount - PagesUsed;
             }
         }
 

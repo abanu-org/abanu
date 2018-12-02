@@ -22,6 +22,8 @@ namespace lonos.kernel.core
         public bool VBEPresent;
         public uint VBEMode;
 
+        public uint InstalledPhysicalMemory;
+
         public BootInfoFramebufferInfo FbInfo;
     }
 

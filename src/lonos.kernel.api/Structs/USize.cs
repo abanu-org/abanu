@@ -14,7 +14,8 @@ namespace lonos.kernel.core
     {
         private unsafe void* _value; // Do not rename (binary serialization)
 
-        public static readonly Addr Zero;  
+        public static readonly Addr Zero;
+        public static readonly Addr Invalid = new Addr(0xFFFFFFFE);
 
         [NonVersionable]
 		public unsafe Addr(uint value)
