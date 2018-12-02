@@ -13,7 +13,7 @@ namespace lonos.kernel.core
         public unsafe static void Main()
         {
             Mosa.Runtime.StartUp.InitializeAssembly();
-
+            KernelMemory.InitializeGCMemory();
 
             ApiContext.Current = new ApiHost();
 

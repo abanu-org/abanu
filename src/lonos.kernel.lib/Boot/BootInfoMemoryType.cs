@@ -18,10 +18,11 @@ namespace lonos.kernel.core
         PageTable = 12,
         InitialStack = 13,
         InitialGCMemory = 14,
+        KernelReserved = 16,
 
         // Kernel side
 
-        KernelMemoryMap = 15,
-        PageFrameAllocator = 16,
+        KernelMemoryMap = 17,
+        PageFrameAllocator = 18,
     }
 }

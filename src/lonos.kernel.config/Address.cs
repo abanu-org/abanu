@@ -20,14 +20,11 @@ namespace lonos.kernel.core
 
         public const uint KernelBasePhys = 0x01400000;  // 27MB
         public const uint KernelBaseVirt = 0xC0100000;  // 3GB+1MB
-        //public const uint KernelBaseVirt = 0x7000000;  // 3GB+1MB
         public const uint KernelElfSection = KernelBasePhys - 0x1000;
-        public const uint OriginalKernelElfSection = 0x00C00000;  //17MB
-        public const uint KernelBootInfo = OriginalKernelElfSection - 0x1000;
-        public const uint VirtuaMemory = 0x04000000;
+        public const uint KernelBootInfo = 0xA00000 + 0x1000;
+        public const uint OriginalKernelElfSection = KernelBootInfo + 0x1000;  //17MB
 
-        public const uint ReserveMemory = 1024 * 1024;  // 
-        //public const uint ReserveMemory = 0x05000000;  // 80MB
+        public const uint ReserveMemory = 0x100000;  // 1MB 
         public const uint MaximumMemory = 0xFFFFFFFF;  // 4GB
 
         public const uint UnitTestStack = 0x00004000;  // 4KB (stack grows down)

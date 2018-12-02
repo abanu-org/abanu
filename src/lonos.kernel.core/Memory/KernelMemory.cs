@@ -10,6 +10,11 @@ namespace lonos.kernel.core
     public static class KernelMemory
     {
 
+        public static void InitializeGCMemory()
+        {
+            MemoryOperation.Clear4(Address.GCInitialMemory, 1024 * 1024);
+        }
+
         [Plug("Mosa.Runtime.GC::AllocateMemory")]
         static unsafe IntPtr _AllocateMemory(uint size)
         {
