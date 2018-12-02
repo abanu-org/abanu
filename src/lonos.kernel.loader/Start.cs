@@ -19,7 +19,8 @@ namespace lonos.kernel.core
             //Native.Nop();
             //Native.Nop();
 
-            Serial.SetupPort(Serial.COM1);
+            var kmsgHandler = new KernelMessageWriter();
+            KernelMessage.SetHandler(kmsgHandler);
             KernelMessage.WriteLine("hello");
 
             Multiboot.Setup();
@@ -33,17 +34,44 @@ namespace lonos.kernel.core
 
             //PageTable.Setup();
 
-
-
             SetupOriginalKernelElf();
             DumpElfInfo();
             SetupKernelSection();
             SetupBootInfo();
             SetupVideoInfo();
             SetupMemoryMap();
-            uint kernelEntry = Address.KernelBaseVirt + 0x30;
-            Native.Call(kernelEntry);
+
+            // Setup Global Descriptor Table
+            GDT.Setup();
+
+            // Now we enable Paging. It's important that we do not cause a Page Fault Exception,
+            // Because IDT is not setup yet, that could handle this kind of exception.
+
+            PageTable.Setup();
+
+            // Now we are in virtual Adress Space !
+            // Not requied yet, but maybe some re-initialization of should be done now.
+
+            uint kernelEntry = GetKernelStartAddr();
+
+            KernelMessage.WriteLine("Call Kernel Start at {0:X8}", kernelEntry);
+            CallAddress(kernelEntry);
+
+            KernelMessage.WriteLine("Unexpected return from Kernel Start");
+
             Debug.Break();
+        }
+
+        static Addr GetKernelStartAddr()
+        {
+            var symName = Address.KernelEntryName;
+            var sym = OriginalKernelElf.GetSymbol(symName);
+            return sym->Value;
+        }
+
+        private static void CallAddress(uint addr)
+        {
+            Native.Call(addr);
         }
 
         private static ElfHelper OriginalKernelElf;

@@ -1,7 +1,7 @@
 ﻿using System;
 using Mosa.Runtime;
 
-using Mosa.Kernel.x86;
+//using Mosa.Kernel.x86;
 
 
 namespace lonos.kernel.core

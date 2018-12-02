@@ -16,6 +16,8 @@ namespace lonos.kernel.core
         /// </summary>
         public static void Setup()
         {
+            KernelMessage.WriteLine("Setup PageTable");
+
             // Setup Page Directory
             for (int index = 0; index < 1024; index++)
             {
@@ -44,8 +46,12 @@ namespace lonos.kernel.core
             // Set CR3 register on processor - sets page directory
             Native.SetCR3(Address.PageDirectory);
 
+            KernelMessage.Write("Enable Paging");
+
             // Set CR0 register on processor - turns on virtual memory
             Native.SetCR0(Native.GetCR0() | 0x80000000);
+
+            KernelMessage.Write("Paging enabled");
         }
 
         private static PageTableEntry* GetTableEntry(uint forVirtualAddress){

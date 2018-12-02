@@ -12,6 +12,8 @@ namespace lonos.kernel.core
 
         public unsafe static void Main()
         {
+            Mosa.Runtime.StartUp.InitializeAssembly();
+
             ApiContext.Current = new ApiHost();
 
             // Setup some pseudo devices
@@ -33,19 +35,8 @@ namespace lonos.kernel.core
             // Initialize the embedded code (actually only a little proof of conecept code)
             NativeCalls.Setup();
 
-            // Setup Global Descriptor Table
-            GDT.Setup();
-
-            // Now we enable Paging. It's important that we do not cause a Page Fault Exception,
-            // Because IDT is not setup yet, that could handle this kind of exception.
-
             PageFrameAllocator.Setup();
-            PageTable.Setup();
 
-            // Now we are in virtual Adress Space !
-            // Not requied yet, but maybe some re-initialization of should be done now.
-
-            //PageFrameAllocator.Setup();
             Memory.Setup();
 
             // Now Memory Sub System is working. At this point it's valid

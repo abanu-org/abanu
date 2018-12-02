@@ -51,6 +51,10 @@
       <Project>{1DAF7D31-54DC-4B15-A14E-15206073C579}</Project>
       <Name>lonos.kernel.unixapi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\lonos.kernel.config\lonos.kernel.config.csproj">
+      <Project>{317E8C4B-089B-469B-8789-D76EB2F87504}</Project>
+      <Name>lonos.kernel.config</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elf\ElfHeader.cs" />
@@ -59,7 +63,7 @@
     <Compile Include="StringBuffer.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ApiContext.cs" />
-    <Compile Include="FileExtensions.cs" />
+    <Compile Include="BufferExtensions.cs" />
     <Compile Include="Fonts\PSF2Header.cs" />
     <Compile Include="Fonts\PSF1Header.cs" />
     <Compile Include="KMath.cs" />
@@ -68,6 +72,13 @@
     <Compile Include="Boot\BootInfoMemory.cs" />
     <Compile Include="Boot\BootInfoMemoryType.cs" />
     <Compile Include="Boot\BiosMemoryType.cs" />
+    <Compile Include="GDT.cs" />
+    <Compile Include="PageTable.cs" />
+    <Compile Include="PageTable2.cs" />
+    <Compile Include="PageTable3.cs" />
+    <Compile Include="Assert.cs" />
+    <Compile Include="KernelMessage.cs" />
+    <Compile Include="IKernelMessageHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />

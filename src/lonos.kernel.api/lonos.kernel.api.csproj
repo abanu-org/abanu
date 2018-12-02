@@ -52,6 +52,7 @@
     <Compile Include="Structs\Addr.cs" />
     <Compile Include="IKernelApi.cs" />
     <Compile Include="IFile.cs" />
+    <Compile Include="IBufferWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />

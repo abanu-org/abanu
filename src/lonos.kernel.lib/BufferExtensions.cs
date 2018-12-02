@@ -2,10 +2,10 @@
 
 namespace lonos.kernel.core
 {
-    public static class FileExtensions
+    public static class BufferExtensions
     {
 
-        public static void Write(this IFile file, string value)
+        public static void Write(this IBufferWriter file, string value)
         {
             for (var i = 0; i < value.Length; i++)
             {
@@ -13,14 +13,14 @@ namespace lonos.kernel.core
             }
         }
 
-        public unsafe static void Write(this IFile file, char value)
+        public unsafe static void Write(this IBufferWriter file, char value)
         {
             var b = (byte)value;
             byte* ptr = &b;
             file.Write(ptr, 1);
         }
 
-        public unsafe static void Write(this IFile file, byte value)
+        public unsafe static void Write(this IBufferWriter file, byte value)
         {
             byte* ptr = &value;
             file.Write(ptr, 1);

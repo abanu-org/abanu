@@ -4,6 +4,11 @@ namespace lonos.kernel.core
 {
     public static class Address
     {
+        /// <summary>
+        /// The Name of Kernel Entry Method. It's used by the Loader to determine it's address.
+        /// </summary>
+        public static readonly string KernelEntryName = "System.Void lonos.kernel.core.Start::Main()";
+
         public const uint InitialStack = 0x000F0000; // ???KB (stack grows down)
 
         private const uint TempShift = 0x1000000;

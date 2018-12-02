@@ -2,7 +2,23 @@
 namespace lonos.kernel.core
 {
 
-    public static class KernelMessage
+    public class KernelMessageWriter : IBufferWriter
+    {
+
+        public KernelMessageWriter()
+        {
+            Serial.SetupPort(Serial.COM1);
+        }
+
+        public unsafe SSize Write(byte* buf, USize count)
+        {
+            for (var i = 0; i < count; i++)
+                Serial.Write(Serial.COM1, buf[i]);
+            return (uint)count;
+        }
+    }
+
+    public static class KernelMessage_
     {
 
         public static void WriteLine(string msg)

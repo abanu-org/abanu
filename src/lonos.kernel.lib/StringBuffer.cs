@@ -580,7 +580,7 @@ namespace lonos.kernel.core
             sb.Append(this);
         }
 
-        public unsafe void WriteTo(IFile handle)
+        public unsafe void WriteTo(IBufferWriter handle)
         {
             fixed (char* ptr = chars)
             {

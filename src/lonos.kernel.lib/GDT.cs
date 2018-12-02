@@ -179,7 +179,8 @@ namespace lonos.kernel.core
         public void SetEntry(ushort index, DescriptorTableEntry source)
         {
             Assert.InRange(index, Length);
-            DescriptorTableEntry.CopyTo(&source, entries + index);
+            //DescriptorTableEntry.CopyTo(&source, entries + index);
+            entries[index] = source;
         }
 
         public DescriptorTableEntry GetEntry(ushort index)
@@ -263,15 +264,15 @@ namespace lonos.kernel.core
             }
         }
 
-        public static void CopyTo(DescriptorTableEntry* source, DescriptorTableEntry* destination)
-        {
-            Memory.Copy((uint)source, (uint)destination, EntrySize);
-        }
+        //public static void CopyTo(DescriptorTableEntry* source, DescriptorTableEntry* destination)
+        //{
+        //    Memory.Copy((uint)source, (uint)destination, EntrySize);
+        //}
 
-        public static void Clear(DescriptorTableEntry* entry)
-        {
-            Memory.Clear((uint)entry, EntrySize);
-        }
+        //public static void Clear(DescriptorTableEntry* entry)
+        //{
+        //    Memory.Clear((uint)entry, EntrySize);
+        //}
 
         private class AccessByteOffset
         {

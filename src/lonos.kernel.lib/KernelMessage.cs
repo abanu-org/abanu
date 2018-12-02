@@ -1,20 +1,18 @@
 ﻿using System;
 using Mosa.Runtime;
-using Mosa.Kernel.x86;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
 
 namespace lonos.kernel.core
 {
+
     unsafe public static class KernelMessage
     {
 
-        private static IFile Dev
-        {
-            get
-            {
-                return Devices.KMsg;
-            }
+        static IBufferWriter Dev;
+
+        public static void SetHandler(IBufferWriter handler) {
+            Dev = handler;
         }
 
         public static void Write(string value)

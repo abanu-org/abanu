@@ -3,9 +3,8 @@
 namespace lonos.kernel.core
 {
 
-    public interface IFile
+    public interface IFile : IBufferWriter
     {
-        unsafe SSize Write(byte* buf, USize count);
     }
 
 }

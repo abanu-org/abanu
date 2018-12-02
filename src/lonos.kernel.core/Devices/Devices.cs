@@ -25,6 +25,7 @@ namespace lonos.kernel.core
         {
             Null = new NullDevice();
             KMsg = new KernelMessageDevice();
+            KernelMessage.SetHandler(KMsg);
         }
 
         /// <summary>

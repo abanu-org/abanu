@@ -37,19 +37,14 @@
     <Compile Include="Memory\KernelMemory.cs" />
     <Compile Include="Interrupts\IDTMosa.cs" />
     <Compile Include="Interrupts\IDTStack.cs" />
-    <Compile Include="Memory\PageFrameAllocator.cs" />
-    <Compile Include="Memory\PageTable.cs" />
     <Compile Include="Boot\MultiBoot.cs" />
-    <Compile Include="Memory\GDT.cs" />
     <Compile Include="Debug\Panic.cs" />
     <Compile Include="Debug\Debug.cs" />
     <Compile Include="Interrupts\PIC.cs" />
     <Compile Include="External\NativeCalls.cs" />
-    <Compile Include="Debug\Assert.cs" />
     <Compile Include="Interrupts\InterruptHandlers.cs" />
     <Compile Include="Interrupts\Interrupt.cs" />
     <Compile Include="Interrupts\IDTManager.cs" />
-    <Compile Include="Debug\KernelMessage.cs" />
     <Compile Include="Interrupts\InterruptInfo.cs" />
     <Compile Include="Devices\Console\Screen.cs" />
     <Compile Include="Devices\Console\ScreenColors.cs" />
@@ -64,10 +59,9 @@
     <Compile Include="Devices\Console\ConsoleDevice.cs" />
     <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
-    <Compile Include="Memory\PageTable2.cs" />
-    <Compile Include="Memory\PageTable3.cs" />
     <Compile Include="Memory\Page.cs" />
     <Compile Include="BootInfo.cs" />
+    <Compile Include="Memory\PageFrameAllocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

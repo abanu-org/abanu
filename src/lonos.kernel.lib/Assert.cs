@@ -7,9 +7,23 @@ namespace lonos.kernel.core
 
     public static class Assert
     {
+
+        public delegate void DAssertErrorHandler(string errorMessage);
+
+        static DAssertErrorHandler ErrorHandler;
+
+        public static void Setup(DAssertErrorHandler errorHandler)
+        {
+            ErrorHandler = errorHandler;
+        }
+
         private static void AssertError(string message)
         {
-            Panic.Error(message);
+            if (ErrorHandler == null)
+            {
+                throw new Exception(message);
+            }
+            ErrorHandler(message);
         }
 
         [Conditional("DEBUG")]
@@ -33,7 +47,7 @@ namespace lonos.kernel.core
                 AssertError(userMessage);
         }
 
-		[Conditional("DEBUG")]
+        [Conditional("DEBUG")]
         public static void False(bool condition)
         {
             if (condition)
