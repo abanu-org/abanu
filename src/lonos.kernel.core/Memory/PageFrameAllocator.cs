@@ -46,7 +46,7 @@ namespace lonos.kernel.core
             {
                 var mm = &BootInfo.Header->MemoryMapArray[index];
 
-                if (mm->Type == BootInfoMemoryType.Usable)
+                if (mm->Type == BootInfoMemoryType.SystemUsable)
                 {
                     AddFreeMemory(cnt++, mm->Start, mm->Size);
                 }

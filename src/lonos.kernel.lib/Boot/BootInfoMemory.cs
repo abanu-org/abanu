@@ -7,7 +7,7 @@ namespace lonos.kernel.core
         public Addr Start;
         public USize Size;
         public BootInfoMemoryType Type;
-        public bool CanWrite;
-        public bool CanExecute;
+        //public bool CanWrite;
+        //public bool CanExecute;
     }
 }

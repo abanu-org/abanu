@@ -13,13 +13,15 @@ namespace lonos.kernel.core
 
         private const uint TempShift = 0x1000000;
 
-        public const uint PageDirectory = TempShift + 0x00B00000;  // 12MB [Size=4KB]
-        public const uint GDTTable = TempShift + 0x00B10000;  // 12MB+ [Size=1KB]
-        public const uint IDTTable = TempShift + 0x00B11000;  // 12MB+ [Size=1KB]
+        public const uint InitialDynamicPage = TempShift + 0x00B00000;  // 12MB [Size=4KB]
+
+        //public const uint PageDirectory = TempShift + 0x00B00000;  // 12MB [Size=4KB]
+        //public const uint GDTTable = TempShift + 0x00B10000;  // 12MB+ [Size=1KB]
+        //public const uint IDTTable = TempShift + 0x00B05000;  // 12MB+ [Size=1KB]
 
         public const uint PageFrameAllocator = TempShift + 0x00C00000;  // 13MB [Size=4MB]
-        public const uint PageTable = TempShift + 0x01000000;  // 16MB [Size=4MB]
-        public const uint VirtualPageAllocator = TempShift + 0x01400000;  // 20MB [Size=32KB]
+        //public const uint PageTable = TempShift + 0x01000000;  // 16MB [Size=4MB]
+        //public const uint VirtualPageAllocator = TempShift + 0x01400000;  // 20MB [Size=32KB]
 
         public const uint GCInitialMemory = TempShift + 0x03000000;  // 48MB [Size=16MB]
         public const uint GCInitialMemory_BootLoader = TempShift + 0x02000000;  // 32MB [Size=16MB]

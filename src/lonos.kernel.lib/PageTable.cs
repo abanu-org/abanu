@@ -11,28 +11,38 @@ namespace lonos.kernel.core
     /// </summary>
     public unsafe static class PageTable
     {
+
+        public static USize InitalPageDirectorySize = PageDirectoryEntry.EntrySize * 1024;
+        public static USize InitalPageTableSize = PageTableEntry.EntrySize * 1024 * 1024;
+
+        public static uint AddrPageDirectory;
+        public static uint AddrPageTable;
+
         /// <summary>
         /// Sets up the PageTable
         /// </summary>
-        public static void Setup()
+        public static void Setup(Addr addrPageDirectory, Addr addrPageTable)
         {
             KernelMessage.WriteLine("Setup PageTable");
+
+            AddrPageDirectory = addrPageDirectory;
+            AddrPageTable = addrPageTable;
 
             // Setup Page Directory
             for (int index = 0; index < 1024; index++)
             {
-                PageDirectoryEntry* pte = (PageDirectoryEntry*)Address.PageDirectory;
+                PageDirectoryEntry* pte = (PageDirectoryEntry*)AddrPageDirectory;
                 pte[index] = new PageDirectoryEntry();
                 pte[index].Present = true;
                 pte[index].Writable = true;
                 pte[index].User = true;
-                pte[index].PageTableEntry = (PageTableEntry*)(uint)(Address.PageTable + (index * 4096));
+                pte[index].PageTableEntry = (PageTableEntry*)(uint)(AddrPageTable + (index * 4096));
             }
 
             // Map the first 128MB of memory (32786 4K pages) (why 128MB?)
             for (int index = 0; index < 1024 * 32; index++)
             {
-                PageTableEntry* pte = (PageTableEntry*)Address.PageTable;
+                PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
                 pte[index] = new PageTableEntry();
                 pte[index].Present = true;
                 pte[index].Writable = true;
@@ -44,7 +54,7 @@ namespace lonos.kernel.core
             MapVirtualAddressToPhysical(0x0, 0x0, false);
 
             // Set CR3 register on processor - sets page directory
-            Native.SetCR3(Address.PageDirectory);
+            Native.SetCR3(AddrPageDirectory);
 
             KernelMessage.Write("Enable Paging... ");
 
@@ -54,8 +64,15 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Done");
         }
 
-        private static PageTableEntry* GetTableEntry(uint forVirtualAddress){
-            return (PageTableEntry*)(Address.PageTable+ ((forVirtualAddress & 0xFFFFF000u) >> 10));
+        public static void KernelSetup(Addr addrPageDirectory, Addr addrPageTable)
+        {
+            AddrPageDirectory = addrPageDirectory;
+            AddrPageTable = addrPageTable;
+        }
+
+        private static PageTableEntry* GetTableEntry(uint forVirtualAddress)
+        {
+            return (PageTableEntry*)(AddrPageTable + ((forVirtualAddress & 0xFFFFF000u) >> 10));
         }
 
         /// <summary>
@@ -88,7 +105,7 @@ namespace lonos.kernel.core
         public static uint GetPhysicalAddressFromVirtual(IntPtr virtualAddress)
         {
             //FUTURE: traverse page directory from CR3 --- do not assume page table is linearly allocated
-            return Intrinsic.Load32(new IntPtr(Address.PageTable), (((uint)virtualAddress.ToInt32() & 0xFFFFF000u) >> 10)) + ((uint)virtualAddress.ToInt32() & 0xFFFu);
+            return Intrinsic.Load32(new IntPtr(AddrPageTable), (((uint)virtualAddress.ToInt32() & 0xFFFFF000u) >> 10)) + ((uint)virtualAddress.ToInt32() & 0xFFFu);
         }
 
 

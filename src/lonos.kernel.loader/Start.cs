@@ -12,6 +12,8 @@ namespace lonos.kernel.core
 
         public static void Main()
         {
+            BootMemory.Setup();
+
             // Setup Kernel Log
             var kmsgHandler = new KernelMessageWriter();
             KernelMessage.SetHandler(kmsgHandler);
@@ -30,17 +32,21 @@ namespace lonos.kernel.core
             SetupKernelSection();
 
             // Collection informations we need to pass to the kernel
-            SetupBootInfo();
-            SetupVideoInfo();
-            SetupMemoryMap();
+            BootInfo_.Setup();
 
             // Setup Global Descriptor Table
-            GDT.Setup();
+            var map = BootMemory.AllocateMemoryMap(0x1000, BootInfoMemoryType.GDT);
+            BootInfo_.AddMap(map);
+            GDT.Setup(map.Start);
 
             // Now we enable Paging. It's important that we do not cause a Page Fault Exception,
             // Because IDT is not setup yet, that could handle this kind of exception.
 
-            PageTable.Setup();
+            map = BootMemory.AllocateMemoryMap(PageTable.InitalPageDirectorySize, BootInfoMemoryType.PageDirectory);
+            BootInfo_.AddMap(map);
+            var map2 = BootMemory.AllocateMemoryMap(PageTable.InitalPageTableSize, BootInfoMemoryType.PageTable);
+            BootInfo_.AddMap(map2);
+            PageTable.Setup(map.Start, map2.Start);
 
             // Because Kernel is compiled in virtual address space, we need to remap the pages
             MapKernelImage();
@@ -86,7 +92,7 @@ namespace lonos.kernel.core
             Native.Call(addr);
         }
 
-        static ElfHelper OriginalKernelElf;
+        public static ElfHelper OriginalKernelElf;
 
         static void SetupOriginalKernelElf()
         {
@@ -107,97 +113,6 @@ namespace lonos.kernel.core
             // TODO: Respect section progream header adresses.
             // Currently, we can make a raw copy of ELF file
             MemoryOperation.Copy4(Address.OriginalKernelElfSection, Address.KernelElfSection, OriginalKernelElf.TotalFileSize);
-        }
-
-        static BootInfoHeader* BootInfo;
-
-        static void SetupBootInfo()
-        {
-            BootInfo = (BootInfoHeader*)Address.KernelBootInfo;
-            BootInfo->Magic = lonos.kernel.core.BootInfoHeader.BootInfoMagic;
-            BootInfo->HeapStart = KMath.AlignValueCeil(Address.OriginalKernelElfSection + OriginalKernelElf.TotalFileSize, 0x1000);
-            BootInfo->HeapSize = 0;
-        }
-
-        static void SetupVideoInfo()
-        {
-            BootInfo->VBEPresent = Multiboot.VBEPresent;
-            BootInfo->VBEMode = Multiboot.VBEMode;
-
-            BootInfo->FbInfo = new BootInfoFramebufferInfo();
-            BootInfo->FbInfo.FbAddr = Multiboot.multiBootInfo->FbAddr;
-            BootInfo->FbInfo.FbPitch = Multiboot.multiBootInfo->FbPitch;
-            BootInfo->FbInfo.FbWidth = Multiboot.multiBootInfo->FbWidth;
-            BootInfo->FbInfo.FbHeight = Multiboot.multiBootInfo->FbHeight;
-            BootInfo->FbInfo.FbBpp = Multiboot.multiBootInfo->FbBpp;
-            BootInfo->FbInfo.FbType = Multiboot.multiBootInfo->FbType;
-            BootInfo->FbInfo.ColorInfo = Multiboot.multiBootInfo->ColorInfo;
-        }
-
-        static void SetupMemoryMap()
-        {
-            uint customMaps = 4;
-            var mbMapCount = Multiboot.MemoryMapCount;
-            BootInfo->MemoryMapLength = mbMapCount + customMaps;
-            BootInfo->MemoryMapArray = (BootInfoMemory*)MallocBootInfoData((USize)(sizeof(MultiBootMemoryMap) * mbMapCount));
-
-            for (uint i = 0; i < mbMapCount; i++)
-            {
-                BootInfo->MemoryMapArray[i].Start = Multiboot.GetMemoryMapBase(i);
-                BootInfo->MemoryMapArray[i].Size = Multiboot.GetMemoryMapLength(i);
-                var memType = BootInfoMemoryType.Reserved;
-                var type = (BIOSMemoryMapType)Multiboot.GetMemoryMapType(i);
-
-                switch (type)
-                {
-                    case BIOSMemoryMapType.Usable:
-                        memType = BootInfoMemoryType.Usable;
-                        break;
-                    case BIOSMemoryMapType.Reserved:
-                        memType = BootInfoMemoryType.Reserved;
-                        break;
-                    case BIOSMemoryMapType.ACPI_Relaimable:
-                        memType = BootInfoMemoryType.ACPI_Relaimable;
-                        break;
-                    case BIOSMemoryMapType.ACPI_NVS_Memory:
-                        memType = BootInfoMemoryType.ACPI_NVS_Memory;
-                        break;
-                    case BIOSMemoryMapType.BadMemory:
-                        memType = BootInfoMemoryType.BadMemory;
-                        break;
-                    default:
-                        memType = BootInfoMemoryType.Unknown;
-                        break;
-                }
-                BootInfo->MemoryMapArray[i].Type = memType;
-            }
-
-            var idx = mbMapCount + 0;
-            BootInfo->MemoryMapArray[idx].Start = Address.OriginalKernelElfSection;
-            BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(OriginalKernelElf.TotalFileSize, 0x1000);
-            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.OriginalKernelElfImage;
-
-            idx++;
-            BootInfo->MemoryMapArray[idx].Start = Address.KernelElfSection;
-            BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(OriginalKernelElf.TotalFileSize, 0x1000);
-            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelElf;
-
-            idx++;
-            BootInfo->MemoryMapArray[idx].Start = Address.KernelBootInfo;
-            BootInfo->MemoryMapArray[idx].Size = 0x1000;
-            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeader;
-
-            idx++;
-            BootInfo->MemoryMapArray[idx].Start = BootInfo->HeapStart;
-            BootInfo->MemoryMapArray[idx].Size = 0x1000; //TODO: Recaluclate after Setup all Infos
-            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeap;
-        }
-
-        static Addr MallocBootInfoData(USize size)
-        {
-            var ret = BootInfo->HeapStart + BootInfo->HeapSize;
-            BootInfo->HeapSize += size;
-            return ret;
         }
 
         public unsafe static void DumpElfInfo()

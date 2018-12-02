@@ -57,6 +57,8 @@
     <Compile Include="Memory\Page.cs" />
     <Compile Include="BootInfo.cs" />
     <Compile Include="Memory\PageFrameAllocator.cs" />
+    <Compile Include="Memory\Allocator.cs" />
+    <Compile Include="Memory\KernelMemoryMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

@@ -14,6 +14,7 @@ namespace lonos.kernel.core
         {
             Mosa.Runtime.StartUp.InitializeAssembly();
 
+
             ApiContext.Current = new ApiHost();
 
             // Setup some pseudo devices
@@ -28,6 +29,9 @@ namespace lonos.kernel.core
 
             // Detect environment (Memory Maps, Video Mode, etc.)
             BootInfo.Setup();
+
+            KernelMemoryMapManager.Setup();
+            KernelMemoryMapManager.Allocate(0x1000*1000, BootInfoMemoryType.PageDirectory);
 
             // Read own ELF-Headers and Sections
             KernelElf.Setup();

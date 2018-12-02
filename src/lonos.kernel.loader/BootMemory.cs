@@ -9,9 +9,11 @@ namespace lonos.kernel.core
 
     public static class BootMemory
     {
-        static private uint heapStart = Address.GCInitialMemory;
-        static private uint heapSize = 0x02000000;
-        static private uint heapUsed = 0;
+
+        public static void Setup()
+        {
+            PageStartAddr = Address.InitialDynamicPage;
+        }
 
         [Plug("Mosa.Runtime.GC::AllocateMemory")]
         static unsafe private IntPtr _AllocateMemory(uint size)
@@ -29,6 +31,20 @@ namespace lonos.kernel.core
             nextAddr += size;
 
             return (IntPtr)(((uint)Address.GCInitialMemory) + retAddr);
+        }
+
+        static Addr PageStartAddr;
+        public static BootInfoMemory AllocateMemoryMap(USize size, BootInfoMemoryType type)
+        {
+            var map = new BootInfoMemory();
+            map.Start = PageStartAddr;
+            map.Size = size;
+            map.Type = type;
+            PageStartAddr += size;
+
+            KernelMessage.WriteLine("Allocated MemoryMap of Type {0} at {1:X8} with Size {2:X8}", (uint)type, map.Start, map.Size);
+
+            return map;
         }
 
     }

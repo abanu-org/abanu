@@ -32,14 +32,19 @@ namespace lonos.kernel.core
 
         internal static InterruptInfo[] handlers;
 
+        static Addr IDTAddr;
+
         public static void Setup()
         {
             KernelMessage.WriteLine("Setup IDT");
 
+            IDTAddr = PageFrameAllocator.Allocate();
+            KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
+
             // Setup IDT table
-            Mosa.Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable), 6);
-            Intrinsic.Store16(new IntPtr(Address.IDTTable), (Offset.TotalSize * 256) - 1);
-            Intrinsic.Store32(new IntPtr(Address.IDTTable), 2, Address.IDTTable + 6);
+            Mosa.Runtime.Internal.MemoryClear(new IntPtr((uint)IDTAddr), 6);
+            Intrinsic.Store16(new IntPtr((uint)IDTAddr), (Offset.TotalSize * 256) - 1);
+            Intrinsic.Store32(new IntPtr((uint)IDTAddr), 2, IDTAddr + 6);
 
             SetTableEntries();
 
@@ -77,7 +82,8 @@ namespace lonos.kernel.core
             SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptsHandlers.SIMDFloatinPointException);
             SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
 
-            Native.Lidt(Address.IDTTable);
+            var idtAddr = (uint)IDTAddr;
+            Native.Lidt(idtAddr);
             Native.Sti();
         }
 
@@ -101,7 +107,7 @@ namespace lonos.kernel.core
         private static void SetTableEntries()
         {
             // Clear out idt table
-            Mosa.Runtime.Internal.MemoryClear(new IntPtr(Address.IDTTable) + 6, Offset.TotalSize * 256);
+            Mosa.Runtime.Internal.MemoryClear(new IntPtr((uint)IDTAddr) + 6, Offset.TotalSize * 256);
 
             // Note: GetIDTJumpLocation parameter must be a constant and not a variable
             Set(0, Native.GetIDTJumpLocation(0), 0x08, 0x8E);
@@ -371,7 +377,7 @@ namespace lonos.kernel.core
         /// <param name="flags">The flags.</param>
         private static void Set(uint index, uint address, ushort select, byte flags)
         {
-            var entry = new IntPtr(Address.IDTTable + 6 + (index * Offset.TotalSize));
+            var entry = new IntPtr(IDTAddr + 6 + (index * Offset.TotalSize));
             Intrinsic.Store16(entry, Offset.BaseLow, (ushort)(address & 0xFFFF));
             Intrinsic.Store16(entry, Offset.BaseHigh, (ushort)((address >> 16) & 0xFFFF));
             Intrinsic.Store16(entry, Offset.Select, select);
