@@ -22,7 +22,7 @@ namespace lonos.kernel.core
 
         public unsafe static void ApplyMode()
         {
-            ApplyMode(BootInfo.Header->VBEMode);
+            //ApplyMode(BootInfo.Header->VBEMode);
         }
 
         public static void ApplyMode(uint mode)
@@ -203,7 +203,7 @@ namespace lonos.kernel.core
                 // Copy All rows one line up
                 // TODO: Normally, Reading from mapped ROM is much slower
                 // than reading from normal RAM. Consider using Offscreen Buffer
-                Memory.Copy(ScreenAddress + Columns * 2, ScreenAddress, (Rows - 1) * Columns * 2);
+                MemoryOperation.Copy(ScreenAddress + Columns * 2, ScreenAddress, (Rows - 1) * Columns * 2);
 
                 //Blank last line
                 for (uint c = 0; c < Columns; c++)

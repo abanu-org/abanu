@@ -7,7 +7,7 @@ using Mosa.Runtime.x86;
 namespace lonos.kernel.core
 {
 
-    public static class KernelMemory
+    public static class BootMemory
     {
         static private uint heapStart = Address.GCInitialMemory;
         static private uint heapSize = 0x02000000;

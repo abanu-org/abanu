@@ -69,7 +69,7 @@ namespace lonos.kernel.core
         public static Addr AllocateCleared(USize n, GFP flags)
         {
             var addr = Allocate(n, flags);
-            Clear(addr, n);
+            MemoryOperation.Clear(addr, n);
             return addr;
         }
 
@@ -88,7 +88,7 @@ namespace lonos.kernel.core
         {
             var total = elements * size;
             var addr = Allocate(total, flags);
-            Clear(addr, total);
+            MemoryOperation.Clear(addr, total);
             return addr;
         }
 
@@ -118,35 +118,6 @@ namespace lonos.kernel.core
 
         public unsafe static Addr MapVirtualPages(Page* pages, uint count, ulong flags, pgprot_t protection) {
             return Addr.Zero;
-        }
-
-        /// <summary>
-        /// Clears the specified memory area.
-        /// </summary>
-        /// <param name="start">The start.</param>
-        /// <param name="bytes">The bytes.</param>
-        public static void Clear(Addr start, USize bytes)
-        {
-            if (bytes % 4 == 0)
-            {
-                Clear4(start, bytes);
-                return;
-            }
-
-            for (uint at = start; at < (start + bytes); at++)
-                Native.Set8(at, 0);
-        }
-
-        public static void Clear4(Addr start, USize bytes)
-        {
-            for (uint at = start; at < (start + bytes); at = at + 4)
-                Native.Set32(at, 0);
-        }
-
-        public static void Copy(Addr source, Addr destination, USize length)
-        {
-            for (uint i = 0; i < length; i++)
-                Native.Set8(destination + i, Native.Get8(source + i));  //TODO: Optimize with Set32
         }
 
     }

@@ -79,6 +79,10 @@
     <Compile Include="Assert.cs" />
     <Compile Include="KernelMessage.cs" />
     <Compile Include="IKernelMessageHandler.cs" />
+    <Compile Include="Serial.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="MemoryOperation.cs" />
+    <Compile Include="ScreenColors.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />

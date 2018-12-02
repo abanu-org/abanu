@@ -40,10 +40,10 @@ namespace lonos.build
         {
             Options = new Options()
             {
-                EnableSSA = false,
+                EnableSSA = true,
                 EnableIROptimizations = false,
                 EnableSparseConditionalConstantPropagation = false,
-                EnableInlinedMethods = false,
+                EnableInlinedMethods = true,
                 EnableIRLongExpansion = false,
                 EnableValueNumbering = false,
                 TwoPassOptimizations = false,
@@ -90,21 +90,7 @@ namespace lonos.build
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
-                    },
-                    /*new Section
-                    {
-                        Name = "boot.data",
-                        Type = SectionType.ProgBits,
-                        AddressAlignment = 0x1000,
-                        Address = 0x4FF000,
-                        Size=0x1000,
-                        EmitMethod = (section, writer) =>
-                        {
-                            sect = section; //TODO: Could set outsite
-                            writer.Write(new byte[]{1,2,3,4,5,6,7,8,9});
-                            section.Size=0x1000;
-                        }
-                    }*/
+                    }
                 };
             };
 

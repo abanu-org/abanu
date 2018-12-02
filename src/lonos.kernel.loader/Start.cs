@@ -21,7 +21,7 @@ namespace lonos.kernel.core
 
             var kmsgHandler = new KernelMessageWriter();
             KernelMessage.SetHandler(kmsgHandler);
-            KernelMessage.WriteLine("hello");
+            KernelMessage.WriteLine("<Lonos Kernel Loader>");
 
             Multiboot.Setup();
 
@@ -110,7 +110,7 @@ namespace lonos.kernel.core
         {
             // TODO: Respect section progream header adresses.
             // Currently, we can make a raw copy of ELF file
-            Memory.Copy4(Address.OriginalKernelElfSection, Address.KernelElfSection, OriginalKernelElf.TotalFileSize);
+            MemoryOperation.Copy4(Address.OriginalKernelElfSection, Address.KernelElfSection, OriginalKernelElf.TotalFileSize);
         }
 
         static BootInfoHeader* BootInfo;
@@ -209,8 +209,7 @@ namespace lonos.kernel.core
             var secArray = OriginalKernelElf.SectionHeaderArray;
             var secLength = OriginalKernelElf.SectionHeaderCount;
 
-            KernelMessage.WriteLine("CNT");
-            KernelMessage.WriteLine(secLength);
+            KernelMessage.WriteLine("Found {0} sections:", secLength);
 
             for (uint i = 0; i < secLength; i++)
             {

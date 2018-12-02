@@ -24,7 +24,7 @@ namespace lonos.kernel.core
         /// <summary>
         /// Currently unused, because Kernel is loaded via from kernel.loader
         /// </summary>
-        unsafe static ElfHelper FromMultiBootInfo(MultiBootInfo* multiBootInfo)
+        /*unsafe static ElfHelper FromMultiBootInfo(MultiBootInfo* multiBootInfo)
         {
             var helper = new ElfHelper
             {
@@ -34,7 +34,7 @@ namespace lonos.kernel.core
             };
             helper.Init();
             return helper;
-        }
+        }*/
 
         unsafe static ElfHelper FromAddress(Addr elfStart)
         {

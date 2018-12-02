@@ -37,7 +37,6 @@
     <Compile Include="Memory\KernelMemory.cs" />
     <Compile Include="Interrupts\IDTMosa.cs" />
     <Compile Include="Interrupts\IDTStack.cs" />
-    <Compile Include="Boot\MultiBoot.cs" />
     <Compile Include="Debug\Panic.cs" />
     <Compile Include="Debug\Debug.cs" />
     <Compile Include="Interrupts\PIC.cs" />
@@ -46,10 +45,7 @@
     <Compile Include="Interrupts\Interrupt.cs" />
     <Compile Include="Interrupts\IDTManager.cs" />
     <Compile Include="Interrupts\InterruptInfo.cs" />
-    <Compile Include="Devices\Console\Screen.cs" />
-    <Compile Include="Devices\Console\ScreenColors.cs" />
     <Compile Include="Devices\Console\BiosTextScreenDevice.cs" />
-    <Compile Include="Devices\Serial\Serial.cs" />
     <Compile Include="Devices\Serial\SerialDevice.cs" />
     <Compile Include="Devices\NullDevice.cs" />
     <Compile Include="Debug\KernelMessageDevice.cs" />
