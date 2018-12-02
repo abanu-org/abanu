@@ -14,8 +14,8 @@ namespace lonos.kernel.core
         public static void Setup()
         {
             KernelMessage.WriteLine("Setup ELF Headers");
-            KernelMessage.WriteLine("Image Header:");
-            KernelMemory.DumpToConsoleLine(Address.KernelElfSection, 124);
+            //KernelMessage.WriteLine("Image Header:");
+            //KernelMemory.DumpToConsoleLine(Address.KernelElfSection, 124);
 
             Main = FromAddress(Address.KernelElfSection);
             Native = FromSectionName("native");

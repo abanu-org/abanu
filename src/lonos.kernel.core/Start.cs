@@ -23,8 +23,8 @@ namespace lonos.kernel.core
             Devices.InitStage2();
 
             // Write first output
-            KernelMessage.WriteLine("<CONSOLE:BEGIN>");
-            KernelMessage.WriteLine("Booting Lonos Kernel...");
+            KernelMessage.WriteLine("<KERNEL:CONSOLE:BEGIN>");
+            KernelMessage.WriteLine("Starting Lonos Kernel...");
 
             // Detect environment (Memory Maps, Video Mode, etc.)
             BootInfo.Setup();

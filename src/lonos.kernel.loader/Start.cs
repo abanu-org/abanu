@@ -15,7 +15,7 @@ namespace lonos.kernel.core
             // Setup Kernel Log
             var kmsgHandler = new KernelMessageWriter();
             KernelMessage.SetHandler(kmsgHandler);
-            KernelMessage.WriteLine("<Lonos Kernel Loader>");
+            KernelMessage.WriteLine("<LOADER:CONSOLE:BEGIN>");
 
             // Parse Boot Informations
             Multiboot.Setup();
@@ -66,7 +66,7 @@ namespace lonos.kernel.core
             var diff = Address.KernelBaseVirt - Address.KernelBasePhys;
             var endPhys = phys + OriginalKernelElf.TotalFileSize;
             var addr = phys;
-            KernelMessage.WriteLine("Mapping now Kernel image from phsical {0:X8} to {1:X8}", phys, phys + diff);
+            KernelMessage.WriteLine("Mapping Kernel Image from physical {0:X8} to virtual {1:X8}", phys, phys + diff);
             while (addr < endPhys)
             {
                 PageTable.MapVirtualAddressToPhysical(addr + diff, addr);
@@ -205,7 +205,7 @@ namespace lonos.kernel.core
             var secArray = OriginalKernelElf.SectionHeaderArray;
             var secLength = OriginalKernelElf.SectionHeaderCount;
 
-            KernelMessage.WriteLine("Found {0} sections:", secLength);
+            KernelMessage.WriteLine("Found {0} Kernel Sections:", secLength);
 
             for (uint i = 0; i < secLength; i++)
             {
