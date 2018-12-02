@@ -49,6 +49,8 @@ namespace lonos.kernel.core
 
             PageTable.Setup();
 
+            MapKernelImage();
+
             // Now we are in virtual Adress Space !
             // Not requied yet, but maybe some re-initialization of should be done now.
 
@@ -60,6 +62,20 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Unexpected return from Kernel Start");
 
             Debug.Break();
+        }
+
+        static void MapKernelImage()
+        {
+            var phys = Address.KernelElfSection;
+            var diff = Address.KernelBaseVirt - Address.KernelBasePhys;
+            var endPhys = phys + OriginalKernelElf.TotalFileSize;
+            var addr = phys;
+            KernelMessage.WriteLine("Mapping now Kernel image from phsical {0:X8} to {1:X8}", phys, phys + diff);
+            while (addr < endPhys)
+            {
+                PageTable.MapVirtualAddressToPhysical(addr + diff, addr);
+                addr += 0x1000;
+            }
         }
 
         static Addr GetKernelStartAddr()

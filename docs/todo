@@ -1,0 +1,4 @@
+Compiler:
+- STACK_TOP configurable
+- Patch for ProramHeader
+- Insert Comment for explaination why needing Running InitializeAssembly() manually

@@ -28,7 +28,7 @@ namespace lonos.kernel.core
 
         public const uint KernelBasePhys = 0x01400000;  // 27MB
         //public const uint KernelBaseVirt = 0xC0100000;  // 3GB+1MB
-        public const uint KernelBaseVirt = 0x01400000;  // 3GB+1MB
+        public const uint KernelBaseVirt = 0x7000000;  // 3GB+1MB
         public const uint KernelElfSection = KernelBasePhys - 0x1000;
         public const uint OriginalKernelElfSection = 0x00C00000;  //17MB
         public const uint KernelBootInfo = OriginalKernelElfSection - 0x1000;
