@@ -24,7 +24,7 @@ namespace lonos.kernel.core
 
             _kmalloc_Next = RequestRawVirtalMemory(reserveMem);
 
-            KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameAllocator.PagesAvailable * 4096) / 1024 / 1024);
+            KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameManager.PagesAvailable * 4096) / 1024 / 1024);
         }
 
         /// <summary>
@@ -32,14 +32,14 @@ namespace lonos.kernel.core
         /// Consumer: Kernel, Memory allocators
         /// Shoud be used for larger Chunks.
         /// </summary>
-        private static Addr RequestRawVirtalMemory(USize size)
+        unsafe static Addr RequestRawVirtalMemory(USize size)
         {
             Addr virt = _nextVirtAddr;
             for (var i = 0; i < RequiredPagesForSize(size); i++)
             {
-                var phys = PageFrameAllocator.Allocate();
+                var page = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default);
 
-                PageTable.MapVirtualAddressToPhysical(_nextVirtAddr, phys);
+                PageTable.MapVirtualAddressToPhysical(_nextVirtAddr, page->PhysicalAddress);
                 _nextVirtAddr += 4096;
             }
             return virt;

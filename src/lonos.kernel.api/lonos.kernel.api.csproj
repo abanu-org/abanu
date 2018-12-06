@@ -53,6 +53,10 @@
     <Compile Include="IKernelApi.cs" />
     <Compile Include="IFile.cs" />
     <Compile Include="IBufferWriter.cs" />
+    <Compile Include="IPageFrameAllocator.cs" />
+    <Compile Include="Structs\Page.cs" />
+    <Compile Include="Structs\Atomic.cs" />
+    <Compile Include="Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />

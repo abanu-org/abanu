@@ -54,12 +54,12 @@
     <Compile Include="Devices\Console\ConsoleDevice.cs" />
     <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
-    <Compile Include="Memory\Page.cs" />
     <Compile Include="BootInfo.cs" />
     <Compile Include="Memory\PageFrameAllocator.cs" />
     <Compile Include="Memory\Allocator.cs" />
     <Compile Include="Memory\KernelMemoryMap.cs" />
     <Compile Include="Memory\PageFrameAllocator2.cs" />
+    <Compile Include="buddy-malloc.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

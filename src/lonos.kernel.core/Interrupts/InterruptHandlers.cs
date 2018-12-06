@@ -140,9 +140,9 @@ namespace lonos.kernel.core
                 return;
             }
 
-            var physicalpage = PageFrameAllocator.Allocate();
+            var physicalpage = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default);
 
-            if (physicalpage == Addr.Invalid)
+            if (physicalpage == null)
             {
                 Error(stack, "Out of Memory");
                 return;

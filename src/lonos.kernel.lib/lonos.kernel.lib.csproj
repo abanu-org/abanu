@@ -61,7 +61,6 @@
     <Compile Include="Elf\ElfSectionHeader.cs" />
     <Compile Include="Elf\ElfSymbol.cs" />
     <Compile Include="StringBuffer.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="ApiContext.cs" />
     <Compile Include="BufferExtensions.cs" />
     <Compile Include="Fonts\PSF2Header.cs" />

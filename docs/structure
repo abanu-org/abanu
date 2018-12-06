@@ -1,0 +1,7 @@
+
+
+kernel.core	entry point
+kernel.lib	
+kernel.api
+kernel.unixapi
+kernel.utils:	helper function and very basic structs withoutt any dependecies

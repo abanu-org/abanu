@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.loader", "lono
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.config", "lonos.kernel.config\lonos.kernel.config.csproj", "{317E8C4B-089B-469B-8789-D76EB2F87504}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.test.console", "lonos.test.console\lonos.test.console.csproj", "{67A6A46D-DBF4-4013-89DB-3E6457D139F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{317E8C4B-089B-469B-8789-D76EB2F87504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{317E8C4B-089B-469B-8789-D76EB2F87504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{317E8C4B-089B-469B-8789-D76EB2F87504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67A6A46D-DBF4-4013-89DB-3E6457D139F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67A6A46D-DBF4-4013-89DB-3E6457D139F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67A6A46D-DBF4-4013-89DB-3E6457D139F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67A6A46D-DBF4-4013-89DB-3E6457D139F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{631BC4F3-E2D8-4319-814C-13904CAA17CE} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}

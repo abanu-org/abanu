@@ -7,23 +7,82 @@ using Mosa.Runtime;
 namespace lonos.kernel.core
 {
 
+
+    public unsafe static class PageFrameManager
+    {
+
+        static PageFrameAllocator Default;
+
+        public static void Setup()
+        {
+            Default = new PageFrameAllocator();
+            Default.Setup();
+        }
+
+        public static Page* AllocatePages(PageFrameRequestFlags flags, byte order)
+        {
+            return Default.AllocatePages(flags, order); 
+        }
+
+        public static Page* AllocatePage(PageFrameRequestFlags flags)
+        {
+            return Default.AllocatePage(flags);
+        }
+
+        public static void Free(Page* page)
+        {
+            Default.Free(page);
+        }
+
+        public static uint PagesAvailable
+        {
+            get
+            {
+                return Default.PagesAvailable;
+            }
+        }
+
+    }
+
     /// <summary>
     /// A physical page allocator.
     /// </summary>
-    public unsafe static class PageFrameAllocator
+    public unsafe class PageFrameAllocator : IPageFrameAllocator
     {
 
-        static uint PagesUsed;
+        public Page* AllocatePages(PageFrameRequestFlags flags, byte order)
+        {
+            int size = 1 << order;
+            var page = GetPage(Allocate());
+            for (var i = 1; i < size; i++)
+            {
+                Allocate();
+            }
+            return page;
+        }
 
-        static Page* PageArray;
-        static uint PageCount;
+        public Page* AllocatePage(PageFrameRequestFlags flags)
+        {
+            // Fake-Impl
+            return GetPage(Allocate());
+        }
 
-        static KernelMemoryMap kmap;
+        public void Free(Page* page)
+        {
+            Free(page->PhysicalAddress);
+        }
+
+        uint PagesUsed;
+
+        Page* PageArray;
+        uint PageCount;
+
+        KernelMemoryMap kmap;
 
         /// <summary>
         /// Setup the physical page manager
         /// </summary>
-        public static void Setup()
+        public void Setup()
         {
             uint physMem = BootInfo.Header->InstalledPhysicalMemory;
             PageCount = physMem / PageSize;
@@ -37,7 +96,7 @@ namespace lonos.kernel.core
             {
                 PageArray[i].PhysicalAddress = i * PageSize;
                 if (i != 0)
-                    PageArray[i-1].Next = &PageArray[i];
+                    PageArray[i - 1].Next = &PageArray[i];
             }
 
             SetupFreeMemory();
@@ -52,7 +111,7 @@ namespace lonos.kernel.core
         /// <summary>
         /// Setups the free memory.
         /// </summary>
-        unsafe static void SetupFreeMemory()
+        unsafe void SetupFreeMemory()
         {
             if (!BootInfo.Present)
                 return;
@@ -65,7 +124,7 @@ namespace lonos.kernel.core
             }
         }
 
-        public static Page* GetPage(Addr addr)
+        public Page* GetPage(Addr addr)
         {
             return &PageArray[(uint)addr / PageSize];
         }
@@ -77,7 +136,7 @@ namespace lonos.kernel.core
         /// Allocate a physical page from the free list
         /// </summary>
         /// <returns>The page</returns>
-        public static Addr Allocate()
+        Addr Allocate()
         {
             var cnt = 0;
             Page* p = lastAllocatedPage->Next;
@@ -92,22 +151,6 @@ namespace lonos.kernel.core
                     break;
             }
 
-            //for (uint i = _nextAllocacationSearchIndex; i < PageCount; i++)
-            //{
-            //    if (PageArray[i].Free)
-            //    {
-            //        p = &PageArray[i];
-            //        _nextAllocacationSearchIndex = i + 1;
-            //    }
-            //}
-            //for (uint i = 0; i < _nextAllocacationSearchIndex; i++)
-            //{
-            //    if (PageArray[i].Free)
-            //    {
-            //        p = &PageArray[i];
-            //        _nextAllocacationSearchIndex = i + 1;
-            //    }
-            //}
             if (p == null || p->Status != PageStatus.Free)
             {
                 return Addr.Invalid;
@@ -123,7 +166,7 @@ namespace lonos.kernel.core
         /// Releases a page to the free list
         /// </summary>
         /// <param name="address">The address.</param>
-        public static void Free(IntPtr address)
+        void Free(Addr address)
         {
             var p = GetPage(address);
             if (p->Free)
@@ -135,9 +178,9 @@ namespace lonos.kernel.core
         /// <summary>
         /// Retrieves the size of a single memory page.
         /// </summary>
-        public static uint PageSize { get { return 4096; } }
+        public uint PageSize { get { return 4096; } }
 
-        public static uint PagesAvailable
+        public uint PagesAvailable
         {
             get
             {

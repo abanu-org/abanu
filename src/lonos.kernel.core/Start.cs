@@ -39,7 +39,7 @@ namespace lonos.kernel.core
             // Initialize the embedded code (actually only a little proof of conecept code)
             NativeCalls.Setup();
 
-            PageFrameAllocator.Setup();
+            PageFrameManager.Setup();
 
             Memory.Setup();
 

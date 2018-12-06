@@ -13,6 +13,9 @@ namespace lonos.kernel.core
 
     public unsafe struct Page
     {
+        public ulong Flags;
+        public Atomic UsageCount;
+
         public Addr PhysicalAddress;
         public Page* Next;
         public PageStatus Status;

@@ -67,3 +67,6 @@ logs/
 \#*\#
 
 .gdb_history
+
+# libreoffice lock files
+.~lock.*
