@@ -66,6 +66,9 @@ logs/
 #Emacs files
 \#*\#
 
+# monodevelop lock file?
+.\#*
+
 .gdb_history
 
 # libreoffice lock files
