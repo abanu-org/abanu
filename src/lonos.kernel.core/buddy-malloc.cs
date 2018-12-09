@@ -235,7 +235,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
      * Given the requested size passed to "malloc", this function returns the index
      * of the smallest bucket that can fit that size.
      */
-    static byte bucket_for_request(uint request)
+    public static byte bucket_for_request(uint request)
     {
         byte bucket = BUCKET_COUNT - 1;
         uint size = MIN_ALLOC;
@@ -305,16 +305,16 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
         return true;
     }
 
-    public void* malloc(uint request)
+    public void* malloc(byte bucket)
     {
-        byte original_bucket, bucket;
+        byte original_bucket;
 
         /*
          * Make sure it's possible for an allocation of this size to succeed. There's
          * a hard-coded limit on the maximum allocation size because of the way this
          * allocator works.
          */
-        if (request + HEADER_SIZE > MAX_ALLOC)
+        if (bucket > MAX_ALLOC_LOG2)
         {
             return null;
         }
@@ -337,7 +337,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
          * Find the smallest bucket that will fit this request. This doesn't check
          * that there's space for the request yet.
          */
-        bucket = bucket_for_request(request + HEADER_SIZE);
+        //bucket = bucket_for_request(request + HEADER_SIZE);
         original_bucket = bucket;
 
         /*
@@ -438,7 +438,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
              * Now that we have a memory address, write the block header (just the size
              * of the allocation) and return the address immediately after the header.
              */
-            *(uint*)ptr = request;
+            *(uint*)ptr = bucket;
             return (void*)((PointerType)ptr + HEADER_SIZE);
         }
 
@@ -464,7 +464,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
          * look up the index of the node corresponding to this address.
          */
         ptr = (void*)((PointerType)ptr - HEADER_SIZE);
-        bucket = bucket_for_request(*(uint*)ptr + HEADER_SIZE);
+        bucket = (byte)(*(uint*)ptr);
         i = node_for_ptr((void*)ptr, bucket);
 
         /*
@@ -520,6 +520,11 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
 
     //TODO: Exteral
     protected abstract void* sbrk(uint size);
+
+    public struct page { 
+        public byte bucket;
+        public byte parent_is_split;
+    }
 
 }
 

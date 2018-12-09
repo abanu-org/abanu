@@ -42,8 +42,9 @@ namespace lonos.test.console
         public void Alloc(uint size)
         {
             var data = new byte[size];
+            var bucket = BinaryBuddyAllocator_TestImplementation.bucket_for_request(size+8);
             rnd.NextBytes(data);
-            var ptr = (byte*)malloc.malloc(size);
+            var ptr = (byte*)malloc.malloc(bucket);
             for (var i = 0; i < size; i++)
             {
                 ptr[i] = data[i];
@@ -81,12 +82,12 @@ namespace lonos.test.console
 
         private void* addr;
 
-        protected byte* node_is_split;
+        protected page* node_is_split;
 
         protected override bool parent_is_split(uint index)
         {
             index = (index - 1) / 2;
-            return ((node_is_split[index / 8] >> (byte)(index % 8)) & 1) != 0;
+            return ((node_is_split[index / 8].parent_is_split >> (byte)(index % 8)) & 1) != 0;
         }
 
         /*
@@ -95,15 +96,15 @@ namespace lonos.test.console
         protected override void flip_parent_is_split(uint index)
         {
             index = (index - 1) / 2;
-            node_is_split[index / 8] ^= (byte)(1 << (byte)(index % 8));
+            node_is_split[index / 8].parent_is_split ^= (byte)(1 << (byte)(index % 8));
         }
 
         public MyAlloc()
         {
             addr = (void*)Marshal.AllocHGlobal(128 * 1024 * 1024);
             buckets = (list_t*)Marshal.AllocHGlobal(sizeof(list_t) * BUCKET_COUNT);
-            var nodeIsSplitSize = sizeof(void*) * ((1 << (BUCKET_COUNT - 1)) / 8);
-            node_is_split = (byte*)Marshal.AllocHGlobal(nodeIsSplitSize);
+            var nodeIsSplitSize = sizeof(page) * ((1 << (BUCKET_COUNT - 1)) / 8);
+            node_is_split = (page*)Marshal.AllocHGlobal(nodeIsSplitSize);
         }
 
         protected override unsafe bool brk(void* addr)
