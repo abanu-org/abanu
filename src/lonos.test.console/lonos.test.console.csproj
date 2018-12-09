@@ -40,9 +40,11 @@
       <Link>buddy-malloc.cs</Link>
     </Compile>
     <Compile Include="alloc2\EmptyClass.cs" />
+    <Compile Include="Alloc3\Alloc3.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="alloc2\" />
+    <Folder Include="Alloc3\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lonos.core.classlib\lonos.core.classlib.csproj">
