@@ -14,7 +14,13 @@
  * for larger allocations again.
  */
 
-unsafe class BinaryBuddyAllocator_TestImplementation
+#if BITS32
+using PointerType = System.UInt32;
+#else
+using PointerType = System.UInt64;
+#endif
+
+unsafe public abstract class BinaryBuddyAllocator_TestImplementation
 {
 
     /*
@@ -51,7 +57,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
  * Given a bucket index, the size of the allocations in that bucket can be
  * found with "(size_t)1 << (MAX_ALLOC_LOG2 - bucket)".
  */
-    const byte BUCKET_COUNT = (MAX_ALLOC_LOG2 - MIN_ALLOC_LOG2 + 1);
+    protected const byte BUCKET_COUNT = (MAX_ALLOC_LOG2 - MIN_ALLOC_LOG2 + 1);
 
     /*
  * Free lists are stored as circular doubly-linked lists. Every possible
@@ -60,7 +66,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
  * "sizeof(list_t)". MIN_ALLOC is currently 16 bytes, so this will be true for
  * both 32-bit and 64-bit.
  */
-    unsafe struct list_t
+    protected unsafe struct list_t
     {
         public list_t* prev;
         public list_t* next;
@@ -71,8 +77,8 @@ unsafe class BinaryBuddyAllocator_TestImplementation
  * for that size. The bucket at index 0 corresponds to an allocation size of
  * MAX_ALLOC (i.e. the whole address space).
  */
-    //static list_t buckets[BUCKET_COUNT];
-    static list_t* buckets;
+
+    protected list_t* buckets;
 
     /*
  * We could initialize the allocator by giving it one free block the size of
@@ -82,7 +88,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
  * root. Instead, we have the tree start out small and grow the size of the
  * tree as we use more memory. The size of the tree is tracked by this value.
  */
-    static byte bucket_limit;
+    byte bucket_limit;
 
     /*
  * This array represents a linearized binary tree of bits. Every possible
@@ -112,19 +118,19 @@ unsafe class BinaryBuddyAllocator_TestImplementation
  * since we only ever care about parent nodes.
  */
     //static uint8_t node_is_split[(1 << (BUCKET_COUNT - 1)) / 8];
-    static byte* node_is_split;
+    protected byte* node_is_split;
 
     /*
      * This is the starting address of the address range for this allocator. Every
      * returned allocation will be an offset of this pointer from 0 to MAX_ALLOC.
      */
-    static void* base_ptr;
+    void* base_ptr;
 
     /*
      * This is the maximum address that has ever been used by the allocator. It's
      * used to know when to call "brk" to request more memory from the kernel.
      */
-    static void* max_ptr;
+    void* max_ptr;
 
     /*
      * Make sure all addresses before "new_value" are valid and can be used. Memory
@@ -132,17 +138,17 @@ unsafe class BinaryBuddyAllocator_TestImplementation
      * front. It's only reserved when it's needed by calling this function. This
      * will return false if the memory could not be reserved.
      */
-    static bool update_max_ptr(void* new_value)
+    bool update_max_ptr(void* new_value)
     {
         if (new_value > max_ptr)
         {
             if (brk(new_value))
             {
-                return false;
+                return true;
             }
             max_ptr = new_value;
         }
-        return true;
+        return false;
     }
 
     /*
@@ -200,9 +206,9 @@ unsafe class BinaryBuddyAllocator_TestImplementation
      * required to be provided here since having them means we can avoid the loop
      * and have this function return in constant time.
      */
-    static void* ptr_for_node(uint index, byte bucket)
+    void* ptr_for_node(uint index, byte bucket)
     {
-        return (void*)(((uint)base_ptr) + ((index - (uint)(1 << bucket) + 1) << (MAX_ALLOC_LOG2 - bucket)));
+        return (void*)(((PointerType)base_ptr) + ((index - (PointerType)(1 << bucket) + 1) << (MAX_ALLOC_LOG2 - bucket)));
     }
 
     /*
@@ -210,15 +216,15 @@ unsafe class BinaryBuddyAllocator_TestImplementation
      * address. There are often many nodes that all map to the same address, so
      * the bucket is needed to uniquely identify a node.
      */
-    static uint node_for_ptr(void* ptr, byte bucket)
+    uint node_for_ptr(void* ptr, byte bucket)
     {
-        return (uint)((((uint)ptr - (uint)base_ptr) >> (MAX_ALLOC_LOG2 - bucket)) + (1 << bucket) - 1);
+        return (uint)((((uint)((PointerType)ptr - (PointerType)base_ptr)) >> (MAX_ALLOC_LOG2 - bucket)) + (1 << bucket) - 1);
     }
 
     /*
      * Given the index of a node, this returns the "is split" flag of the parent.
      */
-    static bool parent_is_split(uint index)
+    bool parent_is_split(uint index)
     {
         index = (index - 1) / 2;
         return ((node_is_split[index / 8] >> (byte)(index % 8)) & 1) != 0;
@@ -227,7 +233,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
     /*
      * Given the index of a node, this flips the "is split" flag of the parent.
      */
-    static void flip_parent_is_split(uint index)
+    void flip_parent_is_split(uint index)
     {
         index = (index - 1) / 2;
         node_is_split[index / 8] ^= (byte)(1 << (byte)(index % 8));
@@ -256,7 +262,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
  * tree by repeatedly doubling it in size until the root lies at the provided
  * bucket index. Each doubling lowers the bucket limit by 1.
  */
-    static bool lower_bucket_limit(byte bucket)
+    bool lower_bucket_limit(byte bucket)
     {
         while (bucket < bucket_limit)
         {
@@ -286,7 +292,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
              * checked it above).
              */
             right_child = ptr_for_node(root + 1, bucket_limit);
-            if (!update_max_ptr((void*)((uint)right_child + sizeof(list_t))))
+            if (!update_max_ptr((void*)((PointerType)right_child + (PointerType)sizeof(list_t))))
             {
                 return false;
             }
@@ -307,7 +313,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
         return true;
     }
 
-    void* malloc(uint request)
+    public void* malloc(uint request)
     {
         byte original_bucket, bucket;
 
@@ -330,7 +336,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
         {
             base_ptr = max_ptr = sbrk(0);
             bucket_limit = BUCKET_COUNT - 1;
-            update_max_ptr((void*)((uint)base_ptr + sizeof(list_t)));
+            update_max_ptr((void*)((PointerType)base_ptr + (PointerType)sizeof(list_t)));
             list_init(&buckets[BUCKET_COUNT - 1]);
             list_push(&buckets[BUCKET_COUNT - 1], (list_t*)base_ptr);
         }
@@ -398,7 +404,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
              */
             size = (uint)(1 << (MAX_ALLOC_LOG2 - bucket));
             bytes_needed = bucket < original_bucket ? size / 2 + (byte)sizeof(list_t) : size;
-            if (!update_max_ptr((void*)((uint)ptr + bytes_needed)))
+            if (!update_max_ptr((void*)((PointerType)ptr + bytes_needed)))
             {
                 list_push(&buckets[bucket], (list_t*)ptr);
                 return null;
@@ -441,13 +447,13 @@ unsafe class BinaryBuddyAllocator_TestImplementation
              * of the allocation) and return the address immediately after the header.
              */
             *(uint*)ptr = request;
-            return (void*)((uint)ptr + HEADER_SIZE);
+            return (void*)((PointerType)ptr + HEADER_SIZE);
         }
 
         return null;
     }
 
-    void free(void* ptr)
+    public void free(void* ptr)
     {
         byte bucket;
         uint i;
@@ -455,7 +461,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
         /*
          * Ignore any attempts to free a NULL pointer.
          */
-        if ((uint)ptr == 0)
+        if ((PointerType)ptr == 0)
         {
             return;
         }
@@ -465,7 +471,7 @@ unsafe class BinaryBuddyAllocator_TestImplementation
          * address of the node by subtracting off the size of the block header. Then
          * look up the index of the node corresponding to this address.
          */
-        ptr = (void*)((uint)ptr - HEADER_SIZE);
+        ptr = (void*)((PointerType)ptr - HEADER_SIZE);
         bucket = bucket_for_request(*(uint*)ptr + HEADER_SIZE);
         i = node_for_ptr((void*)ptr, bucket);
 
@@ -518,16 +524,10 @@ unsafe class BinaryBuddyAllocator_TestImplementation
     }
 
     //TODO: Exteral
-    static bool brk(void* addr)
-    {
-        return false;
-    }
+    protected abstract bool brk(void* addr);
 
     //TODO: Exteral
-    static void* sbrk(uint size)
-    {
-        return null;
-    }
+    protected abstract void* sbrk(uint size);
 
 }
 

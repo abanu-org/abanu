@@ -5,7 +5,7 @@ SRC=`pwd`
 cd ../external/MOSA-Project/Source
 
 old=v4.7.2
-new=v4.6.1
+new=v4.7.1
 grep -rl $old . | xargs sed -i s/$old/$new/g
 
 #old=Microsoft.CSHARP.Targets

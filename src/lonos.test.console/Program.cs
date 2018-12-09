@@ -6,7 +6,10 @@ namespace lonos.test.console
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine(Environment.Is64BitProcess);
             Console.WriteLine("Hello World!");
+            new AllocTest().run();
+            Console.ReadLine();
         }
     }
 }
