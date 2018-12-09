@@ -14,7 +14,7 @@
  * for larger allocations again.
  */
 
-#if BITS32
+#if BITS_32
 using PointerType = System.UInt32;
 #else
 using PointerType = System.UInt64;
@@ -118,7 +118,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
  * since we only ever care about parent nodes.
  */
     //static uint8_t node_is_split[(1 << (BUCKET_COUNT - 1)) / 8];
-    protected byte* node_is_split;
+    //protected byte* node_is_split;
 
     /*
      * This is the starting address of the address range for this allocator. Every
@@ -224,20 +224,12 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
     /*
      * Given the index of a node, this returns the "is split" flag of the parent.
      */
-    bool parent_is_split(uint index)
-    {
-        index = (index - 1) / 2;
-        return ((node_is_split[index / 8] >> (byte)(index % 8)) & 1) != 0;
-    }
+    protected abstract bool parent_is_split(uint index);
 
     /*
      * Given the index of a node, this flips the "is split" flag of the parent.
      */
-    void flip_parent_is_split(uint index)
-    {
-        index = (index - 1) / 2;
-        node_is_split[index / 8] ^= (byte)(1 << (byte)(index % 8));
-    }
+    protected abstract void flip_parent_is_split(uint index);
 
     /*
      * Given the requested size passed to "malloc", this function returns the index

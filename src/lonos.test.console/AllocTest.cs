@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Linq;
 
+
 namespace lonos.test.console
 {
 
@@ -19,7 +20,7 @@ namespace lonos.test.console
             malloc = new MyAlloc();
             for (var i = 0; i < 10000; i++)
             {
-                if (hash.Count>3 && rnd.Next(2) == 0)
+                if (hash.Count > 3 && rnd.Next(2) == 0)
                 {
                     RandomFree();
                 }
@@ -80,11 +81,29 @@ namespace lonos.test.console
 
         private void* addr;
 
+        protected byte* node_is_split;
+
+        protected override bool parent_is_split(uint index)
+        {
+            index = (index - 1) / 2;
+            return ((node_is_split[index / 8] >> (byte)(index % 8)) & 1) != 0;
+        }
+
+        /*
+         * Given the index of a node, this flips the "is split" flag of the parent.
+         */
+        protected override void flip_parent_is_split(uint index)
+        {
+            index = (index - 1) / 2;
+            node_is_split[index / 8] ^= (byte)(1 << (byte)(index % 8));
+        }
+
         public MyAlloc()
         {
             addr = (void*)Marshal.AllocHGlobal(128 * 1024 * 1024);
             buckets = (list_t*)Marshal.AllocHGlobal(sizeof(list_t) * BUCKET_COUNT);
-            node_is_split = (byte*)Marshal.AllocHGlobal(sizeof(void*) * ((1 << (BUCKET_COUNT - 1)) / 8));
+            var nodeIsSplitSize = sizeof(void*) * ((1 << (BUCKET_COUNT - 1)) / 8);
+            node_is_split = (byte*)Marshal.AllocHGlobal(nodeIsSplitSize);
         }
 
         protected override unsafe bool brk(void* addr)
