@@ -50,8 +50,9 @@ namespace lonos.build
 
                 Emulator = EmulatorType.Bochs,
                 ImageFormat = ImageFormat.IMG,
-                BootFormat = BootFormat.Multiboot_0_7,
-                PlatformType = PlatformType.X86,
+                //BootFormat = BootFormat.Multiboot_0_7,
+                MultiBootV1 = true,
+                PlatformType = PlatformType.x86,
                 LinkerFormatType = LinkerFormatType.Elf32,
                 EmulatorMemoryInMB = 128,
                 DestinationDirectory = Program.GetEnv("LONOS_OSDIR"),
@@ -77,6 +78,7 @@ namespace lonos.build
                 GenerateASMFile = false,
                 GenerateMapFile = false,
                 GenerateDebugFile = false,
+                PlugKorlib = true
             };
 
             //Options.GenerateNASMFile = true;

@@ -37,6 +37,7 @@
     <Compile Include="KernelMessage.cs" />
     <Compile Include="KernelMessageWriter.cs" />
     <Compile Include="BootInfo.cs" />
+    <Compile Include="SSE.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
