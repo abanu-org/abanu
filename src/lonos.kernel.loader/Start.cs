@@ -12,14 +12,14 @@ namespace lonos.kernel.core
 
         public static void Main()
         {
-            Screen.BackgroundColor = ScreenColor.Green;
-            Screen.Color = ScreenColor.Red;
-            Screen.Clear();
-            Screen.Goto(0, 0);
-            Screen.Write('A');
+            //Screen.BackgroundColor = ScreenColor.Green;
+            //Screen.Color = ScreenColor.Red;
+            //Screen.Clear();
+            //Screen.Goto(0, 0);
+            //Screen.Write('A');
 
-            Serial.SetupPort(Serial.COM1);
-            Serial.Write(Serial.COM1, "Hello");
+            //Serial.SetupPort(Serial.COM1);
+            //Serial.Write(Serial.COM1, "Hello");
 
             BootMemory.Setup();
 
