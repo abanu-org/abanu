@@ -25,6 +25,11 @@ namespace lonos.kernel.core
             BootInfo->VBEPresent = Multiboot.VBEPresent;
             BootInfo->VBEMode = Multiboot.VBEMode;
 
+            KernelMessage.WriteLine("FrameBuffer present: ", Multiboot.FBPresent ? "yes" : "no");
+            if (Multiboot.FBPresent)
+                KernelMessage.WriteLine("FB Present!");
+            BootInfo->FBPresent = Multiboot.FBPresent;
+
             BootInfo->FbInfo = new BootInfoFramebufferInfo();
             BootInfo->FbInfo.FbAddr = Multiboot.multiBootInfo->FbAddr;
             BootInfo->FbInfo.FbPitch = Multiboot.multiBootInfo->FbPitch;

@@ -47,7 +47,7 @@ namespace lonos.kernel.core
         /// </summary>
         public unsafe static void InitFrameBuffer()
         {
-            if (!BootInfo.Header->VBEPresent)
+            if (!BootInfo.Header->FBPresent)
             {
                 KernelMessage.Path("fb", "not present");
                 return;
