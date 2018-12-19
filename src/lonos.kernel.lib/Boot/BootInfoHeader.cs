@@ -24,6 +24,7 @@ namespace lonos.kernel.core
 
         public uint InstalledPhysicalMemory;
 
+        public bool FBPresent;
         public BootInfoFramebufferInfo FbInfo;
     }
 
