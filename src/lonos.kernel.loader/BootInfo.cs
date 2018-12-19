@@ -9,6 +9,7 @@ namespace lonos.kernel.core
 
         public static void Setup()
         {
+            KernelMessage.WriteLine("Multiboot Flags: {0:X}", Multiboot.Flags);
             BootInfo = (BootInfoHeader*)Address.KernelBootInfo;
             BootInfo->Magic = lonos.kernel.core.BootInfoHeader.BootInfoMagic;
             BootInfo->HeapStart = KMath.AlignValueCeil(Address.OriginalKernelElfSection + Start.OriginalKernelElf.TotalFileSize, 0x1000);
@@ -22,12 +23,13 @@ namespace lonos.kernel.core
 
         static void SetupVideoInfo()
         {
+            KernelMessage.WriteLine("VBE present: {0}", Multiboot.VBEPresent ? "yes" : "no");
+            if (Multiboot.VBEPresent)
+                KernelMessage.WriteLine("VBE Mode: {0}", Multiboot.VBEMode);
             BootInfo->VBEPresent = Multiboot.VBEPresent;
             BootInfo->VBEMode = Multiboot.VBEMode;
 
-            KernelMessage.WriteLine("FrameBuffer present: ", Multiboot.FBPresent ? "yes" : "no");
-            if (Multiboot.FBPresent)
-                KernelMessage.WriteLine("FB Present!");
+            KernelMessage.WriteLine("FrameBuffer present: {0}", Multiboot.FBPresent ? "yes" : "no");
             BootInfo->FBPresent = Multiboot.FBPresent;
 
             BootInfo->FbInfo = new BootInfoFramebufferInfo();

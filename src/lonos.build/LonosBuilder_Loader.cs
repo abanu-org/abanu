@@ -74,7 +74,7 @@ namespace lonos.build
                 PlugKorlib = true
             };
 
-            //Options.VBEVideo = true;
+            Options.VBEVideo = true;
 
             Section sect = null;
             Options.CreateExtraSections = () =>

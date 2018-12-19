@@ -20,17 +20,20 @@ namespace lonos.kernel.core
             Goto(0, 0);
         }
 
-        public unsafe static void ApplyMode()
-        {
-            //ApplyMode(BootInfo.Header->VBEMode);
-        }
-
         public static void ApplyMode(uint mode)
         {
+            // https://de.wikibooks.org/wiki/Interrupts_80x86/_INT_10#Funktion_00h:_Setze_Bildschirmmodus_(EGA/VGA)
             KernelMessage.WriteLine("Screen VBE Mode: {0}", mode);
-            //switch(mode){
-            //    case 
-            //}
+            switch(mode){
+                case 1:
+                    Rows = 25;
+                    Columns = 40;
+                    break;
+                case 3:
+                    Rows = 25;
+                    Columns = 80;
+                    break;
+            }
         }
 
         private static StringBuffer tmpLine;

@@ -31,13 +31,15 @@ namespace lonos.kernel.core
         /// <summary>
         /// Output and Debug devices
         /// </summary>
-        public static void InitStage2()
+        public unsafe static void InitStage2()
         {
             Serial.SetupPort(Serial.COM1);
             Serial1 = new SerialDevice(Serial.COM1);
 
             lonos.kernel.core.Screen.EarlyInitialization();
             BiosTextScreen = new BiosTextScreenDevice();
+
+            Screen.ApplyMode(BootInfo.Header->VBEMode);
 
             Console = new ConsoleDevice(BiosTextScreen);
         }
@@ -47,7 +49,7 @@ namespace lonos.kernel.core
         /// </summary>
         public unsafe static void InitFrameBuffer()
         {
-            if (!BootInfo.Header->FBPresent)
+            if (!BootInfo.Header->FBPresent || BootInfo.Header->VBEMode < 0x100)
             {
                 KernelMessage.Path("fb", "not present");
                 return;
