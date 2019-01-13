@@ -28,7 +28,7 @@ namespace lonos.build
         public AppLocations AppLocations { get; set; }
 
         public TypeSystem TypeSystem { get; internal set; }
-        public BaseLinker Linker { get; internal set; }
+        public MosaLinker Linker { get; internal set; }
 
         protected Starter Starter;
         protected Process Process;
@@ -62,8 +62,8 @@ namespace lonos.build
                 BootLoader = BootLoader.Syslinux_3_72,
                 VBEVideo = false,
                 BaseAddress = Address.LoaderBasePhys,
-                EmitRelocations = false,
-                EmitSymbols = false,
+                //EmitRelocations = false,
+                //EmitSymbols = false,
                 Emitx86IRQMethods = false,
                 //SerialConnectionOption = SerialConnectionOption.Pipe,
                 ExitOnLaunch = true,

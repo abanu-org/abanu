@@ -28,7 +28,7 @@ namespace lonos.build
         public AppLocations AppLocations { get; set; }
 
         public TypeSystem TypeSystem { get; internal set; }
-        public BaseLinker Linker { get; internal set; }
+        public MosaLinker Linker { get; internal set; }
 
         protected Starter Starter;
         protected Process Process;
@@ -66,8 +66,8 @@ namespace lonos.build
                 Depth = 32,
                 //BaseAddress = 0x00500000,
                 BaseAddress = Address.KernelBaseVirt,
-                EmitRelocations = false,
-                EmitSymbols = false,
+                //EmitRelocations = false,
+                //EmitSymbols = false,
                 Emitx86IRQMethods = true,
                 //SerialConnectionOption = SerialConnectionOption.Pipe,
                 SerialConnectionPort = 9999,
@@ -85,8 +85,8 @@ namespace lonos.build
             Options.GenerateASMFile = true;
             Options.GenerateMapFile = true;
             Options.GenerateDebugFile = true;
-            Options.EmitRelocations = true;
-            Options.EmitSymbols = true; // Kernel Loader needs to resolve Adress of Start Method
+            //Options.EmitRelocations = true;
+            //Options.EmitSymbols = true; // Kernel Loader needs to resolve Adress of Start Method
             Options.Emitx86IRQMethods = true;
 
             Options.EnableSSA = false;
