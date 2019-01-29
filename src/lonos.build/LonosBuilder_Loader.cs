@@ -64,7 +64,7 @@ namespace lonos.build
                 BaseAddress = Address.LoaderBasePhys,
                 //EmitRelocations = false,
                 //EmitSymbols = false,
-                Emitx86IRQMethods = false,
+                //Emitx86IRQMethods = false,
                 //SerialConnectionOption = SerialConnectionOption.Pipe,
                 ExitOnLaunch = true,
                 GenerateNASMFile = false,

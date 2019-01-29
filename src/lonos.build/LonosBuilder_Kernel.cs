@@ -68,7 +68,7 @@ namespace lonos.build
                 BaseAddress = Address.KernelBaseVirt,
                 //EmitRelocations = false,
                 //EmitSymbols = false,
-                Emitx86IRQMethods = true,
+                //Emitx86IRQMethods = true,
                 //SerialConnectionOption = SerialConnectionOption.Pipe,
                 SerialConnectionPort = 9999,
                 SerialConnectionHost = "127.0.0.1",
@@ -87,7 +87,7 @@ namespace lonos.build
             Options.GenerateDebugFile = true;
             //Options.EmitRelocations = true;
             //Options.EmitSymbols = true; // Kernel Loader needs to resolve Adress of Start Method
-            Options.Emitx86IRQMethods = true;
+            //Options.Emitx86IRQMethods = true;
             Options.EmitAllSymbols = true;
 
 
