@@ -60,7 +60,6 @@
     <Compile Include="Memory\KernelMemoryMap.cs" />
     <Compile Include="Memory\PageFrameAllocator2.cs" />
     <Compile Include="buddy-malloc.cs" />
-    <Compile Include="Interrupts\IDT.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
