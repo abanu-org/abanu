@@ -62,6 +62,17 @@ namespace lonos.kernel.core
 
             // Get Entry Point of Kernel
             uint kernelEntry = GetKernelStartAddr();
+            if (kernelEntry == 0)
+            {
+                KernelMessage.WriteLine("No kernel entry point found {0:X8}");
+                KernelMessage.WriteLine("Is the name of entry point correct?");
+                KernelMessage.WriteLine("Are symbols emitted?");
+                KernelMessage.WriteLine("System halt!");
+                while (true)
+                {
+                    Native.Nop();
+                }
+            }
             KernelMessage.WriteLine("Call Kernel Start at {0:X8}", kernelEntry);
 
             // Start Kernel.
@@ -93,6 +104,8 @@ namespace lonos.kernel.core
         {
             var symName = Address.KernelEntryName;
             var sym = OriginalKernelElf.GetSymbol(symName);
+            if (sym == (ElfSymbol*)0)
+                return Addr.Zero;
             return sym->Value;
         }
 
