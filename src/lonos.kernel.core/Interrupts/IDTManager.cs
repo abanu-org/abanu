@@ -44,11 +44,14 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
 
             // Setup IDT table
+            KernelMessage.Write("Clear memory block for IDT");
             Mosa.Runtime.Internal.MemoryClear(new IntPtr((uint)IDTAddr), 6);
             Intrinsic.Store16(new IntPtr((uint)IDTAddr), (Offset.TotalSize * 256) - 1);
             Intrinsic.Store32(new IntPtr((uint)IDTAddr), 2, IDTAddr + 6);
 
+            KernelMessage.Write("Set IDT table entries...");
             SetTableEntries();
+            KernelMessage.WriteLine("done");
 
             handlers = new InterruptInfo[256];
             for (var i = 0; i <= 255; i++)
@@ -84,9 +87,11 @@ namespace lonos.kernel.core
             SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptsHandlers.SIMDFloatinPointException);
             SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
 
+            KernelMessage.Write("Enabling interrupts...");
             var idtAddr = (uint)IDTAddr;
             Native.Lidt(idtAddr);
             Native.Sti();
+            KernelMessage.WriteLine("done");
         }
 
         private static void UndefinedHandler(IDTStack* stack)
