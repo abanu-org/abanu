@@ -1,4 +1,17 @@
 #target remote :1234
+
+define hook-quit
+	kill
+    set confirm off
+end
+
+define hook-kill
+    set confirm off
+end
+
+set disassembly-flavor intel
+b *0x0
+b *0xc010609f
 file os/lonos.kernel.core.bin
 target remote | ./lonosctl debug qemu-kernel-run
 #hbreak System.Void lonos.kernel.core.Start::Main()

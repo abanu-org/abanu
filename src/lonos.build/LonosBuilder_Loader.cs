@@ -71,7 +71,8 @@ namespace lonos.build
                 GenerateASMFile = true,
                 GenerateMapFile = true,
                 GenerateDebugFile = false,
-                PlugKorlib = true
+                PlugKorlib = true,
+                HuntForCorLib=true
             };
 
             Options.VBEVideo = true;

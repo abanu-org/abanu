@@ -78,7 +78,8 @@ namespace lonos.build
                 GenerateASMFile = false,
                 GenerateMapFile = false,
                 GenerateDebugFile = false,
-                PlugKorlib = true
+                PlugKorlib = true,
+                HuntForCorLib = true
             };
 
             //Options.GenerateNASMFile = true;
