@@ -88,6 +88,8 @@ namespace lonos.build
             //Options.EmitRelocations = true;
             //Options.EmitSymbols = true; // Kernel Loader needs to resolve Adress of Start Method
             Options.Emitx86IRQMethods = true;
+            Options.EmitAllSymbols = true;
+
 
             Options.EnableSSA = false;
             Options.EnableIROptimizations = false;

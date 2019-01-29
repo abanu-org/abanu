@@ -75,6 +75,7 @@ namespace lonos.build
             };
 
             Options.VBEVideo = true;
+            Options.EmitAllSymbols = true;
 
             Section sect = null;
             Options.CreateExtraSections = () =>
