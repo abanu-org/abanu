@@ -22,6 +22,8 @@ namespace Mosa.Kernel.x86
         /// <param name="stackStatePointer">The stack state pointer.</param>
         private unsafe static void ProcessInterrupt(uint stackStatePointer)
         {
+            KernelMessage.WriteLine("Interrupt occured");
+
             var stack = (IDTStack*)stackStatePointer;
             var irq = stack->Interrupt;
             var info = IDTManager.handlers[irq];

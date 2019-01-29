@@ -44,7 +44,6 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
 
             // Setup IDT table
-            KernelMessage.Write("Clear memory block for IDT");
             Mosa.Runtime.Internal.MemoryClear(new IntPtr((uint)IDTAddr), 6);
             Intrinsic.Store16(new IntPtr((uint)IDTAddr), (Offset.TotalSize * 256) - 1);
             Intrinsic.Store32(new IntPtr((uint)IDTAddr), 2, IDTAddr + 6);
@@ -1918,7 +1917,9 @@ namespace lonos.kernel.core
 
         private static void Set(uint index, Delegate method)
         {
+            //KernelMessage.WriteLine("set {0}", index);
             var p = Marshal.GetFunctionPointerForDelegate(method);
+            //KernelMessage.WriteLine("got p: {0:X8}", (Addr)p);
 
             Set(index, (uint)p.ToInt32(), 0x08, 0x8E);
         }

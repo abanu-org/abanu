@@ -7,7 +7,7 @@ using Mosa.Runtime.x86;
 namespace lonos.kernel.core
 {
 
-    unsafe static class Start
+    unsafe static class LoaderStart
     {
 
         public static void Main()

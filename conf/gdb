@@ -1,1 +1,6 @@
-target remote :1234
+#target remote :1234
+file os/lonos.kernel.core.bin
+target remote | ./lonosctl debug qemu-kernel-run
+#hbreak System.Void lonos.kernel.core.Start::Main()
+hbreak System.Void lonos.kernel.core.IDTManager::SetTableEntries()
+continue

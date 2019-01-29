@@ -31,7 +31,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Start.cs" />
+    <Compile Include="LoaderStart.cs" />
     <Compile Include="MultiBoot.cs" />
     <Compile Include="BootMemory.cs" />
     <Compile Include="KernelMessage.cs" />

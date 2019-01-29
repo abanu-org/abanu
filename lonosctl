@@ -100,6 +100,22 @@ function run {
 	esac
 }
 
+function debug {
+	case $1 in
+		qemu-kernel)
+			gdb -x conf/gdb
+			;;
+
+		qemu-kernel-run)
+			qemu-system-i386 -kernel os/lonos.kernel.image.bin -serial file:/home/sebastian/projects/lonos/logs/kernel.log -S -gdb stdio
+			;;
+
+		*)
+			echo $"Usage: lonosctl run {qemu-kernel}"
+			exit 1
+	esac
+}
+
 function _disk {
 	#image=$LONOS_OSDIR/lonos.kernel.image.bin
 	#loader=$LONOS_PROJDIR/os/lonos.kernel.loader.bin
@@ -260,6 +276,10 @@ case $1 in
 	f1)
 		create_efi_disk ${@:2}
 		#create_chroot
+		;;
+
+	debug)
+		debug ${@:2}
 		;;
 
 	*)

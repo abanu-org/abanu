@@ -12,7 +12,7 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Multiboot Flags: {0:X}", Multiboot.Flags);
             BootInfo = (BootInfoHeader*)Address.KernelBootInfo;
             BootInfo->Magic = lonos.kernel.core.BootInfoHeader.BootInfoMagic;
-            BootInfo->HeapStart = KMath.AlignValueCeil(Address.OriginalKernelElfSection + Start.OriginalKernelElf.TotalFileSize, 0x1000);
+            BootInfo->HeapStart = KMath.AlignValueCeil(Address.OriginalKernelElfSection + LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->HeapSize = 0;
 
             BootInfo->InstalledPhysicalMemory = 128 * 1024 * 1024;
@@ -84,12 +84,12 @@ namespace lonos.kernel.core
 
             var idx = mbMapCount + 0;
             BootInfo->MemoryMapArray[idx].Start = Address.OriginalKernelElfSection;
-            BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(Start.OriginalKernelElf.TotalFileSize, 0x1000);
+            BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.OriginalKernelElfImage;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.KernelElfSection;
-            BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(Start.OriginalKernelElf.TotalFileSize, 0x1000);
+            BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelElf;
 
             idx++;
