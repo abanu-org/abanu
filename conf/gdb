@@ -1,4 +1,8 @@
-#target remote :1234
+#######################
+# general configuration
+
+set history remove-duplicates unlimited
+set disassembly-flavor intel
 
 define hook-quit
 	kill
@@ -9,11 +13,18 @@ define hook-kill
     set confirm off
 end
 
-set disassembly-flavor intel
-b *0x0
-b *0xc010609f
+########################
+# specific configuration
+
 file os/lonos.kernel.core.bin
 target remote | ./lonosctl debug qemu-kernel-run
+b *0x0
+b *0xc010609f
+
 #hbreak System.Void lonos.kernel.core.Start::Main()
-hbreak System.Void lonos.kernel.core.IDTManager::SetTableEntries()
+#hbreak System.Void lonos.kernel.core.IDTManager::SetTableEntries()
+
+####################
+# continue debugging
+
 continue
