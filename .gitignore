@@ -60,7 +60,7 @@ Mosa-Project/
 
 os/
 logs/
-/tools/
+#/tools/
 *.hexer
 
 #Emacs files

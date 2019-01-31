@@ -1,3 +1,6 @@
 [submodule "MOSA-Project"]
 	path = external/MOSA-Project
 	url = https://github.com/Arakis/MOSA-Project.git
+[submodule "tools"]
+	path = tools
+	url = https://github.com/lonos-project/lonos-tools.git
