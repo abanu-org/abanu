@@ -13,7 +13,8 @@
 
 Prerequisites:
 - .NET Framework 4.6.1 or latest Mono
-- NASM Assembler
+- NASM Assembler (`sudo apt-get install nasm`)
+- mtools (`sudo apt-get install mtools`)
 - Optional: qemu or bochs for emulation.
 
 ```
