@@ -31,7 +31,7 @@ namespace lonos.kernel.core
             BootInfo.Setup();
 
             KernelMemoryMapManager.Setup();
-            KernelMemoryMapManager.Allocate(0x1000*1000, BootInfoMemoryType.PageDirectory);
+            KernelMemoryMapManager.Allocate(0x1000 * 1000, BootInfoMemoryType.PageDirectory);
 
             // Read own ELF-Headers and Sections
             KernelElf.Setup();
@@ -40,6 +40,10 @@ namespace lonos.kernel.core
             NativeCalls.Setup();
 
             PageFrameManager.Setup();
+
+            KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
+            PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, 10);
+            KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
 
             Memory.Setup();
 

@@ -35,12 +35,17 @@ namespace lonos.kernel.core
         unsafe static Addr RequestRawVirtalMemory(USize size)
         {
             Addr virt = _nextVirtAddr;
-            for (var i = 0; i < RequiredPagesForSize(size); i++)
-            {
-                var page = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default);
+            var pages = RequiredPagesForSize(size);
+            var head = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
+            if (head == null)
+                return Addr.Zero;
 
-                PageTable.MapVirtualAddressToPhysical(_nextVirtAddr, page->PhysicalAddress);
+            var p = head;
+            for (var i = 0; i < pages; i++)
+            {
+                PageTable.MapVirtualAddressToPhysical(_nextVirtAddr, p->PhysicalAddress);
                 _nextVirtAddr += 4096;
+                p = p->Next;
             }
             return virt;
         }

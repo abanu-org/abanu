@@ -28,9 +28,6 @@ namespace lonos.kernel.core
         {
             cnt++;
 
-            var retAddr = nextAddr;
-            nextAddr += size;
-
             var col = Screen.column;
             var row = Screen.row;
             Screen.column = 0;
@@ -38,10 +35,16 @@ namespace lonos.kernel.core
             Screen.Write("AllocCount: ");
             Screen.Write(cnt);
             Screen.Goto(1, 35);
-            Screen.Write("AllocSize:  ");
-            Screen.Write(nextAddr);
             Screen.row = row;
             Screen.column = col;
+
+            return AllocateMemory_EarlyBoot(size);
+        }
+
+        static IntPtr AllocateMemory_EarlyBoot(uint size)
+        {
+            var retAddr = nextAddr;
+            nextAddr += size;
 
             return (IntPtr)(((uint)Address.GCInitialMemory) + retAddr);
         }

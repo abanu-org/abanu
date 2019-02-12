@@ -17,6 +17,18 @@ namespace lonos.kernel.core
         public Atomic UsageCount;
 
         public Addr PhysicalAddress;
+
+        // If this is the head of an allocated block
+        public Page* Head;
+
+        // If this is the tail of an allocated block
+        public Page* Tail;
+
+        /// <summary>
+        /// Number of reserved Page for this allocation. Only set if this is the Head page.
+        /// </summary>
+        public uint PagesUsed;
+
         public Page* Next;
         public PageStatus Status;
 

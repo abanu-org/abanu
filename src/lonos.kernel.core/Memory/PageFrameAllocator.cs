@@ -19,9 +19,9 @@ namespace lonos.kernel.core
             Default.Setup();
         }
 
-        public static Page* AllocatePages(PageFrameRequestFlags flags, byte order)
+        public static Page* AllocatePages(PageFrameRequestFlags flags, uint pages)
         {
-            return Default.AllocatePages(flags, order); 
+            return Default.AllocatePages(flags, pages);
         }
 
         public static Page* AllocatePage(PageFrameRequestFlags flags)
@@ -50,21 +50,14 @@ namespace lonos.kernel.core
     public unsafe class PageFrameAllocator : IPageFrameAllocator
     {
 
-        public Page* AllocatePages(PageFrameRequestFlags flags, byte order)
+        public Page* AllocatePages(PageFrameRequestFlags flags, uint pages)
         {
-            int size = 1 << order;
-            var page = GetPage(Allocate());
-            for (var i = 1; i < size; i++)
-            {
-                Allocate();
-            }
-            return page;
+            return Allocate(pages);
         }
 
         public Page* AllocatePage(PageFrameRequestFlags flags)
         {
-            // Fake-Impl
-            return GetPage(Allocate());
+            return GetPage(Allocate(1));
         }
 
         public void Free(Page* page)
@@ -136,43 +129,86 @@ namespace lonos.kernel.core
         /// Allocate a physical page from the free list
         /// </summary>
         /// <returns>The page</returns>
-        Addr Allocate()
+        Page* Allocate(uint num)
         {
             var cnt = 0;
+
+            if (lastAllocatedPage == null)
+                lastAllocatedPage = PageArray;
+
             Page* p = lastAllocatedPage->Next;
             while (true)
             {
                 if (p == null)
                     p = PageArray;
+
                 if (p->Status == PageStatus.Free)
-                    break;
+                {
+                    var head = p;
+
+                    // Found free Page. Check now free range.
+                    for (var i = 0; i < num; i++)
+                    {
+                        if (p == null)
+                            break; // Reached end. SorRange is incomplete
+                        if (p->Status != PageStatus.Free) // Used -> so we can abort the searach
+                            break;
+
+                        if (i == num - 1)
+                        { // all loops successful. So we found our range.
+
+                            p = head;
+                            head->Tail = p;
+                            head->PagesUsed = num;
+                            for (var n = 0; n < num; n++)
+                            {
+                                p->Status = PageStatus.Used;
+                                p->Head = head;
+                                p->Tail = head->Tail;
+                                p = p->Next;
+                                PagesUsed++;
+                            }
+                            lastAllocatedPage = p;
+
+                            return head;
+                        }
+
+                        p = p->Next;
+                    }
+
+                }
+
+                if (p->Tail != null)
+                    p = p->Tail;
+
                 p = p->Next;
                 if (++cnt > PageCount)
                     break;
             }
 
-            if (p == null || p->Status != PageStatus.Free)
-            {
-                return Addr.Invalid;
-            }
-
-            p->Status = PageStatus.Used;
-            PagesUsed++;
-            lastAllocatedPage = p;
-            return p->PhysicalAddress;
+            return null;
         }
 
         /// <summary>
         /// Releases a page to the free list
         /// </summary>
-        /// <param name="address">The address.</param>
         void Free(Addr address)
         {
             var p = GetPage(address);
             if (p->Free)
                 return;
-            p->Status = PageStatus.Free;
-            PagesUsed--;
+
+            var num = p->PagesUsed;
+
+            for (var n = 0; n < num; n++)
+            {
+                p->Status = PageStatus.Used;
+                p->PagesUsed = 0;
+                p->Head = null;
+                p->Tail = null;
+                p = p->Next;
+                PagesUsed--;
+            }
         }
 
         /// <summary>
