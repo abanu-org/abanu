@@ -9,7 +9,10 @@ namespace lonos.test.console
             Console.WriteLine(Environment.Is64BitProcess);
             Console.WriteLine(IntPtr.Size);
             Console.WriteLine("Hello World!");
-            new AllocTest().run();
+            //new AllocTest().run();
+
+            new lonos.test.malloc4.Tester().run();
+
             Console.ReadLine();
         }
     }

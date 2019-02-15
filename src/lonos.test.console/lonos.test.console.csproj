@@ -41,6 +41,8 @@
     </Compile>
     <Compile Include="alloc2\EmptyClass.cs" />
     <Compile Include="Alloc3\Alloc3.cs" />
+    <Compile Include="alloc4.cs" />
+    <Compile Include="alloc4Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="alloc2\" />

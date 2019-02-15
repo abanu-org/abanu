@@ -13,6 +13,7 @@ http://www.informit.com/articles/article.aspx?p=29961&seqNum=2
 
 #kmallic impl:
 http://minirighi.sourceforge.net/html/kmalloc_8c-source.html
+https://github.com/bedrinejl/MicroKernel/blob/master/libc/stdlib/malloc.c
 
 # Linux boot process (overview)
 https://www.ibm.com/developerworks/library/l-linuxboot/index.html

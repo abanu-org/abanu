@@ -32,10 +32,9 @@ namespace lonos.kernel.core
         /// Consumer: Kernel, Memory allocators
         /// Shoud be used for larger Chunks.
         /// </summary>
-        unsafe static Addr RequestRawVirtalMemory(USize size)
+        public unsafe static Addr RequestRawVirtalMemoryPages(uint pages)
         {
             Addr virt = _nextVirtAddr;
-            var pages = RequiredPagesForSize(size);
             var head = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
             if (head == null)
                 return Addr.Zero;
@@ -48,6 +47,10 @@ namespace lonos.kernel.core
                 p = p->Next;
             }
             return virt;
+        }
+
+        public unsafe static void FreeRawVirtalMemoryPages(Addr virtAddr)
+        {
         }
 
         private static uint RequiredPagesForSize(USize size)
