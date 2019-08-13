@@ -21,7 +21,7 @@ namespace lonos.build
 {
     public class LonosBuilder_Loader : IBuilderEvent, IStarterEvent
     {
-        public Options Options { get; }
+        public LauncherOptions Options { get; }
         public string TestAssemblyPath { get; set; }
         public string Platform { get; set; }
         public string InputAssembly { get; set; }
@@ -38,7 +38,7 @@ namespace lonos.build
 
         public LonosBuilder_Loader(string inputAssembly)
         {
-            Options = new Options()
+            Options = new LauncherOptions()
             {
                 EnableSSA = true,
                 EnableIROptimizations = false,
@@ -57,7 +57,7 @@ namespace lonos.build
                 EmulatorMemoryInMB = 128,
                 DestinationDirectory = Program.GetEnv("LONOS_OSDIR"),
                 FileSystem = FileSystem.FAT16,
-                UseMultiThreadingCompiler = false,
+                EnableMultiThreading = false,
                 InlinedIRMaximum = 12,
                 BootLoader = BootLoader.Syslinux_3_72,
                 VBEVideo = false,
