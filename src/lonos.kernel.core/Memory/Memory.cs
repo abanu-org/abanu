@@ -10,48 +10,22 @@ namespace lonos.kernel.core
     public static class Memory
     {
 
-        private static Addr _startVirtAddr;
-        private static Addr _nextVirtAddr;
-
-        public static void Setup()
+        public unsafe static void Setup()
         {
-            _startVirtAddr = 0x40000000; //1gb
-            _nextVirtAddr = _startVirtAddr;
+            kmallocAllocator = new Allocator();
 
-            uint reserveMem = 10 * 1024 * 1024;
-
-            KernelMessage.WriteLine("Request {0} MB for MemoryAllocator", reserveMem / 1024 / 1024);
-
-            _kmalloc_Next = RequestRawVirtalMemory(reserveMem);
+            var ptr = (byte*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(KMath.AlignValueCeil(Allocator.headSize, 4096));
+            for (var i = 0; i < Allocator.headSize; i++)
+                *(ptr + i) = 0;
+            kmallocAllocator.list_heads = (malloc_meta**)ptr;
+            ManagedMemoy.useAllocator = true;
 
             KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameManager.PagesAvailable * 4096) / 1024 / 1024);
+
+            var s = new int[] { 1, 2, 3, 4, };
+            s[1] = 5;
         }
 
-        /// <summary>
-        /// Returns raw, unmanaged Memory.
-        /// Consumer: Kernel, Memory allocators
-        /// Shoud be used for larger Chunks.
-        /// </summary>
-        public unsafe static Addr RequestRawVirtalMemoryPages(uint pages)
-        {
-            Addr virt = _nextVirtAddr;
-            var head = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
-            if (head == null)
-                return Addr.Zero;
-
-            var p = head;
-            for (var i = 0; i < pages; i++)
-            {
-                PageTable.MapVirtualAddressToPhysical(_nextVirtAddr, p->PhysicalAddress);
-                _nextVirtAddr += 4096;
-                p = p->Next;
-            }
-            return virt;
-        }
-
-        public unsafe static void FreeRawVirtalMemoryPages(Addr virtAddr)
-        {
-        }
 
         private static uint RequiredPagesForSize(USize size)
         {
@@ -63,16 +37,14 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("NotImplemented"); ;
         }
 
-        private static Addr _kmalloc_Next;
+        private static Allocator kmallocAllocator;
 
         /// <summary>
         /// kmalloc is the normal method of allocating memory for objects smaller than page size in the kernel.
         /// </summary>
-        public static Addr Allocate(USize n, GFP flags)
+        public unsafe static Addr Allocate(USize n, GFP flags)
         {
-            var next = _kmalloc_Next;
-            _kmalloc_Next += next;
-            return next;
+            return kmallocAllocator.malloc(n);
         }
 
         /// <summary>
@@ -115,8 +87,17 @@ namespace lonos.kernel.core
         /// <summary>
         /// free previously allocated memory
         /// </summary>
-        public static void Free(Addr address)
+        public unsafe static void Free(Addr address)
         {
+            kmallocAllocator.free(address);
+        }
+
+        /// <summary>
+        /// free previously allocated memory
+        /// </summary>
+        public unsafe static void Free(IntPtr address)
+        {
+            kmallocAllocator.free((void*)address);
         }
 
         /// <summary>

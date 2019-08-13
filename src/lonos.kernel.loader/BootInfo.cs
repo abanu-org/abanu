@@ -110,7 +110,7 @@ namespace lonos.kernel.core
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.GCInitialMemory;
-            BootInfo->MemoryMapArray[idx].Size = 0x100000; // 1MB
+            BootInfo->MemoryMapArray[idx].Size = Address.GCInitialMemorySize;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialGCMemory;
 
             idx++;

@@ -23,6 +23,8 @@ b *0xc010609f
 
 #hbreak System.Void lonos.kernel.core.Start::Main()
 #hbreak System.Void lonos.kernel.core.IDTManager::SetTableEntries()
+#hbreak src/lonos.kernel.core/Start.cs:63
+#hbreak src/lonos.kernel.core/KList.cs:45
 
 ####################
 # continue debugging

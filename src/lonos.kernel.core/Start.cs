@@ -12,8 +12,9 @@ namespace lonos.kernel.core
 
         public unsafe static void Main()
         {
+            ManagedMemoy.InitializeGCMemory();
             Mosa.Runtime.StartUp.InitializeAssembly();
-            KernelMemory.InitializeGCMemory();
+            //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
             ApiContext.Current = new ApiHost();
 
@@ -44,6 +45,7 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
             PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, 10);
             KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
+            RawVirtualFrameAllocator.Setup();
 
             Memory.Setup();
 
@@ -59,6 +61,21 @@ namespace lonos.kernel.core
             // Important Note: IDT depends on GDT. Never setup IDT before GDT.
             IDTManager.Setup();
 
+            Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
+
+
+            var ar = new KList<uint>(sizeof(uint));
+            ar.Add(44);
+            ar.Add(55);
+            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
+            foreach (var num in ar)
+            {
+                KernelMessage.WriteLine("VAL: {0}", num);
+            }
+            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
+            ar.Destroy();
+
+            KernelMessage.WriteLine("Kernel initialized");
             // We have nothing todo (yet). So let's stop.
             Debug.Break();
         }

@@ -14,8 +14,9 @@ namespace lonos.kernel.core
         private const uint InitialAllocStart = 0x4000000;
 
         public const uint GCInitialMemory = InitialAllocStart;
+        public const uint GCInitialMemorySize = 1024 * 1024 * 3;
 
-        public const uint InitialDynamicPage = InitialAllocStart + 1024 * 1024;
+        public const uint InitialDynamicPage = InitialAllocStart + GCInitialMemorySize;
         public const uint LoaderBasePhys = 0x00200000;  // 3MB
 
         public const uint KernelBasePhys = 0x01400000;  // 27MB
