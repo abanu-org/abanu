@@ -98,7 +98,6 @@
     <Folder Include="Memory\" />
     <Folder Include="Elf\" />
     <Folder Include="Interrupts\" />
-    <Folder Include="Boot\" />
     <Folder Include="Debug\" />
     <Folder Include="External\" />
     <Folder Include="Devices\" />
