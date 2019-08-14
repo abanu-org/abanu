@@ -58,6 +58,8 @@ function build {
 			(cd src && msbuild lonos.build.sln /p:Configuration=Release)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
+			cp external/MOSA-Project/bin/dnlib.* bin
+			cp external/MOSA-Project/bin/Priority\ Queue.dll bin
 			;;
 
 		assembly)
