@@ -186,6 +186,7 @@ namespace lonos.kernel.core
                     break;
             }
 
+            Panic.Error("PageFrameAllocator: No free Page found");
             return null;
         }
 

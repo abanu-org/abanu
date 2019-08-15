@@ -42,7 +42,7 @@ namespace lonos.kernel.core
             // Initialize the embedded code (actually only a little proof of conecept code)
             NativeCalls.Setup();
 
-            //PageTable.InitialKernelProtect();
+            //InitialKernelProtect();
 
             PageFrameManager.Setup();
 
@@ -84,13 +84,42 @@ namespace lonos.kernel.core
             AppMain();
         }
 
-        unsafe public static void ProtectMemory()
-        {
+        // public unsafe static void InitialKernelProtect()
+        // {
+        //     KernelMessage.WriteLine("Protecting Memory...");
 
-            //PageTable.GetTableEntry(0)->Writable = false;
+        //     // PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
+        //     // for (int index = 0; index < 1024; index++)
+        //     // {
+        //     // 	pde[index].Writable = false;
+        //     // }
 
-            //Native.SetCR3(AddrPageDirectory);
-        }
+        //     // PageTable.PageTableEntry* pte = (PageTable.PageTableEntry*)PageTable.AddrPageTable;
+        //     // for (int index = 0; index < 1024 * 32; index++)
+        //     // 	pte[index].Writable = false;
+
+        //     // InitialKernelProtect_MakeWritable_ByRegion(0, 90 * 1024 * 1024);
+
+        //     KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
+        //     Native.SetCR3(PageTable.AddrPageDirectory);
+        //     //Native.Invlpg();
+        //     KernelMessage.WriteLine("Protecting Memory done");
+        // }
+
+        // public unsafe static void InitialKernelProtect_MakeWritable_ByRegion(uint startVirtAddr, uint endVirtAddr)
+        // {
+        //     InitialKernelProtect_MakeWritable_BySize(startVirtAddr, endVirtAddr - startVirtAddr);
+        // }
+
+        // public unsafe static void InitialKernelProtect_MakeWritable_BySize(uint virtAddr, uint size)
+        // {
+        //     var pages = KMath.DivCeil(size, 4096);
+        //     for (var i = 0; i < pages; i++)
+        //     {
+        //         var entry = PageTable.GetTableEntry(virtAddr);
+        //         entry->Writable = true;
+        //     }
+        // }
 
         public static void AppMain()
         {

@@ -427,6 +427,7 @@ namespace lonos.kernel.core
         {
             var bytes = pages * 4096;
             var ptr = (byte*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(pages);
+            //KernelMessage.WriteLine("mmap: Pages: {0}, Addr: {1:X8}", pages, (uint)ptr);
             for (var i = 0; i < bytes; i++)
                 *(ptr + i) = 0;
 
