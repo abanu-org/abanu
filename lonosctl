@@ -116,7 +116,9 @@ function debug {
 			;;
 
 		qemu-kernel-run)
-			qemu-system-i386 -kernel os/lonos.kernel.image.bin -serial file:/home/sebastian/projects/lonos/logs/kernel.log -S -gdb stdio
+			# Uncomment if not required!
+			DEBUG_INTERRUPTS=,int
+			qemu-system-i386 -kernel os/lonos.kernel.image.bin -serial file:/home/sebastian/projects/lonos/logs/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors{DEBUG_INTERRUPTS} -D ${LONOS_PROJDIR}/logs/emulator.log
 			;;
 
 		*)
