@@ -111,7 +111,7 @@ namespace lonos.build
                         FileSize = 0x12345678, // Will be replaced in Link Disk stage
                         MemorySize = 0x12345678,
                         PhysicalAddress = Address.OriginalKernelElfSection, //Multiboot will load section here
-                        VirtualAddress = Address.OriginalKernelElfSection, 
+                        VirtualAddress = Address.OriginalKernelElfSection,
                         Type = ProgramHeaderType.Load,
                         Flags = ProgramHeaderFlags.Read
                     }

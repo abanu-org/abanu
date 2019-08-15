@@ -12,6 +12,8 @@ namespace lonos.kernel.core
 
         public unsafe static void Main()
         {
+            BootInfo.SetupStage1();
+
             ManagedMemoy.InitializeGCMemory();
             Mosa.Runtime.StartUp.InitializeAssembly();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
@@ -29,7 +31,7 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Starting Lonos Kernel...");
 
             // Detect environment (Memory Maps, Video Mode, etc.)
-            BootInfo.Setup();
+            BootInfo.SetupStage2();
 
             KernelMemoryMapManager.Setup();
             KernelMemoryMapManager.Allocate(0x1000 * 1000, BootInfoMemoryType.PageDirectory);

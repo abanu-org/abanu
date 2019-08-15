@@ -16,8 +16,29 @@ namespace lonos.build
             {
                 switch (name)
                 {
-                    case "LONOS_PROJECT_ROOT":
+                    case "LONOS_PROJDIR":
                         value = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(typeof(Program).Assembly.Location).AbsolutePath));
+                        break;
+                    case "LONOS_OSDIR":
+                        value = "${LONOS_PROJDIR}/os";
+                        break;
+                    case "LONOS_NATIVE_FILES":
+                        value = "${LONOS_PROJDIR}/bin/lonos.native.o";
+                        break;
+                    case "LONOS_BOOTLOADER_EXE":
+                        value = "${LONOS_PROJDIR}/bin/lonos.kernel.loader.exe";
+                        break;
+                    case "LONOS_EXE":
+                        value = "${LONOS_PROJDIR}/bin/lonos.kernel.core.exe";
+                        break;
+                    case "LONOS_LOGDIR":
+                        value = "${LONOS_PROJDIR}/logs";
+                        break;
+                    case "LONOS_ISODIR":
+                        value = "${LONOS_PROJDIR}/iso";
+                        break;
+                    case "LONOS_TOOLSDIR":
+                        value = "${LONOS_PROJDIR}/tools";
                         break;
                 }
             }

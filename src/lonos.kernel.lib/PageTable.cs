@@ -59,6 +59,9 @@ namespace lonos.kernel.core
 
             KernelMessage.Write("Enable Paging... ");
 
+            // Set CR0.WP
+            Native.SetCR0(Native.GetCR0() | 0x10000);
+
             // Set CR0 register on processor - turns on virtual memory
             Native.SetCR0(Native.GetCR0() | 0x80000000);
 
@@ -98,9 +101,14 @@ namespace lonos.kernel.core
 
             var entry = GetTableEntry(virtualAddress);
             entry->PhysicalAddress = physicalAddress;
-            entry->Present = true;
+            entry->Present = present;
             entry->Writable = true;
             entry->User = true;
+
+            //Native.Invlpg(virtualAddress); Not implemented in MOSA yet
+
+            // workarround:
+            Native.SetCR3(PageTable.AddrPageDirectory);
         }
 
         /// <summary>

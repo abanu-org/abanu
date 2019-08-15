@@ -8,10 +8,13 @@ namespace lonos.kernel.core
 
         public static bool Present;
 
-        public static void Setup()
+        public static void SetupStage1()
         {
             Header = (BootInfoHeader*)Address.KernelBootInfo;
+        }
 
+        public static void SetupStage2()
+        {
             if (Header->Magic != BootInfoHeader.BootInfoMagic)
             {
                 Present = false;
