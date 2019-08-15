@@ -40,6 +40,8 @@ namespace lonos.kernel.core
 			// Initialize the embedded code (actually only a little proof of conecept code)
 			NativeCalls.Setup();
 
+			PageTable.InitialKernelProtect();
+
 			PageFrameManager.Setup();
 
 			KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
@@ -78,6 +80,14 @@ namespace lonos.kernel.core
 			KernelMessage.WriteLine("Kernel initialized");
 
 			AppMain();
+		}
+
+		unsafe public static void ProtectMemory()
+		{
+
+			//PageTable.GetTableEntry(0)->Writable = false;
+
+			//Native.SetCR3(AddrPageDirectory);
 		}
 
 		public static void AppMain()
