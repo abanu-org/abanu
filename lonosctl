@@ -51,6 +51,7 @@ function build {
 			build native
 			build loader
 			build kernel
+			build image
 			build disk
 			;;
 
@@ -76,6 +77,10 @@ function build {
 
 		kernel)
 			(cd bin && mono -O=all ./lonos.build.exe --image=kernel)
+			;;
+
+		image)
+			_image
 			;;
 
 		disk)
@@ -120,6 +125,10 @@ function debug {
 	esac
 }
 
+function _image {
+	(cd bin && mono -O=all ./lonos.build.exe --image=image)
+}
+
 function _disk {
 	#image=$LONOS_OSDIR/lonos.kernel.image.bin
 	#loader=$LONOS_PROJDIR/os/lonos.kernel.loader.bin
@@ -127,8 +136,6 @@ function _disk {
 	#rm -f $image
 	#cat $loader $kernel > $image
 	#printf '\x31\xc0\xc3' | dd of=$image bs=1 seek=3 count=3 conv=notrunc
-	
-	(cd bin && mono -O=all ./lonos.build.exe --image=image)
 	
 	create_efi_disk
 	create_grub_hybrid_disk
