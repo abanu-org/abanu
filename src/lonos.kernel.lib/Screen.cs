@@ -24,7 +24,8 @@ namespace lonos.kernel.core
         {
             // https://de.wikibooks.org/wiki/Interrupts_80x86/_INT_10#Funktion_00h:_Setze_Bildschirmmodus_(EGA/VGA)
             KernelMessage.WriteLine("Screen VBE Mode: {0}", mode);
-            switch(mode){
+            switch (mode)
+            {
                 case 1:
                     Rows = 25;
                     Columns = 40;

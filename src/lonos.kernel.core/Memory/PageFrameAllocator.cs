@@ -8,221 +8,221 @@ namespace lonos.kernel.core
 {
 
 
-	public unsafe static class PageFrameManager
-	{
+    public unsafe static class PageFrameManager
+    {
 
-		static PageFrameAllocator Default;
+        static PageFrameAllocator Default;
 
-		public static void Setup()
-		{
-			Default = new PageFrameAllocator();
-			Default.Setup();
-		}
+        public static void Setup()
+        {
+            Default = new PageFrameAllocator();
+            Default.Setup();
+        }
 
-		public static Page* AllocatePages(PageFrameRequestFlags flags, uint pages)
-		{
-			return Default.AllocatePages(flags, pages);
-		}
+        public static Page* AllocatePages(PageFrameRequestFlags flags, uint pages)
+        {
+            return Default.AllocatePages(flags, pages);
+        }
 
-		public static Page* AllocatePage(PageFrameRequestFlags flags)
-		{
-			return Default.AllocatePage(flags);
-		}
+        public static Page* AllocatePage(PageFrameRequestFlags flags)
+        {
+            return Default.AllocatePage(flags);
+        }
 
-		public static void Free(Page* page)
-		{
-			Default.Free(page);
-		}
+        public static void Free(Page* page)
+        {
+            Default.Free(page);
+        }
 
-		public static uint PagesAvailable
-		{
-			get
-			{
-				return Default.PagesAvailable;
-			}
-		}
+        public static uint PagesAvailable
+        {
+            get
+            {
+                return Default.PagesAvailable;
+            }
+        }
 
-	}
+    }
 
-	/// <summary>
-	/// A physical page allocator.
-	/// </summary>
-	public unsafe class PageFrameAllocator : IPageFrameAllocator
-	{
+    /// <summary>
+    /// A physical page allocator.
+    /// </summary>
+    public unsafe class PageFrameAllocator : IPageFrameAllocator
+    {
 
-		public Page* AllocatePages(PageFrameRequestFlags flags, uint pages)
-		{
-			return Allocate(pages);
-		}
+        public Page* AllocatePages(PageFrameRequestFlags flags, uint pages)
+        {
+            return Allocate(pages);
+        }
 
-		public Page* AllocatePage(PageFrameRequestFlags flags)
-		{
-			return GetPage(Allocate(1));
-		}
+        public Page* AllocatePage(PageFrameRequestFlags flags)
+        {
+            return GetPage(Allocate(1));
+        }
 
-		public void Free(Page* page)
-		{
-			Free(page->PhysicalAddress);
-		}
+        public void Free(Page* page)
+        {
+            Free(page->PhysicalAddress);
+        }
 
-		uint PagesUsed;
+        uint PagesUsed;
 
-		Page* PageArray;
-		uint PageCount;
+        Page* PageArray;
+        uint PageCount;
 
-		KernelMemoryMap kmap;
+        KernelMemoryMap kmap;
 
-		/// <summary>
-		/// Setup the physical page manager
-		/// </summary>
-		public void Setup()
-		{
-			uint physMem = BootInfo.Header->InstalledPhysicalMemory;
-			PageCount = physMem / PageSize;
-			kmap = KernelMemoryMapManager.Allocate(PageCount * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
-			PageArray = (Page*)kmap.Start;
-			lastAllocatedPage = PageArray;
+        /// <summary>
+        /// Setup the physical page manager
+        /// </summary>
+        public void Setup()
+        {
+            uint physMem = BootInfo.Header->InstalledPhysicalMemory;
+            PageCount = physMem / PageSize;
+            kmap = KernelMemoryMapManager.Allocate(PageCount * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
+            PageArray = (Page*)kmap.Start;
+            lastAllocatedPage = PageArray;
 
-			MemoryOperation.Clear4(kmap.Start, kmap.Size);
+            MemoryOperation.Clear4(kmap.Start, kmap.Size);
 
-			for (uint i = 0; i < PageCount; i++)
-			{
-				PageArray[i].PhysicalAddress = i * PageSize;
-				if (i != 0)
-					PageArray[i - 1].Next = &PageArray[i];
-			}
+            for (uint i = 0; i < PageCount; i++)
+            {
+                PageArray[i].PhysicalAddress = i * PageSize;
+                if (i != 0)
+                    PageArray[i - 1].Next = &PageArray[i];
+            }
 
-			SetupFreeMemory();
+            SetupFreeMemory();
 
-			for (uint i = 0; i < PageCount; i++)
-			{
-				if (!PageArray[i].Used)
-					PageArray[i].Status = PageStatus.Free;
-			}
-		}
+            for (uint i = 0; i < PageCount; i++)
+            {
+                if (!PageArray[i].Used)
+                    PageArray[i].Status = PageStatus.Free;
+            }
+        }
 
-		/// <summary>
-		/// Setups the free memory.
-		/// </summary>
-		unsafe void SetupFreeMemory()
-		{
-			if (!BootInfo.Present)
-				return;
+        /// <summary>
+        /// Setups the free memory.
+        /// </summary>
+        unsafe void SetupFreeMemory()
+        {
+            if (!BootInfo.Present)
+                return;
 
-			for (var i = 0; i < KernelMemoryMapManager.Header->Used.Count; i++)
-			{
-				var map = KernelMemoryMapManager.Header->Used.Items[i];
-				GetPage(map.Start)->Status = PageStatus.Used;
-				PagesUsed++;
-			}
-		}
+            for (var i = 0; i < KernelMemoryMapManager.Header->Used.Count; i++)
+            {
+                var map = KernelMemoryMapManager.Header->Used.Items[i];
+                GetPage(map.Start)->Status = PageStatus.Used;
+                PagesUsed++;
+            }
+        }
 
-		public Page* GetPage(Addr addr)
-		{
-			return &PageArray[(uint)addr / PageSize];
-		}
+        public Page* GetPage(Addr addr)
+        {
+            return &PageArray[(uint)addr / PageSize];
+        }
 
-		//static uint _nextAllocacationSearchIndex;
-		private static Page* lastAllocatedPage;
+        //static uint _nextAllocacationSearchIndex;
+        private static Page* lastAllocatedPage;
 
-		/// <summary>
-		/// Allocate a physical page from the free list
-		/// </summary>
-		/// <returns>The page</returns>
-		Page* Allocate(uint num)
-		{
-			var cnt = 0;
+        /// <summary>
+        /// Allocate a physical page from the free list
+        /// </summary>
+        /// <returns>The page</returns>
+        Page* Allocate(uint num)
+        {
+            var cnt = 0;
 
-			if (lastAllocatedPage == null)
-				lastAllocatedPage = PageArray;
+            if (lastAllocatedPage == null)
+                lastAllocatedPage = PageArray;
 
-			Page* p = lastAllocatedPage->Next;
-			while (true)
-			{
-				if (p == null)
-					p = PageArray;
+            Page* p = lastAllocatedPage->Next;
+            while (true)
+            {
+                if (p == null)
+                    p = PageArray;
 
-				if (p->Status == PageStatus.Free)
-				{
-					var head = p;
+                if (p->Status == PageStatus.Free)
+                {
+                    var head = p;
 
-					// Found free Page. Check now free range.
-					for (var i = 0; i < num; i++)
-					{
-						if (p == null)
-							break; // Reached end. SorRange is incomplete
-						if (p->Status != PageStatus.Free) // Used -> so we can abort the searach
-							break;
+                    // Found free Page. Check now free range.
+                    for (var i = 0; i < num; i++)
+                    {
+                        if (p == null)
+                            break; // Reached end. SorRange is incomplete
+                        if (p->Status != PageStatus.Free) // Used -> so we can abort the searach
+                            break;
 
-						if (i == num - 1)
-						{ // all loops successful. So we found our range.
+                        if (i == num - 1)
+                        { // all loops successful. So we found our range.
 
-							p = head;
-							head->Tail = p;
-							head->PagesUsed = num;
-							for (var n = 0; n < num; n++)
-							{
-								p->Status = PageStatus.Used;
-								p->Head = head;
-								p->Tail = head->Tail;
-								p = p->Next;
-								PagesUsed++;
-							}
-							lastAllocatedPage = p;
+                            p = head;
+                            head->Tail = p;
+                            head->PagesUsed = num;
+                            for (var n = 0; n < num; n++)
+                            {
+                                p->Status = PageStatus.Used;
+                                p->Head = head;
+                                p->Tail = head->Tail;
+                                p = p->Next;
+                                PagesUsed++;
+                            }
+                            lastAllocatedPage = p;
 
-							return head;
-						}
+                            return head;
+                        }
 
-						p = p->Next;
-					}
+                        p = p->Next;
+                    }
 
-				}
+                }
 
-				if (p->Tail != null)
-					p = p->Tail;
+                if (p->Tail != null)
+                    p = p->Tail;
 
-				p = p->Next;
-				if (++cnt > PageCount)
-					break;
-			}
+                p = p->Next;
+                if (++cnt > PageCount)
+                    break;
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		/// <summary>
-		/// Releases a page to the free list
-		/// </summary>
-		void Free(Addr address)
-		{
-			var p = GetPage(address);
-			if (p->Free)
-				return;
+        /// <summary>
+        /// Releases a page to the free list
+        /// </summary>
+        void Free(Addr address)
+        {
+            var p = GetPage(address);
+            if (p->Free)
+                return;
 
-			var num = p->PagesUsed;
+            var num = p->PagesUsed;
 
-			for (var n = 0; n < num; n++)
-			{
-				p->Status = PageStatus.Used;
-				p->PagesUsed = 0;
-				p->Head = null;
-				p->Tail = null;
-				p = p->Next;
-				PagesUsed--;
-			}
-		}
+            for (var n = 0; n < num; n++)
+            {
+                p->Status = PageStatus.Used;
+                p->PagesUsed = 0;
+                p->Head = null;
+                p->Tail = null;
+                p = p->Next;
+                PagesUsed--;
+            }
+        }
 
-		/// <summary>
-		/// Retrieves the size of a single memory page.
-		/// </summary>
-		public uint PageSize { get { return 4096; } }
+        /// <summary>
+        /// Retrieves the size of a single memory page.
+        /// </summary>
+        public uint PageSize { get { return 4096; } }
 
-		public uint PagesAvailable
-		{
-			get
-			{
-				return PageCount - PagesUsed;
-			}
-		}
+        public uint PagesAvailable
+        {
+            get
+            {
+                return PageCount - PagesUsed;
+            }
+        }
 
-	}
+    }
 }

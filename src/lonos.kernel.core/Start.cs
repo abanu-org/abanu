@@ -7,131 +7,131 @@ using Mosa.Runtime.x86;
 namespace lonos.kernel.core
 {
 
-	internal static class Start
-	{
+    internal static class Start
+    {
 
-		public unsafe static void Main()
-		{
-			ManagedMemoy.InitializeGCMemory();
-			Mosa.Runtime.StartUp.InitializeAssembly();
-			//Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
+        public unsafe static void Main()
+        {
+            ManagedMemoy.InitializeGCMemory();
+            Mosa.Runtime.StartUp.InitializeAssembly();
+            //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
-			ApiContext.Current = new ApiHost();
+            ApiContext.Current = new ApiHost();
 
-			// Setup some pseudo devices
-			Devices.InitStage1();
+            // Setup some pseudo devices
+            Devices.InitStage1();
 
-			//Setup Output and Debug devices
-			Devices.InitStage2();
+            //Setup Output and Debug devices
+            Devices.InitStage2();
 
-			// Write first output
-			KernelMessage.WriteLine("<KERNEL:CONSOLE:BEGIN>");
-			KernelMessage.WriteLine("Starting Lonos Kernel...");
+            // Write first output
+            KernelMessage.WriteLine("<KERNEL:CONSOLE:BEGIN>");
+            KernelMessage.WriteLine("Starting Lonos Kernel...");
 
-			// Detect environment (Memory Maps, Video Mode, etc.)
-			BootInfo.Setup();
+            // Detect environment (Memory Maps, Video Mode, etc.)
+            BootInfo.Setup();
 
-			KernelMemoryMapManager.Setup();
-			KernelMemoryMapManager.Allocate(0x1000 * 1000, BootInfoMemoryType.PageDirectory);
+            KernelMemoryMapManager.Setup();
+            KernelMemoryMapManager.Allocate(0x1000 * 1000, BootInfoMemoryType.PageDirectory);
 
-			// Read own ELF-Headers and Sections
-			KernelElf.Setup();
+            // Read own ELF-Headers and Sections
+            KernelElf.Setup();
 
-			// Initialize the embedded code (actually only a little proof of conecept code)
-			NativeCalls.Setup();
+            // Initialize the embedded code (actually only a little proof of conecept code)
+            NativeCalls.Setup();
 
-			PageTable.InitialKernelProtect();
+            PageTable.InitialKernelProtect();
 
-			PageFrameManager.Setup();
+            PageFrameManager.Setup();
 
-			KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
-			PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, 10);
-			KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
-			RawVirtualFrameAllocator.Setup();
+            KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
+            PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, 10);
+            KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
+            RawVirtualFrameAllocator.Setup();
 
-			Memory.Setup();
+            Memory.Setup();
 
-			// Now Memory Sub System is working. At this point it's valid
-			// to allocate memory dynamicly
+            // Now Memory Sub System is working. At this point it's valid
+            // to allocate memory dynamicly
 
-			Devices.InitFrameBuffer();
+            Devices.InitFrameBuffer();
 
-			// Setup Programmable Interrupt Table
-			PIC.Setup();
+            // Setup Programmable Interrupt Table
+            PIC.Setup();
 
-			// Setup Interrupt Descriptor Table
-			// Important Note: IDT depends on GDT. Never setup IDT before GDT.
-			IDTManager.Setup();
+            // Setup Interrupt Descriptor Table
+            // Important Note: IDT depends on GDT. Never setup IDT before GDT.
+            IDTManager.Setup();
 
-			Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
-
-
-			var ar = new KList<uint>(sizeof(uint));
-			ar.Add(44);
-			ar.Add(55);
-			KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
-			foreach (var num in ar)
-			{
-				KernelMessage.WriteLine("VAL: {0}", num);
-			}
-			KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
-			ar.Destroy();
-
-			KernelMessage.WriteLine("Kernel initialized");
-
-			AppMain();
-		}
-
-		unsafe public static void ProtectMemory()
-		{
-
-			//PageTable.GetTableEntry(0)->Writable = false;
-
-			//Native.SetCR3(AddrPageDirectory);
-		}
-
-		public static void AppMain()
-		{
-			KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
-
-			for (var i = 0; i < 10000; i++)
-			{
-				var s = new int[] { 1, 2, 3, 4, };
-				s[1] = 5;
-				Memory.FreeObject(s);
-			}
-			KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
-			//Memory.FreeObject(s);
+            Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
 
-			// We have nothing todo (yet). So let's stop.
-			Debug.Break();
-		}
+            var ar = new KList<uint>(sizeof(uint));
+            ar.Add(44);
+            ar.Add(55);
+            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
+            foreach (var num in ar)
+            {
+                KernelMessage.WriteLine("VAL: {0}", num);
+            }
+            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
+            ar.Destroy();
 
-		private static void Dummy()
-		{
-			//This is a dummy call, that get never executed.
-			//Its requied, because we need a real reference to Mosa.Runtime.x86
-			//Without that, the .NET compiler will optimize that reference away
-			//if its nowhere used. Than the Compiler dosnt know about that Refernce
-			//and the Compilation will fail
-			Mosa.Runtime.x86.Internal.GetStackFrame(0);
-		}
+            KernelMessage.WriteLine("Kernel initialized");
 
-		public const uint Columns = 80;
+            AppMain();
+        }
 
-		/// <summary>
-		/// The rows
-		/// </summary>
-		public const uint Rows = 40;
+        unsafe public static void ProtectMemory()
+        {
 
-		public static void RawWrite(uint row, uint column, char chr, byte color)
-		{
-			IntPtr address = new IntPtr(0x0B8000 + ((row * Columns + column) * 2));
+            //PageTable.GetTableEntry(0)->Writable = false;
 
-			Intrinsic.Store8(address, (byte)chr);
-			Intrinsic.Store8(address, 1, color);
-		}
+            //Native.SetCR3(AddrPageDirectory);
+        }
 
-	}
+        public static void AppMain()
+        {
+            KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
+
+            for (var i = 0; i < 10000; i++)
+            {
+                var s = new int[] { 1, 2, 3, 4, };
+                s[1] = 5;
+                Memory.FreeObject(s);
+            }
+            KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
+            //Memory.FreeObject(s);
+
+
+            // We have nothing todo (yet). So let's stop.
+            Debug.Break();
+        }
+
+        private static void Dummy()
+        {
+            //This is a dummy call, that get never executed.
+            //Its requied, because we need a real reference to Mosa.Runtime.x86
+            //Without that, the .NET compiler will optimize that reference away
+            //if its nowhere used. Than the Compiler dosnt know about that Refernce
+            //and the Compilation will fail
+            Mosa.Runtime.x86.Internal.GetStackFrame(0);
+        }
+
+        public const uint Columns = 80;
+
+        /// <summary>
+        /// The rows
+        /// </summary>
+        public const uint Rows = 40;
+
+        public static void RawWrite(uint row, uint column, char chr, byte color)
+        {
+            IntPtr address = new IntPtr(0x0B8000 + ((row * Columns + column) * 2));
+
+            Intrinsic.Store8(address, (byte)chr);
+            Intrinsic.Store8(address, 1, color);
+        }
+
+    }
 }

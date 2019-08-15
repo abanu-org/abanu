@@ -1,7 +1,7 @@
 {
     "FormattingOptions": {
-            "UseTabs": true,
-            "TabSize": 3,
-            "IndentationSize": 3
+            "UseTabs": false,
+            "TabSize": 4,
+            "IndentationSize": 4
     }
 }
