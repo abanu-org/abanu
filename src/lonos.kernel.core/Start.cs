@@ -40,7 +40,7 @@ namespace lonos.kernel.core
             // Initialize the embedded code (actually only a little proof of conecept code)
             NativeCalls.Setup();
 
-            PageTable.InitialKernelProtect();
+            //PageTable.InitialKernelProtect();
 
             PageFrameManager.Setup();
 

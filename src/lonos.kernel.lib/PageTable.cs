@@ -54,6 +54,7 @@ namespace lonos.kernel.core
             MapVirtualAddressToPhysical(0x0, 0x0, false);
 
             // Set CR3 register on processor - sets page directory
+            KernelMessage.WriteLine("Set CR3 to {0:X8}", PageTable.AddrPageDirectory);
             Native.SetCR3(AddrPageDirectory);
 
             KernelMessage.Write("Enable Paging... ");
@@ -62,20 +63,6 @@ namespace lonos.kernel.core
             Native.SetCR0(Native.GetCR0() | 0x80000000);
 
             KernelMessage.WriteLine("Done");
-        }
-
-        public static void InitialKernelProtect()
-        {
-            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
-            for (int index = 0; index < 1024 * 32; index++)
-            {
-                var writable = WritableAddress(pte[index].PhysicalAddress);
-                pte[index].Writable = writable;
-                pte[index].User = true;
-            }
-
-            Native.SetCR0(Native.GetCR0() | 0x1000);
-            Native.SetCR3(AddrPageDirectory);
         }
 
         private static bool WritableAddress(uint physAddr)
