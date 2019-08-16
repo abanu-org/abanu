@@ -57,7 +57,7 @@ namespace lonos.kernel.core
 
         public Page* AllocatePage(PageFrameRequestFlags flags)
         {
-            return GetPage(Allocate(1));
+            return GetPhysPage(Allocate(1));
         }
 
         public void Free(Page* page)
@@ -83,6 +83,7 @@ namespace lonos.kernel.core
             PageArray = (Page*)kmap.Start;
             lastAllocatedPage = PageArray;
 
+            Memory.InitialKernelProtect_MakeWritable_BySize(kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
 
             for (uint i = 0; i < PageCount; i++)
@@ -112,13 +113,21 @@ namespace lonos.kernel.core
             for (var i = 0; i < KernelMemoryMapManager.Header->Used.Count; i++)
             {
                 var map = KernelMemoryMapManager.Header->Used.Items[i];
-                GetPage(map.Start)->Status = PageStatus.Used;
+                if (map.Start >= BootInfo.Header->InstalledPhysicalMemory)
+                    continue;
+                KernelMessage.WriteLine("{0:X}", map.Start);
+                var page = GetPhysPage(map.Start);
+                if (page == null)
+                    continue;
+                page->Status = PageStatus.Used;
                 PagesUsed++;
             }
         }
 
-        public Page* GetPage(Addr addr)
+        public Page* GetPhysPage(Addr addr)
         {
+            if (addr >= BootInfo.Header->InstalledPhysicalMemory)
+                return null;
             return &PageArray[(uint)addr / PageSize];
         }
 
@@ -195,7 +204,7 @@ namespace lonos.kernel.core
         /// </summary>
         void Free(Addr address)
         {
-            var p = GetPage(address);
+            var p = GetPhysPage(address);
             if (p->Free)
                 return;
 

@@ -6,12 +6,14 @@ namespace lonos.kernel.core
     public class MemoryOperation
     {
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static void Copy(Addr source, Addr destination, USize length)
         {
             for (uint i = 0; i < length; i++)
                 Native.Set8(destination + i, Native.Get8(source + i));  //TODO: Optimize with Set32
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static void Copy4(Addr source, Addr destination, USize length)
         {
             var count = length / 4; //TODO: Check modulo 4 == 0
@@ -19,6 +21,7 @@ namespace lonos.kernel.core
                 Native.Set32(destination + i, Native.Get32(source + i));
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public unsafe static void Copy4(uint source, uint destination, uint length)
         {
             var count = length / 4; //TODO: Check modulo 4 == 0
@@ -29,7 +32,8 @@ namespace lonos.kernel.core
 
             var src = (uint*)source;
             var dst = (uint*)destination;
-            for (var i = 0; i < count; i++) {
+            for (var i = 0; i < count; i++)
+            {
                 dst[i] = src[i];
             }
         }
@@ -39,6 +43,7 @@ namespace lonos.kernel.core
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="bytes">The bytes.</param>
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static void Clear(Addr start, USize bytes)
         {
             if (bytes % 4 == 0)
@@ -51,7 +56,7 @@ namespace lonos.kernel.core
                 Native.Set8(at, 0);
         }
 
-
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static void Clear4(Addr start, USize bytes)
         {
             for (uint at = start; at < (start + bytes); at = at + 4)

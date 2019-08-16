@@ -56,6 +56,16 @@ namespace lonos.kernel.core
             Count++;
         }
 
+        public KernelMemoryMap* FindFirst(BootInfoMemoryType type)
+        {
+            for (var i = 0; i < Count; i++)
+            {
+                if (Items[i].Type == type)
+                    return &Items[i];
+            }
+            return null;
+        }
+
         public bool Intersects(Addr addr)
         {
             for (var i = 0; i < Count; i++)
@@ -121,11 +131,12 @@ namespace lonos.kernel.core
         {
             var addr = Initial_FindIFreePage();
 
-            KernelMessage.Path("KernelMemoryMapManager", "Initial Page: {0:X}", addr);
+            //KernelMessage.Path("KernelMemoryMapManager", "Initial Page: {0:X}", addr);
 
             // 80KB should be enough
             // TODO: Check if really 80KB are available after this address.
             InitialMap = new KernelMemoryMap(addr, 0x1000 * 20, BootInfoMemoryType.KernelMemoryMap);
+            Memory.InitialKernelProtect_MakeWritable_BySize(InitialMap.Start, InitialMap.Size);
 
             Header = (KernelMemoryMapHeader*)InitialMap.Start;
 
@@ -134,6 +145,8 @@ namespace lonos.kernel.core
 
             Header->SystemUsable = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset1), 50);
             Header->Used = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset2), 100);
+            // Memory.InitialKernelProtect_MakeWritable_BySize(((uint)&Header->SystemUsable), sizeof());
+            // Memory.InitialKernelProtect_MakeWritable_BySize(((uint)&Header->SystemUsable), InitialMap.Size);
 
             for (uint i = 0; i < BootInfo.Header->MemoryMapLength; i++)
             {
@@ -148,6 +161,14 @@ namespace lonos.kernel.core
             }
             Header->Used.Add(InitialMap);
             //Debug_FillAvailableMemory();
+        }
+
+        public static KernelMemoryMap* FindFirst(BootInfoMemoryType type)
+        {
+            var map = Header->Used.FindFirst(type);
+            if (map == null)
+                map = Header->SystemUsable.FindFirst(type);
+            return map;
         }
 
         public static void Debug_FillAvailableMemory()

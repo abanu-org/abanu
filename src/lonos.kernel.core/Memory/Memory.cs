@@ -117,6 +117,65 @@ namespace lonos.kernel.core
             return Addr.Zero;
         }
 
+        public static bool UseKernelWriteProtection;
+
+        public unsafe static void InitialKernelProtect()
+        {
+            if (!UseKernelWriteProtection)
+                return;
+
+            //KernelMessage.WriteLine("Unset CR0.WP");
+            Native.SetCR0((uint)(Native.GetCR0() & ~0x10000));
+
+            PageTable.PageTableEntry* pte = (PageTable.PageTableEntry*)PageTable.AddrPageTable;
+            for (int index = 0; index < 1024 * 32; index++)
+            {
+                var e = &pte[index];
+                e->Writable = false;
+            }
+
+            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageDirectory);
+            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageTable);
+            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.InitialStack);
+
+            //KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
+            Native.SetCR3(PageTable.AddrPageDirectory);
+
+            //KernelMessage.WriteLine("Set CR0.WP");
+            Native.SetCR0((uint)(Native.GetCR0() | 0x10000));
+
+            //Native.Invlpg();
+        }
+
+        public unsafe static void InitialKernelProtect_MakeWritable_ByRegion(uint startVirtAddr, uint endVirtAddr)
+        {
+            InitialKernelProtect_MakeWritable_BySize(startVirtAddr, endVirtAddr - startVirtAddr);
+        }
+
+        public unsafe static void InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType type)
+        {
+            var mm = BootInfo.GetMap(type);
+            InitialKernelProtect_MakeWritable_BySize(mm->Start, mm->Size);
+        }
+
+        public unsafe static void InitialKernelProtect_MakeWritable_BySize(uint virtAddr, uint size)
+        {
+            if (!UseKernelWriteProtection)
+                return;
+
+            //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
+            var pages = KMath.DivCeil(size, 4096);
+            for (var i = 0; i < pages; i++)
+            {
+                var entry = PageTable.GetTableEntry(virtAddr);
+                entry->Writable = true;
+
+                virtAddr += 4096;
+            }
+
+            Native.SetCR3(PageTable.AddrPageDirectory);
+        }
+
     }
 
 }

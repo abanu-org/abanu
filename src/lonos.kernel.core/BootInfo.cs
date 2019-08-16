@@ -11,6 +11,7 @@ namespace lonos.kernel.core
         public static void SetupStage1()
         {
             Header = (BootInfoHeader*)Address.KernelBootInfo;
+            ApplyAddresses();
         }
 
         public static void SetupStage2()
@@ -32,28 +33,25 @@ namespace lonos.kernel.core
                 var mm = Header->MemoryMapArray[i];
                 KernelMessage.WriteLine("Map Start={0:X8}, Size={1:X8}, Type={2}", mm.Start, mm.Size, (uint)mm.Type);
             }
-
-            ApplyAddresses();
         }
 
-        static void ApplyAddresses()
+        public static void ApplyAddresses()
         {
-            GDT.KernelSetup(GetAddrOfMapType(BootInfoMemoryType.GDT));
+            GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
             PageTable.KernelSetup(
-                GetAddrOfMapType(BootInfoMemoryType.PageDirectory),
-                GetAddrOfMapType(BootInfoMemoryType.PageTable));
+                GetMap(BootInfoMemoryType.PageDirectory)->Start,
+                GetMap(BootInfoMemoryType.PageTable)->Start);
         }
 
-        static Addr GetAddrOfMapType(BootInfoMemoryType type)
+        public static BootInfoMemory* GetMap(BootInfoMemoryType type)
         {
             var mapLen = Header->MemoryMapLength;
-            //KernelMessage.WriteLine("Maps: {0}", mapLen);
             for (uint i = 0; i < mapLen; i++)
             {
                 if (Header->MemoryMapArray[i].Type == type)
-                    return Header->MemoryMapArray[i].Start;
+                    return &Header->MemoryMapArray[i];
             }
-            return Addr.Zero;
+            return null;
         }
 
     }

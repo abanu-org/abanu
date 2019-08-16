@@ -13,6 +13,7 @@ namespace lonos.kernel.core
         public unsafe static void Main()
         {
             BootInfo.SetupStage1();
+            Memory.InitialKernelProtect();
 
             ManagedMemoy.InitializeGCMemory();
             Mosa.Runtime.StartUp.InitializeAssembly();
