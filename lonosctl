@@ -79,6 +79,11 @@ function build {
 			(cd bin && mono -O=all ./lonos.build.exe --image=kernel)
 			;;
 
+		loader,kernel)
+			build loader
+			build kernel
+			;;
+
 		image)
 			_image
 			;;
