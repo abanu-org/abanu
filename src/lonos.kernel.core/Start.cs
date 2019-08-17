@@ -65,22 +65,13 @@ namespace lonos.kernel.core
             // Important Note: IDT depends on GDT. Never setup IDT before GDT.
             IDTManager.Setup();
 
+            KernelMessage.WriteLine("Initialize Runtime Metadata");
             Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
+            KernelMessage.WriteLine("Performing some tests");
+            Tests();
 
-            var ar = new KList<uint>(sizeof(uint));
-            ar.Add(44);
-            ar.Add(55);
-            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
-            foreach (var num in ar)
-            {
-                KernelMessage.WriteLine("VAL: {0}", num);
-            }
-            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
-            ar.Destroy();
-
-            KernelMessage.WriteLine("Kernel initialized");
-
+            KernelMessage.WriteLine("Enter Main Loop");
             AppMain();
         }
 
@@ -121,8 +112,19 @@ namespace lonos.kernel.core
         //     }
         // }
 
-        public static void AppMain()
+        public static void Tests()
         {
+            var ar = new KList<uint>(sizeof(uint));
+            ar.Add(44);
+            ar.Add(55);
+            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
+            foreach (var num in ar)
+            {
+                KernelMessage.WriteLine("VAL: {0}", num);
+            }
+            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
+            ar.Destroy();
+
             KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
 
             for (var i = 0; i < 10000; i++)
@@ -135,6 +137,10 @@ namespace lonos.kernel.core
             //Memory.FreeObject(s);
 
 
+        }
+
+        public static void AppMain()
+        {
             // We have nothing todo (yet). So let's stop.
             Debug.Break();
         }

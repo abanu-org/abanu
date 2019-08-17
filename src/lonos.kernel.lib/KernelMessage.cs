@@ -11,7 +11,8 @@ namespace lonos.kernel.core
 
         static IBufferWriter Dev;
 
-        public static void SetHandler(IBufferWriter handler) {
+        public static void SetHandler(IBufferWriter handler)
+        {
             Dev = handler;
         }
 
@@ -65,6 +66,13 @@ namespace lonos.kernel.core
             Write(prefix);
             Write(": ");
             WriteLine(format, arg0, arg1, arg2);
+        }
+
+        public static void Write(string format, uint arg1)
+        {
+            var buf = new StringBuffer();
+            buf.Append(format, arg1);
+            buf.WriteTo(Dev);
         }
 
         public static void WriteLine(string format, uint arg1)

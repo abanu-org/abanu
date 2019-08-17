@@ -131,6 +131,8 @@ namespace lonos.kernel.core
         /// <returns>The page</returns>
         Page* Allocate(uint num)
         {
+            KernelMessage.Write("Request {0} pages...", num);
+
             var cnt = 0;
 
             if (lastAllocatedPage == null)
@@ -157,9 +159,9 @@ namespace lonos.kernel.core
                         if (i == num - 1)
                         { // all loops successful. So we found our range.
 
-                            p = head;
                             head->Tail = p;
                             head->PagesUsed = num;
+                            p = head;
                             for (var n = 0; n < num; n++)
                             {
                                 p->Status = PageStatus.Used;
@@ -169,6 +171,8 @@ namespace lonos.kernel.core
                                 PagesUsed++;
                             }
                             lastAllocatedPage = p;
+
+                            KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head, (uint)head->Tail);
 
                             return head;
                         }

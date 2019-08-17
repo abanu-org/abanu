@@ -56,5 +56,25 @@ namespace lonos.kernel.core
             return Addr.Zero;
         }
 
+        // static void ApplyAddresses()
+        // {
+        //     GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
+        //     PageTable.KernelSetup(
+        //         GetMap(BootInfoMemoryType.PageDirectory)->Start,
+        //         GetMap(BootInfoMemoryType.PageTable)->Start);
+        // }
+
+        // static BootInfoMemory* GetMap(BootInfoMemoryType type)
+        // {
+        //     var mapLen = Header->MemoryMapLength;
+        //     //KernelMessage.WriteLine("Maps: {0}", mapLen);
+        //     for (uint i = 0; i < mapLen; i++)
+        //     {
+        //         if (Header->MemoryMapArray[i].Type == type)
+        //             return &Header->MemoryMapArray[i];
+        //     }
+        //     return null;
+        // }
+
     }
 }
