@@ -57,7 +57,7 @@ namespace lonos.build
                 EmulatorMemoryInMB = 128,
                 DestinationDirectory = Program.GetEnv("LONOS_OSDIR"),
                 FileSystem = FileSystem.FAT16,
-                EnableMultiThreading = true,
+                EnableMultiThreading = false,
                 InlinedIRMaximum = 12,
                 BootLoader = BootLoader.Syslinux_3_72,
                 VBEVideo = false,

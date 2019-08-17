@@ -36,45 +36,45 @@ namespace lonos.kernel.core
             ApplyAddresses();
         }
 
-        static void ApplyAddresses()
-        {
-            GDT.KernelSetup(GetAddrOfMapType(BootInfoMemoryType.GDT));
-            PageTable.KernelSetup(
-                GetAddrOfMapType(BootInfoMemoryType.PageDirectory),
-                GetAddrOfMapType(BootInfoMemoryType.PageTable));
-        }
-
-        static Addr GetAddrOfMapType(BootInfoMemoryType type)
-        {
-            var mapLen = Header->MemoryMapLength;
-            //KernelMessage.WriteLine("Maps: {0}", mapLen);
-            for (uint i = 0; i < mapLen; i++)
-            {
-                if (Header->MemoryMapArray[i].Type == type)
-                    return Header->MemoryMapArray[i].Start;
-            }
-            return Addr.Zero;
-        }
-
         // static void ApplyAddresses()
         // {
-        //     GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
+        //     GDT.KernelSetup(GetAddrOfMapType(BootInfoMemoryType.GDT));
         //     PageTable.KernelSetup(
-        //         GetMap(BootInfoMemoryType.PageDirectory)->Start,
-        //         GetMap(BootInfoMemoryType.PageTable)->Start);
+        //         GetAddrOfMapType(BootInfoMemoryType.PageDirectory),
+        //         GetAddrOfMapType(BootInfoMemoryType.PageTable));
         // }
 
-        // static BootInfoMemory* GetMap(BootInfoMemoryType type)
+        // static Addr GetAddrOfMapType(BootInfoMemoryType type)
         // {
         //     var mapLen = Header->MemoryMapLength;
         //     //KernelMessage.WriteLine("Maps: {0}", mapLen);
         //     for (uint i = 0; i < mapLen; i++)
         //     {
         //         if (Header->MemoryMapArray[i].Type == type)
-        //             return &Header->MemoryMapArray[i];
+        //             return Header->MemoryMapArray[i].Start;
         //     }
-        //     return null;
+        //     return Addr.Zero;
         // }
+
+        static void ApplyAddresses()
+        {
+            GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
+            PageTable.KernelSetup(
+                GetMap(BootInfoMemoryType.PageDirectory)->Start,
+                GetMap(BootInfoMemoryType.PageTable)->Start);
+        }
+
+        static BootInfoMemory* GetMap(BootInfoMemoryType type)
+        {
+            var mapLen = Header->MemoryMapLength;
+            //KernelMessage.WriteLine("Maps: {0}", mapLen);
+            for (uint i = 0; i < mapLen; i++)
+            {
+                if (Header->MemoryMapArray[i].Type == type)
+                    return &Header->MemoryMapArray[i];
+            }
+            return null;
+        }
 
     }
 }
