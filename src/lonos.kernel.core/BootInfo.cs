@@ -11,6 +11,7 @@ namespace lonos.kernel.core
         public static void SetupStage1()
         {
             Header = (BootInfoHeader*)Address.KernelBootInfo;
+            ApplyAddresses();
         }
 
         public static void SetupStage2()
@@ -32,8 +33,6 @@ namespace lonos.kernel.core
                 var mm = Header->MemoryMapArray[i];
                 KernelMessage.WriteLine("Map Start={0:X8}, Size={1:X8}, Type={2}", mm.Start, mm.Size, (uint)mm.Type);
             }
-
-            ApplyAddresses();
         }
 
         // static void ApplyAddresses()

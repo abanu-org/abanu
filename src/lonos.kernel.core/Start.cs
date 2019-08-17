@@ -14,6 +14,10 @@ namespace lonos.kernel.core
         {
             BootInfo.SetupStage1();
 
+            // Field needs to be explicit set, because InitializeAssembly is not invoked yet.
+            Memory.UseKernelWriteProtection = false;
+            Memory.InitialKernelProtect();
+
             ManagedMemoy.InitializeGCMemory();
             Mosa.Runtime.StartUp.InitializeAssembly();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();

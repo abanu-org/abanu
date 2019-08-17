@@ -19,7 +19,7 @@ namespace lonos.kernel.core
         internal static FrameBuffer fb;
 
         /// <summary>
-        /// Pseudeo devices 
+        /// Pseudeo devices
         /// </summary>
         public static void InitStage1()
         {
@@ -36,6 +36,7 @@ namespace lonos.kernel.core
             Serial.SetupPort(Serial.COM1);
             Serial1 = new SerialDevice(Serial.COM1);
 
+            Memory.InitialKernelProtect_MakeWritable_BySize(Screen.ScreenMemoryAddress, Screen.ScreenMemorySize);
             lonos.kernel.core.Screen.EarlyInitialization();
             BiosTextScreen = new BiosTextScreenDevice();
 

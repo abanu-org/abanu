@@ -38,7 +38,8 @@ namespace lonos.kernel.core
         }
 
         private static StringBuffer tmpLine;
-        private static uint ScreenAddress = 0x0B8000;
+        public static uint ScreenMemoryAddress = 0x0B8000;
+        public static uint ScreenMemorySize = 25 * 80 * 2;
 
         public static uint column = 0;
         public static uint row = 0;
@@ -121,7 +122,7 @@ namespace lonos.kernel.core
         {
             Assert.True(row < Rows);
             Assert.True(column < Columns);
-            IntPtr address = new IntPtr(ScreenAddress + ((row * Columns + column) * 2));
+            IntPtr address = new IntPtr(ScreenMemoryAddress + ((row * Columns + column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
@@ -139,7 +140,7 @@ namespace lonos.kernel.core
                 return;
             }
 
-            IntPtr address = new IntPtr(ScreenAddress + ((Row * Columns + Column) * 2));
+            IntPtr address = new IntPtr(ScreenMemoryAddress + ((Row * Columns + Column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
@@ -207,7 +208,7 @@ namespace lonos.kernel.core
                 // Copy All rows one line up
                 // TODO: Normally, Reading from mapped ROM is much slower
                 // than reading from normal RAM. Consider using Offscreen Buffer
-                MemoryOperation.Copy(ScreenAddress + Columns * 2, ScreenAddress, (Rows - 1) * Columns * 2);
+                MemoryOperation.Copy(ScreenMemoryAddress + Columns * 2, ScreenMemoryAddress, (Rows - 1) * Columns * 2);
 
                 //Blank last line
                 for (uint c = 0; c < Columns; c++)
