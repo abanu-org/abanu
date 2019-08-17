@@ -274,6 +274,18 @@ function logs {
 	esac
 }
 
+function _test {
+	case $1 in
+		cloud)
+			
+			;;
+
+		*)
+			echo $"Usage: lonosctl test {cloud}"
+			exit 1
+	esac
+}
+
 case $1 in
 	configure)
 		configure ${@:2}
@@ -298,6 +310,10 @@ case $1 in
 
 	debug)
 		debug ${@:2}
+		;;
+
+	test)
+		_test ${@:2}
 		;;
 
 	*)

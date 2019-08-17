@@ -1,0 +1,12 @@
+#!/bin/bash
+
+NAME=lonos-docker-integration
+IMAGE=lonos-project/lonos-docker-integration
+
+#docker build . -t lonos/$NAME
+
+docker rm -f $NAME
+
+docker run -it --name $NAME -v ${PWD}/start:/home/lonos/start $IMAGE /bin/bash -c /home/lonos/start
+
+
