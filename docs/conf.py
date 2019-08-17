@@ -28,23 +28,23 @@ source_parsers = {
 }
 
 master_doc = 'index'
-project = u'Mosa Project Documentation'
-copyright = '2008-{}, Mosa Project & contributors'.format(
+project = u'Lonos Documentation'
+copyright = '2008-{}, Lonos Project & contributors'.format(
     2019
 )
 
 exclude_patterns = ['_build']
 default_role = 'obj'
 intersphinx_mapping = {
-    'mosa': ('http://docs.mosa-project.org/en/latest/', None),
+    'lonos': ('http://docs.lonos.io/en/latest/', None),
 }
-htmlhelp_basename = 'MosaDoc'
+htmlhelp_basename = 'LonosDoc'
 latex_documents = [
-    ('index', 'mosa.tex', u'Mosa Project Documentation',
+    ('index', 'lonos.tex', u'Lonos Project Documentation',
      u'', 'manual'),
 ]
 man_pages = [
-    ('index', 'mosa', u'Mosa Project Documentation',
+    ('index', 'lonos', u'Lonos Project Documentation',
      [u''], 1)
 ]
 
