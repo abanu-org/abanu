@@ -181,7 +181,7 @@ namespace lonos.kernel.core
                             }
                             lastAllocatedPage = p;
 
-                            KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head, (uint)head->Tail);
+                            KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress);
 
                             return head;
                         }
