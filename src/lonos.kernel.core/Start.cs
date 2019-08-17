@@ -13,6 +13,8 @@ namespace lonos.kernel.core
         public unsafe static void Main()
         {
             BootInfo.SetupStage1();
+
+            Memory.UseKernelWriteProtection = false;
             Memory.InitialKernelProtect();
 
             ManagedMemoy.InitializeGCMemory();

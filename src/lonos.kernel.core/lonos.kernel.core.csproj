@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -98,13 +97,13 @@
     <Folder Include="Memory\" />
     <Folder Include="Elf\" />
     <Folder Include="Interrupts\" />
-    <Folder Include="Debug\" />
     <Folder Include="External\" />
     <Folder Include="Devices\" />
     <Folder Include="Devices\Console\" />
     <Folder Include="Devices\Serial\" />
     <Folder Include="Devices\Terminal\" />
     <Folder Include="Api\" />
+    <Compile Include="Debug\PageDump.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

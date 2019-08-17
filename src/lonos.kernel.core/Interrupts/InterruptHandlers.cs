@@ -140,17 +140,18 @@ namespace lonos.kernel.core
                 return;
             }
 
-            Error(stack, "Not mapped");
+            KernelMessage.WriteLine("PageFault CR2 {0:X8}", cr2);
+            //Error(stack, "Not mapped");
 
-            // var physicalpage = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default);
+            var physicalpage = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default);
 
-            // if (physicalpage == null)
-            // {
-            //     Error(stack, "Out of Memory");
-            //     return;
-            // }
+            if (physicalpage == null)
+            {
+                Error(stack, "Out of Memory");
+                return;
+            }
 
-            // PageTable.MapVirtualAddressToPhysical(cr2, (uint)physicalpage);
+            PageTable.MapVirtualAddressToPhysical(cr2, (uint)physicalpage);
         }
 
         /// <summary>

@@ -55,7 +55,7 @@ namespace lonos.kernel.core
             BootInfo_.AddMap(map);
             var map2 = BootMemory.AllocateMemoryMap(PageTable.InitalPageTableSize, BootInfoMemoryType.PageTable);
             BootInfo_.AddMap(map2);
-            PageTable.Setup(map.Start, map2.Start);
+            PageTable.Setup(map.Start, map2.Start, BootInfo_.BootInfo->InstalledPhysicalMemory / 4096);
 
             // Because Kernel is compiled in virtual address space, we need to remap the pages
             MapKernelImage();

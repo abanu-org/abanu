@@ -42,6 +42,19 @@ namespace lonos.kernel.core
             }
         }
 
+        public static uint TotalPhysPages
+        {
+            get
+            {
+                return PageTable.TotalPhysPages;
+            }
+        }
+
+        public static Page* GetPageByIndex(uint index)
+        {
+            return Default.GetPhysPage(index * 4096);
+        }
+
     }
 
     /// <summary>
@@ -140,6 +153,8 @@ namespace lonos.kernel.core
         /// <returns>The page</returns>
         Page* Allocate(uint num)
         {
+            KernelMessage.WriteLine("Request {0} pages", num);
+
             var cnt = 0;
 
             if (lastAllocatedPage == null)
@@ -166,9 +181,9 @@ namespace lonos.kernel.core
                         if (i == num - 1)
                         { // all loops successful. So we found our range.
 
-                            p = head;
                             head->Tail = p;
                             head->PagesUsed = num;
+                            p = head;
                             for (var n = 0; n < num; n++)
                             {
                                 p->Status = PageStatus.Used;
@@ -178,6 +193,8 @@ namespace lonos.kernel.core
                                 PagesUsed++;
                             }
                             lastAllocatedPage = p;
+
+                            KernelMessage.WriteLine("Allocated {0} Pages from {1:X8} to {2:X8}", num, (uint)head, (uint)head->Tail);
 
                             return head;
                         }

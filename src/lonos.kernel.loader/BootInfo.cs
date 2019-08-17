@@ -5,7 +5,7 @@ namespace lonos.kernel.core
 {
     public unsafe class BootInfo_
     {
-        static BootInfoHeader* BootInfo;
+        public static BootInfoHeader* BootInfo;
 
         public static void Setup()
         {
@@ -103,7 +103,7 @@ namespace lonos.kernel.core
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeap;
 
             idx++;
-            uint stackSize = 0x100000; // 1MB 
+            uint stackSize = 0x100000; // 1MB
             BootInfo->MemoryMapArray[idx].Start = Address.InitialStack - stackSize;
             BootInfo->MemoryMapArray[idx].Size = stackSize;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialStack;

@@ -18,15 +18,18 @@ namespace lonos.kernel.core
         public static uint AddrPageDirectory;
         public static uint AddrPageTable;
 
+        public static uint TotalPhysPages;
+
         /// <summary>
         /// Sets up the PageTable
         /// </summary>
-        public static void Setup(Addr addrPageDirectory, Addr addrPageTable)
+        public static void Setup(Addr addrPageDirectory, Addr addrPageTable, uint pages)
         {
             KernelMessage.WriteLine("Setup PageTable");
 
             AddrPageDirectory = addrPageDirectory;
             AddrPageTable = addrPageTable;
+            TotalPhysPages = pages;
 
             // Setup Page Directory
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
@@ -73,15 +76,21 @@ namespace lonos.kernel.core
             return false;
         }
 
-        public static void KernelSetup(Addr addrPageDirectory, Addr addrPageTable)
+        public static void KernelSetup(Addr addrPageDirectory, Addr addrPageTable, uint pages)
         {
             AddrPageDirectory = addrPageDirectory;
             AddrPageTable = addrPageTable;
+            TotalPhysPages = pages;
         }
 
         public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
         {
             return (PageTableEntry*)(AddrPageTable + ((forVirtualAddress & 0xFFFFF000u) >> 10));
+        }
+
+        public static PageTableEntry* GetTableEntryByIndex(uint index)
+        {
+            return (PageTableEntry*)(AddrPageTable + index * 4096);
         }
 
         /// <summary>
