@@ -47,7 +47,7 @@ namespace lonos.build
                 EnableIROptimizations = true,
                 EnableSparseConditionalConstantPropagation = true,
                 EnableInlinedMethods = true,
-                EnableIRLongExpansion = true,
+                EnableIRLongExpansion = false, // Compiler commit 2e23a85: If true, the loader is not able to display the section names
                 EnableValueNumbering = true,
                 TwoPassOptimizations = true,
 
