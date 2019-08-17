@@ -64,7 +64,7 @@ namespace lonos.kernel.core
                 GetMap(BootInfoMemoryType.PageTable)->Start);
         }
 
-        static BootInfoMemory* GetMap(BootInfoMemoryType type)
+        public static BootInfoMemory* GetMap(BootInfoMemoryType type)
         {
             var mapLen = Header->MemoryMapLength;
             //KernelMessage.WriteLine("Maps: {0}", mapLen);
