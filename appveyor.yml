@@ -19,7 +19,7 @@ for:
         - image: Ubuntu1804
 
     install:
-    - sh: docker pull lonos-project/lonos-docker-integration || docker pull lonos-project/lonos-docker-integration # with retry, if failed
+    - sh: docker pull lonosproject/lonos-build || docker pull lonosproject/lonos-build # with retry, if failed
 
     before_build:
     - echo test
@@ -28,4 +28,4 @@ for:
 
     build_script:
     - sh: echo UID "$UID"
-    - sh: docker run --name lonos -v $APPVEYOR_BUILD_FOLDER:/home/appveyor lonos-project/lonos-docker-integration /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x lonosctl && ./lonosctl test cloud'"
+    - sh: docker run --name lonos -v $APPVEYOR_BUILD_FOLDER:/home/appveyor lonosproject/lonos-build /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x lonosctl && ./lonosctl test cloud'"
