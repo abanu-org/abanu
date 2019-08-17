@@ -2,4 +2,4 @@
 
 git clone --recursive --depth 1 https://github.com/lonos-project/lonos.git 
 cd lonos
-./lonosctl cloud-test
+./lonosctl test cloud
