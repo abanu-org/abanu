@@ -36,7 +36,8 @@ namespace lonos.kernel.core
             const int EntriesPerPageEntryEntry = 1024;
             var totalDirectoryEntries = KMath.DivCeil(totalPages, PagesPerDictionaryEntry);
 
-            KernelMessage.WriteLine("Total Dictionary Entries: {0}", totalDirectoryEntries);
+            KernelMessage.WriteLine("Total Pages: {0}", totalPages);
+            KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", totalDirectoryEntries);
 
             var pidx = 0;
             for (int didx = 0; didx < totalDirectoryEntries; didx++)
@@ -58,6 +59,9 @@ namespace lonos.kernel.core
                 pde[didx].User = true;
                 pde[didx].PageTableEntry = &pte[didx * PagesPerDictionaryEntry];
             }
+
+            // TODO/BUG: Why this line will not be printed??
+            KernelMessage.WriteLine("Total Page Table Entries: {0}", pidx);
 
             // Unmap the first page for null pointer exceptions
             MapVirtualAddressToPhysical(0x0, 0x0, false);
