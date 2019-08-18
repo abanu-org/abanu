@@ -1,8 +1,10 @@
-version: '1.9.7.{build}'
+version: '0.0.1.{build}'
 
 configuration: Release
 platform: Any CPU
 image:
+- Visual Studio 2019
+- Visual Studio 2017
 - Ubuntu1804
 
 shallow_clone: true
@@ -10,7 +12,77 @@ shallow_clone: true
 build: off
 skip_tags: true
 
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+
 for:
+
+# Windows Build - Visual Studio 2019:
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2019
+
+#    install:
+#    - cmd: choco install InnoSetup
+#    - cmd: SET PATH=C:\Program Files (x86)\Inno Setup 6;%PATH%
+
+    before_build:
+
+    build:
+
+    after_build:
+
+    build_script:
+
+    test_script:
+
+    after_test:
+
+    nuget:
+
+    test: off
+
+    artifacts:
+
+    deploy:
+
+# Windows Build - Visual Studio 2017:
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2017
+
+    install:
+
+    before_build:
+
+    build:
+
+    after_build:
+
+    build_script:
+
+    test_script:
+
+    after_test:
+
+    nuget:
+
+    test: off
+
+    assembly_info:
+      patch: true
+      file: AssemblyInfo.*
+      assembly_version: "{version}"
+      assembly_file_version: "{version}"
+      assembly_informational_version: "{version}"
+
+    artifacts:
 
 # Linux Build:
   -
@@ -28,4 +100,4 @@ for:
 
     build_script:
     - sh: echo UID "$UID"
-    - sh: docker run --name lonos -v $APPVEYOR_BUILD_FOLDER:/home/appveyor lonosproject/lonos-build /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x lonosctl && ./lonosctl test cloud'"
+    - sh: docker run --name MOSA -v $APPVEYOR_BUILD_FOLDER:/home/appveyor lonosproject/lonos-build /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x lonosctl && ./mosctl test && ./lonosctl unittest'"
