@@ -1,6 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/lonos/badge/?version=latest)](http://docs.lonos.io/en/latest/?badge=latest)
-
-[![License][github-license]][github-license-link]  [![Issues][github-issues]][github-issues-link]  [![Stars][github-stars]][github-stars-link]  [![Forks][github-forks]][github-forks-link]
+[![Documentation Status](https://readthedocs.org/projects/lonos/badge/?version=latest)](http://docs.lonos.io/en/latest/?badge=latest) [![License][github-license]][github-license-link]  [![Issues][github-issues]][github-issues-link]  [![Stars][github-stars]][github-stars-link]  [![Forks][github-forks]][github-forks-link]
 
 [github-forks]: https://img.shields.io/github/forks/lonos-project/lonos.svg
 [github-forks-link]: https://github.com/lonos-project/lonos/network
