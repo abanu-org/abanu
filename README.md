@@ -11,6 +11,8 @@
 
 ## Build instructions
 
+[![Join the chat at https://gitter.im/lonos-project/lonos](https://badges.gitter.im/lonos-project/lonos.svg)](https://gitter.im/lonos-project/lonos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Prerequisites:
 - .NET Framework 4.6.1 or latest Mono
 - NASM Assembler (`sudo apt-get install nasm`)
