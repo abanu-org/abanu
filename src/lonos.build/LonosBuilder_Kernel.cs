@@ -50,6 +50,7 @@ namespace lonos.build
                 EnableIRLongExpansion = false, // see LonosBuilder_Loader
                 EnableValueNumbering = true,
                 TwoPassOptimizations = true,
+                //EnableBitTracker = true,
 
                 Emulator = EmulatorType.Bochs,
                 ImageFormat = ImageFormat.IMG,
@@ -76,6 +77,8 @@ namespace lonos.build
                 //EmitSymbols = false,
                 //Emitx86IRQMethods = true,
                 //SerialConnectionOption = SerialConnectionOption.Pipe,
+                // EmitAllSymbols = true,
+                // EnableQemuGDB = true,
                 SerialConnectionPort = 9999,
                 SerialConnectionHost = "127.0.0.1",
                 SerialPipeName = "MOSA",

@@ -1,3 +1,4 @@
+edeeeeeee
 This document contains some notes/snipptes for Arakis.
 
 ```
@@ -25,3 +26,13 @@ git checkout testing
 git merge master
 ```
 but you must have committed all your code first
+
+Signing git commits:
+gpg --list-keys --fingerprint --keyid-format LONG
+
+	# only keys with [S] can work.	
+	sub   rsa4096/<key> 2019-02-11 [S]
+
+git config --global user.signingkey <key>
+git config --global commit.gpgsign true
+

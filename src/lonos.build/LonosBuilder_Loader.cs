@@ -50,6 +50,7 @@ namespace lonos.build
                 EnableIRLongExpansion = false, // Compiler commit 2e23a85: If true, the loader is not able to display the section names
                 EnableValueNumbering = true,
                 TwoPassOptimizations = true,
+                //EnableBitTracker = true,
 
                 Emulator = EmulatorType.Bochs,
                 ImageFormat = ImageFormat.IMG,
@@ -72,6 +73,8 @@ namespace lonos.build
                 //EmitSymbols = false,
                 //Emitx86IRQMethods = false,
                 //SerialConnectionOption = SerialConnectionOption.Pipe,
+                // EmitAllSymbols = true,
+                // EnableQemuGDB = true,
                 ExitOnLaunch = true,
                 GenerateNASMFile = false,
                 GenerateASMFile = true,
