@@ -24,5 +24,9 @@ namespace lonos.kernel.core
 
         KernelMemoryMap = 17,
         PageFrameAllocator = 18,
+        KernelTextSegment = 30,
+        KernelBssSegment = 31,
+        KernelElfVirt = 32,
+
     }
 }

@@ -46,7 +46,7 @@ namespace lonos.kernel.core
 
         static void SetupMemoryMap()
         {
-            uint customMaps = 7;
+            uint customMaps = 9;
             var mbMapCount = Multiboot.MemoryMapCount;
             BootInfo->MemoryMapLength = mbMapCount + customMaps;
             BootInfo->MemoryMapArray = (BootInfoMemory*)MallocBootInfoData((USize)(sizeof(MultiBootMemoryMap) * MemoryMapReserve));
@@ -103,7 +103,7 @@ namespace lonos.kernel.core
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeap;
 
             idx++;
-            uint stackSize = 0x100000; // 1MB 
+            uint stackSize = 0x100000; // 1MB
             BootInfo->MemoryMapArray[idx].Start = Address.InitialStack - stackSize;
             BootInfo->MemoryMapArray[idx].Size = stackSize;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialStack;
@@ -117,6 +117,16 @@ namespace lonos.kernel.core
             BootInfo->MemoryMapArray[idx].Start = 0x0;
             BootInfo->MemoryMapArray[idx].Size = 0xA0000; // 640 KB
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelReserved;
+
+            idx++;
+            BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".bss")->Addr;
+            BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".bss")->Size;
+            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelBssSegment;
+
+            idx++;
+            BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".text")->Addr;
+            BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".text")->Size;
+            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelTextSegment;
         }
 
         public static void AddMap(BootInfoMemory map)

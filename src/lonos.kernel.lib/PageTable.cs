@@ -30,24 +30,33 @@ namespace lonos.kernel.core
 
             // Setup Page Directory
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
-            for (int index = 0; index < 1024; index++)
-            {
-                pde[index] = new PageDirectoryEntry();
-                pde[index].Present = true;
-                pde[index].Writable = true;
-                pde[index].User = true;
-                pde[index].PageTableEntry = (PageTableEntry*)(uint)(AddrPageTable + (index * 4096));
-            }
+            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
+            uint totalPages = (4096 * 1024) / 4; //pages for 4GB
+            const int PagesPerDictionaryEntry = 1024;
+            const int EntriesPerPageEntryEntry = 1024;
+            var totalDirectoryEntries = KMath.DivCeil(totalPages, PagesPerDictionaryEntry);
 
-            // Map the first 128MB of memory (32786 4K pages) (why 128MB?)
-            for (int index = 0; index < 1024 * 32; index++)
+            KernelMessage.WriteLine("Total Dictionary Entries: {0}", totalDirectoryEntries);
+
+            var pidx = 0;
+            for (int didx = 0; didx < totalDirectoryEntries; didx++)
             {
-                PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
-                pte[index] = new PageTableEntry();
-                pte[index].Present = true;
-                pte[index].Writable = true;
-                pte[index].User = true;
-                pte[index].PhysicalAddress = (uint)(index * 4096);
+                for (int index = 0; index < EntriesPerPageEntryEntry; index++)
+                {
+                    pte[pidx] = new PageTableEntry();
+                    pte[pidx].Present = true;
+                    pte[pidx].Writable = true;
+                    pte[pidx].User = true;
+                    pte[pidx].PhysicalAddress = (uint)(pidx * 4096);
+
+                    pidx++;
+                }
+
+                pde[didx] = new PageDirectoryEntry();
+                pde[didx].Present = true;
+                pde[didx].Writable = true;
+                pde[didx].User = true;
+                pde[didx].PageTableEntry = &pte[didx * PagesPerDictionaryEntry];
             }
 
             // Unmap the first page for null pointer exceptions

@@ -98,6 +98,12 @@ namespace lonos.kernel.core
                 PageTable.MapVirtualAddressToPhysical(addr + diff, addr);
                 addr += 0x1000;
             }
+
+            var map = new BootInfoMemory();
+            map.Start = phys + diff;
+            map.Size = OriginalKernelElf.TotalFileSize;
+            map.Type = BootInfoMemoryType.KernelElfVirt;
+            BootInfo_.AddMap(map);
         }
 
         static Addr GetKernelStartAddr()

@@ -139,6 +139,8 @@ namespace lonos.kernel.core
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageDirectory);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageTable);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.InitialStack);
+            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelBssSegment);
+            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelTextSegment);
 
             //KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
             Native.SetCR3(PageTable.AddrPageDirectory);
