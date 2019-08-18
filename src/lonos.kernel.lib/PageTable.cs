@@ -11,12 +11,18 @@ namespace lonos.kernel.core
     /// </summary>
     public unsafe static class PageTable
     {
-
-        public static USize InitalPageDirectorySize = PageDirectoryEntry.EntrySize * 1024;
-        public static USize InitalPageTableSize = PageTableEntry.EntrySize * 1024 * 1024;
-
         public static uint AddrPageDirectory;
         public static uint AddrPageTable;
+
+        public const uint PagesPerDictionaryEntry = 1024;
+        public const uint EntriesPerPageEntryEntry = 1024;
+
+        public const ulong InitialAddressableVirtMemory = 0x100000000; // 4GB
+        public const uint InitialPageTableEntries = (uint)(InitialAddressableVirtMemory / 4096); // pages for 4GB
+        public const uint InitialDirectoryEntries = InitialPageTableEntries / PagesPerDictionaryEntry; // pages for 4GB
+
+        public static USize InitalPageDirectorySize = PageDirectoryEntry.EntrySize * InitialDirectoryEntries;
+        public static USize InitalPageTableSize = PageTableEntry.EntrySize * InitialPageTableEntries;
 
         /// <summary>
         /// Sets up the PageTable
@@ -31,16 +37,12 @@ namespace lonos.kernel.core
             // Setup Page Directory
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
-            uint totalPages = (4096 * 1024) / 4; //pages for 4GB
-            const int PagesPerDictionaryEntry = 1024;
-            const int EntriesPerPageEntryEntry = 1024;
-            var totalDirectoryEntries = KMath.DivCeil(totalPages, PagesPerDictionaryEntry);
 
-            KernelMessage.WriteLine("Total Pages: {0}", totalPages);
-            KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", totalDirectoryEntries);
+            KernelMessage.WriteLine("Total Pages: {0}", InitialPageTableEntries);
+            KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
 
             var pidx = 0;
-            for (int didx = 0; didx < totalDirectoryEntries; didx++)
+            for (int didx = 0; didx < InitialDirectoryEntries; didx++)
             {
                 for (int index = 0; index < EntriesPerPageEntryEntry; index++)
                 {
