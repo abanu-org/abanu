@@ -130,7 +130,7 @@ namespace lonos.kernel.core
             Native.SetCR0((uint)(Native.GetCR0() & ~0x10000));
 
             PageTable.PageTableEntry* pte = (PageTable.PageTableEntry*)PageTable.AddrPageTable;
-            for (int index = 0; index < 1024 * 32; index++)
+            for (int index = 0; index < PageTable.InitialPageTableEntries; index++)
             {
                 var e = &pte[index];
                 e->Writable = false;
@@ -139,8 +139,9 @@ namespace lonos.kernel.core
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageDirectory);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageTable);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.InitialStack);
+            //InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelElfVirt);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelBssSegment);
-            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelTextSegment);
+            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelROdataSegment);
 
             //KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
             Native.SetCR3(PageTable.AddrPageDirectory);

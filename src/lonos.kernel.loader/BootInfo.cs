@@ -46,7 +46,7 @@ namespace lonos.kernel.core
 
         static void SetupMemoryMap()
         {
-            uint customMaps = 9;
+            uint customMaps = 10;
             var mbMapCount = Multiboot.MemoryMapCount;
             BootInfo->MemoryMapLength = mbMapCount + customMaps;
             BootInfo->MemoryMapArray = (BootInfoMemory*)MallocBootInfoData((USize)(sizeof(MultiBootMemoryMap) * MemoryMapReserve));
@@ -127,6 +127,11 @@ namespace lonos.kernel.core
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".text")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".text")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelTextSegment;
+
+            idx++;
+            BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".rodata")->Addr;
+            BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".rodata")->Size;
+            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelROdataSegment;
         }
 
         public static void AddMap(BootInfoMemory map)
