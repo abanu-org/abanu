@@ -29,6 +29,7 @@ namespace lonos.kernel.core
         KernelTextSegment = 30,
         KernelROdataSegment = 31,
         KernelBssSegment = 32,
+        KernelDataSegment = 33,
 
     }
 }

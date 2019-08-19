@@ -47,7 +47,7 @@ namespace lonos.kernel.core
             var handle = type.TypeHandle;
 
             var ptr = Mosa.Runtime.Internal.AllocateArray(typeof(T).TypeHandle, _elementSize, (uint)capacity);
-                return (T[])Mosa.Runtime.Intrinsic.GetObjectFromAddress(ptr);
+            return (T[])Mosa.Runtime.Intrinsic.GetObjectFromAddress(ptr);
         }
 
         private void DestryArray(T[] array)
@@ -118,7 +118,8 @@ namespace lonos.kernel.core
                         T[] newItems = CreateArray(value);
                         if (_size > 0)
                             Copy(_items, 0, newItems, 0, _size);
-                        DestryArray(_items);
+                        if (_items != _emptyArray)
+                            DestryArray(_items);
                         _items = newItems;
                     }
                     else
