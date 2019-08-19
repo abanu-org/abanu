@@ -47,7 +47,7 @@ namespace lonos.build
                 EnableIROptimizations = true,
                 EnableSparseConditionalConstantPropagation = true,
                 EnableInlinedMethods = true,
-                EnableIRLongExpansion = false, // see LonosBuilder_Loader
+                EnableLongExpansion = false, // see LonosBuilder_Loader
                 EnableValueNumbering = true,
                 TwoPassOptimizations = true,
                 //EnableBitTracker = true,
@@ -105,7 +105,7 @@ namespace lonos.build
             Options.EnableIROptimizations = false;
             Options.EnableSparseConditionalConstantPropagation = false;
             Options.EnableInlinedMethods = true;
-            Options.EnableIRLongExpansion = false;
+            Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
 
