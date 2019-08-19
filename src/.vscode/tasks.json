@@ -1,55 +1,55 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=733558
-	// for the documentation about the tasks.json format
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "build lonos.build.sln",
-			"type": "shell",
-			"command": "msbuild",
-			"args": [
-				"/property:GenerateFullPaths=true",
-				"/t:build",
-				"lonos.build.sln"
-			],
-			"group": "build",
-			"presentation": {
-				"reveal": "always"
-			},
-			"problemMatcher": "$msCompile"
-		},
-		{
-			"label": "build lonos.kernel.sln",
-			"type": "shell",
-			"command": "msbuild",
-			"args": [
-				"/property:GenerateFullPaths=true",
-				"/t:build",
-				"lonos.kernel.sln"
-			],
-			"group": "build",
-			"presentation": {
-				"reveal": "always"
-			},
-			"problemMatcher": "$msCompile"
-		},
-		{
-			"label": "build lonos.build.csproj",
-			"type": "shell",
-			"command": "msbuild",
-			"args": [
-				"/property:GenerateFullPaths=true",
-				"/t:build",
-				"lonos.build/lonos.build.csproj"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"presentation": {
-				"reveal": "always"
-			},
-			"problemMatcher": "$msCompile"
-		}
-	]
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build lonos.build.sln",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "/property:GenerateFullPaths=true",
+                "/t:build",
+                "lonos.build.sln"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build lonos.kernel.sln",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "/property:GenerateFullPaths=true",
+                "/t:build",
+                "lonos.kernel.sln"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build lonos.build.csproj",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "/property:GenerateFullPaths=true",
+                "/t:build",
+                "lonos.build/lonos.build.csproj"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
 }

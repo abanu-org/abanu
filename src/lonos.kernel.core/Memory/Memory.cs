@@ -127,14 +127,9 @@ namespace lonos.kernel.core
                 return;
 
             //KernelMessage.WriteLine("Unset CR0.WP");
-            Native.SetCR0((uint)(Native.GetCR0() & ~0x10000));
+            PageTable.DisableKernelWriteProtection();
 
-            PageTable.PageTableEntry* pte = (PageTable.PageTableEntry*)PageTable.AddrPageTable;
-            for (int index = 0; index < PageTable.InitialPageTableEntries; index++)
-            {
-                var e = &pte[index];
-                e->Writable = false;
-            }
+            PageTable.SetKernelWriteProtectionForAllInitialPages();
 
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageDirectory);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageTable);
@@ -144,12 +139,10 @@ namespace lonos.kernel.core
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelROdataSegment);
 
             //KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
-            Native.SetCR3(PageTable.AddrPageDirectory);
+            PageTable.Flush();
 
             //KernelMessage.WriteLine("Set CR0.WP");
-            Native.SetCR0((uint)(Native.GetCR0() | 0x10000));
-
-            //Native.Invlpg();
+            PageTable.EnableKernelWriteProtection();
         }
 
         public unsafe static void InitialKernelProtect_MakeWritable_ByRegion(uint startVirtAddr, uint endVirtAddr)
@@ -168,17 +161,7 @@ namespace lonos.kernel.core
             if (!UseKernelWriteProtection)
                 return;
 
-            //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
-            var pages = KMath.DivCeil(size, 4096);
-            for (var i = 0; i < pages; i++)
-            {
-                var entry = PageTable.GetTableEntry(virtAddr);
-                entry->Writable = true;
-
-                virtAddr += 4096;
-            }
-
-            Native.SetCR3(PageTable.AddrPageDirectory);
+            PageTable.SetKernelWriteProtectionForRegion(virtAddr, size);
         }
 
     }

@@ -9,8 +9,9 @@ namespace lonos.kernel.core
     /// <summary>
     /// Page Table
     /// </summary>
-    public unsafe static class PageTable
+    public unsafe static class PageTableX86
     {
+
         public static uint AddrPageDirectory;
         public static uint AddrPageTable;
 
@@ -69,13 +70,12 @@ namespace lonos.kernel.core
             MapVirtualAddressToPhysical(0x0, 0x0, false);
 
             // Set CR3 register on processor - sets page directory
-            KernelMessage.WriteLine("Set CR3 to {0:X8}", PageTable.AddrPageDirectory);
-            Native.SetCR3(AddrPageDirectory);
+            KernelMessage.WriteLine("Set CR3 to {0:X8}", AddrPageDirectory);
+            Flush();
 
             KernelMessage.Write("Enable Paging... ");
 
-            // Set CR0.WP
-            Native.SetCR0(Native.GetCR0() | 0x10000);
+            PageTable.EnableKernelWriteProtection();
 
             // Set CR0 register on processor - turns on virtual memory
             Native.SetCR0(Native.GetCR0() | 0x80000000);
@@ -123,7 +123,7 @@ namespace lonos.kernel.core
             //Native.Invlpg(virtualAddress); Not implemented in MOSA yet
 
             // workarround:
-            Native.SetCR3(PageTable.AddrPageDirectory);
+            Flush();
         }
 
         /// <summary>
@@ -137,6 +137,39 @@ namespace lonos.kernel.core
             return Intrinsic.Load32(new IntPtr(AddrPageTable), (((uint)virtualAddress.ToInt32() & 0xFFFFF000u) >> 10)) + ((uint)virtualAddress.ToInt32() & 0xFFFu);
         }
 
+        public static void SetKernelWriteProtectionForAllInitialPages()
+        {
+            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
+            for (int index = 0; index < InitialPageTableEntries; index++)
+            {
+                var e = &pte[index];
+                e->Writable = false;
+            }
+        }
+
+        public static void Flush() {
+            Native.SetCR3(AddrPageDirectory);
+        }
+
+        public static void Flush(Addr virtAddr)
+        {
+            Flush(); //TODO: Use Native.InvPg!
+        }
+
+        public unsafe static void SetKernelWriteProtectionForRegion(uint virtAddr, uint size)
+        {
+            //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
+            var pages = KMath.DivCeil(size, 4096);
+            for (var i = 0; i < pages; i++)
+            {
+                var entry = GetTableEntry(virtAddr);
+                entry->Writable = true;
+
+                virtAddr += 4096;
+            }
+
+            PageTable.Flush();
+        }
 
         [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 4)]
         unsafe public struct PageDirectoryEntry

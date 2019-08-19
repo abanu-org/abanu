@@ -72,9 +72,6 @@
     <Compile Include="Boot\BootInfoMemoryType.cs" />
     <Compile Include="Boot\BiosMemoryType.cs" />
     <Compile Include="GDT.cs" />
-    <Compile Include="PageTable.cs" />
-    <Compile Include="PageTable2.cs" />
-    <Compile Include="PageTable3.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="KernelMessage.cs" />
     <Compile Include="IKernelMessageHandler.cs" />
@@ -83,12 +80,16 @@
     <Compile Include="MemoryOperation.cs" />
     <Compile Include="ScreenColors.cs" />
     <Compile Include="Debug.cs" />
+    <Compile Include="PageTable\PageTable.cs" />
+    <Compile Include="PageTable\PageTableX86.cs" />
+    <Compile Include="PageTable\PageTableX64.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />
     <Folder Include="Fonts\" />
     <Folder Include="Structs\" />
     <Folder Include="Boot\" />
+    <Folder Include="PageTable\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

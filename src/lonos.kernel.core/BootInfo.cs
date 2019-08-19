@@ -60,7 +60,7 @@ namespace lonos.kernel.core
             GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
             PageTable.KernelSetup(
                 GetMap(BootInfoMemoryType.PageDirectory)->Start,
-                GetMap(BootInfoMemoryType.PageTable)->Start);
+                GetMap(BootInfoMemoryType.PageTable)->Start, PageTable.PageTableType.x86);
         }
 
         public static BootInfoMemory* GetMap(BootInfoMemoryType type)
