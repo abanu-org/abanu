@@ -107,52 +107,36 @@ namespace lonos.kernel.core
             for (uint i = 0; i < PageCount; i++)
                 PageArray[i].Status = PageStatus.Reserved;
 
-            for (var i = 0; i < KernelMemoryMapManager.Header->SystemUsable.Count; i++)
-            {
-                var map = KernelMemoryMapManager.Header->SystemUsable.Items[i];
-                if (map.Start >= BootInfo.Header->InstalledPhysicalMemory)
-                    continue;
-
-                var mapPages = KMath.DivCeil(map.Size, 4096);
-                KernelMessage.WriteLine("Mark Pages as Free from {0:X8}, Size {1:X8}, Pages {2}", map.Start, map.Size, mapPages);
-
-                for (var p = 0; p < mapPages; p++)
-                {
-                    var addr = map.Start + p * 4096;
-                    if (addr >= BootInfo.Header->InstalledPhysicalMemory)
-                        break;
-
-                    GetPhysPage(addr)->Status = PageStatus.Free;
-                }
-            }
-
-            //Dump();
-
-            for (var i = 0; i < KernelMemoryMapManager.Header->Used.Count; i++)
-            {
-                var map = KernelMemoryMapManager.Header->Used.Items[i];
-                if (map.Start >= BootInfo.Header->InstalledPhysicalMemory)
-                    continue;
-
-                var mapPages = KMath.DivCeil(map.Size, 4096);
-                KernelMessage.WriteLine("Mark Pages as Used from {0:X8}, Size {1:X8}, Pages {2}", map.Start, map.Size, mapPages);
-
-                for (var p = 0; p < mapPages; p++)
-                {
-                    var addr = map.Start + p * 4096;
-                    if (addr >= BootInfo.Header->InstalledPhysicalMemory)
-                        break;
-                    GetPhysPage(addr)->Status = PageStatus.Used;
-                }
-            }
+            SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
+            SetInitialPageStatus(&KernelMemoryMapManager.Header->Used, PageStatus.Used);
 
             FreePages = 0;
             for (uint i = 0; i < PageCount; i++)
                 if (PageArray[i].Status == PageStatus.Free)
                     FreePages++;
 
-            //Dump();
             KernelMessage.WriteLine("Pages Free: {0}", FreePages);
+        }
+
+        private void SetInitialPageStatus(KernelMemoryMapArray* maps, PageStatus status)
+        {
+            for (var i = 0; i < maps->Count; i++)
+            {
+                var map = maps->Items[i];
+                if (map.Start >= BootInfo.Header->InstalledPhysicalMemory)
+                    continue;
+
+                var mapPages = KMath.DivCeil(map.Size, 4096);
+                KernelMessage.WriteLine("Mark Pages from {0:X8}, Size {1:X8}, Pages {2}, Type {3}", map.Start, map.Size, mapPages, (uint)status);
+
+                for (var p = 0; p < mapPages; p++)
+                {
+                    var addr = map.Start + p * 4096;
+                    if (addr >= BootInfo.Header->InstalledPhysicalMemory)
+                        break;
+                    GetPhysPage(addr)->Status = status;
+                }
+            }
         }
 
         public void Dump()
@@ -188,7 +172,7 @@ namespace lonos.kernel.core
         /// <returns>The page</returns>
         Page* Allocate(uint num)
         {
-            KernelMessage.Write("Request {0} pages...", num);
+            //KernelMessage.WriteLine("Request {0} pages...", num);
 
             var cnt = 0;
 
