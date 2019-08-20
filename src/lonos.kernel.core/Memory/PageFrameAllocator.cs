@@ -65,7 +65,7 @@ namespace lonos.kernel.core
             Free(page->PhysicalAddress);
         }
 
-        uint PagesUsed;
+        uint FreePages;
 
         Page* PageArray;
         uint PageCount;
@@ -146,11 +146,13 @@ namespace lonos.kernel.core
                 }
             }
 
+            FreePages = 0;
             for (uint i = 0; i < PageCount; i++)
                 if (PageArray[i].Status == PageStatus.Free)
-                    PagesUsed++;
+                    FreePages++;
 
             //Dump();
+            KernelMessage.WriteLine("Pages Free: {0}", FreePages);
         }
 
         public void Dump()
@@ -223,11 +225,11 @@ namespace lonos.kernel.core
                                 p->Head = head;
                                 p->Tail = head->Tail;
                                 p = p->Next;
-                                PagesUsed++;
+                                FreePages--;
                             }
                             lastAllocatedPage = p;
 
-                            KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress + 4096 - 1);
+                            //KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress + 4096 - 1);
 
                             return head;
                         }
@@ -267,7 +269,7 @@ namespace lonos.kernel.core
                 p->Head = null;
                 p->Tail = null;
                 p = p->Next;
-                PagesUsed--;
+                FreePages++;
             }
         }
 
@@ -280,7 +282,7 @@ namespace lonos.kernel.core
         {
             get
             {
-                return PageCount - PagesUsed;
+                return FreePages;
             }
         }
 
