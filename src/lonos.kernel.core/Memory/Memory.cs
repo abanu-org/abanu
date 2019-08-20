@@ -131,7 +131,6 @@ namespace lonos.kernel.core
 
             PageTable.SetKernelWriteProtectionForAllInitialPages();
 
-            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageDirectory);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageTable);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.InitialStack);
             //InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelElfVirt);

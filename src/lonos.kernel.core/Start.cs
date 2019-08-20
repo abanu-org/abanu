@@ -38,7 +38,7 @@ namespace lonos.kernel.core
             BootInfo.SetupStage2();
 
             KernelMemoryMapManager.Setup();
-            KernelMemoryMapManager.Allocate(0x1000 * 1000, BootInfoMemoryType.PageDirectory);
+            //KernelMemoryMapManager.Allocate(0x1000 * 1000, BootInfoMemoryType.PageDirectory);
 
             // Read own ELF-Headers and Sections
             KernelElf.Setup();

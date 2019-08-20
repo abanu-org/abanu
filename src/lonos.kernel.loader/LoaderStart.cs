@@ -52,11 +52,9 @@ namespace lonos.kernel.core
             // Because IDT is not setup yet, that could handle this kind of exception.
 
             PageTable.ConfigureType(PageTable.PageTableType.x86);
-            map = BootMemory.AllocateMemoryMap(PageTable.InitalPageDirectorySize, BootInfoMemoryType.PageDirectory);
+            map = BootMemory.AllocateMemoryMap(PageTable.InitalMemoryAllocationSize, BootInfoMemoryType.PageTable);
             BootInfo_.AddMap(map);
-            var map2 = BootMemory.AllocateMemoryMap(PageTable.InitalPageTableSize, BootInfoMemoryType.PageTable);
-            BootInfo_.AddMap(map2);
-            PageTable.Setup(map.Start, map2.Start, PageTable.PageTableType.x86);
+            PageTable.Setup(map.Start, PageTable.PageTableType.x86);
 
             // Because Kernel is compiled in virtual address space, we need to remap the pages
             MapKernelImage();

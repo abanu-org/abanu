@@ -22,18 +22,22 @@ namespace lonos.kernel.core
         public const uint InitialPageTableEntries = (uint)(InitialAddressableVirtMemory / 4096); // pages for 4GB
         public const uint InitialDirectoryEntries = InitialPageTableEntries / PagesPerDictionaryEntry; // pages for 4GB
 
-        public static USize InitalPageDirectorySize = PageDirectoryEntry.EntrySize * InitialDirectoryEntries;
-        public static USize InitalPageTableSize = PageTableEntry.EntrySize * InitialPageTableEntries;
+        private const uint InitalPageDirectorySize = PageDirectoryEntry.EntrySize * InitialDirectoryEntries;
+        private const uint InitalPageTableSize = PageTableEntry.EntrySize * InitialPageTableEntries;
+
+        public const uint InitalMemoryAllocationSize = InitalPageDirectorySize + InitalPageTableSize;
 
         /// <summary>
         /// Sets up the PageTable
         /// </summary>
-        public static void Setup(Addr addrPageDirectory, Addr addrPageTable)
+        public static void Setup(Addr entriesAddr)
         {
             KernelMessage.WriteLine("Setup PageTable");
 
-            AddrPageDirectory = addrPageDirectory;
-            AddrPageTable = addrPageTable;
+            AddrPageDirectory = entriesAddr;
+            AddrPageTable = entriesAddr + InitalPageDirectorySize;
+
+            PrintAddress();
 
             // Setup Page Directory
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
@@ -83,15 +87,21 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Done");
         }
 
+        private static void PrintAddress() {
+            KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
+            KernelMessage.WriteLine("PageTable: {0:X8}", AddrPageTable);
+        }
+
         private static bool WritableAddress(uint physAddr)
         {
             return false;
         }
 
-        public static void KernelSetup(Addr addrPageDirectory, Addr addrPageTable)
+        public static void KernelSetup(Addr entriesAddr)
         {
-            AddrPageDirectory = addrPageDirectory;
-            AddrPageTable = addrPageTable;
+            AddrPageDirectory = entriesAddr;
+            AddrPageTable = entriesAddr + InitalPageDirectorySize;
+            //PrintAddress();
         }
 
         public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
@@ -147,7 +157,8 @@ namespace lonos.kernel.core
             }
         }
 
-        public static void Flush() {
+        public static void Flush()
+        {
             Native.SetCR3(AddrPageDirectory);
         }
 

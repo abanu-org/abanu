@@ -14,7 +14,7 @@ namespace lonos.kernel.core
         BootInfoHeader = 8,
         BootInfoHeap = 9,
         GDT = 10,
-        PageDirectory = 11,
+        //PageDirectory = 11,
         PageTable = 12,
         InitialStack = 13,
         InitialGCMemory = 14,

@@ -22,40 +22,29 @@ namespace lonos.kernel.core
 
         public static void ConfigureType(PageTableType type) => Type = type;
 
-        public static USize InitalPageDirectorySize
+        public static USize InitalMemoryAllocationSize
         {
             get
             {
                 if (Type == PageTableType.x86)
-                    return PageTableX86.InitalPageDirectorySize;
+                    return PageTableX86.InitalMemoryAllocationSize;
                 else
                     throw new NotImplementedException();
             }
         }
 
-        public static USize InitalPageTableSize
-        {
-            get
-            {
-                if (Type == PageTableType.x86)
-                    return PageTableX86.InitalPageTableSize;
-                else
-                    throw new NotImplementedException();
-            }
-        }
-
-        public static void Setup(Addr addrPageDirectory, Addr addrPageTable, PageTableType type)
+        public static void Setup(Addr entriesAddr, PageTableType type)
         {
             Type = type;
             if (type == PageTableType.x86)
-                PageTableX86.Setup(addrPageDirectory, addrPageTable);
+                PageTableX86.Setup(entriesAddr);
         }
 
-        public static void KernelSetup(Addr addrPageDirectory, Addr addrPageTable, PageTableType type)
+        public static void KernelSetup(Addr entriesAddr, PageTableType type)
         {
             Type = type;
             if (type == PageTableType.x86)
-                PageTableX86.KernelSetup(addrPageDirectory, addrPageTable);
+                PageTableX86.KernelSetup(entriesAddr);
         }
 
         public static void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true)

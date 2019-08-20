@@ -11,6 +11,7 @@ namespace lonos.kernel.core
     /// </summary>
     public unsafe static class PageTableX64
     {
+
     }
 
 }
