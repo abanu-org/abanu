@@ -34,7 +34,9 @@ namespace lonos.kernel.core
 
 		public USize Size => 4096;
 
-		public bool Free => ((uint)Status).IsMaskSet((uint)PageStatus.Free);
+        public uint PageNum => PhysicalAddress / 4096;
+
+        public bool Free => ((uint)Status).IsMaskSet((uint)PageStatus.Free);
 		public bool Unset => ((uint)Status).IsMaskSet((uint)PageStatus.Unset);
 		public bool Used => ((uint)Status).IsMaskSet((uint)PageStatus.Used);
 		public bool Reserved => ((uint)Status).IsMaskSet((uint)PageStatus.Reserved);
