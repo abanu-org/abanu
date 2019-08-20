@@ -150,8 +150,7 @@ namespace lonos.kernel.core
                 if (PageArray[i].Status == PageStatus.Free)
                     PagesUsed++;
 
-            Dump();
-
+            //Dump();
         }
 
         public void Dump()
