@@ -41,7 +41,13 @@ namespace lonos.kernel.core
         /// </summary>
         public unsafe static Addr Allocate(USize n, GFP flags)
         {
-            return kmallocAllocator.malloc(n);
+            // var sb = new StringBuffer();
+            // sb.Append("Alloc: Size: {0:X8}", (uint)n);
+            var addr = kmallocAllocator.malloc(n);
+            // sb.Append("Alloc: Addr: {0}", (uint)addr);
+            // sb.WriteTo(Devices.Serial1);
+
+            return addr;
         }
 
         /// <summary>

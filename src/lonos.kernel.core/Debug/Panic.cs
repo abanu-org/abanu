@@ -6,7 +6,7 @@ using Mosa.Kernel.x86;
 
 namespace lonos.kernel.core
 {
-	/// <summary>
+    /// <summary>
     /// Panic
     /// </summary>
     public static class Panic
@@ -32,12 +32,12 @@ namespace lonos.kernel.core
         public static void Error(string message)
         {
 
-			//Screen.Goto(0, 0);
-			//Screen.Color = 11;
-			//Screen.Write(message);
-			//while(true){ Native.Nop(); };
-			//return;
-			Screen.BackgroundColor = ScreenColor.Green;
+            //Screen.Goto(0, 0);
+            //Screen.Color = 11;
+            //Screen.Write(message);
+            //while(true){ Native.Nop(); };
+            //return;
+            Screen.BackgroundColor = ScreenColor.Green;
 
             Screen.Clear();
             Screen.Goto(1, 0);
@@ -120,7 +120,7 @@ namespace lonos.kernel.core
 
         private static void DumpStackTrace(uint depth)
         {
-			return;
+            return;
             while (true)
             {
                 var entry = Internal.GetStackTraceEntry(depth, new IntPtr(EBP), new IntPtr(EIP));
