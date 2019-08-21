@@ -43,32 +43,26 @@ namespace lonos.kernel.core
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
 
-            KernelMessage.WriteLine("Total Pages: {0}", InitialPageTableEntries);
+            KernelMessage.WriteLine("Total Page Entries: {0}", InitialPageTableEntries);
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
 
-            var pidx = 0;
+            for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
+            {
+                pte[pidx] = new PageTableEntry();
+                pte[pidx].Present = true;
+                pte[pidx].Writable = true;
+                pte[pidx].User = true;
+                pte[pidx].PhysicalAddress = (uint)(pidx * 4096);
+            }
+
             for (int didx = 0; didx < InitialDirectoryEntries; didx++)
             {
-                for (int index = 0; index < EntriesPerPageEntryEntry; index++)
-                {
-                    pte[pidx] = new PageTableEntry();
-                    pte[pidx].Present = true;
-                    pte[pidx].Writable = true;
-                    pte[pidx].User = true;
-                    pte[pidx].PhysicalAddress = (uint)(pidx * 4096);
-
-                    pidx++;
-                }
-
                 pde[didx] = new PageDirectoryEntry();
                 pde[didx].Present = true;
                 pde[didx].Writable = true;
                 pde[didx].User = true;
                 pde[didx].PageTableEntry = &pte[didx * PagesPerDictionaryEntry];
             }
-
-            // TODO/BUG: Why this line will not be printed??
-            KernelMessage.WriteLine("Total Page Table Entries: {0}", pidx);
 
             // Unmap the first page for null pointer exceptions
             MapVirtualAddressToPhysical(0x0, 0x0, false);
