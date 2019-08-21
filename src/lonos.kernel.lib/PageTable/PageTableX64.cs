@@ -39,18 +39,19 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Setup PageTable");
 
             AddrPageDirectoryPT = entriesAddr;
-            AddrPageDirectory = entriesAddr + InitialDirectoryPTEntries;
-            AddrPageTable = entriesAddr + InitialDirectoryPTEntries + InitalPageDirectorySize;
+            AddrPageDirectory = entriesAddr + InitalPageDirectoryPTSize;
+            AddrPageTable = entriesAddr + InitalPageDirectoryPTSize + InitalPageDirectorySize;
 
             PrintAddress();
 
             // Setup Page Directory
-            PageDirectoryPointerTableEntry* pdpt = (PageDirectoryPointerTableEntry*)AddrPageDirectory;
+            PageDirectoryPointerTableEntry* pdpt = (PageDirectoryPointerTableEntry*)AddrPageDirectoryPT;
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
 
-            KernelMessage.WriteLine("Total Pages: {0}", InitialPageTableEntries);
+            KernelMessage.WriteLine("Total PDPT: {0}", InitialDirectoryPTEntries);
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
+            KernelMessage.WriteLine("Total Page Table Entries: {0}", InitialPageTableEntries);
 
             var pidx = 0;
             var didx = 0;
@@ -64,7 +65,7 @@ namespace lonos.kernel.core
                         pte[pidx].Present = true;
                         pte[pidx].Writable = true;
                         pte[pidx].User = true;
-                        pte[pidx].PhysicalAddress = (uint)(pidx * 4096);
+                        pte[pidx].PhysicalAddress = (ulong)(pidx * 4096);
 
                         pidx++;
                     }
@@ -78,19 +79,16 @@ namespace lonos.kernel.core
                     didx++;
                 }
 
-                pdpt[didx] = new PageDirectoryPointerTableEntry();
-                pdpt[didx].Present = true;
-                pdpt[didx].PageDirectoryEntry = &pde[ptidx * PagesPerDictionaryEntry];
+                pdpt[ptidx] = new PageDirectoryPointerTableEntry();
+                pdpt[ptidx].Present = true;
+                pdpt[ptidx].PageDirectoryEntry = &pde[ptidx * PagesPerDictionaryEntry];
             }
-
-            // TODO/BUG: Why this line will not be printed??
-            KernelMessage.WriteLine("Total Page Table Entries: {0}", pidx);
 
             // Unmap the first page for null pointer exceptions
             MapVirtualAddressToPhysical(0x0, 0x0, false);
 
             // Set CR3 register on processor - sets page directory
-            KernelMessage.WriteLine("Set CR3 to {0:X8}", AddrPageDirectory);
+            KernelMessage.WriteLine("Set CR3 to {0:X8}", AddrPageDirectoryPT);
             Flush();
 
             KernelMessage.Write("Enable Paging... ");
@@ -127,7 +125,7 @@ namespace lonos.kernel.core
         public static PageTableEntry* GetTableEntry(ulong forVirtualAddress)
         {
             var pageNum = forVirtualAddress >> 12;
-            PageTableEntry* table = (PageTableEntry*)AddrPageDirectory;
+            PageTableEntry* table = (PageTableEntry*)AddrPageTable;
             return &table[pageNum];
         }
 
@@ -229,7 +227,7 @@ namespace lonos.kernel.core
                 public const byte Address = 12;
             }
 
-            private const byte AddressBitSize = 40;
+            private const byte AddressBitSize = 52;
             private const ulong AddressMask = 0xFFFFFFFFFFFFF000u;
 
             private ulong PageDirectoryAddress
@@ -292,7 +290,7 @@ namespace lonos.kernel.core
                 public const byte DisableExecution = 63;
             }
 
-            private const byte AddressBitSize = 40;
+            private const byte AddressBitSize = 52;
             private const ulong AddressMask = 0xFFFFFFFFFFFFF000u;
 
             private ulong PageTableAddress
@@ -387,7 +385,7 @@ namespace lonos.kernel.core
                 public const byte DisableExecution = 63;
             }
 
-            private const byte AddressBitSize = 20;
+            private const byte AddressBitSize = 52;
             private const ulong AddressMask = 0xFFFFFFFFFFFFF000u;
 
             /// <summary>

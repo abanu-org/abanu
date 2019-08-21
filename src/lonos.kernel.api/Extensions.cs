@@ -249,27 +249,27 @@ namespace lonos.kernel.core
 
         public static ulong CircularLeftShift(this ulong a, byte n)
         {
-            return a << n | a >> (32 - n);
+            return a << n | a >> (64 - n);
         }
 
         public static ulong CircularRightShift(this ulong a, byte n)
         {
-            return a >> n | a << (32 - n);
+            return a >> n | a << (64 - n);
         }
 
         public static ulong GetBits(this ulong self, byte index, byte count)
         {
-            return (self >> index) << (32 - count);
+            return (self >> index) << (64 - count);
         }
 
         public static ulong GetBits(this ulong self, byte index, byte count, byte sourceIndex)
         {
-            return ((self >> index) << (32 - count)) << sourceIndex;
+            return ((self >> index) << (64 - count)) << sourceIndex;
         }
 
         public static ulong SetBits(this ulong self, byte index, byte count, ulong value)
         {
-            ulong mask = 0xFFFFFFFFFFFFFFFFU >> (32 - count);
+            ulong mask = 0xFFFFFFFFFFFFFFFFU >> (64 - count);
             ulong bits = (value & mask) << index;
             return (self & ~(mask << index)) | bits;
         }
@@ -277,7 +277,7 @@ namespace lonos.kernel.core
         public static ulong SetBits(this ulong self, byte index, byte count, ulong value, byte sourceIndex)
         {
             value = value >> sourceIndex;
-            ulong mask = 0xFFFFFFFFFFFFFFFFU >> (32 - count);
+            ulong mask = 0xFFFFFFFFFFFFFFFFU >> (64 - count);
             ulong bits = (value & mask) << index;
             return (self & ~(mask << index)) | bits;
         }

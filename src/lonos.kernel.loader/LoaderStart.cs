@@ -51,7 +51,7 @@ namespace lonos.kernel.core
             // Now we enable Paging. It's important that we do not cause a Page Fault Exception,
             // Because IDT is not setup yet, that could handle this kind of exception.
 
-            PageTable.ConfigureType(PageTable.PageTableType.x86);
+            PageTable.ConfigureType(PageTable.PageTableType.x64);
             map = BootMemory.AllocateMemoryMap(PageTable.InitalMemoryAllocationSize, BootInfoMemoryType.PageTable);
             BootInfo_.AddMap(map);
             PageTable.Setup(map.Start);
