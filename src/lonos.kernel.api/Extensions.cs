@@ -199,6 +199,91 @@ namespace lonos.kernel.core
 
         #endregion uint
 
+        #region ulong
+
+        public static bool IsMaskSet(this ulong self, ulong mask)
+        {
+            return (self & mask) == mask;
+        }
+
+        public static bool IsBitSet(this ulong self, byte bit)
+        {
+            return (self & (0x1u << bit)) == (0x1u << bit);
+        }
+
+        public static ulong SetMask(this ulong self, byte mask)
+        {
+            return self | mask;
+        }
+
+        public static ulong SetBit(this ulong self, byte bit)
+        {
+            return self | (0x1U << bit);
+        }
+
+        public static ulong ClearMask(this ulong self, ulong mask)
+        {
+            return self & ~mask;
+        }
+
+        public static ulong ClearBit(this ulong self, byte bit)
+        {
+            return self & ~(0x1U << bit);
+        }
+
+        public static ulong SetMask(this ulong self, uint mask, bool state)
+        {
+            if (state)
+                return self | mask;
+            else
+                return self & ~mask;
+        }
+
+        public static ulong SetBit(this ulong self, byte bit, bool state)
+        {
+            if (state)
+                return self | (0x1U << bit);
+            else
+                return self & ~(0x1U << bit);
+        }
+
+        public static ulong CircularLeftShift(this ulong a, byte n)
+        {
+            return a << n | a >> (32 - n);
+        }
+
+        public static ulong CircularRightShift(this ulong a, byte n)
+        {
+            return a >> n | a << (32 - n);
+        }
+
+        public static ulong GetBits(this ulong self, byte index, byte count)
+        {
+            return (self >> index) << (32 - count);
+        }
+
+        public static ulong GetBits(this ulong self, byte index, byte count, byte sourceIndex)
+        {
+            return ((self >> index) << (32 - count)) << sourceIndex;
+        }
+
+        public static ulong SetBits(this ulong self, byte index, byte count, ulong value)
+        {
+            ulong mask = 0xFFFFFFFFFFFFFFFFU >> (32 - count);
+            ulong bits = (value & mask) << index;
+            return (self & ~(mask << index)) | bits;
+        }
+
+        public static ulong SetBits(this ulong self, byte index, byte count, ulong value, byte sourceIndex)
+        {
+            value = value >> sourceIndex;
+            ulong mask = 0xFFFFFFFFFFFFFFFFU >> (32 - count);
+            ulong bits = (value & mask) << index;
+            return (self & ~(mask << index)) | bits;
+        }
+
+        #endregion uint
+
         #region *Byte
 
         unsafe public static bool IsMaskSet(byte* self, byte mask)

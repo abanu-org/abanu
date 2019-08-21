@@ -54,7 +54,7 @@ namespace lonos.kernel.core
             PageTable.ConfigureType(PageTable.PageTableType.x86);
             map = BootMemory.AllocateMemoryMap(PageTable.InitalMemoryAllocationSize, BootInfoMemoryType.PageTable);
             BootInfo_.AddMap(map);
-            PageTable.Setup(map.Start, PageTable.PageTableType.x86);
+            PageTable.Setup(map.Start);
 
             // Because Kernel is compiled in virtual address space, we need to remap the pages
             MapKernelImage();

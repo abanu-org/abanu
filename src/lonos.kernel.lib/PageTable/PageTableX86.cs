@@ -87,7 +87,8 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Done");
         }
 
-        private static void PrintAddress() {
+        private static void PrintAddress()
+        {
             KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
             KernelMessage.WriteLine("PageTable: {0:X8}", AddrPageTable);
         }
@@ -107,6 +108,9 @@ namespace lonos.kernel.core
         public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
         {
             return (PageTableEntry*)(AddrPageTable + ((forVirtualAddress & 0xFFFFF000u) >> 10));
+            // var pageNum = forVirtualAddress >> 12;
+            // PageTableEntry* table = (PageTableEntry*)AddrPageDirectory;
+            // return &table[pageNum];
         }
 
         /// <summary>
@@ -181,6 +185,7 @@ namespace lonos.kernel.core
 
             PageTable.Flush();
         }
+
 
         [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 4)]
         unsafe public struct PageDirectoryEntry

@@ -29,15 +29,16 @@ namespace lonos.kernel.core
                 if (Type == PageTableType.x86)
                     return PageTableX86.InitalMemoryAllocationSize;
                 else
-                    throw new NotImplementedException();
+                    return PageTableX64.InitalMemoryAllocationSize;
             }
         }
 
-        public static void Setup(Addr entriesAddr, PageTableType type)
+        public static void Setup(Addr entriesAddr)
         {
-            Type = type;
-            if (type == PageTableType.x86)
+            if (Type == PageTableType.x86)
                 PageTableX86.Setup(entriesAddr);
+            else
+                PageTableX64.Setup(entriesAddr);
         }
 
         public static void KernelSetup(Addr entriesAddr, PageTableType type)
@@ -45,12 +46,16 @@ namespace lonos.kernel.core
             Type = type;
             if (type == PageTableType.x86)
                 PageTableX86.KernelSetup(entriesAddr);
+            else
+                PageTableX64.KernelSetup(entriesAddr);
         }
 
         public static void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true)
         {
             if (Type == PageTableType.x86)
                 PageTableX86.MapVirtualAddressToPhysical(virtualAddress, physicalAddress, present);
+            else
+                PageTableX64.MapVirtualAddressToPhysical(virtualAddress, physicalAddress, present);
         }
 
         public static void EnableKernelWriteProtection()
@@ -69,23 +74,31 @@ namespace lonos.kernel.core
         {
             if (Type == PageTableType.x86)
                 PageTableX86.SetKernelWriteProtectionForAllInitialPages();
+            else
+                PageTableX64.SetKernelWriteProtectionForAllInitialPages();
         }
 
         public static void Flush()
         {
             if (Type == PageTableType.x86)
                 PageTableX86.Flush();
+            else
+                PageTableX64.Flush();
         }
 
         public static void Flush(Addr virtAddr)
         {
             if (Type == PageTableType.x86)
                 PageTableX86.Flush(virtAddr);
+            else
+                PageTableX64.Flush(virtAddr);
         }
 
         public static void SetKernelWriteProtectionForRegion(uint virtAddr, uint size)
         {
             if (Type == PageTableType.x86)
+                PageTableX86.SetKernelWriteProtectionForRegion(virtAddr, size);
+            else
                 PageTableX86.SetKernelWriteProtectionForRegion(virtAddr, size);
         }
 
