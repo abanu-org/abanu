@@ -107,10 +107,10 @@ namespace lonos.kernel.core
 
         public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
         {
-            return (PageTableEntry*)(AddrPageTable + ((forVirtualAddress & 0xFFFFF000u) >> 10));
-            // var pageNum = forVirtualAddress >> 12;
-            // PageTableEntry* table = (PageTableEntry*)AddrPageDirectory;
-            // return &table[pageNum];
+            //return (PageTableEntry*)(AddrPageTable + ((forVirtualAddress & 0xFFFFF000u) >> 10));
+            var pageNum = forVirtualAddress >> 12;
+            PageTableEntry* table = (PageTableEntry*)AddrPageTable;
+            return &table[pageNum];
         }
 
         /// <summary>
