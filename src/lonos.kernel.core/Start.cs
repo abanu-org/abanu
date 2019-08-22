@@ -15,7 +15,6 @@ namespace lonos.kernel.core
             BootInfo.SetupStage1();
 
             // Field needs to be explicit set, because InitializeAssembly is not invoked yet.
-            Memory.UseKernelWriteProtection = true;
             Memory.InitialKernelProtect();
 
             ManagedMemoy.InitializeGCMemory();

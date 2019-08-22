@@ -23,6 +23,7 @@ namespace lonos.kernel.core
         public uint VBEMode;
 
         public uint InstalledPhysicalMemory;
+        public PageTable.PageTableType PageTableType;
 
         public bool FBPresent;
         public BootInfoFramebufferInfo FbInfo;

@@ -32,4 +32,11 @@ namespace lonos.kernel.core
         public const uint UnitTestQueue = 0x01E00000;  // 30MB [Size=2MB] - previous: 5KB [Size=1KB] 0x00005000
         public const uint DebuggerBuffer = 0x00010000;  // 16KB [Size=64KB]
     }
+
+    public static class KConfig
+    {
+        public static bool UsePAE = false;
+        public static bool UseKernelMemoryProtection = true;
+    }
+
 }

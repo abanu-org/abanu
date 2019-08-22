@@ -5,7 +5,7 @@ namespace lonos.kernel.core
 {
     public unsafe class BootInfo_
     {
-        static BootInfoHeader* BootInfo;
+        public static BootInfoHeader* BootInfo;
 
         public static void Setup()
         {
@@ -16,6 +16,7 @@ namespace lonos.kernel.core
             BootInfo->HeapSize = 0;
 
             BootInfo->InstalledPhysicalMemory = 128 * 1024 * 1024;
+            BootInfo->PageTableType = KConfig.UsePAE ? PageTable.PageTableType.x64 : PageTable.PageTableType.x86;
 
             SetupVideoInfo();
             SetupMemoryMap();

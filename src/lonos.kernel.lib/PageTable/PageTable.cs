@@ -99,7 +99,7 @@ namespace lonos.kernel.core
             if (Type == PageTableType.x86)
                 PageTableX86.SetKernelWriteProtectionForRegion(virtAddr, size);
             else
-                PageTableX86.SetKernelWriteProtectionForRegion(virtAddr, size);
+                PageTableX64.SetKernelWriteProtectionForRegion(virtAddr, size);
         }
 
     }

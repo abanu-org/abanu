@@ -16,8 +16,9 @@ end
 ########################
 # specific configuration
 
-#file os/lonos.kernel.core.bin
-file os/lonos.kernel.loader.bin
+#set arch i386:x86-64:intel
+file os/lonos.kernel.core.bin
+#file os/lonos.kernel.loader.bin
 target remote | ./lonosctl debug qemu-kernel-run
 b *0x0
 #b *0xc010609f
@@ -26,10 +27,14 @@ b *0x0
 #hbreak System.Void lonos.kernel.core.IDTManager::SetTableEntries()
 #hbreak src/lonos.kernel.core/Start.cs:63
 #hbreak src/lonos.kernel.core/KList.cs:45
-b PageTableX64.cs:94
+#b PageTableX64.cs:75
+b PageTableX64.cs:109
+b LoaderStart.cs:61
+b *0xc013e365
+b *0xC0100CD7
 
 ####################
 # continue debugging
 
-#continue
+continue
 

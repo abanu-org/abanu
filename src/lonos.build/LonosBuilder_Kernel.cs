@@ -101,13 +101,13 @@ namespace lonos.build
             Options.EmitAllSymbols = true;
 
 
-            // Options.EnableSSA = false;
-            // Options.EnableIROptimizations = false;
-            // Options.EnableSparseConditionalConstantPropagation = false;
-            // Options.EnableInlinedMethods = false;
-            // Options.EnableLongExpansion = false;
-            // Options.EnableValueNumbering = false;
-            // Options.TwoPassOptimizations = false;
+            Options.EnableSSA = false;
+            Options.EnableIROptimizations = false;
+            Options.EnableSparseConditionalConstantPropagation = false;
+            Options.EnableInlinedMethods = false;
+            Options.EnableLongExpansion = false;
+            Options.EnableValueNumbering = false;
+            Options.TwoPassOptimizations = false;
 
             //Options.VBEVideo = true;
 

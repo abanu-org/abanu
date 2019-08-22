@@ -125,11 +125,9 @@ namespace lonos.kernel.core
 
         // COMPILER BUG: The presence of the following Methods causes a "Page not mapped" error.
 
-        public static bool UseKernelWriteProtection;
-
         public unsafe static void InitialKernelProtect()
         {
-            if (!UseKernelWriteProtection)
+            if (!KConfig.UseKernelMemoryProtection)
                 return;
 
             //KernelMessage.WriteLine("Unset CR0.WP");
@@ -164,7 +162,7 @@ namespace lonos.kernel.core
 
         public unsafe static void InitialKernelProtect_MakeWritable_BySize(uint virtAddr, uint size)
         {
-            if (!UseKernelWriteProtection)
+            if (!KConfig.UseKernelMemoryProtection)
                 return;
 
             PageTable.SetKernelWriteProtectionForRegion(virtAddr, size);

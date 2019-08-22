@@ -31,18 +31,35 @@ namespace lonos.kernel.core
 
         public const uint InitalMemoryAllocationSize = InitalPageDirectoryPTSize + InitalPageDirectorySize + InitalPageTableSize;
 
+        private static void SetAddress(Addr entriesAddr)
+        {
+            AddrPageDirectoryPT = entriesAddr;
+            AddrPageDirectory = entriesAddr + InitalPageDirectoryPTSize;
+            AddrPageTable = entriesAddr + InitalPageDirectoryPTSize + InitalPageDirectorySize;
+        }
+
         /// <summary>
         /// Sets up the PageTable
         /// </summary>
         public static void Setup(Addr entriesAddr)
         {
             KernelMessage.WriteLine("Setup PageTable");
+            SetAddress(entriesAddr);
 
-            AddrPageDirectoryPT = entriesAddr;
-            AddrPageDirectory = entriesAddr + InitalPageDirectoryPTSize;
-            AddrPageTable = entriesAddr + InitalPageDirectoryPTSize + InitalPageDirectorySize;
+            MemoryOperation.Clear4(AddrPageDirectoryPT, InitalMemoryAllocationSize);
 
             PrintAddress();
+
+            // uint mask = 0x00004000;
+            // uint v1 = 0x00000007;
+            // uint r1 = v1.SetBits(12, 52, mask, 12);
+
+            // ulong v2 = v1;
+            // ulong r2 = v2.SetBits(12, 52, mask, 12);
+            // uint r2Int = (uint)r2;
+
+            // KernelMessage.WriteLine("r1: {0:X8}", r1);
+            // KernelMessage.WriteLine("r2: {0:X8}", r2Int);
 
             // Setup Page Directory
             PageDirectoryPointerTableEntry* pdpt = (PageDirectoryPointerTableEntry*)AddrPageDirectoryPT;
@@ -53,32 +70,26 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
             KernelMessage.WriteLine("Total Page Table Entries: {0}", InitialPageTableEntries);
 
-            var pidx = 0;
-            var didx = 0;
-            for (var ptidx = 0; ptidx < 4; ptidx++)
+            for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
             {
-                for (int didxLocal = 0; didxLocal < InitialDirectoryEntries; didxLocal++)
-                {
-                    for (int index = 0; index < EntriesPerPageEntryEntry; index++)
-                    {
-                        pte[pidx] = new PageTableEntry();
-                        pte[pidx].Present = true;
-                        pte[pidx].Writable = true;
-                        pte[pidx].User = true;
-                        pte[pidx].PhysicalAddress = (ulong)(pidx * 4096);
+                pte[pidx] = new PageTableEntry();
+                pte[pidx].Present = true;
+                pte[pidx].Writable = true;
+                pte[pidx].User = true;
+                pte[pidx].PhysicalAddress = (uint)(pidx * 4096);
+            }
 
-                        pidx++;
-                    }
+            for (int didx = 0; didx < InitialDirectoryEntries; didx++)
+            {
+                pde[didx] = new PageDirectoryEntry();
+                pde[didx].Present = true;
+                pde[didx].Writable = true;
+                pde[didx].User = true;
+                pde[didx].PageTableEntry = &pte[didx * PagesPerDictionaryEntry];
+            }
 
-                    pde[didx] = new PageDirectoryEntry();
-                    pde[didx].Present = true;
-                    pde[didx].Writable = true;
-                    pde[didx].User = true;
-                    pde[didx].PageTableEntry = &pte[didx * EntriesPerPageEntryEntry];
-
-                    didx++;
-                }
-
+            for (int ptidx = 0; ptidx < InitialDirectoryPTEntries; ptidx++)
+            {
                 pdpt[ptidx] = new PageDirectoryPointerTableEntry();
                 pdpt[ptidx].Present = true;
                 pdpt[ptidx].PageDirectoryEntry = &pde[ptidx * PagesPerDictionaryEntry];
@@ -106,6 +117,7 @@ namespace lonos.kernel.core
 
         private static void PrintAddress()
         {
+            KernelMessage.WriteLine("PageDirectoryPT: {0:X8}", AddrPageDirectoryPT);
             KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
             KernelMessage.WriteLine("PageTable: {0:X8}", AddrPageTable);
         }
@@ -117,12 +129,12 @@ namespace lonos.kernel.core
 
         public static void KernelSetup(Addr entriesAddr)
         {
-            AddrPageDirectory = entriesAddr;
-            AddrPageTable = entriesAddr + InitalPageDirectorySize;
+            SetAddress(entriesAddr);
             //PrintAddress();
         }
 
-        public static PageTableEntry* GetTableEntry(ulong forVirtualAddress)
+        public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
+        //public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
         {
             var pageNum = forVirtualAddress >> 12;
             PageTableEntry* table = (PageTableEntry*)AddrPageTable;
@@ -145,10 +157,10 @@ namespace lonos.kernel.core
             // FUTURE: Change this! Allocate dynamicly
 
             var entry = GetTableEntry(virtualAddress);
-            entry->PhysicalAddress = physicalAddress;
             entry->Present = present;
             entry->Writable = true;
             entry->User = true;
+            entry->PhysicalAddress = physicalAddress;
 
             //Native.Invlpg(virtualAddress); Not implemented in MOSA yet
 
@@ -199,7 +211,7 @@ namespace lonos.kernel.core
                 virtAddr += 4096;
             }
 
-            PageTable.Flush();
+            Flush();
         }
 
         public const byte MAXPHYS = 52;
@@ -208,7 +220,7 @@ namespace lonos.kernel.core
         unsafe public struct PageDirectoryPointerTableEntry
         {
             [FieldOffset(0)]
-            private ulong data;
+            private uint data;
 
             public const byte EntrySize = 8;
 
@@ -228,9 +240,10 @@ namespace lonos.kernel.core
             }
 
             private const byte AddressBitSize = 52;
-            private const ulong AddressMask = 0xFFFFFFFFFFFFF000u;
+            //private const ulong AddressMask = 0xFFFFFFFFFFFFF000u;
+            private const uint AddressMask = 0xFFFFF000u;
 
-            private ulong PageDirectoryAddress
+            private uint PageDirectoryAddress
             {
                 get { return data & AddressMask; }
                 set
@@ -243,7 +256,7 @@ namespace lonos.kernel.core
             internal PageDirectoryEntry* PageDirectoryEntry
             {
                 get { return (PageDirectoryEntry*)PageDirectoryAddress; }
-                set { PageDirectoryAddress = (ulong)value; }
+                set { PageDirectoryAddress = (uint)value; }
             }
 
             public bool Present
@@ -270,7 +283,7 @@ namespace lonos.kernel.core
         unsafe public struct PageDirectoryEntry
         {
             [FieldOffset(0)]
-            private ulong data;
+            private uint data;
 
             public const byte EntrySize = 8;
 
@@ -291,9 +304,9 @@ namespace lonos.kernel.core
             }
 
             private const byte AddressBitSize = 52;
-            private const ulong AddressMask = 0xFFFFFFFFFFFFF000u;
+            private const uint AddressMask = 0xFFFFF000u;
 
-            private ulong PageTableAddress
+            private uint PageTableAddress
             {
                 get { return data & AddressMask; }
                 set
@@ -306,7 +319,7 @@ namespace lonos.kernel.core
             internal PageTableEntry* PageTableEntry
             {
                 get { return (PageTableEntry*)PageTableAddress; }
-                set { PageTableAddress = (ulong)value; }
+                set { PageTableAddress = (uint)value; }
             }
 
             public bool Present
@@ -365,7 +378,7 @@ namespace lonos.kernel.core
         public struct PageTableEntry
         {
             [FieldOffset(0)]
-            private ulong Value;
+            private uint Value;
 
             public const byte EntrySize = 8;
 
@@ -385,19 +398,26 @@ namespace lonos.kernel.core
                 public const byte DisableExecution = 63;
             }
 
-            private const byte AddressBitSize = 52;
-            private const ulong AddressMask = 0xFFFFFFFFFFFFF000u;
+            //private const byte AddressBitSize = 52;
+            private const byte AddressBitSize = 20;
+            private const uint AddressMask = 0xFFFFF000u;
+
+            //public static bool Debug = false;
 
             /// <summary>
             /// 4k aligned physical address
             /// </summary>
-            public ulong PhysicalAddress
+            public uint PhysicalAddress
             {
                 get { return Value & AddressMask; }
                 set
                 {
                     Assert.True(value << AddressBitSize == 0, "PageTableEntry.PhysicalAddress needs to be 4k aligned");
+                    // if (Debug)
+                    //     KernelMessage.WriteLine("Value: {0:X8}, Addr: {1:X8}", (uint)Value, (uint)value);
                     Value = Value.SetBits(Offset.Address, AddressBitSize, value, Offset.Address);
+                    // if (Debug)
+                    //     KernelMessage.WriteLine("new Value: {0:X8}", (uint)Value);
                 }
             }
 
