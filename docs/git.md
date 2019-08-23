@@ -36,3 +36,8 @@ gpg --list-keys --fingerprint --keyid-format LONG
 git config --global user.signingkey <key>
 git config --global commit.gpgsign true
 
+# Windows compatibility
+# per repo:
+git config core.filemode false
+# global:
+git config --global core.filemode false
