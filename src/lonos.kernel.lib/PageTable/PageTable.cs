@@ -78,6 +78,12 @@ namespace lonos.kernel.core
                 PageTableX64.SetKernelWriteProtectionForAllInitialPages();
         }
 
+        public static void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
+        {
+            if (Type == PageTableType.x64)
+                PageTableX64.SetExecutionProtectionForAllInitialPages(currentTextSection);
+        }
+
         public static void Flush()
         {
             if (Type == PageTableType.x86)
@@ -100,6 +106,12 @@ namespace lonos.kernel.core
                 PageTableX86.SetKernelWriteProtectionForRegion(virtAddr, size);
             else
                 PageTableX64.SetKernelWriteProtectionForRegion(virtAddr, size);
+        }
+
+        public static void SetExecutableForRegion(uint virtAddr, uint size)
+        {
+            if (Type == PageTableType.x64)
+                PageTableX64.SetExecutableForRegion(virtAddr, size);
         }
 
     }

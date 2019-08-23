@@ -32,6 +32,14 @@ namespace lonos.kernel.core
             Dev.Write('\n');
         }
 
+        public static void WriteLine(string format, bool arg0)
+        {
+            var buf = new StringBuffer();
+            buf.Append(format, arg0 == true ? "yes" : "no");
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
         public static void WriteLine(string format, string arg0)
         {
             var buf = new StringBuffer();

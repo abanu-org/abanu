@@ -33,6 +33,10 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("<KERNEL:CONSOLE:BEGIN>");
             KernelMessage.WriteLine("Starting Lonos Kernel...");
 
+            KernelMessage.WriteLine("KConfig.UseKernelMemoryProtection: {0}", KConfig.UseKernelMemoryProtection);
+            KernelMessage.WriteLine("KConfig.UsePAE: {0}", KConfig.UsePAE);
+            KernelMessage.WriteLine("Apply PageTableType: {0}", (uint)BootInfo.Header->PageTableType);
+
             // Detect environment (Memory Maps, Video Mode, etc.)
             BootInfo.SetupStage2();
 

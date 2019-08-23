@@ -35,8 +35,8 @@ namespace lonos.kernel.core
 
     public static class KConfig
     {
-        public static bool UsePAE = false;
-        public static bool UseKernelMemoryProtection = true;
+        public const bool UsePAE = true;
+        public const bool UseKernelMemoryProtection = true;
     }
 
 }

@@ -147,11 +147,14 @@ namespace lonos.kernel.core
 
             //KernelMessage.WriteLine("Set CR0.WP");
             PageTable.EnableKernelWriteProtection();
-        }
 
-        public unsafe static void InitialKernelProtect_MakeWritable_ByRegion(uint startVirtAddr, uint endVirtAddr)
-        {
-            InitialKernelProtect_MakeWritable_BySize(startVirtAddr, endVirtAddr - startVirtAddr);
+
+            var code = BootInfo.GetMap(BootInfoMemoryType.KernelElfVirt);
+            var codeReg = new LinkedMemoryRegion(new MemoryRegion(code->Start, code->Size));
+            var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
+
+            //PageTable.SetExecutionProtectionForAllInitialPages(&codeReg);
+            //InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType.KernelTextSegment);
         }
 
         public unsafe static void InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType type)
@@ -166,6 +169,20 @@ namespace lonos.kernel.core
                 return;
 
             PageTable.SetKernelWriteProtectionForRegion(virtAddr, size);
+        }
+
+        public unsafe static void InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType type)
+        {
+            var mm = BootInfo.GetMap(type);
+            InitialKernelProtect_MakeExecutable_BySize(mm->Start, mm->Size);
+        }
+
+        public unsafe static void InitialKernelProtect_MakeExecutable_BySize(uint virtAddr, uint size)
+        {
+            if (!KConfig.UseKernelMemoryProtection)
+                return;
+
+            PageTable.SetExecutableForRegion(virtAddr, size);
         }
 
     }

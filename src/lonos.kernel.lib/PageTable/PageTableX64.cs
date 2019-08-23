@@ -189,6 +189,30 @@ namespace lonos.kernel.core
             }
         }
 
+        public static void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
+        {
+            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
+            for (uint index = 0; index < InitialPageTableEntries; index++)
+            {
+                var virtAddr = index * 4096;
+                var reg = currentTextSection;
+                var regionMatches = false;
+                while (reg != null)
+                {
+                    if (reg->Region.Contains(virtAddr))
+                    {
+                        regionMatches = true;
+                        break;
+                    }
+                    reg = reg->Next;
+                }
+                if (regionMatches)
+                    continue;
+                var e = &pte[index];
+                e->DisableExecution = true;
+            }
+        }
+
         public static void Flush()
         {
             Native.SetCR3(AddrPageDirectoryPT);
@@ -207,6 +231,21 @@ namespace lonos.kernel.core
             {
                 var entry = GetTableEntry(virtAddr);
                 entry->Writable = true;
+
+                virtAddr += 4096;
+            }
+
+            Flush();
+        }
+
+        public unsafe static void SetExecutableForRegion(uint virtAddr, uint size)
+        {
+            //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
+            var pages = KMath.DivCeil(size, 4096);
+            for (var i = 0; i < pages; i++)
+            {
+                var entry = GetTableEntry(virtAddr);
+                entry->DisableExecution = false;
 
                 virtAddr += 4096;
             }
@@ -364,6 +403,7 @@ namespace lonos.kernel.core
                 set { data = data.SetBit(Offset.PageSize4Mib, value); }
             }
 
+            // Temp Fix, because of compiler bug!
             public bool DisableExecution
             {
                 get { return data.IsBitSet(Offset.DisableExecution); }
@@ -379,6 +419,9 @@ namespace lonos.kernel.core
         {
             [FieldOffset(0)]
             private uint Value;
+
+            [FieldOffset(4)]
+            private uint data2;
 
             public const byte EntrySize = 8;
 
@@ -469,10 +512,31 @@ namespace lonos.kernel.core
                 set { Value = Value.SetBit(Offset.Dirty, value); }
             }
 
+            // public bool DisableExecution
+            // {
+            //     get { return Value.IsBitSet(Offset.DisableExecution); }
+            //     set { Value = Value.SetBit(Offset.DisableExecution, value); }
+            // }
+
             public bool DisableExecution
             {
-                get { return Value.IsBitSet(Offset.DisableExecution); }
-                set { Value = Value.SetBit(Offset.DisableExecution, value); }
+                get
+                {
+                    //return dataLong.IsBitSet(Offset.DisableExecution);
+                    return data2 == 0x80000000u;
+                }
+                set
+                {
+                    //data = dataLong.SetBit(Offset.DisableExecution, value);
+                    if (value)
+                    {
+                        data2 = 0x80000000u;
+                    }
+                    else
+                    {
+                        data2 = 0;
+                    }
+                }
             }
 
         }
