@@ -19,6 +19,7 @@ namespace lonos.kernel.core
                 *(ptr + i) = 0;
             kmallocAllocator.list_heads = (malloc_meta**)ptr;
             ManagedMemoy.useAllocator = true;
+            KernelMessage.WriteLine("EarlyBootBytesUsed: {0} bytes", ManagedMemoy.EarlyBootBytesUsed);
 
             KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameManager.PagesAvailable * 4096) / 1024 / 1024);
         }

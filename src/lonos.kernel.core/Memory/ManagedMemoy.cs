@@ -25,7 +25,9 @@ namespace lonos.kernel.core
 
         internal static bool useAllocator;
 
-        static uint nextAddr;
+        public static uint EarlyBootBytesUsed => currentSize;
+
+        static uint currentSize;
         public static uint AllocationCount;
         static public IntPtr AllocateMemory(uint size)
         {
@@ -49,10 +51,10 @@ namespace lonos.kernel.core
 
         static IntPtr AllocateMemory_EarlyBoot(uint size)
         {
-            var retAddr = nextAddr;
-            nextAddr += size;
+            var cSize = currentSize;
+            currentSize += size;
 
-            return (IntPtr)(((uint)Address.GCInitialMemory) + retAddr);
+            return (IntPtr)(((uint)Address.GCInitialMemory) + cSize);
         }
 
         public static void DumpToConsoleLine(uint addr, uint length)

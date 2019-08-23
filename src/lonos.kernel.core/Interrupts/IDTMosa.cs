@@ -16,6 +16,8 @@ namespace Mosa.Kernel.x86
     public unsafe static class IDT
     {
 
+        public static bool Enabled = false;
+        private static void test(uint err) { }
         /// <summary>
         /// Interrupts the handler.
         /// </summary>
@@ -26,6 +28,16 @@ namespace Mosa.Kernel.x86
 
             var stack = (IDTStack*)stackStatePointer;
             var irq = stack->Interrupt;
+
+            if (irq == 14)
+            {
+                var errorCode = stack->ErrorCode;
+                test(errorCode);
+            }
+
+            if (!Enabled)
+                return;
+
             var info = IDTManager.handlers[irq];
 
             IDTManager.RaisedCount++;

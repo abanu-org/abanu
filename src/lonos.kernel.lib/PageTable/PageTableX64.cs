@@ -527,6 +527,7 @@ namespace lonos.kernel.core
                 }
                 set
                 {
+                    //KernelMessage.WriteLine("sdf");
                     //data = dataLong.SetBit(Offset.DisableExecution, value);
                     if (value)
                     {
@@ -535,6 +536,7 @@ namespace lonos.kernel.core
                     else
                     {
                         data2 = 0;
+
                     }
                 }
             }

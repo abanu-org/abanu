@@ -87,9 +87,13 @@ namespace lonos.kernel.core
             SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
 
             KernelMessage.Write("Enabling interrupts...");
+
             var idtAddr = (uint)IDTAddr;
             Native.Lidt(idtAddr);
             Native.Sti();
+
+            Mosa.Kernel.x86.IDT.Enabled = true
+            ;
             KernelMessage.WriteLine("done");
         }
 

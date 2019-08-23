@@ -36,5 +36,5 @@ b *0xC0100CD7
 ####################
 # continue debugging
 
-continue
+#continue
 
