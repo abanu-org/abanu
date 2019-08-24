@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -82,14 +82,10 @@
     <Compile Include="Debug.cs" />
     <Compile Include="PageTable\PageTable.cs" />
     <Compile Include="PageTable\PageTableX86.cs" />
-    <Compile Include="PageTable\PageTableX64.cs" />
+    <Compile Include="PageTable\PageTablePAE.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Elf\" />
-    <Folder Include="Fonts\" />
     <Folder Include="Structs\" />
-    <Folder Include="Boot\" />
-    <Folder Include="PageTable\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,5 +6,5 @@ nasm -f elf32 native.s
 #nasm -f bin native.s
 cp native.o ../../bin/lonos.native.o
 
-nasm -f bin EnableExecutionProtection.s
-cp EnableExecutionProtection ../../bin/lonos.EnableExecutionProtection.o
+nasm -f bin EnableExecutionProtection.s -o EnableExecutionProtection.o
+cp EnableExecutionProtection.o ../../bin/lonos.EnableExecutionProtection.o

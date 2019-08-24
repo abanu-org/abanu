@@ -9,7 +9,7 @@ namespace lonos.kernel.core
     /// <summary>
     /// Page Table
     /// </summary>
-    public unsafe static class PageTableX64
+    public unsafe static class PageTablePAE
     {
 
         public static uint AddrPageDirectoryPT;
