@@ -128,6 +128,12 @@ namespace lonos.kernel.core
 
         public unsafe static void InitialKernelProtect()
         {
+            SetInitialWriteProtection();
+            SetInitialExecutionProtection();
+        }
+
+        private static void SetInitialWriteProtection()
+        {
             if (!KConfig.UseKernelMemoryProtection)
                 return;
 
@@ -148,14 +154,20 @@ namespace lonos.kernel.core
 
             //KernelMessage.WriteLine("Set CR0.WP");
             PageTable.EnableKernelWriteProtection();
+        }
 
+        private unsafe static void SetInitialExecutionProtection()
+        {
+            if (KConfig.UseExecutionProtection)
+            {
+                var code = BootInfo.GetMap(BootInfoMemoryType.KernelTextSegment);
+                var codeReg = new LinkedMemoryRegion(new MemoryRegion(code->Start, code->Size));
+                //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
+                //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
 
-            var code = BootInfo.GetMap(BootInfoMemoryType.KernelElfVirt);
-            var codeReg = new LinkedMemoryRegion(new MemoryRegion(code->Start, code->Size));
-            var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
-
-            //PageTable.SetExecutionProtectionForAllInitialPages(&codeReg);
-            //InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType.KernelTextSegment);
+                PageTable.SetExecutionProtectionForAllInitialPages(&codeReg);
+                //InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType.KernelTextSegment);
+            }
         }
 
         public unsafe static void InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType type)

@@ -206,7 +206,7 @@ namespace lonos.kernel.core
 
         public static void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
         {
-            // Must be enabled before setting the page bits
+            // Must be enabled before setting the page bits, otherwise you get a PageFault exception because of using an reserved bit.
             PageTable.EnableExecutionProtection();
 
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
