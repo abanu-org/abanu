@@ -12,6 +12,7 @@ namespace lonos.kernel.core
     {
 
         static PageFrameAllocator Default;
+        public const uint PageSize = 4096;
 
         public static void Setup()
         {

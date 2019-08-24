@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -33,6 +33,8 @@
     <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Scheduling\Scheduler.cs" />
+    <Compile Include="Scheduling\ThreadStatus.cs" />
     <Compile Include="Start.cs" />
     <Compile Include="Memory\Memory.cs" />
     <Compile Include="Elf\KernelElf.cs" />
@@ -94,17 +96,6 @@
       <Name>lonos.kernel.config</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Memory\" />
-    <Folder Include="Elf\" />
-    <Folder Include="Interrupts\" />
-    <Folder Include="Debug\" />
-    <Folder Include="External\" />
-    <Folder Include="Devices\" />
-    <Folder Include="Devices\Console\" />
-    <Folder Include="Devices\Serial\" />
-    <Folder Include="Devices\Terminal\" />
-    <Folder Include="Api\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

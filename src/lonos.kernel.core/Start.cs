@@ -1,8 +1,5 @@
 ﻿using System;
 using Mosa.Runtime;
-using Mosa.Kernel.x86;
-using Mosa.Runtime.Plug;
-using Mosa.Runtime.x86;
 
 namespace lonos.kernel.core
 {
@@ -78,11 +75,32 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Initialize Runtime Metadata");
             Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
+            Scheduler.Setup();
+            Scheduler.CreateThread(Thread1, 0x4000);
+            Scheduler.CreateThread(Thread2, 0x4000);
+            Scheduler.Start();
+
             KernelMessage.WriteLine("Performing some tests");
             Tests();
 
             KernelMessage.WriteLine("Enter Main Loop");
             AppMain();
+        }
+
+        private static void Thread1()
+        {
+            while (true)
+            {
+                KernelMessage.WriteLine("III");
+            }
+        }
+
+        private static void Thread2()
+        {
+            while (true)
+            {
+                KernelMessage.WriteLine("HHH");
+            }
         }
 
         // public unsafe static void InitialKernelProtect()

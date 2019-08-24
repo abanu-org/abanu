@@ -176,6 +176,11 @@ namespace lonos.kernel.core
         {
             //Screen.Goto(15, 5);
             //Screen.Write(IDTManager.RaisedCount);
+
+            // to clock events...
+
+            // at least, call scheduler. Keep in mind, it may not return because of thread switching
+            Scheduler.ClockInterrupt(new IntPtr(stack));
         }
 
         public static void Keyboard(IDTStack* stack)
