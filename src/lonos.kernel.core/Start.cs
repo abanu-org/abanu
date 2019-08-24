@@ -89,17 +89,27 @@ namespace lonos.kernel.core
 
         private static void Thread1()
         {
+            uint i = 0;
             while (true)
             {
-                KernelMessage.WriteLine("III");
+                i++;
+                //if (Scheduler.ClockTicks % 100 == 0)
+                Screen.Goto(0, 0);
+                Screen.Write("TH1:");
+                Screen.Write(i, 10);
             }
         }
 
         private static void Thread2()
         {
+            uint i = 0;
             while (true)
             {
-                KernelMessage.WriteLine("HHH");
+                i++;
+                //if (Scheduler.ClockTicks % 100 == 0)
+                Screen.Goto(1, 0);
+                Screen.Write("TH2:");
+                Screen.Write(i, 10);
             }
         }
 
