@@ -14,6 +14,11 @@ namespace lonos.kernel.core
         public static void Setup()
         {
             KernelMessage.WriteLine("Setup Native Calls");
+
+            // TODO: VirtAddr!
+            // TODO: SetExecutable!
+            //PageTable.SetExecutableForRegion(...);
+
             prog1Addr = KernelElf.Native.GetPhysAddrOfSymbol("test_proc1");
             prog2Addr = KernelElf.Native.GetPhysAddrOfSymbol("test_proc2");
             bochsDebugAddr = KernelElf.Native.GetPhysAddrOfSymbol("bochs_debug");
