@@ -104,7 +104,8 @@ namespace lonos.kernel.core
 
             KernelMessage.Write("Enable Paging... ");
 
-            PageTable.EnableKernelWriteProtection();
+            if (KConfig.UseKernelMemoryProtection)
+                PageTable.EnableKernelWriteProtection();
 
             // Enable PAE
             Native.SetCR4(Native.GetCR4() | 0x20);
@@ -417,11 +418,14 @@ namespace lonos.kernel.core
         [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 8)]
         public struct PageTableEntry
         {
+            //[FieldOffset(0)]
+            //private ulong Value;
+
             [FieldOffset(0)]
             private uint Value;
 
             [FieldOffset(4)]
-            private uint data2;
+            private uint Value2;
 
             public const byte EntrySize = 8;
 
@@ -442,10 +446,12 @@ namespace lonos.kernel.core
             }
 
             //private const byte AddressBitSize = 52;
+            //private const ulong AddressMask = 0xFFFFFFFFFFFFF000u;
+
             private const byte AddressBitSize = 20;
             private const uint AddressMask = 0xFFFFF000u;
 
-            //public static bool Debug = false;
+            public static bool Debug = false;
 
             /// <summary>
             /// 4k aligned physical address
@@ -456,11 +462,12 @@ namespace lonos.kernel.core
                 set
                 {
                     Assert.True(value << AddressBitSize == 0, "PageTableEntry.PhysicalAddress needs to be 4k aligned");
-                    // if (Debug)
-                    //     KernelMessage.WriteLine("Value: {0:X8}, Addr: {1:X8}", (uint)Value, (uint)value);
+                    //Debug = true;
+                    //if (Debug)
+                    //    KernelMessage.WriteLine("Value: {0:X8}, Addr: {1:X8}", (uint)Value, (uint)value);
                     Value = Value.SetBits(Offset.Address, AddressBitSize, value, Offset.Address);
-                    // if (Debug)
-                    //     KernelMessage.WriteLine("new Value: {0:X8}", (uint)Value);
+                    //if (Debug)
+                    //    KernelMessage.WriteLine("new Value: {0:X8}", (uint)Value);
                 }
             }
 
@@ -473,7 +480,10 @@ namespace lonos.kernel.core
             public bool Writable
             {
                 get { return Value.IsBitSet(Offset.Readonly); }
-                set { Value = Value.SetBit(Offset.Readonly, value); }
+                set
+                {
+                    //Value = Value.SetBit(Offset.Readonly, value);
+                }
             }
 
             public bool User
@@ -512,18 +522,18 @@ namespace lonos.kernel.core
                 set { Value = Value.SetBit(Offset.Dirty, value); }
             }
 
-            // public bool DisableExecution
-            // {
-            //     get { return Value.IsBitSet(Offset.DisableExecution); }
-            //     set { Value = Value.SetBit(Offset.DisableExecution, value); }
-            // }
+            //public bool DisableExecution
+            //{
+            //    get { return Value.IsBitSet(Offset.DisableExecution); }
+            //    set { Value = Value.SetBit(Offset.DisableExecution, value); }
+            //}
 
             public bool DisableExecution
             {
                 get
                 {
                     //return dataLong.IsBitSet(Offset.DisableExecution);
-                    return data2 == 0x80000000u;
+                    return Value2 == 0x80000000u;
                 }
                 set
                 {
@@ -531,11 +541,11 @@ namespace lonos.kernel.core
                     //data = dataLong.SetBit(Offset.DisableExecution, value);
                     if (value)
                     {
-                        data2 = 0x80000000u;
+                        Value2 = 0x80000000u;
                     }
                     else
                     {
-                        data2 = 0;
+                        Value2 = 0;
 
                     }
                 }

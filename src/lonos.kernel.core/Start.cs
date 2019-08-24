@@ -37,6 +37,9 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("KConfig.UsePAE: {0}", KConfig.UsePAE);
             KernelMessage.WriteLine("Apply PageTableType: {0}", (uint)BootInfo.Header->PageTableType);
 
+            ulongtest1();
+            ulongtest2();
+
             // Detect environment (Memory Maps, Video Mode, etc.)
             BootInfo.SetupStage2();
 
@@ -125,6 +128,34 @@ namespace lonos.kernel.core
         //         entry->Writable = true;
         //     }
         // }
+        static void ulongtest1()
+        {
+            uint mask = 0x00004000;
+            uint v1 = 0x00000007;
+            uint r1 = v1.SetBits(12, 52, mask, 12); //52 with uint makes no sense, but this doesnt matter in this case, the result just works as expected. It works correct with count<32, too, of course.
+                                                    // r1 =  00004007
+            ulong v2 = v1;
+            ulong r2 = v2.SetBits(12, 52, mask, 12);
+            uint r2Int = (uint)r2;
+            // r2Int = 00000007. This is wrong. It should be the same as r1.
+
+            KernelMessage.WriteLine("bla1: {0:X8}", r1);
+            KernelMessage.WriteLine("bla2: {0:X8}", r2Int);
+        }
+
+        static unsafe void ulongtest2()
+        {
+            ulong addr = 0x0000000019ad000;
+            ulong data = 40004005;
+            ulong result = data.SetBits(12, 52, addr, 12);
+
+            var rAddr = (uint*)(void*)&result;
+            var r1 = rAddr[0];
+            var r2 = rAddr[1];
+
+            KernelMessage.WriteLine("r1: {0:X8}", r1);
+            KernelMessage.WriteLine("r2: {0:X8}", r2);
+        }
 
         public static void Tests()
         {

@@ -73,7 +73,8 @@ namespace lonos.kernel.core
 
             KernelMessage.Write("Enable Paging... ");
 
-            PageTable.EnableKernelWriteProtection();
+            if (KConfig.UseKernelMemoryProtection)
+                PageTable.EnableKernelWriteProtection();
 
             // Set CR0 register on processor - turns on virtual memory
             Native.SetCR0(Native.GetCR0() | 0x80000000);
