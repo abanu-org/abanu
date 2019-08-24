@@ -107,7 +107,7 @@ namespace lonos.kernel.core
 
         static Addr GetKernelStartAddr()
         {
-            var symName = Address.KernelEntryName;
+            var symName = KConfig.KernelEntryName;
             var sym = OriginalKernelElf.GetSymbol(symName);
             if (sym == (ElfSymbol*)0)
                 return Addr.Zero;

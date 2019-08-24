@@ -190,10 +190,24 @@ namespace lonos.kernel.core
             }
         }
 
+        //public static void EnableExecutionProtection()
+        //{
+        //    // set IA32_EFER.NXE
+        //    const uint EFER = 0xC0000080;
+        //    Native.WrMSR(EFER, Native.RdMSR(EFER) | BitMask.Bit11);
+        //}
+        [DllImport("lonos.EnableExecutionProtection.o", EntryPoint = "EnableExecutionProtection")]
+        private extern static void EnableExecutionProtectionInternal();
+
+        public static void EnableExecutionProtection()
+        {
+            EnableExecutionProtectionInternal();
+        }
+
         public static void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
         {
             // Must be enabled before setting the page bits
-            //PageTable.EnableExecutionProtection();
+            PageTable.EnableExecutionProtection();
 
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
             for (uint index = 0; index < InitialPageTableEntries; index++)

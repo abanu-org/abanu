@@ -16,7 +16,7 @@ end
 ########################
 # specific configuration
 
-#set arch i386:x86-64:intel
+set arch i386:x86-64:intel
 file os/lonos.kernel.core.bin
 #file os/lonos.kernel.loader.bin
 target remote | ./lonosctl debug qemu-kernel-run
