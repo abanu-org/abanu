@@ -190,7 +190,7 @@ namespace lonos.kernel.core
             }
         }
 
-        //public static void EnableExecutionProtection()
+        //private static void EnableExecutionProtectionInternal()
         //{
         //    // set IA32_EFER.NXE
         //    const uint EFER = 0xC0000080;

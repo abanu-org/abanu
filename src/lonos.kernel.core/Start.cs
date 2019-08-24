@@ -75,13 +75,16 @@ namespace lonos.kernel.core
             // Important Note: IDT depends on GDT. Never setup IDT before GDT.
             IDTManager.Setup();
 
-            var code = BootInfo.GetMap(BootInfoMemoryType.KernelElfVirt);
-            var codeReg = new LinkedMemoryRegion(new MemoryRegion(code->Start, code->Size));
-            //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
-            //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
+            if (KConfig.UseExecutionProtection)
+            {
+                var code = BootInfo.GetMap(BootInfoMemoryType.KernelElfVirt);
+                var codeReg = new LinkedMemoryRegion(new MemoryRegion(code->Start, code->Size));
+                //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
+                //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
 
-            PageTable.SetExecutionProtectionForAllInitialPages(&codeReg);
-            //InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType.KernelTextSegment);
+                PageTable.SetExecutionProtectionForAllInitialPages(&codeReg);
+                //InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType.KernelTextSegment);
+            }
 
             KernelMessage.WriteLine("Initialize Runtime Metadata");
             Mosa.Runtime.StartUp.InitializeRuntimeMetadata();

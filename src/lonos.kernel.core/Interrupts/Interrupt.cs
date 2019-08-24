@@ -20,6 +20,7 @@ namespace lonos.kernel.core
         CoProcessorError = 16,
         SIMDFloatinPointException = 19,
         ClockTimer = 32,
+        Keyboard = 33
     }
 
 }

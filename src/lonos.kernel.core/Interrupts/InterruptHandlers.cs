@@ -178,5 +178,60 @@ namespace lonos.kernel.core
             //Screen.Write(IDTManager.RaisedCount);
         }
 
+        public static void Keyboard(IDTStack* stack)
+        {
+            //Screen.Goto(15, 5);
+            //Screen.Write(IDTManager.RaisedCount);
+            var code = (uint)Native.In8(0x60);
+            KernelMessage.WriteLine("Got Keyboard scancode: {0:X2}", code);
+
+            // for debugging
+            switch (code)
+            {
+                case 0x02:
+                    key1();
+                    break;
+                case 0x03:
+                    key2();
+                    break;
+                case 0x04:
+                    key3();
+                    break;
+                case 0x05:
+                    key4();
+                    break;
+                case 0x06:
+                    key5();
+                    break;
+                case 0x07:
+                    key6();
+                    break;
+            }
+        }
+
+        private static void key1()
+        {
+        }
+
+        private static void key2()
+        {
+        }
+
+        private static void key3()
+        {
+        }
+
+        private static void key4()
+        {
+        }
+
+        private static void key5()
+        {
+        }
+
+        private static void key6()
+        {
+        }
+
     }
 }

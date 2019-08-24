@@ -85,6 +85,7 @@ namespace lonos.kernel.core
             SetInterruptHandler(KnownInterrupt.CoProcessorError, InterruptsHandlers.CoProcessorError);
             SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptsHandlers.SIMDFloatinPointException);
             SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
+            SetInterruptHandler(KnownInterrupt.Keyboard, InterruptsHandlers.Keyboard);
 
             KernelMessage.Write("Enabling interrupts...");
 
@@ -99,7 +100,8 @@ namespace lonos.kernel.core
 
         private static void UndefinedHandler(IDTStack* stack)
         {
-            NativeCalls.BochsDebug();
+            //NativeCalls.BochsDebug();
+            KernelMessage.WriteLine("Unhandled Interrupt {0}", stack->Interrupt);
         }
 
         internal static void SetInterruptHandler(KnownInterrupt interrupt, InterruptHandler interruptHandler)

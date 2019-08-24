@@ -17,7 +17,7 @@ namespace Mosa.Kernel.x86
     {
 
         public static bool Enabled = false;
-        private static void test(uint err) { }
+        private static void dummy(uint err) { }
         /// <summary>
         /// Interrupts the handler.
         /// </summary>
@@ -29,22 +29,30 @@ namespace Mosa.Kernel.x86
             var stack = (IDTStack*)stackStatePointer;
             var irq = stack->Interrupt;
 
-            if (irq == 14)
+            if (irq == (uint)KnownInterrupt.PageFault)
             {
                 var errorCode = stack->ErrorCode;
-                test(errorCode);
+                dummy(errorCode);
             }
 
             if (!Enabled)
+            {
+                PIC.SendEndOfInterrupt(irq);
                 return;
+            }
 
-            var info = IDTManager.handlers[irq];
+            if (irq != (uint)KnownInterrupt.ClockTimer)
+            {
+                dummy(irq);
+            }
+
+            var interruptInfo = IDTManager.handlers[irq];
 
             IDTManager.RaisedCount++;
 
-            if (info.CountStatistcs)
+            if (interruptInfo.CountStatistcs)
                 IDTManager.RaisedCountCustom++;
-            if (info.Trace)
+            if (interruptInfo.Trace)
                 KernelMessage.WriteLine("Interrupt: {0}", irq);
 
             var col = Screen.column;
@@ -62,16 +70,16 @@ namespace Mosa.Kernel.x86
             if (irq < 0 || irq > 255)
                 Panic.Error("Invalid Interrupt");
 
-            if (info.Handler == null)
+            if (interruptInfo.Handler == null)
             {
-                //Panic.Error("Handlr is null");
+                Panic.Error("Handler is null");
             }
             else
             {
 
             }
 
-            info.Handler(stack);
+            interruptInfo.Handler(stack);
 
             PIC.SendEndOfInterrupt(irq);
         }
