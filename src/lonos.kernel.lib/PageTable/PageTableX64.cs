@@ -192,6 +192,9 @@ namespace lonos.kernel.core
 
         public static void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
         {
+            // Must be enabled before setting the page bits
+            //PageTable.EnableExecutionProtection();
+
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
             for (uint index = 0; index < InitialPageTableEntries; index++)
             {
@@ -482,7 +485,7 @@ namespace lonos.kernel.core
                 get { return Value.IsBitSet(Offset.Readonly); }
                 set
                 {
-                    //Value = Value.SetBit(Offset.Readonly, value);
+                    Value = Value.SetBit(Offset.Readonly, value);
                 }
             }
 

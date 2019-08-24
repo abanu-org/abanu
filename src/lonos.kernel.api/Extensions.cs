@@ -395,4 +395,40 @@ namespace lonos.kernel.core
         public const uint Bit30 = 0x40000000;
         public const uint Bit31 = 0x80000000;
     }
+
+    public static class BitMask64
+    {
+        public const ulong Bit0 = 0x1;
+        public const ulong Bit1 = 0x2;
+        public const ulong Bit2 = 0x4;
+        public const ulong Bit3 = 0x8;
+        public const ulong Bit4 = 0x10;
+        public const ulong Bit5 = 0x20;
+        public const ulong Bit6 = 0x40;
+        public const ulong Bit7 = 0x80;
+        public const ulong Bit8 = 0x100;
+        public const ulong Bit9 = 0x200;
+        public const ulong Bit10 = 0x400;
+        public const ulong Bit11 = 0x800;
+        public const ulong Bit12 = 0x1000;
+        public const ulong Bit13 = 0x2000;
+        public const ulong Bit14 = 0x4000;
+        public const ulong Bit15 = 0x8000;
+        public const ulong Bit16 = 0x10000;
+        public const ulong Bit17 = 0x20000;
+        public const ulong Bit18 = 0x40000;
+        public const ulong Bit19 = 0x80000;
+        public const ulong Bit20 = 0x100000;
+        public const ulong Bit21 = 0x200000;
+        public const ulong Bit22 = 0x400000;
+        public const ulong Bit23 = 0x800000;
+        public const ulong Bit24 = 0x1000000;
+        public const ulong Bit25 = 0x2000000;
+        public const ulong Bit26 = 0x4000000;
+        public const ulong Bit27 = 0x8000000;
+        public const ulong Bit28 = 0x10000000;
+        public const ulong Bit29 = 0x20000000;
+        public const ulong Bit30 = 0x40000000;
+        public const ulong Bit31 = 0x80000000;
+    }
 }

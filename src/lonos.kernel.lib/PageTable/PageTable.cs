@@ -70,6 +70,15 @@ namespace lonos.kernel.core
             Native.SetCR0((uint)(Native.GetCR0() & ~0x10000));
         }
 
+        //public static void EnableExecutionProtection()
+        //{
+        //    // set IA32_EFER.NXE
+        //    const uint EFER = 0xC0000080;
+        //    Native.WrMSR(EFER, Native.RdMSR(EFER) | BitMask.Bit11);
+        //}
+        //[DllImport("lonos.EnableExecutionProtection.o", EntryPoint = "EnableExecutionProtection")]
+        //public extern static void EnableExecutionProtection();
+
         public static void SetKernelWriteProtectionForAllInitialPages()
         {
             if (Type == PageTableType.x86)

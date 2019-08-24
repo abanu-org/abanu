@@ -5,3 +5,6 @@ cd $(dirname $0)
 nasm -f elf32 native.s
 #nasm -f bin native.s
 cp native.o ../../bin/lonos.native.o
+
+nasm -f bin EnableExecutionProtection.s
+cp EnableExecutionProtection ../../bin/lonos.EnableExecutionProtection.o
