@@ -85,7 +85,9 @@ namespace lonos.kernel.core
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SignalThreadTerminationMethod()
         {
-            Native.Int(ThreadTerminationSignalIRQ);
+            KernelMessage.WriteLine("Terminating Thread");
+            //Native.Int(ThreadTerminationSignalIRQ);
+            TerminateCurrentThread();
         }
 
         public static void TerminateCurrentThread()
@@ -96,8 +98,6 @@ namespace lonos.kernel.core
             {
                 TerminateThread(threadID);
             }
-
-            ScheduleNextThread(threadID);
         }
 
         private static void TerminateThread(uint threadID)
@@ -109,6 +109,10 @@ namespace lonos.kernel.core
                 thread.Status = ThreadStatus.Terminating;
 
                 // TODO: release stack memory
+            }
+            while (true)
+            {
+                Native.Hlt();
             }
         }
 
@@ -185,25 +189,17 @@ namespace lonos.kernel.core
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
             var stackTop = stack + (int)stackSize;
 
-            // Setup stack state
+            var stackStateOffset = 2 * 4;
+
             Intrinsic.Store32(stackTop, -4, 0);          // Zero Sentinel
             Intrinsic.Store32(stackTop, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
 
-            Intrinsic.Store32(stackTop, -12, 0x00000202);// EFLAG
-            Intrinsic.Store32(stackTop, -16, 0x08);      // CS
-            Intrinsic.Store32(stackTop, -20, methodAddress.ToInt32()); // EIP
-
-            Intrinsic.Store32(stackTop, -24, 0);     // ErrorCode - not used
-            Intrinsic.Store32(stackTop, -28, 0);     // Interrupt Number - not used
-
-            Intrinsic.Store32(stackTop, -32, 0);     // EAX
-            Intrinsic.Store32(stackTop, -36, 0);     // ECX
-            Intrinsic.Store32(stackTop, -40, 0);     // EDX
-            Intrinsic.Store32(stackTop, -44, 0);     // EBX
-            Intrinsic.Store32(stackTop, -48, 0);     // ESP (original) - not used
-            Intrinsic.Store32(stackTop, -52, (stackTop - 8).ToInt32()); // EBP
-            Intrinsic.Store32(stackTop, -56, 0);     // ESI
-            Intrinsic.Store32(stackTop, -60, 0);     // EDI
+            var stackState = (IDTStack*)(stackTop - IDTStack.Size - stackStateOffset);
+            stackState[0] = new IDTStack();
+            stackState->EFLAGS = 0x00000202;
+            stackState->CS = 0x08;
+            stackState->EIP = (uint)methodAddress.ToInt32();
+            stackState->EBP = (uint)(stackTop - stackStateOffset).ToInt32();
 
             thread.Status = ThreadStatus.Running;
             thread.StackBottom = stack;

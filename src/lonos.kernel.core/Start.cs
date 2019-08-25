@@ -103,7 +103,7 @@ namespace lonos.kernel.core
         private static void Thread2()
         {
             uint i = 0;
-            while (true)
+            while (i < 100)
             {
                 i++;
                 //if (Scheduler.ClockTicks % 100 == 0)

@@ -10,43 +10,62 @@ namespace lonos.kernel.core
     [StructLayout(LayoutKind.Explicit)]
     public struct IDTStack
     {
-        [FieldOffset(0x00)]
+        public const int Size = 52;
+
+        public static class Offset
+        {
+            public const int EDI = 0x00;
+            public const int ESI = 0x04;
+            public const int EBP = 0x08;
+            public const int ESP = 0x0C;
+            public const int EBX = 0x10;
+            public const int EDX = 0x14;
+            public const int ECX = 0x18;
+            public const int EAX = 0x1C;
+            public const int Interrupt = 0x20;
+            public const int ErrorCode = 0x24;
+            public const int EIP = 0x28;
+            public const int CS = 0x2C;
+            public const int EFLAGS = 0x30;
+        }
+
+        [FieldOffset(Offset.EDI)]
         public uint EDI;
 
-        [FieldOffset(0x04)]
+        [FieldOffset(Offset.ESI)]
         public uint ESI;
 
-        [FieldOffset(0x08)]
+        [FieldOffset(Offset.EBP)]
         public uint EBP;
 
-        [FieldOffset(0x0C)]
+        [FieldOffset(Offset.ESP)]
         public uint ESP;
 
-        [FieldOffset(0x10)]
+        [FieldOffset(Offset.EBX)]
         public uint EBX;
 
-        [FieldOffset(0x14)]
+        [FieldOffset(Offset.EDX)]
         public uint EDX;
 
-        [FieldOffset(0x18)]
+        [FieldOffset(Offset.ECX)]
         public uint ECX;
 
-        [FieldOffset(0x1C)]
+        [FieldOffset(Offset.EAX)]
         public uint EAX;
 
-        [FieldOffset(0x20)]
+        [FieldOffset(Offset.Interrupt)]
         public uint Interrupt;
 
-        [FieldOffset(0x24)]
+        [FieldOffset(Offset.ErrorCode)]
         public uint ErrorCode;
 
-        [FieldOffset(0x28)]
+        [FieldOffset(Offset.EIP)]
         public uint EIP;
 
-        [FieldOffset(0x2C)]
+        [FieldOffset(Offset.CS)]
         public uint CS;
 
-        [FieldOffset(0x30)]
+        [FieldOffset(Offset.EFLAGS)]
         public uint EFLAGS;
     }
 }
