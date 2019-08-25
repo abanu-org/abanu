@@ -17,9 +17,9 @@ using Mosa.Runtime;
 namespace lonos.kernel.core
 {
 
-	unsafe public static class GDT
+    unsafe public static class GDT
     {
-		private static uint gdtTableAddress ;
+        private static uint gdtTableAddress;
         private static DescriptorTable* table;
 
         /// <summary>
@@ -57,13 +57,51 @@ namespace lonos.kernel.core
             dataEntry.Granularity = true;
             table->AddEntry(dataEntry);
 
-			Flush();
+            Flush();
 
             KernelMessage.WriteLine("Done");
         }
 
-        public static void KernelSetup(Addr gdtAddr) {
+        public static void SetupUserMode()
+        {
+            KernelMessage.Write("Setup GDT UserMode");
+
+            //code segment
+            var codeEntry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
+            codeEntry.CodeSegment_Readable = true;
+            codeEntry.PriviligeRing = 0;
+            codeEntry.Present = true;
+            codeEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            codeEntry.Granularity = true;
+            table->AddEntry(codeEntry);
+
+            //data segment
+            var dataEntry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
+            dataEntry.DataSegment_Writable = true;
+            dataEntry.PriviligeRing = 0;
+            dataEntry.Present = true;
+            dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            dataEntry.Granularity = true;
+            table->AddEntry(dataEntry);
+
+            //TSS
+            //var tssEntry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
+            //dataEntry.DataSegment_Writable = true;
+            //dataEntry.PriviligeRing = 3;
+            //dataEntry.Present = true;
+            //dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            //dataEntry.Granularity = true;
+            //table->AddEntry(dataEntry);
+
+            Flush();
+
+            KernelMessage.WriteLine("Done");
+        }
+
+        public static void KernelSetup(Addr gdtAddr)
+        {
             gdtTableAddress = gdtAddr;
+            table = (DescriptorTable*)gdtTableAddress;
         }
 
         /// <summary>
@@ -75,7 +113,7 @@ namespace lonos.kernel.core
         }
     }
 
-	/// <summary>
+    /// <summary>
     /// Global Descriptor Table and Local Descriptor Table
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
@@ -165,6 +203,27 @@ namespace lonos.kernel.core
         [FieldOffset(7)]
         private byte baseHigh;
 
+        private class AccessByteOffset
+        {
+            public const byte SegmentType = 0; //bits 0-4
+            public const byte Ac = 0;
+            public const byte RW = 1;
+            public const byte DC = 2;
+            public const byte Ex = 3;
+            public const byte UserDescriptor = 4;
+            public const byte Privl = 5;
+            public const byte Pr = 7;
+        }
+
+        private class FlagsByteOffset
+        {
+            public const byte Limit = 0;
+            public const byte Custom = 4;
+            public const byte LongMode = 5;
+            public const byte Sz = 6; // 1 = 32 bit code, 0 = 16 bit
+            public const byte Gr = 7;
+        }
+
         public const byte EntrySize = 0x08;
 
         public static DescriptorTableEntry CreateNullDescriptor()
@@ -227,27 +286,6 @@ namespace lonos.kernel.core
         //{
         //    Memory.Clear((uint)entry, EntrySize);
         //}
-
-        private class AccessByteOffset
-        {
-            public const byte Ac = 0;
-            public const byte RW = 1;
-            public const byte DC = 2;
-            public const byte Ex = 3;
-            public const byte UserDescriptor = 4;
-            public const byte Privl = 5;
-            public const byte Pr = 7;
-            public const byte SegmentType = 0; //bits 0-4
-        }
-
-        private class FlagsByteOffset
-        {
-            public const byte Gr = 7;
-            public const byte Sz = 6;
-            public const byte LongMode = 5;
-            public const byte Custom = 4;
-            public const byte Limit = 0;
-        }
 
         #region AccessByte
 

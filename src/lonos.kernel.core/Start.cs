@@ -75,6 +75,8 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Initialize Runtime Metadata");
             Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
+            GDT.SetupUserMode();
+
             Scheduler.Setup();
             Scheduler.CreateThread(Thread1, 0x4000);
             Scheduler.CreateThread(Thread2, 0x4000);

@@ -197,7 +197,7 @@ namespace lonos.kernel.core
             var stackState = (IDTStack*)(stackTop - IDTStack.Size - stackStateOffset);
             stackState[0] = new IDTStack();
             stackState->EFLAGS = 0x00000202;
-            stackState->CS = 0x08;
+            stackState->CS = 0x18;
             stackState->EIP = (uint)methodAddress.ToInt32();
             stackState->EBP = (uint)(stackTop - stackStateOffset).ToInt32();
 
