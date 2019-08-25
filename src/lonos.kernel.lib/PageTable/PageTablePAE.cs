@@ -190,14 +190,14 @@ namespace lonos.kernel.core
             }
         }
 
-        //private static void EnableExecutionProtectionInternal()
-        //{
-        //    // set IA32_EFER.NXE
-        //    const uint EFER = 0xC0000080;
-        //    Native.WrMSR(EFER, Native.RdMSR(EFER) | BitMask.Bit11);
-        //}
-        [DllImport("lonos.EnableExecutionProtection.o", EntryPoint = "EnableExecutionProtection")]
-        private extern static void EnableExecutionProtectionInternal();
+        private static void EnableExecutionProtectionInternal()
+        {
+            // set IA32_EFER.NXE
+            const uint EFER = 0xC0000080;
+            Native.WrMSR(EFER, Native.RdMSR(EFER) | BitMask.Bit11);
+        }
+        //[DllImport("lonos.EnableExecutionProtection.o", EntryPoint = "EnableExecutionProtection")]
+        //private extern static void EnableExecutionProtectionInternal();
 
         public static void EnableExecutionProtection()
         {
