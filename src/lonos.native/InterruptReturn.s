@@ -1,22 +1,27 @@
 [BITS 32]
 push ebp
 mov ebp, esp
-mov esi, [ebp+0x8]	;get stack pointer argument
-mov esp, esi		;set stack pointer
+cli
 
-mov eax, dword 0x20
-mov gs,eax
-mov ds,eax
-mov fs,eax
-mov es,eax
+mov eax, [ebp+0x8]	;get stack pointer argument
 
-;mov [esp+13*4],esi
-;mov [esp+14*4],dword 0x20
-popad
-add esp, 0x8
+push dword 0x23       ; push user ss
+push eax       ; push user esp
 
-;mov [esp], dword 0xBBAABBAA
-;mov [esp+4], dword 0xCCDDCCDD
+pushf
 
-sti
+pop eax            ;
+or eax, dword 0x200      ;
+and eax, dword 0xffffbfff   ;
+push eax         ; re-enable interupt after switch
+
+push dword 0x1B       ; push user cs (0x23)
+push dword 0x22222222       ; push code offset
+
+mov ax, 0x23   ; user data segement
+mov ds, ax
+mov es, ax
+mov fs, ax
+mov gs, ax
+
 iretd

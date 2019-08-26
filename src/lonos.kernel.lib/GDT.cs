@@ -77,7 +77,7 @@ namespace lonos.kernel.core
             //code segment
             var codeEntry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
             codeEntry.CodeSegment_Readable = true;
-            codeEntry.PriviligeRing = 0;
+            codeEntry.PriviligeRing = 3;
             codeEntry.Present = true;
             codeEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
             codeEntry.CodeSegment_Confirming = false;
@@ -86,24 +86,24 @@ namespace lonos.kernel.core
             //data segment
             var dataEntry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
             dataEntry.DataSegment_Writable = true;
-            dataEntry.PriviligeRing = 0;
+            dataEntry.PriviligeRing = 3;
             dataEntry.Present = true;
             dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
             GdtTable->AddEntry(dataEntry);
 
             //TSS
-            //var tss = AddTSS();
-            //KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
+            var tss = AddTSS();
+            KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
 
-            //var tssEntry = DescriptorTableEntry.CreateTSS(tss);
-            //tssEntry.PriviligeRing = 0;
-            //tssEntry.TSS_AVL = true;
-            //tssEntry.Present = true;
-            //GdtTable->AddEntry(tssEntry);
+            var tssEntry = DescriptorTableEntry.CreateTSS(tss);
+            tssEntry.PriviligeRing = 0;
+            tssEntry.TSS_AVL = true;
+            tssEntry.Present = true;
+            GdtTable->AddEntry(tssEntry);
 
             Flush();
-            //KernelMessage.WriteLine("LoadTaskRegister...");
-            //LoadTaskRegister(0x28);
+            KernelMessage.WriteLine("LoadTaskRegister...");
+            LoadTaskRegister(0x28);
 
             KernelMessage.WriteLine("Done");
         }
