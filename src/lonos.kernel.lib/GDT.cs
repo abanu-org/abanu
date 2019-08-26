@@ -65,14 +65,17 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Done");
         }
 
-        public static void SetupUserMode(Addr tssAddr)
+        public static void SetupUserMode(Addr kernelStack, Addr tssAddr)
         {
             KernelMessage.Write("Setup GDT UserMode");
 
-            TssAddr = tssAddr;
-            TssTable = (TaskStateSegmentTable*)tssAddr;
-            TssTable->Clear();
-            TssTable->AdressOfEntries = TssAddr + TaskStateSegmentTable.StructSize;
+            if (KConfig.UseTaskStateSegment)
+            {
+                TssAddr = tssAddr;
+                TssTable = (TaskStateSegmentTable*)tssAddr;
+                TssTable->Clear();
+                TssTable->AdressOfEntries = TssAddr + TaskStateSegmentTable.StructSize;
+            }
 
             //code segment
             var codeEntry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
@@ -92,18 +95,28 @@ namespace lonos.kernel.core
             GdtTable->AddEntry(dataEntry);
 
             //TSS
-            var tss = AddTSS();
-            KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
+            //var tss = AddTSS();
+            //tss->esp0 = kernelStack;
+            //tss->ss0 = 0x10;
 
-            var tssEntry = DescriptorTableEntry.CreateTSS(tss);
-            tssEntry.PriviligeRing = 0;
-            tssEntry.TSS_AVL = true;
-            tssEntry.Present = true;
-            GdtTable->AddEntry(tssEntry);
+            //tss->cs = 0xb;
+            //tss->ss = tss->ds = tss->es = tss->fs = tss->gs = 0x13;
+
+            //KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
+
+            //var tssEntry = DescriptorTableEntry.CreateTSS(tss);
+            //tssEntry.PriviligeRing = 0;
+            //tssEntry.TSS_AVL = true;
+            //tssEntry.Present = true;
+            //GdtTable->AddEntry(tssEntry);
 
             Flush();
-            KernelMessage.WriteLine("LoadTaskRegister...");
-            LoadTaskRegister(0x28);
+
+            if (KConfig.UseTaskStateSegment)
+            {
+                KernelMessage.WriteLine("LoadTaskRegister...");
+                LoadTaskRegister(0x28);
+            }
 
             KernelMessage.WriteLine("Done");
         }
@@ -683,19 +696,19 @@ namespace lonos.kernel.core
     {
         public const byte EntrySize = 104;
 
-        uint back_link;
-        uint esp0, ss0;
-        uint esp1, ss1;
-        uint esp2, ss2;
-        uint cr3;
-        uint eip;
-        uint eflags;
-        uint eax, ecx, edx, ebx;
-        uint esp, ebp;
-        uint esi, edi;
-        uint es, cs, ss, ds, fs, gs;
-        uint ldt;
-        uint trace_bitmap;
+        public uint back_link;
+        public uint esp0, ss0;
+        public uint esp1, ss1;
+        public uint esp2, ss2;
+        public uint cr3;
+        public uint eip;
+        public uint eflags;
+        public uint eax, ecx, edx, ebx;
+        public uint esp, ebp;
+        public uint esi, edi;
+        public uint es, cs, ss, ds, fs, gs;
+        public uint ldt;
+        public uint trace_bitmap;
     };
 
 }

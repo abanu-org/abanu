@@ -53,6 +53,9 @@ namespace lonos.kernel.core
 
             //Native.Cli();
             Native.Int(ClockIRQ);
+
+            // Normally, you should never go here
+            Panic.Error("Main-Thread still alive");
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -60,7 +63,16 @@ namespace lonos.kernel.core
         {
             while (true)
             {
-                Native.Hlt();
+                //Native.Hlt();
+                //Native.Nop();
+                uint i = 0;
+                while (true)
+                {
+                    i++;
+                    Screen.Goto(2, 0);
+                    Screen.Write("IDLE:");
+                    Screen.Write(i, 10);
+                }
             }
         }
 
@@ -134,7 +146,7 @@ namespace lonos.kernel.core
 
                 var thread = Threads[threadID];
 
-                if (thread.Status == ThreadStatus.Running)
+                if (thread.Status == ThreadStatus.Running || thread.Status == ThreadStatus.Creating)
                     return threadID;
 
                 if (currentThreadID == threadID)
@@ -187,26 +199,30 @@ namespace lonos.kernel.core
             stackSize = stackPages * PageFrameManager.PageSize;
             KernelMessage.WriteLine("Create Thread. Stack size: {0:X8}", stackSize);
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
-            KernelMessage.WriteLine("Stack Addr: {0:X8}", (uint)stack);
+            KernelMessage.WriteLine("Stack Addr: {0:X8}. EntryPoint: {1:X8}", (uint)stack, (uint)methodAddress);
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
             var stackTop = stack + (int)stackSize;
 
-            var stackStateOffset = 2 * 4;
+            var stackStateOffset = 4 * 4;
+
+            thread.Status = ThreadStatus.Creating;
+            thread.StackBottom = stack;
+            thread.StackTop = stackTop;
+            thread.StackStatePointer = stackTop - (60 + 8);
 
             Intrinsic.Store32(stackTop, -4, 0);          // Zero Sentinel
             Intrinsic.Store32(stackTop, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
+            Intrinsic.Store32(stackTop, -12, 0x23);
+            Intrinsic.Store32(stackTop, -16, (uint)thread.StackStatePointer);
 
             var stackState = (IDTStack*)(stackTop - IDTStack.Size - stackStateOffset);
             stackState[0] = new IDTStack();
             stackState->EFLAGS = 0x00000202;
-            stackState->CS = 0x18;
+            byte IOPL = 3;
+            stackState->EFLAGS = stackState->EFLAGS.SetBits(12, 2, IOPL);
+            stackState->CS = 0x1B;
             stackState->EIP = (uint)methodAddress.ToInt32();
             stackState->EBP = (uint)(stackTop - stackStateOffset).ToInt32();
-
-            thread.Status = ThreadStatus.Running;
-            thread.StackBottom = stack;
-            thread.StackTop = stackTop;
-            thread.StackStatePointer = stackTop - 60;
         }
 
         private static void SaveThreadState(uint threadID, IntPtr stackSate)
@@ -214,6 +230,9 @@ namespace lonos.kernel.core
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
 
             var thread = Threads[threadID];
+
+            if (thread.Status == ThreadStatus.Creating)
+                return; // New threads doesn't have a stack in use. Take the initial one.
 
             //Assert.True(thread != null, "SaveThreadState(): thread id = null");
 
@@ -238,6 +257,9 @@ namespace lonos.kernel.core
         {
             var thread = Threads[threadID];
 
+            if (KConfig.TraceThreadSwitch)
+                KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackStatePointer);
+
             //Assert.True(thread != null, "invalid thread id");
 
             thread.Ticks++;
@@ -245,12 +267,24 @@ namespace lonos.kernel.core
             SetThreadID(threadID);
 
             PIC.SendEndOfInterrupt(ClockIRQ);
-            //Native.InterruptReturn((uint)thread.StackStatePointer.ToInt32());
-            InterruptReturn((uint)thread.StackStatePointer.ToInt32());
+
+            if (thread.Status == ThreadStatus.Creating)
+            {
+                thread.Status = ThreadStatus.Running;
+                InterruptReturn((uint)thread.StackStatePointer.ToInt32());
+            }
+            else
+            {
+                InterruptReturn2((uint)thread.StackStatePointer.ToInt32());
+                //Native.InterruptReturn((uint)thread.StackStatePointer.ToInt32());
+            }
         }
 
         [DllImport("lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
         private extern static void InterruptReturn(uint stackStatePointer);
+
+        [DllImport("lonos.InterruptReturn2.o", EntryPoint = "InterruptReturn2")]
+        private extern static void InterruptReturn2(uint stackStatePointer);
 
         private static uint FindEmptyThreadSlot()
         {

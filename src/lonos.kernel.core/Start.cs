@@ -1,5 +1,6 @@
 ﻿using System;
 using Mosa.Runtime;
+using Mosa.Runtime.x86;
 
 namespace lonos.kernel.core
 {
@@ -72,27 +73,55 @@ namespace lonos.kernel.core
             // Important Note: IDT depends on GDT. Never setup IDT before GDT.
             IDTManager.Setup();
 
+            InitializeUserMode();
+
             KernelMessage.WriteLine("Initialize Runtime Metadata");
             Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
-            var tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
-            Memory.InitialKernelProtect_MakeWritable_BySize(tssAddr, 4096);
-            GDT.SetupUserMode(tssAddr);
+            KernelMessage.WriteLine("Performing some Non-Thread Tests");
+            Tests();
 
+            if (KConfig.SingleThread)
+            {
+                KernelMessage.WriteLine("Enter Main Loop");
+                AppMain();
+            }
+            else
+            {
+                StartThreading();
+            }
+        }
+
+        public static void InitializeUserMode()
+        {
+            if (!KConfig.UseUserMode)
+                return;
+
+            var kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+            Memory.InitialKernelProtect_MakeWritable_BySize(kernelStack, 256 * 4096);
+            Addr tssAddr = null;
+            if (KConfig.UseTaskStateSegment)
+            {
+                tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
+                Memory.InitialKernelProtect_MakeWritable_BySize(tssAddr, 4096);
+            }
+            GDT.SetupUserMode(kernelStack, tssAddr);
+        }
+
+        public static void StartThreading()
+        {
             Scheduler.Setup();
             Scheduler.CreateThread(Thread1, 0x4000);
             Scheduler.CreateThread(Thread2, 0x4000);
             Scheduler.Start();
 
-            KernelMessage.WriteLine("Performing some tests");
-            Tests();
-
-            KernelMessage.WriteLine("Enter Main Loop");
-            AppMain();
+            while (true)
+                Native.Hlt();
         }
 
         private static void Thread1()
         {
+            KernelMessage.WriteLine("Thread1: Enter");
             uint i = 0;
             while (true)
             {
@@ -102,10 +131,12 @@ namespace lonos.kernel.core
                 Screen.Write("TH1:");
                 Screen.Write(i, 10);
             }
+            KernelMessage.WriteLine("Thread1: Finished");
         }
 
         private static void Thread2()
         {
+            KernelMessage.WriteLine("Thread2: Enter");
             uint i = 0;
             while (i < 100)
             {
@@ -115,6 +146,9 @@ namespace lonos.kernel.core
                 Screen.Write("TH2:");
                 Screen.Write(i, 10);
             }
+            KernelMessage.WriteLine("Thread2: Finished");
+            while (true)
+                i++;
         }
 
         // public unsafe static void InitialKernelProtect()

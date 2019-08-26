@@ -28,6 +28,31 @@
         /// Does not requiere Long Mode.
         /// </summary>
         public const bool UseExecutionProtection = true;
+
+        /// <summary>
+        /// If true, there's only a one Process with single Thread.
+        /// </summary>
+        public const bool SingleThread = false;
+
+        /// <summary>
+        /// If true, there's only a one Process with single Thread.
+        /// </summary>
+        public const bool UseTaskStateSegment = false;
+
+        /// <summary>
+        /// Traces every Thread switch
+        /// </summary>
+        public const bool TraceThreadSwitch = true;
+
+        /// <summary>
+        /// If false, no User Segments will be created.
+        /// </summary>
+        public const bool UseUserMode = true;
+
+        /// <summary>
+        /// If enabled, Tasks in UserMode will run with Kernel Permissions
+        /// </summary>
+        public const bool UserUserModeWithSupervisorPrivileges = false;
     }
 
 }
