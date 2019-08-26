@@ -6,6 +6,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
+using System.Runtime.InteropServices;
+
 namespace lonos.kernel.core
 {
     public static class Scheduler
@@ -243,9 +245,12 @@ namespace lonos.kernel.core
             SetThreadID(threadID);
 
             PIC.SendEndOfInterrupt(ClockIRQ);
-
-            Native.InterruptReturn((uint)thread.StackStatePointer.ToInt32());
+            //Native.InterruptReturn((uint)thread.StackStatePointer.ToInt32());
+            InterruptReturn((uint)thread.StackStatePointer.ToInt32());
         }
+
+        [DllImport("lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
+        private extern static void InterruptReturn(uint stackStatePointer);
 
         private static uint FindEmptyThreadSlot()
         {

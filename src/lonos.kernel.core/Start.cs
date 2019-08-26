@@ -75,7 +75,9 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Initialize Runtime Metadata");
             Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
-            GDT.SetupUserMode();
+            var tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
+            Memory.InitialKernelProtect_MakeWritable_BySize(tssAddr, 4096);
+            GDT.SetupUserMode(tssAddr);
 
             Scheduler.Setup();
             Scheduler.CreateThread(Thread1, 0x4000);

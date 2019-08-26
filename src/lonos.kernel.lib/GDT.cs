@@ -13,14 +13,18 @@ using System;
 using System.Runtime.InteropServices;
 using Mosa.Runtime.x86;
 using Mosa.Runtime;
+using System.Runtime.CompilerServices;
 
 namespace lonos.kernel.core
 {
 
     unsafe public static class GDT
     {
-        private static uint gdtTableAddress;
-        private static DescriptorTable* table;
+        private static uint GdtTableAddress;
+        private static DescriptorTable* GdtTable;
+
+        private static uint TssAddr;
+        private static TaskStateSegmentTable* TssTable;
 
         /// <summary>
         /// Sets up the GDT table and entries
@@ -29,15 +33,15 @@ namespace lonos.kernel.core
         {
             KernelMessage.Write("Setup GDT...");
 
-            gdtTableAddress = addr;
+            GdtTableAddress = addr;
 
-            table = (DescriptorTable*)gdtTableAddress;
-            table->Clear();
-            table->AdressOfEntries = gdtTableAddress + DescriptorTable.StructSize;
+            GdtTable = (DescriptorTable*)GdtTableAddress;
+            GdtTable->Clear();
+            GdtTable->AdressOfEntries = GdtTableAddress + DescriptorTable.StructSize;
 
             //Null segment
             var nullEntry = DescriptorTableEntry.CreateNullDescriptor();
-            table->AddEntry(nullEntry);
+            GdtTable->AddEntry(nullEntry);
 
             //code segment
             var codeEntry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
@@ -45,8 +49,8 @@ namespace lonos.kernel.core
             codeEntry.PriviligeRing = 0;
             codeEntry.Present = true;
             codeEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            codeEntry.Granularity = true;
-            table->AddEntry(codeEntry);
+            codeEntry.CodeSegment_Confirming = true;
+            GdtTable->AddEntry(codeEntry);
 
             //data segment
             var dataEntry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
@@ -54,17 +58,21 @@ namespace lonos.kernel.core
             dataEntry.PriviligeRing = 0;
             dataEntry.Present = true;
             dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            dataEntry.Granularity = true;
-            table->AddEntry(dataEntry);
+            GdtTable->AddEntry(dataEntry);
 
             Flush();
 
             KernelMessage.WriteLine("Done");
         }
 
-        public static void SetupUserMode()
+        public static void SetupUserMode(Addr tssAddr)
         {
             KernelMessage.Write("Setup GDT UserMode");
+
+            TssAddr = tssAddr;
+            TssTable = (TaskStateSegmentTable*)tssAddr;
+            TssTable->Clear();
+            TssTable->AdressOfEntries = TssAddr + TaskStateSegmentTable.StructSize;
 
             //code segment
             var codeEntry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
@@ -72,8 +80,8 @@ namespace lonos.kernel.core
             codeEntry.PriviligeRing = 0;
             codeEntry.Present = true;
             codeEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            codeEntry.Granularity = true;
-            table->AddEntry(codeEntry);
+            codeEntry.CodeSegment_Confirming = false;
+            GdtTable->AddEntry(codeEntry);
 
             //data segment
             var dataEntry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
@@ -81,35 +89,49 @@ namespace lonos.kernel.core
             dataEntry.PriviligeRing = 0;
             dataEntry.Present = true;
             dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            dataEntry.Granularity = true;
-            table->AddEntry(dataEntry);
+            GdtTable->AddEntry(dataEntry);
 
             //TSS
-            //var tssEntry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
-            //dataEntry.DataSegment_Writable = true;
-            //dataEntry.PriviligeRing = 3;
-            //dataEntry.Present = true;
-            //dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            //dataEntry.Granularity = true;
-            //table->AddEntry(dataEntry);
+            //var tss = AddTSS();
+            //KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
+
+            //var tssEntry = DescriptorTableEntry.CreateTSS(tss);
+            //tssEntry.PriviligeRing = 0;
+            //tssEntry.TSS_AVL = true;
+            //tssEntry.Present = true;
+            //GdtTable->AddEntry(tssEntry);
 
             Flush();
+            //KernelMessage.WriteLine("LoadTaskRegister...");
+            //LoadTaskRegister(0x28);
 
             KernelMessage.WriteLine("Done");
+        }
+
+        [DllImport("lonos.LoadTaskRegister.o", EntryPoint = "LoadTaskRegister")]
+        private extern static void LoadTaskRegister(ushort taskSegmentSelector);
+
+        private static TaskStateSegment* AddTSS()
+        {
+            var tss = new TaskStateSegment();
+            return TssTable->AddEntry(tss);
         }
 
         public static void KernelSetup(Addr gdtAddr)
         {
-            gdtTableAddress = gdtAddr;
-            table = (DescriptorTable*)gdtTableAddress;
+            GdtTableAddress = gdtAddr;
+            GdtTable = (DescriptorTable*)GdtTableAddress;
         }
 
         /// <summary>
         /// Flushes the GDT table
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Flush()
         {
-            Native.Lgdt(gdtTableAddress);
+            Native.Lgdt(GdtTableAddress);
+            Native.SetSegments(0x10, 0x10, 0x10, 0x10, 0x10);
+            Native.FarJump();
         }
     }
 
@@ -183,6 +205,72 @@ namespace lonos.kernel.core
     }
 
     [StructLayout(LayoutKind.Explicit)]
+    unsafe public struct TaskStateSegmentTable
+    {
+        [FieldOffset(0)]
+        private ushort size;
+
+        [FieldOffset(2)]
+        public uint AdressOfEntries;
+
+        public const byte StructSize = 0x06;
+
+        private TaskStateSegment* entries
+        {
+            get { return (TaskStateSegment*)AdressOfEntries; }
+            set { AdressOfEntries = (uint)value; }
+        }
+
+        internal TaskStateSegment* GetEntryRef(ushort index)
+        {
+            Assert.InRange(index, Length);
+            return &entries[index];
+        }
+
+        public ushort Length
+        {
+            get
+            {
+                if (size == 0)
+                    return 0;
+                else
+                    return (ushort)((size + 1) / TaskStateSegment.EntrySize);
+            }
+            private set
+            {
+                if (value == 0)
+                    size = 0;
+                else
+                    size = (ushort)(value * TaskStateSegment.EntrySize - 1);
+            }
+        }
+
+        public void Clear()
+        {
+            Length = 0;
+        }
+
+        public TaskStateSegment* AddEntry(TaskStateSegment source)
+        {
+            Length++;
+            return SetEntry((ushort)(Length - 1), source);
+        }
+
+        public TaskStateSegment* SetEntry(ushort index, TaskStateSegment source)
+        {
+            Assert.InRange(index, Length);
+            entries[index] = source;
+            return &entries[index];
+        }
+
+        public TaskStateSegment GetEntry(ushort index)
+        {
+            Assert.InRange(index, Length);
+            return entries[index];
+        }
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
     unsafe public struct DescriptorTableEntry
     {
         [FieldOffset(0)]
@@ -218,7 +306,7 @@ namespace lonos.kernel.core
         private class FlagsByteOffset
         {
             public const byte Limit = 0;
-            public const byte Custom = 4;
+            public const byte TSS_AVL = 4;
             public const byte LongMode = 5;
             public const byte Sz = 6; // 1 = 32 bit code, 0 = 16 bit
             public const byte Gr = 7;
@@ -231,14 +319,17 @@ namespace lonos.kernel.core
             return new DescriptorTableEntry();
         }
 
-        private static DescriptorTableEntry Create(uint baseAddress, uint limit)
+        private static DescriptorTableEntry Create(bool granularity, uint baseAddress, uint limit)
         {
-            return new DescriptorTableEntry() { BaseAddress = baseAddress, Limit = limit };
+            var entry = new DescriptorTableEntry() { Granularity = granularity };
+            entry.BaseAddress = baseAddress;
+            entry.Limit = limit;
+            return entry;
         }
 
         public static DescriptorTableEntry CreateCode(uint baseAddress, uint limit)
         {
-            var seg = Create(baseAddress, limit);
+            var seg = Create(true, baseAddress, limit);
             seg.IsUserType = true;
             seg.UserDescriptor_Executable = true;
             return seg;
@@ -246,10 +337,32 @@ namespace lonos.kernel.core
 
         public static DescriptorTableEntry CreateData(uint baseAddress, uint limit)
         {
-            var seg = Create(baseAddress, limit);
+            var seg = Create(true, baseAddress, limit);
             seg.IsUserType = true;
             return seg;
         }
+
+        public static DescriptorTableEntry CreateTSS(TaskStateSegment* tss)
+        {
+            var seg = Create(false, (uint)tss, lonos.kernel.core.TaskStateSegment.EntrySize);
+            seg.SystemDescriptor_Type = InactiveTask;
+            return seg;
+        }
+
+        public TaskStateSegment* TaskStateSegment
+        {
+            get
+            {
+                return (TaskStateSegment*)BaseAddress;
+            }
+            set
+            {
+                BaseAddress = (uint)value;
+                Limit = core.TaskStateSegment.EntrySize;
+            }
+        }
+
+        public bool IsTaskDescriptor => SystemDescriptor_Type == InactiveTask || SystemDescriptor_Type == BusyTask;
 
         public bool IsNullDescriptor
         {
@@ -272,8 +385,19 @@ namespace lonos.kernel.core
             get { return (uint)(limitLow | flags.GetBits(FlagsByteOffset.Limit, 4)); }
             set
             {
-                limitLow = (ushort)(value & 0xFFFF);
-                flags = flags.SetBits(FlagsByteOffset.Limit, 4, (byte)((value >> 16) & 0x0F));
+                if (Granularity)
+                {
+                    limitLow = (ushort)(value & 0xFFFF);
+                    flags = flags.SetBits(FlagsByteOffset.Limit, 4, (byte)((value >> 16) & 0x0F));
+                }
+                else
+                {
+                    limitLow = (ushort)(value & 0xFFFF);
+                    //flags = flags.SetBits(FlagsByteOffset.Limit, 4, (byte)((value >> 16) & 0x0F));
+                    //flag (limit & 0xF0000) >> 16
+                    var highBits = (byte)((value & 0xF0000) >> 16);
+                    flags = flags.SetBits(FlagsByteOffset.Limit, 4, highBits);
+                }
             }
         }
 
@@ -409,6 +533,9 @@ namespace lonos.kernel.core
             set { access = access.SetBits(AccessByteOffset.SegmentType, 4, value); }
         }
 
+        public const byte InactiveTask = 0b_1001;
+        public const byte BusyTask = 0b_1011;
+
         #endregion SystemDescriptor
 
         public byte PriviligeRing
@@ -430,15 +557,15 @@ namespace lonos.kernel.core
 
         #region Flags
 
-        public bool Custom
+        public bool TSS_AVL
         {
             get
             {
-                return flags.IsBitSet(FlagsByteOffset.Custom);
+                return flags.IsBitSet(FlagsByteOffset.TSS_AVL);
             }
             set
             {
-                flags = flags.SetBit(FlagsByteOffset.Custom, value);
+                flags = flags.SetBit(FlagsByteOffset.TSS_AVL, value);
             }
         }
 
@@ -509,7 +636,7 @@ namespace lonos.kernel.core
             {
                 return flags.IsBitSet(FlagsByteOffset.Gr);
             }
-            set
+            private set
             {
                 flags = flags.SetBit(FlagsByteOffset.Gr, value);
             }
@@ -536,7 +663,7 @@ namespace lonos.kernel.core
                 + ",Mode=" + AddressMode.ToStringNumber()
                 + ",Present=" + this.Present.ToChar()
                 + ",Segment=" + this.IsUserType.ToChar()
-                + ",Cust=" + this.Custom.ToChar()
+                + ",Cust=" + this.TSS_AVL.ToChar()
             ;
             string seg = "";
             if (IsUserType)
@@ -551,5 +678,24 @@ namespace lonos.kernel.core
             return s + seg;
         }
     }
+
+    public struct TaskStateSegment
+    {
+        public const byte EntrySize = 104;
+
+        uint back_link;
+        uint esp0, ss0;
+        uint esp1, ss1;
+        uint esp2, ss2;
+        uint cr3;
+        uint eip;
+        uint eflags;
+        uint eax, ecx, edx, ebx;
+        uint esp, ebp;
+        uint esi, edi;
+        uint es, cs, ss, ds, fs, gs;
+        uint ldt;
+        uint trace_bitmap;
+    };
 
 }

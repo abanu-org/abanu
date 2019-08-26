@@ -8,3 +8,9 @@ cp native.o ../../bin/lonos.native.o
 
 nasm -f bin EnableExecutionProtection.s -o EnableExecutionProtection.o
 cp EnableExecutionProtection.o ../../bin/lonos.EnableExecutionProtection.o
+
+nasm -f bin InterruptReturn.s -o InterruptReturn.o
+cp InterruptReturn.o ../../bin/lonos.InterruptReturn.o
+
+nasm -f bin LoadTaskRegister.s -o LoadTaskRegister.o
+cp LoadTaskRegister.o ../../bin/lonos.LoadTaskRegister.o
