@@ -39,11 +39,9 @@ namespace lonos.kernel.core
                 Threads[i] = new Thread();
             }
 
-            var address = GetAddress(IdleThread);
-
             SignalThreadTerminationMethodAddress = GetAddress(SignalThreadTerminationMethod);
 
-            CreateThread(address, 0x4000, 0);
+            CreateThread(new KThreadStartOptions(IdleThread), 0);
         }
 
         public static void Start()
@@ -96,16 +94,24 @@ namespace lonos.kernel.core
             SwitchToThread(threadID);
         }
 
+        private static void ThreadEntry(uint threadID)
+        {
+            var thread = Threads[threadID];
+        }
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SignalThreadTerminationMethod()
         {
-            KernelMessage.WriteLine("Terminating Thread");
+            //KernelMessage.WriteLine("Terminating Thread");
             //Native.Int(ThreadTerminationSignalIRQ);
             TerminateCurrentThread();
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void TerminateCurrentThread()
         {
+            KernelMessage.WriteLine("Terminating Thread");
+
             var threadID = GetCurrentThreadID();
 
             if (threadID != 0)
@@ -159,19 +165,7 @@ namespace lonos.kernel.core
             return Intrinsic.GetDelegateMethodAddress(d);
         }
 
-        private static IntPtr GetAddress(ParameterizedThreadStart d)
-        {
-            return Intrinsic.GetDelegateTargetAddress(d);
-        }
-
-        public static uint CreateThread(ThreadStart thread, uint stackSize)
-        {
-            var address = GetAddress(thread);
-
-            return CreateThread(address, stackSize);
-        }
-
-        public static uint CreateThread(IntPtr methodAddress, uint stackSize)
+        public static uint CreateThread(KThreadStartOptions options)
         {
             //Assert.True(stackSize != 0, "CreateThread(): invalid stack size = " + stackSize.ToString());
             //Assert.True(stackSize % PageFrameAllocator.PageSize == 0, "CreateThread(): invalid stack size % PageSize, stack size = " + stackSize.ToString());
@@ -186,20 +180,21 @@ namespace lonos.kernel.core
 
             //Assert.True(threadID != 0, "CreateThread(): invalid thread id = 0");
 
-            CreateThread(methodAddress, stackSize, threadID);
+            CreateThread(options, threadID);
 
             return threadID;
         }
 
-        private unsafe static void CreateThread(IntPtr methodAddress, uint stackSize, uint threadID)
+        private unsafe static void CreateThread(KThreadStartOptions options, uint threadID)
         {
             var thread = Threads[threadID];
+            var stackSize = options.StackSize;
 
             var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
             stackSize = stackPages * PageFrameManager.PageSize;
             KernelMessage.WriteLine("Create Thread. Stack size: {0:X8}", stackSize);
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
-            KernelMessage.WriteLine("Stack Addr: {0:X8}. EntryPoint: {1:X8}", (uint)stack, (uint)methodAddress);
+            KernelMessage.WriteLine("Stack Addr: {0:X8}. EntryPoint: {1:X8}", (uint)stack, options.MethodAddr);
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
             var stackTop = stack + (int)stackSize;
 
@@ -224,7 +219,7 @@ namespace lonos.kernel.core
                 stackState->EFLAGS = stackState->EFLAGS.SetBits(12, 2, IOPL);
             }
             stackState->CS = 0x1B;
-            stackState->EIP = (uint)methodAddress.ToInt32();
+            stackState->EIP = options.MethodAddr;
             stackState->EBP = (uint)(stackTop - stackStateOffset).ToInt32();
         }
 
@@ -311,4 +306,38 @@ namespace lonos.kernel.core
             }
         }
     }
+
+    //public struct LocalThreadStartInfo
+    //{
+    //    public uint MagicValue1;
+    //    public uint ThreadID;
+    //    public bool RequestAbort;
+    //    public uint MagicValue2;
+    //}
+
+    public struct KThreadStartOptions
+    {
+        public Addr MethodAddr;
+        public bool UserMode;
+        public uint StackSize;
+        public bool AllowUserModeIOPort;
+
+        public KThreadStartOptions(ThreadStart start)
+        {
+            MethodAddr = Intrinsic.GetDelegateMethodAddress(start);
+            UserMode = false;
+            AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
+            StackSize = KConfig.DefaultStackSize;
+        }
+
+        public KThreadStartOptions(Addr methodAddr)
+        {
+            MethodAddr = methodAddr;
+            UserMode = false;
+            AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
+            StackSize = KConfig.DefaultStackSize;
+        }
+
+    }
+
 }

@@ -81,6 +81,8 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Performing some Non-Thread Tests");
             Tests();
 
+            Scheduler.SignalThreadTerminationMethod();
+
             if (KConfig.SingleThread)
             {
                 KernelMessage.WriteLine("Enter Main Loop");
@@ -111,12 +113,28 @@ namespace lonos.kernel.core
         public static void StartThreading()
         {
             Scheduler.Setup();
-            Scheduler.CreateThread(Thread1, 0x4000);
-            Scheduler.CreateThread(Thread2, 0x4000);
+            Scheduler.CreateThread(new KThreadStartOptions(Thread0));
+            Scheduler.CreateThread(new KThreadStartOptions(Thread1) { UserMode = true, AllowUserModeIOPort = true });
+            Scheduler.CreateThread(new KThreadStartOptions(Thread2) { UserMode = true, AllowUserModeIOPort = true });
             Scheduler.Start();
 
             while (true)
                 Native.Hlt();
+        }
+
+        private static void Thread0()
+        {
+            KernelMessage.WriteLine("Thread0: Enter");
+            uint i = 0;
+            while (true)
+            {
+                i++;
+                //if (Scheduler.ClockTicks % 100 == 0)
+                Screen.Goto(3, 0);
+                Screen.Write("TH_KERNEL:");
+                Screen.Write(i, 10);
+            }
+            KernelMessage.WriteLine("Thread0: Finished");
         }
 
         private static void Thread1()

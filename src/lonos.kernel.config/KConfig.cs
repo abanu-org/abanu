@@ -58,6 +58,12 @@
         /// If enabled, User Task will be able to use IOPorts
         /// </summary>
         public const bool AllowUserModeIOPort = true;
+
+        /// <summary>
+        /// Too small value will result in an stackoverflow, a too big value will waste memory.
+        /// FUTURE: Request Virtual Memory
+        /// </summary>
+        public const uint DefaultStackSize = 0x4000;
     }
 
 }

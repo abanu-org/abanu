@@ -173,6 +173,9 @@ namespace lonos.kernel.core
         /// <returns>The page</returns>
         Page* Allocate(uint num)
         {
+            if (num == 0)
+                KernelMessage.WriteLine("Requesting zero pages");
+
             //KernelMessage.WriteLine("Request {0} pages...", num);
 
             var cnt = 0;
