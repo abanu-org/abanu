@@ -188,6 +188,12 @@ namespace lonos.kernel.core
         private unsafe static void CreateThread(KThreadStartOptions options, uint threadID)
         {
             var thread = Threads[threadID];
+
+            // Debug:
+            options.User = true;
+
+            thread.User = options.User;
+
             var stackSize = options.StackSize;
 
             var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
@@ -198,7 +204,13 @@ namespace lonos.kernel.core
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
             var stackTop = stack + (int)stackSize;
 
-            var stackStateOffset = 16;
+            var stackStateOffset = 8;
+            if (options.User)
+                stackStateOffset += 8;
+
+            uint CS = 0x08;
+            if (options.User)
+                CS = 0x1B;
 
             thread.Status = ThreadStatus.Creating;
             thread.StackBottom = stack;
@@ -207,18 +219,21 @@ namespace lonos.kernel.core
 
             Intrinsic.Store32(stackTop, -4, 0);          // Zero Sentinel
             Intrinsic.Store32(stackTop, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
-            Intrinsic.Store32(stackTop, -12, 0x23);
-            Intrinsic.Store32(stackTop, -16, (uint)thread.StackStatePointer);
+            if (options.User)
+            {
+                Intrinsic.Store32(stackTop, -12, 0x23);
+                Intrinsic.Store32(stackTop, -16, (uint)thread.StackStatePointer);
+            }
 
             var stackState = (IDTStack*)(stackTop - IDTStack.Size - stackStateOffset);
             stackState[0] = new IDTStack();
             stackState->EFLAGS = 0x00000202;
-            if (KConfig.AllowUserModeIOPort)
+            if (options.User && options.AllowUserModeIOPort)
             {
                 byte IOPL = 3;
                 stackState->EFLAGS = stackState->EFLAGS.SetBits(12, 2, IOPL);
             }
-            stackState->CS = 0x1B;
+            stackState->CS = CS;
             stackState->EIP = options.MethodAddr;
             stackState->EBP = (uint)(stackTop - stackStateOffset).ToInt32();
         }
@@ -269,11 +284,16 @@ namespace lonos.kernel.core
             if (thread.Status == ThreadStatus.Creating)
             {
                 thread.Status = ThreadStatus.Running;
-                InterruptReturn((uint)thread.StackStatePointer.ToInt32());
+            }
+
+            if (thread.User)
+            {
+                thread.Status = ThreadStatus.Running;
+                InterruptReturnUser((uint)thread.StackStatePointer.ToInt32());
             }
             else
             {
-                InterruptReturn2((uint)thread.StackStatePointer.ToInt32());
+                InterruptReturn((uint)thread.StackStatePointer.ToInt32());
                 //Native.InterruptReturn((uint)thread.StackStatePointer.ToInt32());
             }
         }
@@ -281,8 +301,8 @@ namespace lonos.kernel.core
         [DllImport("lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
         private extern static void InterruptReturn(uint stackStatePointer);
 
-        [DllImport("lonos.InterruptReturn2.o", EntryPoint = "InterruptReturn2")]
-        private extern static void InterruptReturn2(uint stackStatePointer);
+        [DllImport("lonos.InterruptReturnUser.o", EntryPoint = "InterruptReturnUser")]
+        private extern static void InterruptReturnUser(uint stackStatePointer);
 
         private static uint FindEmptyThreadSlot()
         {
@@ -318,14 +338,14 @@ namespace lonos.kernel.core
     public struct KThreadStartOptions
     {
         public Addr MethodAddr;
-        public bool UserMode;
+        public bool User;
         public uint StackSize;
         public bool AllowUserModeIOPort;
 
         public KThreadStartOptions(ThreadStart start)
         {
             MethodAddr = Intrinsic.GetDelegateMethodAddress(start);
-            UserMode = false;
+            User = false;
             AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
             StackSize = KConfig.DefaultStackSize;
         }
@@ -333,7 +353,7 @@ namespace lonos.kernel.core
         public KThreadStartOptions(Addr methodAddr)
         {
             MethodAddr = methodAddr;
-            UserMode = false;
+            User = false;
             AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
             StackSize = KConfig.DefaultStackSize;
         }

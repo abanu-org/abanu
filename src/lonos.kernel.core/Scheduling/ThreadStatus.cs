@@ -19,5 +19,6 @@ namespace lonos.kernel.core
         public IntPtr StackBottom;
         public IntPtr StackStatePointer;
         public uint Ticks;
+        public bool User;
     }
 }

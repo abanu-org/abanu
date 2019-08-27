@@ -4,7 +4,7 @@ mov ebp, esp
 mov esi, [ebp+0x8]	;get stack pointer argument
 mov esp, esi		;set stack pointer
 
-mov eax, dword 0x23
+mov eax, dword 0x10
 mov gs,eax
 mov ds,eax
 mov fs,eax

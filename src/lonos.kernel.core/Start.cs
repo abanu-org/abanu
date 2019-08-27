@@ -114,8 +114,8 @@ namespace lonos.kernel.core
         {
             Scheduler.Setup();
             Scheduler.CreateThread(new KThreadStartOptions(Thread0));
-            Scheduler.CreateThread(new KThreadStartOptions(Thread1) { UserMode = true, AllowUserModeIOPort = true });
-            Scheduler.CreateThread(new KThreadStartOptions(Thread2) { UserMode = true, AllowUserModeIOPort = true });
+            Scheduler.CreateThread(new KThreadStartOptions(Thread1) { User = true, AllowUserModeIOPort = true });
+            Scheduler.CreateThread(new KThreadStartOptions(Thread2) { User = true, AllowUserModeIOPort = true });
             Scheduler.Start();
 
             while (true)
