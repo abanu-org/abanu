@@ -42,6 +42,11 @@ namespace lonos.kernel.core
             SignalThreadTerminationMethodAddress = GetAddress(SignalThreadTerminationMethod);
 
             CreateThread(new KThreadStartOptions(IdleThread), 0);
+
+            // Debug, for breakpoint
+            //clockTicks++;
+
+            //AsmDebugFunction.DebugFunction1();
         }
 
         public static void Start()
@@ -88,10 +93,10 @@ namespace lonos.kernel.core
             ScheduleNextThread(threadID);
         }
 
-        private static void ScheduleNextThread(uint threadID)
+        private static void ScheduleNextThread(uint currentThreadID)
         {
-            threadID = GetNextThread(threadID);
-            SwitchToThread(threadID);
+            var nextThreadID = GetNextThread(currentThreadID);
+            SwitchToThread(nextThreadID, currentThreadID);
         }
 
         private static void ThreadEntry(uint threadID)
@@ -266,12 +271,17 @@ namespace lonos.kernel.core
             //Native.SetFS(threadID);
         }
 
-        private static void SwitchToThread(uint threadID)
+        private static void SwitchToThread(uint threadID, uint oldThreadID)
         {
             var thread = Threads[threadID];
+            var oldThread = Threads[oldThreadID];
 
             if (KConfig.TraceThreadSwitch)
                 KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackStatePointer);
+
+            var oldThreadWasUserMode = false;
+            if (oldThread.User)
+                oldThreadWasUserMode = true;
 
             //Assert.True(thread != null, "invalid thread id");
 
@@ -286,7 +296,13 @@ namespace lonos.kernel.core
                 thread.Status = ThreadStatus.Running;
             }
 
-            if (thread.User)
+            // K=Kernel, U=User, 1=Extra SS:ESP on Stack
+            // K->K: 0->0: InterruptReturnKernelToKernel
+            // U->U: 1->1: InterruptReturnUserToUser
+            // U->K: 1->0: InterruptReturnUserToKernel
+            // K->U: 0->1: InterruptReturnKernelToUser
+
+            if (thread.User && oldThreadWasUserMode)
             {
                 thread.Status = ThreadStatus.Running;
                 InterruptReturnUser((uint)thread.StackStatePointer.ToInt32());

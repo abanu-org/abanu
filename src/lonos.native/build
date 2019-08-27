@@ -18,3 +18,5 @@ cp InterruptReturnUser.o ../../bin/lonos.InterruptReturnUser.o
 nasm -f bin LoadTaskRegister.s -o LoadTaskRegister.o
 cp LoadTaskRegister.o ../../bin/lonos.LoadTaskRegister.o
 
+nasm -f bin DebugFunction1.s -o DebugFunction1.o
+cp DebugFunction1.o ../../bin/lonos.DebugFunction1.o

@@ -37,7 +37,7 @@
         /// <summary>
         /// If true, there's only a one Process with single Thread.
         /// </summary>
-        public const bool UseTaskStateSegment = false;
+        public const bool UseTaskStateSegment = true;
 
         /// <summary>
         /// Traces every Thread switch

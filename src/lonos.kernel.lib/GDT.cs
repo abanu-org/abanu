@@ -94,28 +94,36 @@ namespace lonos.kernel.core
             dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
             GdtTable->AddEntry(dataEntry);
 
-            //TSS
-            //var tss = AddTSS();
-            //tss->esp0 = kernelStack;
-            //tss->ss0 = 0x10;
+            if (KConfig.UseTaskStateSegment)
+            {
+                //TSS
+                var tss = AddTSS();
+                tss->esp0 = kernelStack;
+                tss->ss0 = 0x10;
 
-            //tss->cs = 0xb;
-            //tss->ss = tss->ds = tss->es = tss->fs = tss->gs = 0x13;
+                tss->cs = 0x0B;
+                tss->ss = tss->ds = tss->es = tss->fs = tss->gs = 0x13;
 
-            //KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
+                tss->eip = 0xc01013d5; //tmp
 
-            //var tssEntry = DescriptorTableEntry.CreateTSS(tss);
-            //tssEntry.PriviligeRing = 0;
-            //tssEntry.TSS_AVL = true;
-            //tssEntry.Present = true;
-            //GdtTable->AddEntry(tssEntry);
+                KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
+
+                var tssEntry = DescriptorTableEntry.CreateTSS(tss);
+                tssEntry.PriviligeRing = 3;
+                tssEntry.TSS_AVL = true;
+                tssEntry.Present = true;
+                GdtTable->AddEntry(tssEntry);
+            }
 
             Flush();
 
             if (KConfig.UseTaskStateSegment)
             {
                 KernelMessage.WriteLine("LoadTaskRegister...");
-                LoadTaskRegister(0x28);
+                ushort TS = 0x28;
+                if (KConfig.UseUserMode)
+                    TS |= 0x3;
+                LoadTaskRegister(TS);
             }
 
             KernelMessage.WriteLine("Done");

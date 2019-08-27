@@ -33,6 +33,7 @@
     <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Debug\AsmDebugFunction.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\ThreadStatus.cs" />
     <Compile Include="Start.cs" />

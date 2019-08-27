@@ -99,13 +99,17 @@ namespace lonos.kernel.core
             if (!KConfig.UseUserMode)
                 return;
 
-            var kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
-            Memory.InitialKernelProtect_MakeWritable_BySize(kernelStack, 256 * 4096);
             Addr tssAddr = null;
+            Addr kernelStack = null;
             if (KConfig.UseTaskStateSegment)
             {
                 tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
                 Memory.InitialKernelProtect_MakeWritable_BySize(tssAddr, 4096);
+                kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+
+                KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}", tssAddr, kernelStack);
+
+                Memory.InitialKernelProtect_MakeWritable_BySize(kernelStack, 256 * 4096);
             }
             GDT.SetupUserMode(kernelStack, tssAddr);
         }
