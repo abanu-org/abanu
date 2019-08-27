@@ -203,12 +203,12 @@ namespace lonos.kernel.core
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
             var stackTop = stack + (int)stackSize;
 
-            var stackStateOffset = 4 * 4;
+            var stackStateOffset = 16;
 
             thread.Status = ThreadStatus.Creating;
             thread.StackBottom = stack;
             thread.StackTop = stackTop;
-            thread.StackStatePointer = stackTop - (60 + 8);
+            thread.StackStatePointer = stackTop - IDTStack.Size - stackStateOffset;
 
             Intrinsic.Store32(stackTop, -4, 0);          // Zero Sentinel
             Intrinsic.Store32(stackTop, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
@@ -218,8 +218,11 @@ namespace lonos.kernel.core
             var stackState = (IDTStack*)(stackTop - IDTStack.Size - stackStateOffset);
             stackState[0] = new IDTStack();
             stackState->EFLAGS = 0x00000202;
-            byte IOPL = 3;
-            stackState->EFLAGS = stackState->EFLAGS.SetBits(12, 2, IOPL);
+            if (KConfig.AllowUserModeIOPort)
+            {
+                byte IOPL = 3;
+                stackState->EFLAGS = stackState->EFLAGS.SetBits(12, 2, IOPL);
+            }
             stackState->CS = 0x1B;
             stackState->EIP = (uint)methodAddress.ToInt32();
             stackState->EBP = (uint)(stackTop - stackStateOffset).ToInt32();

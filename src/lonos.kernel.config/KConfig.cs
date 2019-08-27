@@ -53,6 +53,11 @@
         /// If enabled, Tasks in UserMode will run with Kernel Permissions
         /// </summary>
         public const bool UserUserModeWithSupervisorPrivileges = false;
+
+        /// <summary>
+        /// If enabled, User Task will be able to use IOPorts
+        /// </summary>
+        public const bool AllowUserModeIOPort = true;
     }
 
 }
