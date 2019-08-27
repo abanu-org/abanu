@@ -117,7 +117,7 @@ function run {
 function debug {
 	case $1 in
 		qemu-kernel)
-			gdb -x conf/gdb
+			gdb -x conf/gdb-qemu-kernel
 			;;
 
 		qemu-kernel-run)
@@ -128,8 +128,26 @@ function debug {
 			$qemu_app -kernel os/lonos.kernel.image.bin -serial file:/home/sebastian/projects/lonos/logs/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_PROJDIR}/logs/emulator.log
 			;;
 
+		qemu-grub-hybrid)
+			gdb -x conf/gdb-qemu-grub-hybrid
+			;;
+
+		qemu-grub-hybrid-run)
+			# Uncomment if not required!
+			DEBUG_INTERRUPTS=,int
+			qemu_app=qemu-system-x86_64
+			#qemu_app=qemu-system-i386
+
+			bios="-L /usr/share/seabios"
+
+			disk=${LONOS_OSDIR}/lonos.kernel.core.x86-grub-hybrid.disk.img
+
+			$qemu_app ${bios} -hda $disk -serial file:/home/sebastian/projects/lonos/logs/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_PROJDIR}/logs/emulator.log
+
+			;;
+
 		*)
-			echo $"Usage: lonosctl run {qemu-kernel}"
+			echo $"Usage: lonosctl run {qemu-kernel|qemu-grub-hybrid}"
 			exit 1
 	esac
 }

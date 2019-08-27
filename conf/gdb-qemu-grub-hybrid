@@ -1,0 +1,42 @@
+#######################
+# general configuration
+
+set history remove-duplicates unlimited
+set disassembly-flavor intel
+
+define hook-quit
+	kill
+    set confirm off
+end
+
+define hook-kill
+    set confirm off
+end
+
+########################
+# specific configuration
+
+set arch i386:x86-64:intel
+file os/lonos.kernel.core.bin
+#file os/lonos.kernel.loader.bin
+target remote | ./lonosctl debug qemu-grub-hybrid-run
+b *0x0
+#b *0xc010609f
+
+#hbreak System.Void lonos.kernel.core.Start::Main()
+#hbreak System.Void lonos.kernel.core.IDTManager::SetTableEntries()
+#hbreak src/lonos.kernel.core/Start.cs:63
+#hbreak src/lonos.kernel.core/KList.cs:45
+#b PageTableX64.cs:75
+#b PageTableX64.cs:109
+#b LoaderStart.cs:61
+b IDTManager.cs:471
+#b *0xc010f128
+#watch *0x4506010
+#watch *0x4506014
+
+####################
+# continue debugging
+
+continue
+
