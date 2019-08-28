@@ -209,7 +209,7 @@ namespace lonos.kernel.core
             var thread = Threads[threadID];
 
             // Debug:
-            options.User = true;
+            options.User = false;
 
             thread.User = options.User;
 
@@ -226,6 +226,8 @@ namespace lonos.kernel.core
                 KernelMessage.WriteLine("User");
             else
                 KernelMessage.WriteLine("Kernel");
+            fixed (IDTTaskStack* tmpState = &thread.StackState)
+                KernelMessage.WriteLine("StackState at {0:x8}", (uint)tmpState);
 
             var stackStateOffset = 8;
 
