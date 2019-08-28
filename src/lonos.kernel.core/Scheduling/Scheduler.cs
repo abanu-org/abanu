@@ -43,7 +43,7 @@ namespace lonos.kernel.core
 
             CreateThread(new KThreadStartOptions(IdleThread), 0);
 
-            // Debug, for breakpoint
+            //Debug, for breakpoint
             //clockTicks++;
 
             //AsmDebugFunction.DebugFunction1();
@@ -207,7 +207,7 @@ namespace lonos.kernel.core
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
             KernelMessage.WriteLine("Stack Addr: {0:X8}. EntryPoint: {1:X8}", (uint)stack, options.MethodAddr);
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
-            var stackTop = stack + (int)stackSize;
+            var stackBottom = stack + (int)stackSize;
 
             var stackStateOffset = 8;
             if (options.User)
@@ -218,19 +218,19 @@ namespace lonos.kernel.core
                 CS = 0x1B;
 
             thread.Status = ThreadStatus.Creating;
-            thread.StackBottom = stack;
-            thread.StackTop = stackTop;
-            thread.StackStatePointer = stackTop - IDTStack.Size - stackStateOffset;
+            thread.StackTop = stack;
+            thread.StackBottom = stackBottom;
+            thread.StackStatePointer = stackBottom - IDTStack.Size - stackStateOffset;
 
-            Intrinsic.Store32(stackTop, -4, 0);          // Zero Sentinel
-            Intrinsic.Store32(stackTop, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
+            Intrinsic.Store32(stackBottom, -4, 0);          // Zero Sentinel
+            Intrinsic.Store32(stackBottom, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
             if (options.User)
             {
-                Intrinsic.Store32(stackTop, -12, 0x23);
-                Intrinsic.Store32(stackTop, -16, (uint)thread.StackStatePointer);
+                Intrinsic.Store32(stackBottom, -12, 0x23);
+                Intrinsic.Store32(stackBottom, -16, (uint)thread.StackStatePointer);
             }
 
-            var stackState = (IDTStack*)(stackTop - IDTStack.Size - stackStateOffset);
+            var stackState = (IDTStack*)(stackBottom - IDTStack.Size - stackStateOffset);
             stackState[0] = new IDTStack();
             stackState->EFLAGS = 0x00000202;
             if (options.User && options.AllowUserModeIOPort)
@@ -240,7 +240,7 @@ namespace lonos.kernel.core
             }
             stackState->CS = CS;
             stackState->EIP = options.MethodAddr;
-            stackState->EBP = (uint)(stackTop - stackStateOffset).ToInt32();
+            stackState->EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
         }
 
         private static void SaveThreadState(uint threadID, IntPtr stackSate)
@@ -279,9 +279,7 @@ namespace lonos.kernel.core
             if (KConfig.TraceThreadSwitch)
                 KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackStatePointer);
 
-            var oldThreadWasUserMode = false;
-            if (oldThread.User)
-                oldThreadWasUserMode = true;
+            var oldThreadWasUserMode = oldThread.User;
 
             //Assert.True(thread != null, "invalid thread id");
 

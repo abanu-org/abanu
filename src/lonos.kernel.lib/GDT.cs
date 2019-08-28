@@ -49,7 +49,7 @@ namespace lonos.kernel.core
             codeEntry.PriviligeRing = 0;
             codeEntry.Present = true;
             codeEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            codeEntry.CodeSegment_Confirming = true;
+            //codeEntry.CodeSegment_Confirming = true;
             GdtTable->AddEntry(codeEntry);
 
             //data segment
@@ -65,9 +65,9 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Done");
         }
 
-        public static void SetupUserMode(Addr kernelStack, Addr tssAddr)
+        public static void SetupUserMode(Addr kernelStackPointer, Addr tssAddr)
         {
-            KernelMessage.Write("Setup GDT UserMode");
+            KernelMessage.WriteLine("Setup GDT UserMode");
 
             if (KConfig.UseTaskStateSegment)
             {
@@ -98,18 +98,14 @@ namespace lonos.kernel.core
             {
                 //TSS
                 var tss = AddTSS();
-                tss->esp0 = kernelStack;
+                tss->esp0 = kernelStackPointer;
                 tss->ss0 = 0x10;
-
-                tss->cs = 0x0B;
-                tss->ss = tss->ds = tss->es = tss->fs = tss->gs = 0x13;
-
-                tss->eip = 0xc01013d5; //tmp
+                tss->trace_bitmap = 0xdfff;
 
                 KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
 
                 var tssEntry = DescriptorTableEntry.CreateTSS(tss);
-                tssEntry.PriviligeRing = 3;
+                tssEntry.PriviligeRing = 0;
                 tssEntry.TSS_AVL = true;
                 tssEntry.Present = true;
                 GdtTable->AddEntry(tssEntry);
@@ -124,10 +120,19 @@ namespace lonos.kernel.core
                 if (KConfig.UseUserMode)
                     TS |= 0x3;
                 LoadTaskRegister(TS);
+
+                //Debug, for breakpoint
+                //clockTicks++;
+
+                //DebugFunction1();
+
             }
 
             KernelMessage.WriteLine("Done");
         }
+
+        //[DllImport("lonos.DebugFunction1.o", EntryPoint = "DebugFunction1")]
+        //public extern static void DebugFunction1();
 
         [DllImport("lonos.LoadTaskRegister.o", EntryPoint = "LoadTaskRegister")]
         private extern static void LoadTaskRegister(ushort taskSegmentSelector);

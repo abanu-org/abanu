@@ -3,6 +3,8 @@
 cd $(dirname $0)
 source env/default
 
+rm -f os/*.lock
+
 function configure {
 	case $1 in
 		all)

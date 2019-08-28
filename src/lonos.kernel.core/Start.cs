@@ -81,8 +81,6 @@ namespace lonos.kernel.core
             KernelMessage.WriteLine("Performing some Non-Thread Tests");
             Tests();
 
-            Scheduler.SignalThreadTerminationMethod();
-
             if (KConfig.SingleThread)
             {
                 KernelMessage.WriteLine("Enter Main Loop");
@@ -100,18 +98,19 @@ namespace lonos.kernel.core
                 return;
 
             Addr tssAddr = null;
-            Addr kernelStack = null;
+            Addr kernelStackBottom = null;
             if (KConfig.UseTaskStateSegment)
             {
                 tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
                 Memory.InitialKernelProtect_MakeWritable_BySize(tssAddr, 4096);
-                kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+                var kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+                kernelStackBottom = kernelStack + 256 * 4096 - 4;
 
-                KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}", tssAddr, kernelStack);
+                KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", tssAddr, kernelStack + kernelStack);
 
                 Memory.InitialKernelProtect_MakeWritable_BySize(kernelStack, 256 * 4096);
             }
-            GDT.SetupUserMode(kernelStack, tssAddr);
+            GDT.SetupUserMode(kernelStackBottom, tssAddr);
         }
 
         public static void StartThreading()

@@ -30,7 +30,16 @@ b *0x0
 #b PageTableX64.cs:75
 #b PageTableX64.cs:109
 #b LoaderStart.cs:61
-b IDTManager.cs:471
+
+# Invalid TSS
+b IDTManager.cs:448
+
+# General Protection Exception
+b IDTManager.cs:467
+
+# General Protection Exception
+b IDTManager.cs:474
+
 #b *0xc010f128
 #watch *0x4506010
 #watch *0x4506014
