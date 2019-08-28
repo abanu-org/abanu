@@ -57,7 +57,7 @@ namespace lonos.kernel.core
             //Native.Cli();
             Native.Int(ClockIRQ);
 
-            // Normally, you should never go here
+            // Normally, you should never get here
             Panic.Error("Main-Thread still alive");
         }
 
