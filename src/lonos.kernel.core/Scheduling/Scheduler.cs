@@ -64,19 +64,33 @@ namespace lonos.kernel.core
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void IdleThread()
         {
+            var local = 0xAA11BB22;
             while (true)
             {
                 //Native.Hlt();
                 //Native.Nop();
                 uint i = 0;
+                bool flag = false;
                 while (true)
                 {
+                    if (flag)
+                        local++;
+                    else
+                        local--;
+                    flag = !flag;
                     i++;
-                    Screen.Goto(2, 0);
-                    Screen.Write("IDLE:");
-                    Screen.Write(i, 10);
+                    //Screen.Goto(2, 0);
+                    //Screen.Write("IDLE:");
+                    //Screen.Write(i, 10);
+                    //Screen.Write(local, 16);
+                    dummy(local);
+                    dummy(i);
                 }
             }
+        }
+
+        private static void dummy(uint local)
+        {
         }
 
         public static void ClockInterrupt(IntPtr stackSate)
@@ -203,11 +217,15 @@ namespace lonos.kernel.core
 
             var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
             stackSize = stackPages * PageFrameManager.PageSize;
-            KernelMessage.WriteLine("Create Thread. Stack size: {0:X8}", stackSize);
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
-            KernelMessage.WriteLine("Stack Addr: {0:X8}. EntryPoint: {1:X8}", (uint)stack, options.MethodAddr);
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
             var stackBottom = stack + (int)stackSize;
+
+            KernelMessage.Write("Create Thread {0}. EntryPoint: {1:X8} Stack: {2:X8}-{3:X8} Type: ", threadID, options.MethodAddr, (uint)stack, (uint)stackBottom - 1);
+            if (thread.User)
+                KernelMessage.WriteLine("User");
+            else
+                KernelMessage.WriteLine("Kernel");
 
             var stackStateOffset = 8;
 
