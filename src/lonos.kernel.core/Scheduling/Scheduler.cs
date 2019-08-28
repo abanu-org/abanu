@@ -209,16 +209,18 @@ namespace lonos.kernel.core
             var thread = Threads[threadID];
 
             // Debug:
-            options.User = false;
+            options.User = true;
 
             thread.User = options.User;
 
             var stackSize = options.StackSize;
 
             var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
+            var debugPadding = 8u;
             stackSize = stackPages * PageFrameManager.PageSize;
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
+            stackSize -= debugPadding;
             var stackBottom = stack + (int)stackSize;
 
             KernelMessage.Write("Create Thread {0}. EntryPoint: {1:X8} Stack: {2:X8}-{3:X8} Type: ", threadID, options.MethodAddr, (uint)stack, (uint)stackBottom - 1);
@@ -227,7 +229,7 @@ namespace lonos.kernel.core
             else
                 KernelMessage.WriteLine("Kernel");
             fixed (IDTTaskStack* tmpState = &thread.StackState)
-                KernelMessage.WriteLine("StackState at {0:x8}", (uint)tmpState);
+                KernelMessage.WriteLine("StackState at {0:X8}", (uint)tmpState);
 
             var stackStateOffset = 8;
 
@@ -241,7 +243,10 @@ namespace lonos.kernel.core
             thread.StackTop = stack;
             thread.StackBottom = stackBottom;
 
-            Intrinsic.Store32(stackBottom, -4, 0);          // Zero Sentinel
+            Intrinsic.Store32(stackBottom, 4, 0xFF00001);          // Debug Marker
+            Intrinsic.Store32(stackBottom, 0, 0xFF00002);          // Debug Marker
+
+            Intrinsic.Store32(stackBottom, -4, 0x0);
             Intrinsic.Store32(stackBottom, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
 
             thread.StackState = new IDTTaskStack();
