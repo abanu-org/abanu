@@ -254,6 +254,9 @@ namespace lonos.kernel.core
 
             //Assert.True(thread != null, "SaveThreadState(): thread id = null");
 
+            if (KConfig.TraceThreadSwitch)
+                KernelMessage.WriteLine("Thread {0}: Save StackPointer {1:X8}", threadID, (uint)stackSate);
+
             thread.StackStatePointer = stackSate;
         }
 

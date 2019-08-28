@@ -106,7 +106,7 @@ namespace lonos.kernel.core
                 var kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 kernelStackBottom = kernelStack + 256 * 4096 - 4;
 
-                KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", tssAddr, kernelStack + kernelStack);
+                KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", tssAddr, kernelStack, kernelStackBottom);
 
                 Memory.InitialKernelProtect_MakeWritable_BySize(kernelStack, 256 * 4096);
             }
