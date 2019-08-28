@@ -12,13 +12,13 @@ namespace lonos.kernel.core
         Waiting
     };
 
-    internal class Thread
+    internal unsafe class Thread
     {
         public ThreadStatus Status = ThreadStatus.Empty;
         public IntPtr StackBottom;
         public IntPtr StackTop;
         //public IntPtr StackStatePointer;
-        public IDTTaskStack StackState;
+        public IDTTaskStack* StackState;
         public uint Ticks;
         public bool User;
     }

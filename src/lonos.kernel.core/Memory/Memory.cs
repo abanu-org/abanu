@@ -37,6 +37,11 @@ namespace lonos.kernel.core
 
         private static Allocator kmallocAllocator;
 
+        public unsafe static Addr Allocate(USize n)
+        {
+            return kmallocAllocator.malloc(n);
+        }
+
         /// <summary>
         /// kmalloc is the normal method of allocating memory for objects smaller than page size in the kernel.
         /// </summary>
