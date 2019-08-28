@@ -27,6 +27,7 @@ namespace lonos.kernel.core
             var kmsgHandler = new KernelMessageWriter();
             KernelMessage.SetHandler(kmsgHandler);
             KernelMessage.WriteLine("<LOADER:CONSOLE:BEGIN>");
+            Assert.Setup(AssertError);
 
             // Parse Boot Informations
             Multiboot.Setup();
@@ -166,6 +167,12 @@ namespace lonos.kernel.core
             //if its nowhere used. Than the Compiler dosnt know about that Refernce
             //and the Compilation will fail
             Mosa.Runtime.x86.Internal.GetStackFrame(0);
+        }
+
+        static void AssertError(string message)
+        {
+            KernelMessage.Write("ASSERT ERROR! ");
+            KernelMessage.WriteLine(message);
         }
 
     }

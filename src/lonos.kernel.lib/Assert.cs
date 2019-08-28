@@ -60,5 +60,27 @@ namespace lonos.kernel.core
             if (condition)
                 AssertError(userMessage);
         }
+
+        [Conditional("DEBUG")]
+        public static void IsSet(uint value, string userMessage)
+        {
+            if (value == 0)
+                AssertError(userMessage);
+        }
+
+        [Conditional("DEBUG")]
+        public static void IsSet(IntPtr value, string userMessage)
+        {
+            if (value == IntPtr.Zero)
+                AssertError(userMessage);
+        }
+
+        [Conditional("DEBUG")]
+        public static void IsSet(Addr value, string userMessage)
+        {
+            if (value == Addr.Zero)
+                AssertError(userMessage);
+        }
+
     }
 }

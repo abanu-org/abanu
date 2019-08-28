@@ -20,6 +20,7 @@ namespace lonos.kernel.core
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
             ApiContext.Current = new ApiHost();
+            Assert.Setup(AssertError);
 
             // Setup some pseudo devices
             Devices.InitStage1();
@@ -294,6 +295,11 @@ namespace lonos.kernel.core
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
+        }
+
+        static void AssertError(string message)
+        {
+            Panic.Error(message);
         }
 
     }

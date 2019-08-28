@@ -209,7 +209,7 @@ namespace lonos.kernel.core
             var thread = Threads[threadID];
 
             // Debug:
-            options.User = true;
+            //options.User = false;
 
             thread.User = options.User;
 
@@ -254,12 +254,13 @@ namespace lonos.kernel.core
             if (thread.User)
                 stackState = (IDTTaskStack*)Memory.Allocate(IDTTaskStack.Size);
             else
-                stackState = (IDTTaskStack*)(stackBottom - 8 - IDTTaskStack.Size);
+                stackState = (IDTTaskStack*)(stackBottom - 8 - IDTStack.Size); // IDTStackSize ist correct - we don't need the Task-Members.
             thread.StackState = stackState;
 
             stackState->Stack.EFLAGS = 0x00000202;
             if (options.User)
             {
+                // Never set this values for Non-User, otherwiese you will override stack informations.
                 stackState->TASK_SS = 0x23;
                 stackState->TASK_ESP = (uint)stackBottom - 12;
             }
@@ -285,9 +286,14 @@ namespace lonos.kernel.core
             //Assert.True(thread != null, "SaveThreadState(): thread id = null");
 
             if (thread.User)
+            {
+                Assert.IsSet(thread.StackState, "thread.StackState is null");
                 *(thread.StackState) = *((IDTTaskStack*)stackState);
+            }
             else
+            {
                 thread.StackState = (IDTTaskStack*)stackState;
+            }
 
             if (KConfig.TraceThreadSwitch)
                 KernelMessage.WriteLine("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, ESP={3:X8}, EIP={4:X8}", threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->TASK_ESP, thread.StackState->Stack.EIP);
@@ -315,8 +321,6 @@ namespace lonos.kernel.core
             if (KConfig.TraceThreadSwitch)
                 KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackState->TASK_ESP);
 
-            var oldThreadWasUserMode = oldThread.User;
-
             //Assert.True(thread != null, "invalid thread id");
 
             thread.Ticks++;
@@ -326,21 +330,12 @@ namespace lonos.kernel.core
             PIC.SendEndOfInterrupt(ClockIRQ);
 
             if (thread.Status == ThreadStatus.Creating)
-            {
                 thread.Status = ThreadStatus.Running;
-            }
-
-            // K=Kernel, U=User, 1=Extra SS:ESP on Stack
-            // K->K: 0->0: InterruptReturnKernelToKernel
-            // U->U: 1->1: InterruptReturnUserToUser
-            // U->K: 1->0: InterruptReturnUserToKernel
-            // K->U: 0->1: InterruptReturnKernelToUser
 
             uint stackStateAddr = (uint)thread.StackState;
 
-            if (thread.User && oldThreadWasUserMode)
+            if (thread.User)
             {
-                thread.Status = ThreadStatus.Running;
                 InterruptReturnUser(stackStateAddr);
             }
             else
