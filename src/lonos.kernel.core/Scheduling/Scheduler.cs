@@ -210,40 +210,38 @@ namespace lonos.kernel.core
             var stackBottom = stack + (int)stackSize;
 
             var stackStateOffset = 8;
-            if (options.User)
-                stackStateOffset += 8;
 
             uint CS = 0x08;
             if (options.User)
                 CS = 0x1B;
 
+            var stateSize = options.User ? IDTTaskStack.Size : IDTStack.Size;
+
             thread.Status = ThreadStatus.Creating;
             thread.StackTop = stack;
             thread.StackBottom = stackBottom;
-            thread.StackStatePointer = stackBottom - IDTStack.Size - stackStateOffset;
 
             Intrinsic.Store32(stackBottom, -4, 0);          // Zero Sentinel
             Intrinsic.Store32(stackBottom, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
+
+            thread.StackState = new IDTTaskStack();
+            thread.StackState.Stack.EFLAGS = 0x00000202;
             if (options.User)
             {
-                Intrinsic.Store32(stackBottom, -12, 0x23);
-                Intrinsic.Store32(stackBottom, -16, (uint)thread.StackStatePointer);
+                thread.StackState.TASK_SS = 0x23;
+                thread.StackState.TASK_ESP = (uint)stackBottom - 12;
             }
-
-            var stackState = (IDTStack*)(stackBottom - IDTStack.Size - stackStateOffset);
-            stackState[0] = new IDTStack();
-            stackState->EFLAGS = 0x00000202;
             if (options.User && options.AllowUserModeIOPort)
             {
                 byte IOPL = 3;
-                stackState->EFLAGS = stackState->EFLAGS.SetBits(12, 2, IOPL);
+                thread.StackState.Stack.EFLAGS = thread.StackState.Stack.EFLAGS.SetBits(12, 2, IOPL);
             }
-            stackState->CS = CS;
-            stackState->EIP = options.MethodAddr;
-            stackState->EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
+            thread.StackState.Stack.CS = CS;
+            thread.StackState.Stack.EIP = options.MethodAddr;
+            thread.StackState.Stack.EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
         }
 
-        private static void SaveThreadState(uint threadID, IntPtr stackSate)
+        private unsafe static void SaveThreadState(uint threadID, IntPtr stackSate)
         {
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
 
@@ -254,10 +252,11 @@ namespace lonos.kernel.core
 
             //Assert.True(thread != null, "SaveThreadState(): thread id = null");
 
-            if (KConfig.TraceThreadSwitch)
-                KernelMessage.WriteLine("Thread {0}: Save StackPointer {1:X8}", threadID, (uint)stackSate);
+            thread.StackState = *((IDTTaskStack*)stackSate);
 
-            thread.StackStatePointer = stackSate;
+            if (KConfig.TraceThreadSwitch)
+                fixed (IDTTaskStack* tmpState = &thread.StackState)
+                    KernelMessage.WriteLine("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, ESP={3:X8}, EIP={4:X8}", threadID, (uint)stackSate, (uint)tmpState, tmpState->TASK_ESP, tmpState->Stack.EIP);
         }
 
         private static uint GetCurrentThreadID()
@@ -274,13 +273,13 @@ namespace lonos.kernel.core
             //Native.SetFS(threadID);
         }
 
-        private static void SwitchToThread(uint threadID, uint oldThreadID)
+        private unsafe static void SwitchToThread(uint threadID, uint oldThreadID)
         {
             var thread = Threads[threadID];
             var oldThread = Threads[oldThreadID];
 
             if (KConfig.TraceThreadSwitch)
-                KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackStatePointer);
+                KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackState.TASK_ESP);
 
             var oldThreadWasUserMode = oldThread.User;
 
@@ -303,14 +302,18 @@ namespace lonos.kernel.core
             // U->K: 1->0: InterruptReturnUserToKernel
             // K->U: 0->1: InterruptReturnKernelToUser
 
+            uint stackStateAddr;
+            fixed (IDTTaskStack* stackStatePtr = &thread.StackState)
+                stackStateAddr = (uint)stackStatePtr;
+
             if (thread.User && oldThreadWasUserMode)
             {
                 thread.Status = ThreadStatus.Running;
-                InterruptReturnUser((uint)thread.StackStatePointer.ToInt32());
+                InterruptReturnUser(stackStateAddr);
             }
             else
             {
-                InterruptReturn((uint)thread.StackStatePointer.ToInt32());
+                InterruptReturn(stackStateAddr);
                 //Native.InterruptReturn((uint)thread.StackStatePointer.ToInt32());
             }
         }

@@ -7,6 +7,22 @@ namespace lonos.kernel.core
     /// <summary>
     /// IDT Stack
     /// </summary>
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct IDTTaskStack
+    {
+        public const int Size = 60;
+
+        [FieldOffset(0)]
+        public IDTStack Stack;
+
+        [FieldOffset(IDTStack.Offset.TASK_ESP)]
+        public uint TASK_ESP;
+
+        [FieldOffset(IDTStack.Offset.TASK_SS)]
+        public uint TASK_SS;
+    }
+
     [StructLayout(LayoutKind.Explicit)]
     public struct IDTStack
     {
@@ -27,6 +43,8 @@ namespace lonos.kernel.core
             public const int EIP = 0x28;
             public const int CS = 0x2C;
             public const int EFLAGS = 0x30;
+            public const int TASK_ESP = 0x34;
+            public const int TASK_SS = 0x38;
         }
 
         [FieldOffset(Offset.EDI)]

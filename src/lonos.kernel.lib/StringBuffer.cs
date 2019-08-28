@@ -387,6 +387,7 @@ namespace lonos.kernel.core
                    new Argument { _string = arg0, type = ArgumentType._string },
                    new Argument(),
                    new Argument(),
+                   new Argument(),
                    new Argument());
         }
 
@@ -401,6 +402,7 @@ namespace lonos.kernel.core
                    new Argument { _uint = arg0, type = ArgumentType._uint },
                    new Argument { _uint = arg1, type = ArgumentType._uint },
                    new Argument { _uint = arg2, type = ArgumentType._uint },
+                   new Argument(),
                    new Argument()
                   );
         }
@@ -411,6 +413,18 @@ namespace lonos.kernel.core
                    new Argument { _uint = arg0, type = ArgumentType._uint },
                    new Argument { _uint = arg1, type = ArgumentType._uint },
                    new Argument { _uint = arg2, type = ArgumentType._uint },
+                   new Argument { _uint = arg3, type = ArgumentType._uint },
+                   new Argument()
+                  );
+        }
+
+        public unsafe void Append(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4)
+        {
+            Append(format,
+                   new Argument { _uint = arg0, type = ArgumentType._uint },
+                   new Argument { _uint = arg1, type = ArgumentType._uint },
+                   new Argument { _uint = arg2, type = ArgumentType._uint },
+                   new Argument { _uint = arg3, type = ArgumentType._uint },
                    new Argument { _uint = arg3, type = ArgumentType._uint }
                   );
         }
@@ -429,7 +443,7 @@ namespace lonos.kernel.core
             _string = 2
         }
 
-        private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2, Argument arg3)
+        private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4)
         {
             var indexBuffer = new StringBuffer();
             indexBuffer.length = 0;
@@ -466,6 +480,9 @@ namespace lonos.kernel.core
                             break;
                         case '3':
                             Append(arg3, argsBuffer);
+                            break;
+                        case '4':
+                            Append(arg4, argsBuffer);
                             break;
                     }
 

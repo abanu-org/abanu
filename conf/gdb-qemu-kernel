@@ -31,6 +31,8 @@ b *0x0
 #b PageTableX64.cs:109
 #b LoaderStart.cs:61
 
+#b System.Void lonos.kernel.core.IDTManager::IRQ32()
+
 # Invalid TSS
 b IDTManager.cs:448
 

@@ -17,7 +17,8 @@ namespace lonos.kernel.core
         public ThreadStatus Status = ThreadStatus.Empty;
         public IntPtr StackBottom;
         public IntPtr StackTop;
-        public IntPtr StackStatePointer;
+        //public IntPtr StackStatePointer;
+        public IDTTaskStack StackState;
         public uint Ticks;
         public bool User;
     }
