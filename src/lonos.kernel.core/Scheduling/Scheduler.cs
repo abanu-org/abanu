@@ -110,7 +110,7 @@ namespace lonos.kernel.core
         private static void ScheduleNextThread(uint currentThreadID)
         {
             var nextThreadID = GetNextThread(currentThreadID);
-            SwitchToThread(nextThreadID, currentThreadID);
+            SwitchToThread(nextThreadID);
         }
 
         private static void ThreadEntry(uint threadID)
@@ -313,10 +313,9 @@ namespace lonos.kernel.core
             //Native.SetFS(threadID);
         }
 
-        private unsafe static void SwitchToThread(uint threadID, uint oldThreadID)
+        private unsafe static void SwitchToThread(uint threadID)
         {
             var thread = Threads[threadID];
-            var oldThread = Threads[oldThreadID];
 
             if (KConfig.TraceThreadSwitch)
                 KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackState->TASK_ESP);
