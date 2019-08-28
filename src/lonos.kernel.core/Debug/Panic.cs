@@ -25,7 +25,7 @@ namespace lonos.kernel.core
         public static uint Interrupt = 0;
         public static uint ErrorCode = 0;
         public static uint CS = 0;
-        public static uint EFLAGS = 0;
+        public static X86_EFlags EFLAGS = 0;
         public static uint CR2 = 0;
         public static uint FS = 0;
 
@@ -85,7 +85,7 @@ namespace lonos.kernel.core
             Screen.Write(" EBP: ");
             Screen.Write(EBP, 16, 8);
             Screen.Write(" EFLAGS: ");
-            Screen.Write(EFLAGS, 16, 8);
+            Screen.Write((uint)EFLAGS, 16, 8);
             Screen.Write(" CR2: ");
             Screen.Write(CR2, 16, 8);
             Screen.NextLine();

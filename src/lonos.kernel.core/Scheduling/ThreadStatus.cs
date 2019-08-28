@@ -19,6 +19,7 @@ namespace lonos.kernel.core
         public IntPtr StackTop;
         //public IntPtr StackStatePointer;
         public IDTTaskStack* StackState;
+        public uint DataSelector;
         public uint Ticks;
         public bool User;
     }

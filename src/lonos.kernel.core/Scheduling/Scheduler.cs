@@ -257,7 +257,7 @@ namespace lonos.kernel.core
                 stackState = (IDTTaskStack*)(stackBottom - 8 - IDTStack.Size); // IDTStackSize ist correct - we don't need the Task-Members.
             thread.StackState = stackState;
 
-            stackState->Stack.EFLAGS = 0x00000202;
+            stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
             if (options.User)
             {
                 // Never set this values for Non-User, otherwiese you will override stack informations.
@@ -267,8 +267,9 @@ namespace lonos.kernel.core
             if (options.User && options.AllowUserModeIOPort)
             {
                 byte IOPL = 3;
-                stackState->Stack.EFLAGS = stackState->Stack.EFLAGS.SetBits(12, 2, IOPL);
+                stackState->Stack.EFLAGS = (X86_EFlags)((uint)stackState->Stack.EFLAGS).SetBits(12, 2, IOPL);
             }
+
             stackState->Stack.CS = CS;
             stackState->Stack.EIP = options.MethodAddr;
             stackState->Stack.EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
@@ -331,24 +332,18 @@ namespace lonos.kernel.core
             if (thread.Status == ThreadStatus.Creating)
                 thread.Status = ThreadStatus.Running;
 
+            thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;
+
             uint stackStateAddr = (uint)thread.StackState;
 
-            if (thread.User)
-            {
-                InterruptReturnUser(stackStateAddr);
-            }
-            else
-            {
+            if (!thread.User)
                 thread.StackState = null; // just to be sure
-                InterruptReturn(stackStateAddr);
-            }
+
+            InterruptReturn(stackStateAddr, thread.DataSelector);
         }
 
         [DllImport("lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
-        private extern static void InterruptReturn(uint stackStatePointer);
-
-        [DllImport("lonos.InterruptReturnUser.o", EntryPoint = "InterruptReturnUser")]
-        private extern static void InterruptReturnUser(uint stackStatePointer);
+        private extern static void InterruptReturn(uint stackStatePointer, uint dataSegment);
 
         private static uint FindEmptyThreadSlot()
         {

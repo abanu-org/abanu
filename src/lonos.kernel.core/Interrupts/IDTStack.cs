@@ -84,6 +84,6 @@ namespace lonos.kernel.core
         public uint CS;
 
         [FieldOffset(Offset.EFLAGS)]
-        public uint EFLAGS;
+        public X86_EFlags EFLAGS;
     }
 }

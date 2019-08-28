@@ -12,9 +12,6 @@ cp EnableExecutionProtection.o ../../bin/lonos.EnableExecutionProtection.o
 nasm -f bin InterruptReturn.s -o InterruptReturn.o
 cp InterruptReturn.o ../../bin/lonos.InterruptReturn.o
 
-nasm -f bin InterruptReturnUser.s -o InterruptReturnUser.o
-cp InterruptReturnUser.o ../../bin/lonos.InterruptReturnUser.o
-
 nasm -f bin LoadTaskRegister.s -o LoadTaskRegister.o
 cp LoadTaskRegister.o ../../bin/lonos.LoadTaskRegister.o
 
