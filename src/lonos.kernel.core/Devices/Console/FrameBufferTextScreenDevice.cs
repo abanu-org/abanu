@@ -1,4 +1,6 @@
 ﻿
+using lonos.kernel.core.Devices;
+using lonos.kernel.core.Elf;
 using System;
 
 namespace lonos.kernel.core

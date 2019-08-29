@@ -2,7 +2,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace lonos.kernel.core
+namespace lonos.kernel.core.Interrupts
 {
     /// <summary>
     /// IDT Stack

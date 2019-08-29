@@ -34,18 +34,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BackgroundWorker.cs" />
-    <Compile Include="Debug\AsmDebugFunction.cs" />
+    <Compile Include="Diagnostics\AsmDebugFunction.cs" />
     <Compile Include="Scheduling\KThreadStartOptions.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\Thread.cs" />
     <Compile Include="Scheduling\ThreadStatus.cs" />
     <Compile Include="Start.cs" />
-    <Compile Include="Memory\Memory.cs" />
+    <Compile Include="MemoryManagement\Mem.cs" />
     <Compile Include="Elf\KernelElf.cs" />
-    <Compile Include="Memory\ManagedMemoy.cs" />
+    <Compile Include="MemoryManagement\ManagedMemoy.cs" />
     <Compile Include="Interrupts\IDTMosa.cs" />
     <Compile Include="Interrupts\IDTStack.cs" />
-    <Compile Include="Debug\Panic.cs" />
+    <Compile Include="Diagnostics\Panic.cs" />
     <Compile Include="Interrupts\PIC.cs" />
     <Compile Include="External\NativeCalls.cs" />
     <Compile Include="Interrupts\InterruptHandlers.cs" />
@@ -53,21 +53,21 @@
     <Compile Include="Interrupts\IDTManager.cs" />
     <Compile Include="Interrupts\InterruptInfo.cs" />
     <Compile Include="Devices\Console\BiosTextScreenDevice.cs" />
-    <Compile Include="Devices\Serial\SerialDevice.cs" />
+    <Compile Include="Devices\SerialDevice.cs" />
     <Compile Include="Devices\NullDevice.cs" />
-    <Compile Include="Debug\KernelMessageDevice.cs" />
-    <Compile Include="Devices\Terminal\Terminal.cs" />
+    <Compile Include="Diagnostics\KernelMessageDevice.cs" />
+    <Compile Include="Devices\Terminal.cs" />
     <Compile Include="Devices\Devices.cs" />
     <Compile Include="Api\ApiHost.cs" />
     <Compile Include="Devices\Console\ConsoleDevice.cs" />
     <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
     <Compile Include="BootInfo.cs" />
-    <Compile Include="Memory\PageFrameAllocator.cs" />
-    <Compile Include="Memory\Allocator.cs" />
-    <Compile Include="Memory\KernelMemoryMap.cs" />
-    <Compile Include="buddy-malloc.cs" />
-    <Compile Include="Memory\RawVirtualFrameAllocator.cs" />
+    <Compile Include="MemoryManagement\PageFrameAllocator.cs" />
+    <Compile Include="MemoryManagement\Allocator.cs" />
+    <Compile Include="MemoryManagement\KernelMemoryMap.cs" />
+    <Compile Include="Tests\buddy-malloc.cs" />
+    <Compile Include="MemoryManagement\RawVirtualFrameAllocator.cs" />
     <Compile Include="KList.cs" />
   </ItemGroup>
   <ItemGroup>

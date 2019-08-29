@@ -1,12 +1,13 @@
 ﻿using System;
 using Mosa.Runtime;
 using Mosa.Kernel.x86;
+using lonos.kernel.core.MemoryManagement;
+using lonos.kernel.core.Diagnostics;
 
-
-namespace lonos.kernel.core
+namespace lonos.kernel.core.Devices
 {
 
-    public static class Devices
+    public static class DeviceManager
     {
 
         public static IFile Serial1;

@@ -5,6 +5,8 @@ using Mosa.Runtime.x86;
 using System;
 
 using lonos.kernel.core;
+using lonos.kernel.core.Interrupts;
+using lonos.kernel.core.Diagnostics;
 
 //TODO: Name in compiler
 namespace Mosa.Kernel.x86

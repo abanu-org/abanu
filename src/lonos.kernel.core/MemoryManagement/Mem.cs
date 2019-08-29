@@ -2,10 +2,8 @@
 using Mosa.Kernel.x86;
 using Mosa.Runtime.x86;
 
-namespace lonos.kernel.core
+namespace lonos.kernel.core.MemoryManagement
 {
-
-
 
     public static class Memory
     {

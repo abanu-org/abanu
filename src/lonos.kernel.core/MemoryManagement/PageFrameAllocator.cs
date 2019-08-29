@@ -1,10 +1,12 @@
 ﻿using System;
+using lonos.kernel.core.Diagnostics;
+using lonos.kernel.core.Devices;
 using Mosa.Runtime;
 
 //using Mosa.Kernel.x86;
 
 
-namespace lonos.kernel.core
+namespace lonos.kernel.core.MemoryManagement
 {
 
 
@@ -148,7 +150,7 @@ namespace lonos.kernel.core
                 var p = &PageArray[i];
                 sb.Clear();
                 sb.Append("Page {0} at {1:X8}: {2}\n", p->PageNum, p->PhysicalAddress, (uint)p->Status);
-                sb.WriteTo(Devices.Serial1);
+                sb.WriteTo(DeviceManager.Serial1);
             }
         }
 

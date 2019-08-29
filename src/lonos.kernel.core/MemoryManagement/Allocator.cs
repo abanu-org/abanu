@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 // Do not modify this Allocator very much
 // Future: Assign mmap-metod dynamicly.
 
-namespace lonos.kernel.core
+namespace lonos.kernel.core.MemoryManagement
 {
 
     public unsafe struct malloc_list

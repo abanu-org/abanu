@@ -1,4 +1,12 @@
 ﻿using System;
+using lonos.kernel.core.Api;
+using lonos.kernel.core.Devices;
+using lonos.kernel.core.Diagnostics;
+using lonos.kernel.core.Elf;
+using lonos.kernel.core.External;
+using lonos.kernel.core.Interrupts;
+using lonos.kernel.core.MemoryManagement;
+using lonos.kernel.core.Scheduling;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
@@ -23,10 +31,10 @@ namespace lonos.kernel.core
             Assert.Setup(AssertError);
 
             // Setup some pseudo devices
-            Devices.InitStage1();
+            DeviceManager.InitStage1();
 
             //Setup Output and Debug devices
-            Devices.InitStage2();
+            DeviceManager.InitStage2();
 
             // Write first output
             KernelMessage.WriteLine("<KERNEL:CONSOLE:BEGIN>");
@@ -65,7 +73,7 @@ namespace lonos.kernel.core
             // Now Memory Sub System is working. At this point it's valid
             // to allocate memory dynamicly
 
-            Devices.InitFrameBuffer();
+            DeviceManager.InitFrameBuffer();
 
             // Setup Programmable Interrupt Table
             PIC.Setup();

@@ -1,4 +1,5 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+using lonos.kernel.core.MemoryManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;

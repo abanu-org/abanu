@@ -1,4 +1,4 @@
-﻿namespace lonos.kernel.core
+﻿namespace lonos.kernel.core.Scheduling
 {
     public enum ThreadStatus
     {

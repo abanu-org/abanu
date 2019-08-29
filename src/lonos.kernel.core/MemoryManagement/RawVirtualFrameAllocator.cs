@@ -1,5 +1,5 @@
 ﻿using System;
-namespace lonos.kernel.core
+namespace lonos.kernel.core.MemoryManagement
 {
     public class RawVirtualFrameAllocator
     {

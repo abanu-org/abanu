@@ -1,15 +1,14 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using lonos.kernel.core.MemoryManagement;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-//TODO: Name in compiler
-namespace lonos.kernel.core
+namespace lonos.kernel.core.Interrupts
 {
-
     public unsafe delegate void InterruptHandler(IDTStack* stack);
 
     /// <summary>
@@ -45,7 +44,7 @@ namespace lonos.kernel.core
 
             // Setup IDT table
             Mosa.Runtime.Internal.MemoryClear(new IntPtr((uint)IDTAddr), 6);
-            Intrinsic.Store16(new IntPtr((uint)IDTAddr), (Offset.TotalSize * 256) - 1);
+            Intrinsic.Store16(new IntPtr((uint)IDTAddr), Offset.TotalSize * 256 - 1);
             Intrinsic.Store32(new IntPtr((uint)IDTAddr), 2, IDTAddr + 6);
 
             KernelMessage.Write("Set IDT table entries...");
@@ -1942,9 +1941,9 @@ namespace lonos.kernel.core
         /// <param name="flags">The flags.</param>
         private static void Set(uint index, uint address, ushort select, byte flags)
         {
-            var entry = new IntPtr(IDTAddr + 6 + (index * Offset.TotalSize));
+            var entry = new IntPtr(IDTAddr + 6 + index * Offset.TotalSize);
             Intrinsic.Store16(entry, Offset.BaseLow, (ushort)(address & 0xFFFF));
-            Intrinsic.Store16(entry, Offset.BaseHigh, (ushort)((address >> 16) & 0xFFFF));
+            Intrinsic.Store16(entry, Offset.BaseHigh, (ushort)(address >> 16 & 0xFFFF));
             Intrinsic.Store16(entry, Offset.Select, select);
             Intrinsic.Store8(entry, Offset.Always0, 0);
             Intrinsic.Store8(entry, Offset.Flags, flags);
@@ -1954,5 +1953,4 @@ namespace lonos.kernel.core
         internal static uint RaisedCountCustom;
 
     }
-
 }

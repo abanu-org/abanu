@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace lonos.kernel.core
+namespace lonos.kernel.core.Devices
 {
 
     public class BiosTextScreenDevice : IFile
     {
- 
+
         public BiosTextScreenDevice()
         {
         }

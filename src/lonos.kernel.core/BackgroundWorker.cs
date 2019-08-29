@@ -1,4 +1,5 @@
-﻿using Mosa.Runtime.x86;
+﻿using lonos.kernel.core.Scheduling;
+using Mosa.Runtime.x86;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,7 +2,7 @@
 
 using Mosa.Runtime.x86;
 
-namespace lonos.kernel.core
+namespace lonos.kernel.core.Interrupts
 {
     /// <summary>
     /// Programmable Interrupt Controller (PIC)

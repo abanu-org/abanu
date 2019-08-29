@@ -1,6 +1,7 @@
-﻿using System;
+﻿using lonos.kernel.core.Devices;
+using System;
 
-namespace lonos.kernel.core
+namespace lonos.kernel.core.Diagnostics
 {
 
     public class KernelMessageDevice : IFile
@@ -12,8 +13,8 @@ namespace lonos.kernel.core
 
         public unsafe SSize Write(byte* buf, USize count)
         {
-            var devSerial = Devices.Serial1;
-            var devConsole = Devices.Console;
+            var devSerial = DeviceManager.Serial1;
+            var devConsole = DeviceManager.Console;
 
             if (devSerial == null && devConsole == null)
                 return 0;

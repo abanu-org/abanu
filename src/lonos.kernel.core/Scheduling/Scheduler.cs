@@ -7,8 +7,11 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 
 using System.Runtime.InteropServices;
+using lonos.kernel.core.Interrupts;
+using lonos.kernel.core.MemoryManagement;
+using lonos.kernel.core.Diagnostics;
 
-namespace lonos.kernel.core
+namespace lonos.kernel.core.Scheduling
 {
     public static class Scheduler
     {
