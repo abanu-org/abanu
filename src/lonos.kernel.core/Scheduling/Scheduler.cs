@@ -164,9 +164,10 @@ namespace lonos.kernel.core
         public unsafe static void CreateThread(ThreadStartOptions options)
         {
             Thread thread;
+            uint threadID;
             lock (SyncRoot)
             {
-                uint threadID = FindEmptyThreadSlot();
+                threadID = FindEmptyThreadSlot();
 
                 if (threadID == 0)
                 {
