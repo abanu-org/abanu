@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace lonos.Kernel.Core
+namespace lonos
 {
 
     unsafe public struct NullTerminatedString
@@ -61,7 +61,7 @@ namespace lonos.Kernel.Core
             }
             return true;
         }
-    
+
     }
 
 }

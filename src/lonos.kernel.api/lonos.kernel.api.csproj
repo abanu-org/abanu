@@ -45,12 +45,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Structs\NullTerminatedString.cs" />
-    <Compile Include="Structs\USize.cs" />
     <Compile Include="Structs\FileHandle.cs" />
-    <Compile Include="Structs\SSize.cs" />
     <Compile Include="Structs\MemoryRegion.cs" />
-    <Compile Include="Structs\Addr.cs" />
     <Compile Include="IKernelApi.cs" />
     <Compile Include="IFile.cs" />
     <Compile Include="IBufferWriter.cs" />

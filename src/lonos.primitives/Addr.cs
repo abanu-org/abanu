@@ -1,44 +1,38 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
-
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System.Runtime.Versioning;
+﻿using System.Runtime.Versioning;
 using System;
 
-namespace lonos.Kernel.Core
+namespace lonos
 {
     [Serializable]
     public struct USize
     {
         private unsafe void* _value; // Do not rename (binary serialization)
 
-        public static readonly USize Zero;  
+        public static readonly USize Zero;
 
         [NonVersionable]
-		public unsafe USize(uint value)
+        public unsafe USize(uint value)
         {
             _value = (void*)value;
         }
 
         [NonVersionable]
-		public unsafe USize(ulong value)
+        public unsafe USize(ulong value)
         {
             _value = (void*)((uint)value);
         }
 
         [NonVersionable]
-		public unsafe USize(void* value)
+        public unsafe USize(void* value)
         {
             _value = value;
         }
 
         public unsafe override bool Equals(Object obj)
         {
-			if (obj is USize)
+            if (obj is USize)
             {
-				return (_value == ((USize)obj)._value);
+                return (_value == ((USize)obj)._value);
             }
             return false;
         }
@@ -61,37 +55,37 @@ namespace lonos.Kernel.Core
         }
 
         [NonVersionable]
-		public static implicit operator USize(uint value)
-        {
-			return new USize(value);
-        }
-
-        [NonVersionable]
-		public static implicit operator USize(ulong value)
-        {
-			return new USize(value);
-        }
-
-        [NonVersionable]
-		public static unsafe implicit operator USize(void* value)
+        public static implicit operator USize(uint value)
         {
             return new USize(value);
         }
 
         [NonVersionable]
-		public static unsafe implicit operator void* (USize value)
+        public static implicit operator USize(ulong value)
+        {
+            return new USize(value);
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator USize(void* value)
+        {
+            return new USize(value);
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator void*(USize value)
         {
             return value._value;
         }
 
         [NonVersionable]
-		public static unsafe implicit operator uint(USize value)
+        public static unsafe implicit operator uint(USize value)
         {
             return (uint)value._value;
         }
 
         [NonVersionable]
-		public static unsafe implicit operator ulong(USize value)
+        public static unsafe implicit operator ulong(USize value)
         {
             return (ulong)value._value;
         }

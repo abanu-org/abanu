@@ -49,9 +49,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Addr.cs" />
     <Compile Include="BitHelper.cs" />
     <Compile Include="BitMask.cs" />
     <Compile Include="BitMask64.cs" />
+    <Compile Include="NullTerminatedString.cs" />
+    <Compile Include="SSize.cs" />
+    <Compile Include="USize.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
