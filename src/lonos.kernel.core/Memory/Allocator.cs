@@ -277,26 +277,26 @@ namespace lonos.kernel.core
 
         void* buddy_malloc(size_t size)
         {
-            //MALLOC_LOCK;
-            malloc_meta* block = find_free_block(size);
-            if (block != null)
+            lock (this)
             {
-                block = split(block, size);
-                //MALLOC_UNLOCK;
-                return block->data.user;
-            }
+                malloc_meta* block = find_free_block(size);
+                if (block != null)
+                {
+                    block = split(block, size);
+                    return block->data.user;
+                }
 
-            void* ptr = mmap(0, PROT_READ | PROT_WRITE, 1);
-            if (ptr == MAP_FAILED)
-            {
-                malloc_abort("[MALLOC] MMAP ERROR\n");
-                return null;
-            }
+                void* ptr = mmap(0, PROT_READ | PROT_WRITE, 1);
+                if (ptr == MAP_FAILED)
+                {
+                    malloc_abort("[MALLOC] MMAP ERROR\n");
+                    return null;
+                }
 
-            malloc_meta* meta = create_meta(ptr, PAGE_SIZE);
-            meta = split(meta, size);
-            //MALLOC_UNLOCK;
-            return meta->data.user;
+                malloc_meta* meta = create_meta(ptr, PAGE_SIZE);
+                meta = split(meta, size);
+                return meta->data.user;
+            }
         }
 
         public void free(void* ptr)
@@ -305,22 +305,22 @@ namespace lonos.kernel.core
                 return;
 
             malloc_meta* meta = get_meta(ptr);
-            //MALLOC_LOCK;
-
-            meta = fusion(meta, PAGE_SIZE);
-
-            if (GET_SIZE(meta) >= PAGE_SIZE)
+            lock (this)
             {
-                //MALLOC_UNLOCK;
-                if (munmap(meta) != 0)
-                {
-                    malloc_abort("[FREE] MUNMAP ERROR\n");
-                }
-                return;
-            }
 
-            add_to_free_list(meta);
-            //MALLOC_UNLOCK;
+                meta = fusion(meta, PAGE_SIZE);
+
+                if (GET_SIZE(meta) >= PAGE_SIZE)
+                {
+                    if (munmap(meta) != 0)
+                    {
+                        malloc_abort("[FREE] MUNMAP ERROR\n");
+                    }
+                    return;
+                }
+
+                add_to_free_list(meta);
+            }
         }
 
         public void* malloc(size_t size)
@@ -368,23 +368,25 @@ namespace lonos.kernel.core
                 {
                     size_t previous_size = GET_SIZE(meta) - META_SIZE;
 
-                    //MALLOC_LOCK;
-                    meta = fusion(meta, size);
-                    if (GET_SIZE(meta) == size)
+                    lock (this)
                     {
-                        SET_INUSE(meta);
-                        //MALLOC_UNLOCK;
-                        if (ptr != meta->data.user)
-                            memcpy(meta->data.user, ptr, previous_size);
-                        return meta->data.user;
+                        meta = fusion(meta, size);
+                        if (GET_SIZE(meta) == size)
+                        {
+                            SET_INUSE(meta);
+
+                            if (ptr != meta->data.user)
+                                memcpy(meta->data.user, ptr, previous_size);
+                            return meta->data.user;
+                        }
                     }
-                    //MALLOC_UNLOCK;
                 }
                 else
                 {
-                    //MALLOC_LOCK;
-                    meta = split(meta, size);
-                    //MALLOC_UNLOCK;
+                    lock (this)
+                    {
+                        meta = split(meta, size);
+                    }
                     return meta->data.user;
                 }
             }

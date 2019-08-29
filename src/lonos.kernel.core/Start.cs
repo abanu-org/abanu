@@ -248,7 +248,7 @@ namespace lonos.kernel.core
 
         public static void Tests()
         {
-            var ar = new KList<uint>(sizeof(uint));
+            var ar = new KList<uint>();
             ar.Add(44);
             ar.Add(55);
             KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);

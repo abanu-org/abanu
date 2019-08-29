@@ -173,70 +173,73 @@ namespace lonos.kernel.core
         /// <returns>The page</returns>
         Page* Allocate(uint num)
         {
-            if (num == 0)
-                KernelMessage.WriteLine("Requesting zero pages");
-
-            //KernelMessage.WriteLine("Request {0} pages...", num);
-
-            var cnt = 0;
-
-            if (lastAllocatedPage == null)
-                lastAllocatedPage = PageArray;
-
-            Page* p = lastAllocatedPage->Next;
-            while (true)
+            lock (this)
             {
-                if (p == null)
-                    p = PageArray;
+                if (num == 0)
+                    KernelMessage.WriteLine("Requesting zero pages");
 
-                if (p->Status == PageStatus.Free)
+                //KernelMessage.WriteLine("Request {0} pages...", num);
+
+                var cnt = 0;
+
+                if (lastAllocatedPage == null)
+                    lastAllocatedPage = PageArray;
+
+                Page* p = lastAllocatedPage->Next;
+                while (true)
                 {
-                    var head = p;
+                    if (p == null)
+                        p = PageArray;
 
-                    // Found free Page. Check now free range.
-                    for (var i = 0; i < num; i++)
+                    if (p->Status == PageStatus.Free)
                     {
-                        if (p == null)
-                            break; // Reached end. SorRange is incomplete
-                        if (p->Status != PageStatus.Free) // Used -> so we can abort the searach
-                            break;
+                        var head = p;
 
-                        if (i == num - 1)
-                        { // all loops successful. So we found our range.
+                        // Found free Page. Check now free range.
+                        for (var i = 0; i < num; i++)
+                        {
+                            if (p == null)
+                                break; // Reached end. SorRange is incomplete
+                            if (p->Status != PageStatus.Free) // Used -> so we can abort the searach
+                                break;
 
-                            head->Tail = p;
-                            head->PagesUsed = num;
-                            p = head;
-                            for (var n = 0; n < num; n++)
-                            {
-                                p->Status = PageStatus.Used;
-                                p->Head = head;
-                                p->Tail = head->Tail;
-                                p = p->Next;
-                                FreePages--;
+                            if (i == num - 1)
+                            { // all loops successful. So we found our range.
+
+                                head->Tail = p;
+                                head->PagesUsed = num;
+                                p = head;
+                                for (var n = 0; n < num; n++)
+                                {
+                                    p->Status = PageStatus.Used;
+                                    p->Head = head;
+                                    p->Tail = head->Tail;
+                                    p = p->Next;
+                                    FreePages--;
+                                }
+                                lastAllocatedPage = p;
+
+                                //KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress + 4096 - 1);
+
+                                return head;
                             }
-                            lastAllocatedPage = p;
 
-                            //KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress + 4096 - 1);
-
-                            return head;
+                            p = p->Next;
                         }
 
-                        p = p->Next;
                     }
 
+                    if (p->Tail != null)
+                        p = p->Tail;
+
+                    p = p->Next;
+                    if (++cnt > PageCount)
+                        break;
                 }
 
-                if (p->Tail != null)
-                    p = p->Tail;
-
-                p = p->Next;
-                if (++cnt > PageCount)
-                    break;
+                Panic.Error("PageFrameAllocator: No free Page found");
+                return null;
             }
-
-            Panic.Error("PageFrameAllocator: No free Page found");
-            return null;
         }
 
         /// <summary>
@@ -244,20 +247,23 @@ namespace lonos.kernel.core
         /// </summary>
         void Free(Addr address)
         {
-            var p = GetPhysPage(address);
-            if (p->Free)
-                return;
-
-            var num = p->PagesUsed;
-
-            for (var n = 0; n < num; n++)
+            lock (this)
             {
-                p->Status = PageStatus.Used;
-                p->PagesUsed = 0;
-                p->Head = null;
-                p->Tail = null;
-                p = p->Next;
-                FreePages++;
+                var p = GetPhysPage(address);
+                if (p->Free)
+                    return;
+
+                var num = p->PagesUsed;
+
+                for (var n = 0; n < num; n++)
+                {
+                    p->Status = PageStatus.Used;
+                    p->PagesUsed = 0;
+                    p->Head = null;
+                    p->Tail = null;
+                    p = p->Next;
+                    FreePages++;
+                }
             }
         }
 

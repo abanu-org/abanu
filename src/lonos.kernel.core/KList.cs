@@ -18,19 +18,15 @@ namespace lonos.kernel.core
 
         private T[] _items;
         private int _size;
-        private uint _elementSize;
 
-        public KList(uint elementSize)
+        public KList()
         {
             _items = _emptyArray;
             _size = 0;
-            _elementSize = elementSize;
         }
 
-        public unsafe KList(uint elementSize, int capacity)
+        public unsafe KList(int capacity)
         {
-            _elementSize = elementSize;
-
             if (capacity < 0)
                 throw new ArgumentOutOfRangeException(nameof(capacity));
 
@@ -43,11 +39,13 @@ namespace lonos.kernel.core
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         private T[] CreateArray(int capacity)
         {
-            var type = typeof(T);
-            var handle = type.TypeHandle;
+            //var type = typeof(T);
+            //var handle = type.TypeHandle;
 
-            var ptr = Mosa.Runtime.Internal.AllocateArray(typeof(T).TypeHandle, _elementSize, (uint)capacity);
-            return (T[])Mosa.Runtime.Intrinsic.GetObjectFromAddress(ptr);
+            //var ptr = Mosa.Runtime.Internal.AllocateArray(typeof(T).TypeHandle, _elementSize, (uint)capacity);
+            //return (T[])Mosa.Runtime.Intrinsic.GetObjectFromAddress(ptr);
+
+            return new T[capacity];
         }
 
         private void DestryArray(T[] array)
