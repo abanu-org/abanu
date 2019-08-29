@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
     public delegate void ExceptionHandler(string message);
 

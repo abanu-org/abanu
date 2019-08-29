@@ -1,6 +1,8 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-namespace lonos.kernel.core.Devices
+using lonos.Kernel.Core.PageManagement;
+
+namespace lonos.Kernel.Core.Devices
 {
 
     public class FrameBuffer

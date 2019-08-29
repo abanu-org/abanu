@@ -1,5 +1,5 @@
 ﻿using System;
-using lonos.kernel.core;
+using lonos.Kernel.Core;
 
 namespace lonos.test.console.alloc2
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Mosa.Runtime.x86;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
     public class MemoryOperation
     {

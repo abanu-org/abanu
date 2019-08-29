@@ -1,10 +1,11 @@
 ﻿using System;
 using Mosa.Runtime;
 using Mosa.Kernel.x86;
-using lonos.kernel.core.MemoryManagement;
-using lonos.kernel.core.Diagnostics;
+using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Boot;
 
-namespace lonos.kernel.core.Devices
+namespace lonos.Kernel.Core.Devices
 {
 
     public static class DeviceManager
@@ -38,7 +39,7 @@ namespace lonos.kernel.core.Devices
             Serial1 = new SerialDevice(Serial.COM1);
 
             Memory.InitialKernelProtect_MakeWritable_BySize(Screen.ScreenMemoryAddress, Screen.ScreenMemorySize);
-            lonos.kernel.core.Screen.EarlyInitialization();
+            Screen.EarlyInitialization();
             BiosTextScreen = new BiosTextScreenDevice();
 
             Screen.ApplyMode(BootInfo.Header->VBEMode);

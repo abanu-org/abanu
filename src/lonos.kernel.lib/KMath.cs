@@ -1,7 +1,7 @@
 ﻿using System;
-using lonos.kernel.core;
+using lonos.Kernel.Core;
 
-namespace lonos.kernel
+namespace lonos.Kernel
 {
     public static class KMath
     {

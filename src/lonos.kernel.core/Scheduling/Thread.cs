@@ -1,8 +1,8 @@
-﻿using lonos.kernel.core.Interrupts;
-using lonos.kernel.core.MemoryManagement;
+﻿using lonos.Kernel.Core.Interrupts;
+using lonos.Kernel.Core.MemoryManagement;
 using System;
 
-namespace lonos.kernel.core.Scheduling
+namespace lonos.Kernel.Core.Scheduling
 {
     internal unsafe class Thread
     {

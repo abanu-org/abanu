@@ -3,8 +3,12 @@ using Mosa.Runtime;
 using Mosa.Kernel.x86;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
+using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.Elf;
+using lonos.Kernel.Core;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Loader
 {
 
     unsafe static class LoaderStart

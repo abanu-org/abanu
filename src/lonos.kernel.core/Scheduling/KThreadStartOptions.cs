@@ -1,10 +1,10 @@
 ﻿// Adopted Implementation from: MOSA Project
 
-using lonos.kernel.core.MemoryManagement;
+using lonos.Kernel.Core.MemoryManagement;
 using Mosa.Runtime;
 using System.Threading;
 
-namespace lonos.kernel.core.Scheduling
+namespace lonos.Kernel.Core.Scheduling
 {
 
     public struct ThreadStartOptions

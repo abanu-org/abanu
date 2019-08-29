@@ -1,9 +1,9 @@
 ﻿using System;
 using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
-using lonos.kernel.core.Elf;
+using lonos.Kernel.Core.Elf;
 
-namespace lonos.kernel.core.External
+namespace lonos.Kernel.Core.External
 {
 
     public static class NativeCalls

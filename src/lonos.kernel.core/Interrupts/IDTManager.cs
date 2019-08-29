@@ -1,13 +1,13 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using lonos.kernel.core.MemoryManagement;
+using lonos.Kernel.Core.MemoryManagement;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace lonos.kernel.core.Interrupts
+namespace lonos.Kernel.Core.Interrupts
 {
     public unsafe delegate void InterruptHandler(IDTStack* stack);
 

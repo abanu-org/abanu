@@ -1,5 +1,5 @@
 ﻿using System;
-namespace lonos.kernel.core.Api
+namespace lonos.Kernel.Core.Api
 {
 
     internal class ApiHost : IKernelApi

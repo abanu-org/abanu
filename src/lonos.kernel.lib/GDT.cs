@@ -15,7 +15,7 @@ using Mosa.Runtime.x86;
 using Mosa.Runtime;
 using System.Runtime.CompilerServices;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
 
     unsafe public static class GDT
@@ -370,7 +370,7 @@ namespace lonos.kernel.core
 
         public static DescriptorTableEntry CreateTSS(TaskStateSegment* tss)
         {
-            var seg = Create(false, (uint)tss, lonos.kernel.core.TaskStateSegment.EntrySize);
+            var seg = Create(false, (uint)tss, Core.TaskStateSegment.EntrySize);
             seg.SystemDescriptor_Type = InactiveTask;
             return seg;
         }
@@ -384,7 +384,7 @@ namespace lonos.kernel.core
             set
             {
                 BaseAddress = (uint)value;
-                Limit = core.TaskStateSegment.EntrySize;
+                Limit = Core.TaskStateSegment.EntrySize;
             }
         }
 

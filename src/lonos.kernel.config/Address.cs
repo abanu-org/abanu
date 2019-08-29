@@ -1,5 +1,5 @@
 ﻿
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
     /// <summary>
     /// Static known adresses.

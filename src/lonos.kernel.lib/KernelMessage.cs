@@ -3,7 +3,7 @@ using Mosa.Runtime;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
 
     unsafe public static class KernelMessage

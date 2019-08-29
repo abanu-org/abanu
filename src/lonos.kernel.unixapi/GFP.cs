@@ -1,5 +1,5 @@
 ﻿
-namespace lonos.kernel
+namespace lonos.Kernel
 {
 
     public enum GFP

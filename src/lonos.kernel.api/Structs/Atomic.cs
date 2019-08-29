@@ -1,4 +1,4 @@
-﻿namespace lonos.kernel.core
+﻿namespace lonos.Kernel.Core
 {
 
     public struct Atomic

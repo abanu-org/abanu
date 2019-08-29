@@ -1,5 +1,6 @@
-﻿using System;
-namespace lonos.kernel.core.MemoryManagement
+﻿using lonos.Kernel.Core.PageManagement;
+using System;
+namespace lonos.Kernel.Core.MemoryManagement
 {
     public class RawVirtualFrameAllocator
     {

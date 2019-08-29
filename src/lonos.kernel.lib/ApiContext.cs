@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
 
     public class ApiContext

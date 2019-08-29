@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A72ED046-DE1C-4688-981B-6086C091047F}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>lonos.kernel.core</RootNamespace>
+    <RootNamespace>lonos.Kernel.Core</RootNamespace>
     <AssemblyName>lonos.kernel.core</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
@@ -33,14 +33,14 @@
     <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BackgroundWorker.cs" />
+    <Compile Include="Tasks\BackgroundWorker.cs" />
     <Compile Include="Diagnostics\AsmDebugFunction.cs" />
     <Compile Include="Scheduling\KThreadStartOptions.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\Thread.cs" />
     <Compile Include="Scheduling\ThreadStatus.cs" />
     <Compile Include="Start.cs" />
-    <Compile Include="MemoryManagement\Mem.cs" />
+    <Compile Include="MemoryManagement\Memory.cs" />
     <Compile Include="Elf\KernelElf.cs" />
     <Compile Include="MemoryManagement\ManagedMemoy.cs" />
     <Compile Include="Interrupts\IDTMosa.cs" />
@@ -62,13 +62,13 @@
     <Compile Include="Devices\Console\ConsoleDevice.cs" />
     <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
-    <Compile Include="BootInfo.cs" />
+    <Compile Include="Boot\BootInfo.cs" />
     <Compile Include="MemoryManagement\PageFrameAllocator.cs" />
     <Compile Include="MemoryManagement\Allocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMap.cs" />
     <Compile Include="Tests\buddy-malloc.cs" />
     <Compile Include="MemoryManagement\RawVirtualFrameAllocator.cs" />
-    <Compile Include="KList.cs" />
+    <Compile Include="Collections\KList.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">

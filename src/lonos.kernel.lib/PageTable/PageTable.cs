@@ -4,7 +4,7 @@ using Mosa.Runtime.x86;
 
 using System.Runtime.InteropServices;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core.PageManagement
 {
     /// <summary>
     /// Page Table

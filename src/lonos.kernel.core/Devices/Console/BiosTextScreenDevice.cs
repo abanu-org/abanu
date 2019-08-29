@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace lonos.kernel.core.Devices
+namespace lonos.Kernel.Core.Devices
 {
 
     public class BiosTextScreenDevice : IFile

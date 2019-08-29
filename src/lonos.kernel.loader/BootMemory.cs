@@ -3,8 +3,10 @@ using Mosa.Runtime;
 using Mosa.Kernel.x86;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
+using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Loader
 {
 
     public static class BootMemory

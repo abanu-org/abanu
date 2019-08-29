@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core.Boot
 {
     public struct BootInfoMemory
     {

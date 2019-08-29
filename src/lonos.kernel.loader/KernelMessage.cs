@@ -1,5 +1,6 @@
-﻿using System;
-namespace lonos.kernel.core
+﻿using lonos.Kernel.Core;
+using System;
+namespace lonos.Kernel.Loader
 {
 
     public static class KernelMessage_

@@ -1,6 +1,7 @@
-﻿using System;
+﻿using lonos.Kernel.Core.Boot;
+using System;
 
-namespace lonos.kernel.core.MemoryManagement
+namespace lonos.Kernel.Core.MemoryManagement
 {
 
     public struct KernelMemoryMap

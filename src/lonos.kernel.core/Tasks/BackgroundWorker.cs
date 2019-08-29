@@ -1,4 +1,4 @@
-﻿using lonos.kernel.core.Scheduling;
+﻿using lonos.Kernel.Core.Scheduling;
 using Mosa.Runtime.x86;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core.Tasks
 {
 
     public static class BackgroundWorker

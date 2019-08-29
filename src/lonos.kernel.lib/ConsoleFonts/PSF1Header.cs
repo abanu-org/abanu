@@ -4,7 +4,7 @@ using System;
 using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core.ConsoleFonts
 {
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

@@ -1,16 +1,19 @@
 ﻿using System;
-using lonos.kernel.core.Api;
-using lonos.kernel.core.Devices;
-using lonos.kernel.core.Diagnostics;
-using lonos.kernel.core.Elf;
-using lonos.kernel.core.External;
-using lonos.kernel.core.Interrupts;
-using lonos.kernel.core.MemoryManagement;
-using lonos.kernel.core.Scheduling;
+using lonos.Kernel.Core.Api;
+using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.Collections;
+using lonos.Kernel.Core.Devices;
+using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Elf;
+using lonos.Kernel.Core.External;
+using lonos.Kernel.Core.Interrupts;
+using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.Scheduling;
+using lonos.Kernel.Core.Tasks;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
 
     internal static class Start
@@ -24,7 +27,7 @@ namespace lonos.kernel.core
             Memory.InitialKernelProtect();
 
             ManagedMemoy.InitializeGCMemory();
-            Mosa.Runtime.StartUp.InitializeAssembly();
+            StartUp.InitializeAssembly();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
             ApiContext.Current = new ApiHost();
@@ -85,7 +88,7 @@ namespace lonos.kernel.core
             InitializeUserMode();
 
             KernelMessage.WriteLine("Initialize Runtime Metadata");
-            Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
+            StartUp.InitializeRuntimeMetadata();
 
             KernelMessage.WriteLine("Performing some Non-Thread Tests");
             Tests();

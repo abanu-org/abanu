@@ -1,5 +1,6 @@
-﻿using System;
-namespace lonos.kernel.core
+﻿using lonos.Kernel.Core.PageManagement;
+using System;
+namespace lonos.Kernel.Core.Boot
 {
     public unsafe static class BootInfo
     {

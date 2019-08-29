@@ -3,10 +3,10 @@
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 using System;
-using lonos.kernel.core.Scheduling;
-using lonos.kernel.core.Diagnostics;
+using lonos.Kernel.Core.Scheduling;
+using lonos.Kernel.Core.Diagnostics;
 
-namespace lonos.kernel.core.Interrupts
+namespace lonos.Kernel.Core.Interrupts
 {
 
     public unsafe static class InterruptsHandlers

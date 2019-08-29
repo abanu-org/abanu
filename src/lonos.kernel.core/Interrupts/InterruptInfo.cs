@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace lonos.kernel.core.Interrupts
+namespace lonos.Kernel.Core.Interrupts
 {
     public struct InterruptInfo
     {

@@ -1,7 +1,7 @@
-﻿using lonos.kernel.core.Devices;
+﻿using lonos.Kernel.Core.Devices;
 using System;
 
-namespace lonos.kernel.core.Diagnostics
+namespace lonos.Kernel.Core.Diagnostics
 {
 
     public class KernelMessageDevice : IFile

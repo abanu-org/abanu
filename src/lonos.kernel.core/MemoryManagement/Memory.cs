@@ -1,8 +1,10 @@
 ﻿using System;
+using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.PageManagement;
 using Mosa.Kernel.x86;
 using Mosa.Runtime.x86;
 
-namespace lonos.kernel.core.MemoryManagement
+namespace lonos.Kernel.Core.MemoryManagement
 {
 
     public static class Memory

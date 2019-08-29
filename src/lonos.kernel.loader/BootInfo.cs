@@ -1,7 +1,10 @@
 ﻿using System;
+using lonos.Kernel.Core;
+using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.PageManagement;
 using Mosa.Kernel.x86;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Loader
 {
     public unsafe class BootInfo_
     {
@@ -11,7 +14,7 @@ namespace lonos.kernel.core
         {
             KernelMessage.WriteLine("Multiboot Flags: {0:X}", Multiboot.Flags);
             BootInfo = (BootInfoHeader*)Address.KernelBootInfo;
-            BootInfo->Magic = lonos.kernel.core.BootInfoHeader.BootInfoMagic;
+            BootInfo->Magic = BootInfoHeader.BootInfoMagic;
             BootInfo->HeapStart = KMath.AlignValueCeil(Address.OriginalKernelElfSection + LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->HeapSize = 0;
 

@@ -1,6 +1,7 @@
-﻿using System;
+﻿using lonos.Kernel.Core.PageManagement;
+using System;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core.Boot
 {
 
     public unsafe struct BootInfoHeader

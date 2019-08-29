@@ -1,9 +1,10 @@
 ﻿
-using lonos.kernel.core.Devices;
-using lonos.kernel.core.Elf;
+using lonos.Kernel.Core.ConsoleFonts;
+using lonos.Kernel.Core.Devices;
+using lonos.Kernel.Core.Elf;
 using System;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
 
     public class FrameBufferTextScreenDevice : IFile

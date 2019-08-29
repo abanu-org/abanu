@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.Runtime.InteropServices;
 
-namespace lonos.kernel.core.Diagnostics
+namespace lonos.Kernel.Core.Diagnostics
 {
     public static class AsmDebugFunction
     {

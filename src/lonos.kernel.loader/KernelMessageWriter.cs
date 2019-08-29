@@ -1,4 +1,6 @@
-﻿namespace lonos.kernel.core
+﻿using lonos.Kernel.Core;
+
+namespace lonos.Kernel.Loader
 {
     public class KernelMessageWriter : IBufferWriter
     {

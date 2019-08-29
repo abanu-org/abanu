@@ -1,12 +1,13 @@
 ﻿using System;
-using lonos.kernel.core.Diagnostics;
-using lonos.kernel.core.Devices;
+using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Devices;
 using Mosa.Runtime;
+using lonos.Kernel.Core.Boot;
 
 //using Mosa.Kernel.x86;
 
 
-namespace lonos.kernel.core.MemoryManagement
+namespace lonos.Kernel.Core.MemoryManagement
 {
 
 

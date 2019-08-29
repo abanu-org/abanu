@@ -1,10 +1,10 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
-using lonos.kernel.core.MemoryManagement;
+using lonos.Kernel.Core.MemoryManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core.Collections
 {
 
     /// <summary>

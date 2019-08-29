@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 
-namespace lonos.kernel.core
+namespace lonos.Kernel.Core
 {
     /// <summary>
     /// Represents a string as struct, so it can used before memory and runtime initialization.
