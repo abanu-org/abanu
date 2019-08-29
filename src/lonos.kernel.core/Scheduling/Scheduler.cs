@@ -64,29 +64,8 @@ namespace lonos.kernel.core
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void IdleThread()
         {
-            var local = 0xAA11BB22;
             while (true)
-            {
-                //Native.Hlt();
-                //Native.Nop();
-                uint i = 0;
-                bool flag = false;
-                while (true)
-                {
-                    if (flag)
-                        local++;
-                    else
-                        local--;
-                    flag = !flag;
-                    i++;
-                    //Screen.Goto(2, 0);
-                    //Screen.Write("IDLE:");
-                    //Screen.Write(i, 10);
-                    //Screen.Write(local, 16);
-                    dummy(local);
-                    dummy(i);
-                }
-            }
+                Native.Hlt();
         }
 
         private static void dummy(uint local)
@@ -121,8 +100,8 @@ namespace lonos.kernel.core
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SignalThreadTerminationMethod()
         {
-            //KernelMessage.WriteLine("Terminating Thread");
-            //Native.Int(ThreadTerminationSignalIRQ);
+            // No local variables are allowd, because the stack could be totally empty.
+            // Just make a call
             TerminateCurrentThread();
         }
 
@@ -144,15 +123,11 @@ namespace lonos.kernel.core
             var thread = Threads[threadID];
 
             if (thread.Status == ThreadStatus.Running)
-            {
                 thread.Status = ThreadStatus.Terminating;
 
-                // TODO: release stack memory
-            }
+            // We are scheduled now for termination
             while (true)
-            {
-                Native.Hlt();
-            }
+                Native.Nop();
         }
 
         private static uint GetNextThread(uint currentThreadID)
@@ -247,7 +222,7 @@ namespace lonos.kernel.core
             Intrinsic.Store32(stackBottom, 4, 0xFF00001);          // Debug Marker
             Intrinsic.Store32(stackBottom, 0, 0xFF00002);          // Debug Marker
 
-            Intrinsic.Store32(stackBottom, -4, 0x0);
+            Intrinsic.Store32(stackBottom, -4, (uint)stackBottom);
             Intrinsic.Store32(stackBottom, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
 
             IDTTaskStack* stackState = null;
@@ -262,7 +237,7 @@ namespace lonos.kernel.core
             {
                 // Never set this values for Non-User, otherwiese you will override stack informations.
                 stackState->TASK_SS = 0x23;
-                stackState->TASK_ESP = (uint)stackBottom - 12;
+                stackState->TASK_ESP = (uint)stackBottom - 8;
             }
             if (options.User && options.AllowUserModeIOPort)
             {

@@ -169,8 +169,8 @@ namespace lonos.kernel.core
                 Screen.Write(i, 10);
             }
             KernelMessage.WriteLine("Thread2: Finished");
-            while (true)
-                i++;
+            //while (true)
+            //    i++;
         }
 
         // public unsafe static void InitialKernelProtect()
