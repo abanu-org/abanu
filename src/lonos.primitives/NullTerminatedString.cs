@@ -6,14 +6,12 @@ namespace lonos
     unsafe public struct NullTerminatedString
     {
 
-        public Byte* Bytes
+        public byte* Bytes
         {
             get
             {
                 fixed (NullTerminatedString* ptr = &this)
-                {
-                    return (Byte*)ptr;
-                }
+                    return (byte*)ptr;
             }
         }
 
@@ -35,11 +33,11 @@ namespace lonos
                 return true;
             var bytes1 = this.Bytes;
             var bytes2 = value->Bytes;
+
             for (var i = 0; i < len1; i++)
-            {
                 if (bytes1[i] != bytes2[i])
                     return false;
-            }
+
             return true;
         }
 
@@ -54,11 +52,11 @@ namespace lonos
             if (len1 == 0)
                 return true;
             var bytes1 = this.Bytes;
+
             for (var i = 0; i < len1; i++)
-            {
                 if (bytes1[i] != (byte)value[i])
                     return false;
-            }
+
             return true;
         }
 

@@ -20,3 +20,6 @@ cp LoadTaskRegister.o ../../bin/$ARCH/lonos.LoadTaskRegister.o
 
 nasm -f bin DebugFunction1.s -o DebugFunction1.o
 cp DebugFunction1.o ../../bin/$ARCH/lonos.DebugFunction1.o
+
+nasm -f bin app.HelloKernel.s -o app.HelloKernel.o
+cp app.HelloKernel.o ../../bin/$ARCH/app.HelloKernel.o

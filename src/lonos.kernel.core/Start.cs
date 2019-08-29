@@ -9,6 +9,7 @@ using lonos.Kernel.Core.External;
 using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.Scheduling;
+using lonos.Kernel.Core.SysCalls;
 using lonos.Kernel.Core.Tasks;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
@@ -86,6 +87,7 @@ namespace lonos.Kernel.Core
             IDTManager.Setup();
 
             InitializeUserMode();
+            SysCallManager.Setup();
 
             KernelMessage.WriteLine("Initialize Runtime Metadata");
             StartUp.InitializeRuntimeMetadata();

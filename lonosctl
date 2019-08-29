@@ -51,6 +51,7 @@ function build {
 			build builder
 			build assembly
 			build native
+			build apps
 			build loader
 			build kernel
 			build image
@@ -71,6 +72,10 @@ function build {
 
 		native)
 			src/lonos.native.x86/build
+			;;
+
+		apps)
+			(cd bin && mono -O=all ./lonos.build.exe --image=apps)
 			;;
 
 		loader)
@@ -95,7 +100,7 @@ function build {
 			;;
 
 		*)
-			echo $"Usage: lonosctl build {all|builder|assembly|native|disk}"
+			echo $"Usage: lonosctl build {all|builder|assembly|native|apps|image|disk}"
 			exit 1
 	esac
 }

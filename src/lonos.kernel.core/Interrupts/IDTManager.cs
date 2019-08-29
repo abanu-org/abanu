@@ -1,6 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 using System;
@@ -84,17 +85,22 @@ namespace lonos.Kernel.Core.Interrupts
             SetInterruptHandler(KnownInterrupt.CoProcessorError, InterruptsHandlers.CoProcessorError);
             SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptsHandlers.SIMDFloatinPointException);
             SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
-            SetInterruptHandler(KnownInterrupt.Keyboard, InterruptsHandlers.Keyboard);
+            SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
 
             KernelMessage.Write("Enabling interrupts...");
 
-            var idtAddr = (uint)IDTAddr;
-            Native.Lidt(idtAddr);
-            Native.Sti();
+            Flush();
 
             Mosa.Kernel.x86.IDT.Enabled = true
             ;
             KernelMessage.WriteLine("done");
+        }
+
+        public static void Flush()
+        {
+            var idtAddr = (uint)IDTAddr;
+            Native.Lidt(idtAddr);
+            Native.Sti();
         }
 
         private static void UndefinedHandler(IDTStack* stack)
@@ -105,9 +111,14 @@ namespace lonos.Kernel.Core.Interrupts
 
         internal static void SetInterruptHandler(KnownInterrupt interrupt, InterruptHandler interruptHandler)
         {
+            SetInterruptHandler((uint)interrupt, interruptHandler);
+        }
+
+        internal static void SetInterruptHandler(uint interrupt, InterruptHandler interruptHandler)
+        {
             if (interruptHandler == null)
                 interruptHandler = UndefinedHandler;
-            handlers[(uint)interrupt].Handler = interruptHandler;
+            handlers[interrupt].Handler = interruptHandler;
         }
 
         #region SetTable Entries
@@ -1923,30 +1934,38 @@ namespace lonos.Kernel.Core.Interrupts
 
         #endregion IRQ Implementation Methods
 
-        private static void Set(uint index, Action interruptEntryMethod)
+        private static void Set(uint irq, Action interruptEntryMethod)
         {
             //KernelMessage.WriteLine("set {0}", index);
             var p = Marshal.GetFunctionPointerForDelegate(interruptEntryMethod);
             //KernelMessage.WriteLine("got p: {0:X8}", (Addr)p);
 
-            Set(index, (uint)p.ToInt32(), 0x08, 0x8E);
+            Set(irq, (uint)p.ToInt32(), 0x08, 0x8E);
         }
 
         /// <summary>
         /// Sets the specified index.
         /// </summary>
-        /// <param name="index">The index.</param>
+        /// <param name="irq">The index.</param>
         /// <param name="address">The address.</param>
         /// <param name="select">The select.</param>
         /// <param name="flags">The flags.</param>
-        private static void Set(uint index, uint address, ushort select, byte flags)
+        private static void Set(uint irq, uint address, ushort select, byte flags)
         {
-            var entry = new IntPtr(IDTAddr + 6 + index * Offset.TotalSize);
+            var entry = new IntPtr(IDTAddr + 6 + irq * Offset.TotalSize);
             Intrinsic.Store16(entry, Offset.BaseLow, (ushort)(address & 0xFFFF));
             Intrinsic.Store16(entry, Offset.BaseHigh, (ushort)(address >> 16 & 0xFFFF));
             Intrinsic.Store16(entry, Offset.Select, select);
             Intrinsic.Store8(entry, Offset.Always0, 0);
             Intrinsic.Store8(entry, Offset.Flags, flags);
+        }
+
+        public static void SetPrivilegeLevel(uint irq, byte privLevel)
+        {
+            var entry = new IntPtr(IDTAddr + 6 + irq * Offset.TotalSize);
+            var value = Intrinsic.Load8(entry, Offset.Flags);
+            value = value.SetBits(5, 2, privLevel);
+            Intrinsic.Store8(entry, Offset.Flags, value);
         }
 
         internal static uint RaisedCount;
