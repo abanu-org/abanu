@@ -6,13 +6,13 @@ namespace lonos.kernel.core
     {
         Empty = 0,
         Creating,
+        Created,
         Running,
-        Terminating,
         Terminated,
         Waiting
     };
 
-    internal unsafe class Thread
+    internal unsafe class Thread : IDisposable
     {
         public ThreadStatus Status = ThreadStatus.Empty;
         public IntPtr StackBottom;
@@ -22,5 +22,12 @@ namespace lonos.kernel.core
         public uint DataSelector;
         public uint Ticks;
         public bool User;
+
+        public void Dispose()
+        {
+            RawVirtualFrameAllocator.FreeRawVirtalMemoryPages(StackTop);
+            if (User)
+                Memory.Free(StackState);
+        }
     }
 }

@@ -83,14 +83,23 @@ namespace lonos.kernel.core
             Tests();
 
             if (KConfig.SingleThread)
-            {
-                KernelMessage.WriteLine("Enter Main Loop");
-                AppMain();
-            }
+                StartupStage2();
             else
-            {
                 StartThreading();
+        }
+
+        public static void StartupStage2()
+        {
+            if (!KConfig.SingleThread)
+            {
+                Scheduler.CreateThread(new KThreadStartOptions(BackgroundWorker.ThreadMain));
+                Scheduler.CreateThread(new KThreadStartOptions(Thread0));
+                Scheduler.CreateThread(new KThreadStartOptions(Thread1) { User = true, AllowUserModeIOPort = true });
+                Scheduler.CreateThread(new KThreadStartOptions(Thread2) { User = true, AllowUserModeIOPort = true });
             }
+
+            KernelMessage.WriteLine("Enter Main Loop");
+            AppMain();
         }
 
         public static void InitializeUserMode()
@@ -117,9 +126,7 @@ namespace lonos.kernel.core
         public static void StartThreading()
         {
             Scheduler.Setup();
-            Scheduler.CreateThread(new KThreadStartOptions(Thread0));
-            Scheduler.CreateThread(new KThreadStartOptions(Thread1) { User = true, AllowUserModeIOPort = true });
-            Scheduler.CreateThread(new KThreadStartOptions(Thread2) { User = true, AllowUserModeIOPort = true });
+            Scheduler.CreateThread(new KThreadStartOptions(StartupStage2));
             Scheduler.Start();
 
             while (true)
@@ -268,6 +275,8 @@ namespace lonos.kernel.core
 
         public static void AppMain()
         {
+            KernelMessage.WriteLine("Kernel ready");
+
             // We have nothing todo (yet). So let's stop.
             Debug.Break();
         }

@@ -123,7 +123,7 @@ namespace lonos.kernel.core
             var thread = Threads[threadID];
 
             if (thread.Status == ThreadStatus.Running)
-                thread.Status = ThreadStatus.Terminating;
+                thread.Status = ThreadStatus.Terminated;
 
             // We are scheduled now for termination
             while (true)
@@ -146,7 +146,7 @@ namespace lonos.kernel.core
 
                 var thread = Threads[threadID];
 
-                if (thread.Status == ThreadStatus.Running || thread.Status == ThreadStatus.Creating)
+                if (thread.Status == ThreadStatus.Running || thread.Status == ThreadStatus.Created)
                     return threadID;
 
                 if (currentThreadID == threadID)
@@ -182,6 +182,7 @@ namespace lonos.kernel.core
         private unsafe static void CreateThread(KThreadStartOptions options, uint threadID)
         {
             var thread = Threads[threadID];
+            thread.Status = ThreadStatus.Creating;
 
             // Debug:
             //options.User = false;
@@ -215,7 +216,6 @@ namespace lonos.kernel.core
 
             var stateSize = options.User ? IDTTaskStack.Size : IDTStack.Size;
 
-            thread.Status = ThreadStatus.Creating;
             thread.StackTop = stack;
             thread.StackBottom = stackBottom;
 
@@ -248,6 +248,8 @@ namespace lonos.kernel.core
             stackState->Stack.CS = CS;
             stackState->Stack.EIP = options.MethodAddr;
             stackState->Stack.EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
+
+            thread.Status = ThreadStatus.Created;
         }
 
         private unsafe static void SaveThreadState(uint threadID, IntPtr stackState)
@@ -256,7 +258,7 @@ namespace lonos.kernel.core
 
             var thread = Threads[threadID];
 
-            if (thread.Status == ThreadStatus.Creating)
+            if (thread.Status != ThreadStatus.Running)
                 return; // New threads doesn't have a stack in use. Take the initial one.
 
             //Assert.True(thread != null, "SaveThreadState(): thread id = null");
@@ -304,7 +306,7 @@ namespace lonos.kernel.core
 
             PIC.SendEndOfInterrupt(ClockIRQ);
 
-            if (thread.Status == ThreadStatus.Creating)
+            if (thread.Status == ThreadStatus.Created)
                 thread.Status = ThreadStatus.Running;
 
             thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;
@@ -331,16 +333,31 @@ namespace lonos.kernel.core
             return 0;
         }
 
-        private static void ResetTerminatedThreads()
+        public static void ResetTerminatedThreads()
         {
             for (uint i = 0; i < MaxThreads; i++)
             {
                 if (Threads[i].Status == ThreadStatus.Terminated)
                 {
-                    Threads[i].Status = ThreadStatus.Empty;
+                    ResetThread(i);
                 }
             }
         }
+
+        private unsafe static void ResetThread(uint threadID)
+        {
+            var thread = Threads[threadID];
+            lock (thread)
+            {
+                if (thread.Status != ThreadStatus.Terminated)
+                    return;
+
+                thread.Dispose();
+                KernelMessage.WriteLine("Thread disposed");
+                thread.Status = ThreadStatus.Empty;
+            }
+        }
+
     }
 
     //public struct LocalThreadStartInfo
@@ -361,6 +378,7 @@ namespace lonos.kernel.core
         public KThreadStartOptions(ThreadStart start)
         {
             MethodAddr = Intrinsic.GetDelegateMethodAddress(start);
+            Memory.FreeObject(start);
             User = false;
             AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
             StackSize = KConfig.DefaultStackSize;

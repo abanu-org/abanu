@@ -37,6 +37,7 @@ namespace lonos.kernel.core
 
         internal unsafe static void FreeRawVirtalMemoryPages(Addr virtAddr)
         {
+
         }
 
     }
