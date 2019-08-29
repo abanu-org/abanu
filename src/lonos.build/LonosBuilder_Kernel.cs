@@ -15,9 +15,9 @@ using System.Threading;
 using Mosa.Compiler.Framework.Linker.Elf;
 using Mosa.Compiler.Common;
 
-using lonos.kernel.core;
+using lonos.Kernel.Core;
 
-namespace lonos.build
+namespace lonos.Build
 {
     public class LonosBuilder_Kernel : IBuilderEvent, IStarterEvent
     {

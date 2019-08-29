@@ -4,7 +4,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.IO;
 
-namespace lonos.build
+namespace lonos.Build
 {
     internal static class Program
     {
