@@ -33,6 +33,7 @@
     <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DummyClass.cs" />
     <Compile Include="Tasks\BackgroundWorker.cs" />
     <Compile Include="Diagnostics\AsmDebugFunction.cs" />
     <Compile Include="Scheduling\KThreadStartOptions.cs" />

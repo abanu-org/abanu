@@ -317,7 +317,7 @@ namespace lonos.Kernel.Core.Scheduling
             InterruptReturn(stackStateAddr, thread.DataSelector);
         }
 
-        [DllImport("lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
+        [DllImport("x86/lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
         private extern static void InterruptReturn(uint stackStatePointer, uint dataSegment);
 
         private static uint FindEmptyThreadSlot()

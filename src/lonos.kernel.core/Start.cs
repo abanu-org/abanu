@@ -16,7 +16,7 @@ using Mosa.Runtime.x86;
 namespace lonos.Kernel.Core
 {
 
-    internal static class Start
+    public static class Start
     {
 
         public unsafe static void Main()

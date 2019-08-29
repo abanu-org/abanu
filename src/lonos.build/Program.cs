@@ -23,13 +23,13 @@ namespace lonos.Build
                         value = "${LONOS_PROJDIR}/os";
                         break;
                     case "LONOS_NATIVE_FILES":
-                        value = "${LONOS_PROJDIR}/bin/lonos.native.o";
+                        value = "${LONOS_PROJDIR}/bin/x86/lonos.native.o";
                         break;
                     case "LONOS_BOOTLOADER_EXE":
-                        value = "${LONOS_PROJDIR}/bin/lonos.kernel.loader.exe";
+                        value = "${LONOS_PROJDIR}/bin/lonos.os.loader.x86.exe";
                         break;
                     case "LONOS_EXE":
-                        value = "${LONOS_PROJDIR}/bin/lonos.kernel.core.exe";
+                        value = "${LONOS_PROJDIR}/bin/lonos.os.core.x86.exe";
                         break;
                     case "LONOS_LOGDIR":
                         value = "${LONOS_PROJDIR}/logs";
@@ -86,11 +86,11 @@ namespace lonos.Build
 
         public static void LinkImages()
         {
-            var loaderFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.kernel.loader.bin");
-            loaderFile = "/home/sebastian/projects/lonos/os/lonos.kernel.loader.bin";
+            var loaderFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.loader.x86.bin");
+            loaderFile = "/home/sebastian/projects/lonos/os/lonos.os.loader.x86.bin";
 
-            var kernelFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.kernel.core.bin");
-            kernelFile = "/home/sebastian/projects/lonos/os/lonos.kernel.core.bin";
+            var kernelFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.core.x86.bin");
+            kernelFile = "/home/sebastian/projects/lonos/os/lonos.os.core.x86.bin";
 
             var kernelBytes = File.ReadAllBytes(kernelFile);
 
@@ -135,7 +135,7 @@ namespace lonos.Build
             writer.Write(memSize);
 
             var bytes = ms.ToArray();
-            var outFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.kernel.image.bin");
+            var outFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.image.x86.bin");
             File.WriteAllBytes(outFile, bytes);
 
         }
@@ -144,60 +144,6 @@ namespace lonos.Build
         {
             return (value - 1) / dividor + 1;
         }
-
-
-        /*
-        private static void CreateDiskImage(string compiledFile)
-        {
-            var bootImageOptions = new BootImageOptions();
-
-            if (Options.BootLoader == BootLoader.Syslinux_6_03)
-            {
-                bootImageOptions.MBRCode = GetResource(@"syslinux\6.03", "mbr.bin");
-                bootImageOptions.FatBootCode = GetResource(@"syslinux\6.03", "ldlinux.bin");
-
-                bootImageOptions.IncludeFiles.Add(new IncludeFile("ldlinux.sys", GetResource(@"syslinux\6.03", "ldlinux.sys")));
-                bootImageOptions.IncludeFiles.Add(new IncludeFile("mboot.c32", GetResource(@"syslinux\6.03", "mboot.c32")));
-            }
-            else if (Options.BootLoader == BootLoader.Syslinux_3_72)
-            {
-                bootImageOptions.MBRCode = GetResource(@"syslinux\3.72", "mbr.bin");
-                bootImageOptions.FatBootCode = GetResource(@"syslinux\3.72", "ldlinux.bin");
-
-                bootImageOptions.IncludeFiles.Add(new IncludeFile("ldlinux.sys", GetResource(@"syslinux\3.72", "ldlinux.sys")));
-                bootImageOptions.IncludeFiles.Add(new IncludeFile("mboot.c32", GetResource(@"syslinux\3.72", "mboot.c32")));
-            }
-
-            bootImageOptions.IncludeFiles.Add(new IncludeFile("syslinux.cfg", GetResource("syslinux", "syslinux.cfg")));
-            bootImageOptions.IncludeFiles.Add(new IncludeFile(compiledFile, "main.exe"));
-
-            bootImageOptions.IncludeFiles.Add(new IncludeFile("TEST.TXT", Encoding.ASCII.GetBytes("This is a test file.")));
-
-            foreach (var include in Options.IncludeFiles)
-            {
-                bootImageOptions.IncludeFiles.Add(include);
-            }
-
-            bootImageOptions.VolumeLabel = "MOSABOOT";
-
-            var vmext = ".img";
-            switch (Options.ImageFormat)
-            {
-                case ImageFormat.VHD: vmext = ".vhd"; break;
-                case ImageFormat.VDI: vmext = ".vdi"; break;
-                default: break;
-            }
-
-            ImageFile = Path.Combine(Options.DestinationDirectory, Path.GetFileNameWithoutExtension(Options.SourceFile) + vmext);
-
-            bootImageOptions.DiskImageFileName = ImageFile;
-            bootImageOptions.PatchSyslinuxOption = true;
-            bootImageOptions.FileSystem = Options.FileSystem;
-            bootImageOptions.ImageFormat = Options.ImageFormat;
-            bootImageOptions.BootLoader = Options.BootLoader;
-
-            Generator.Create(bootImageOptions);
-        }*/
 
     }
 }

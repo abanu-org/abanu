@@ -11,7 +11,7 @@ using lonos.Kernel.Core;
 namespace lonos.Kernel.Loader
 {
 
-    unsafe static class LoaderStart
+    public unsafe static class LoaderStart
     {
 
         public static void Main()

@@ -40,7 +40,8 @@
     <NoWarn>162</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>lonos.build.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

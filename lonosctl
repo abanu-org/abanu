@@ -70,7 +70,7 @@ function build {
 			;;
 
 		native)
-			src/lonos.native/build
+			src/lonos.native.x86/build
 			;;
 
 		loader)
@@ -127,7 +127,7 @@ function debug {
 			DEBUG_INTERRUPTS=,int
 			qemu_app=qemu-system-x86_64
 			#qemu_app=qemu-system-i386
-			$qemu_app -kernel os/lonos.kernel.image.bin -serial file:/home/sebastian/projects/lonos/logs/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_PROJDIR}/logs/emulator.log
+			$qemu_app -kernel os/lonos.os.image.x86.bin -serial file:/home/sebastian/projects/lonos/logs/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_PROJDIR}/logs/emulator.log
 			;;
 
 		qemu-grub-hybrid)
@@ -194,7 +194,7 @@ function _bochs {
 }
 
 function _qemu {
-	disk=${LONOS_OSDIR}/lonos.kernel.core.img
+	disk=${LONOS_OSDIR}/lonos.os.core.x86.img
 
 	case $1 in
 		x86)
@@ -210,7 +210,7 @@ function _qemu {
 			cpu=qemu32,+sse4.1
 			bios="-L /usr/share/seabios"
 
-			disk=${LONOS_OSDIR}/lonos.kernel.core.x86-grub-hybrid.disk.img
+			disk=${LONOS_OSDIR}/lonos.os.core.x86-grub-hybrid.disk.img
 			;;
 
 		x86-efi)
@@ -219,7 +219,7 @@ function _qemu {
 			cpu=qemu32,+sse4.1
 			bios="-bios ${LONOS_PROJDIR}/tools/ovmf-ia32/OVMF-pure-efi.fd"
 
-			disk=${LONOS_OSDIR}/lonos.kernel.core.x86-efi.disk.img
+			disk=${LONOS_OSDIR}/lonos.os.core.x86-efi.disk.img
 			;;
 
 		x64)
@@ -267,14 +267,14 @@ function create_efi_disk {
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/boot ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/NvVars ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/.disk ::/
-	mcopy -i $disk -s $LONOS_OSDIR/lonos.kernel.image.bin ::/lonos.bin
+	mcopy -i $disk -s $LONOS_OSDIR/lonos.os.image.x86.bin ::/lonos.bin
 }
 
 function create_grub_hybrid_disk {
 	disk=${LONOS_OSDIR}/lonos.kernel.core.x86-grub-hybrid.disk.img
 	isodir=$LONOS_PROJDIR/tmp/iso-grub-hybrid
 	mkdir -p $isodir;
-	cp $LONOS_OSDIR/lonos.kernel.image.bin $isodir/lonos.bin
+	cp $LONOS_OSDIR/lonos.os.image.x86.bin $isodir/lonos.bin
 	mkdir -p $isodir/boot/grub
 	cp $LONOS_TOOLSDIR/grub-efi-x86/boot/grub/grub.cfg $isodir/boot/grub
 	grub-mkrescue -o $disk $isodir

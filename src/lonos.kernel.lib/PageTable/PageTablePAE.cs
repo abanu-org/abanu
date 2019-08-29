@@ -196,7 +196,7 @@ namespace lonos.Kernel.Core.PageManagement
             const uint EFER = 0xC0000080;
             Native.WrMSR(EFER, Native.RdMSR(EFER) | BitMask.Bit11);
         }
-        //[DllImport("lonos.EnableExecutionProtection.o", EntryPoint = "EnableExecutionProtection")]
+        //[DllImport("x86/lonos.EnableExecutionProtection.o", EntryPoint = "EnableExecutionProtection")]
         //private extern static void EnableExecutionProtectionInternal();
 
         public static void EnableExecutionProtection()

@@ -6,10 +6,10 @@ cd ..
 pwd
 )
 
-export LONOS_EXE=${LONOS_PROJDIR}/bin/lonos.kernel.core.exe
-export LONOS_BOOTLOADER_EXE=${LONOS_PROJDIR}/bin/lonos.kernel.loader.exe
+export LONOS_EXE=${LONOS_PROJDIR}/bin/lonos.os.core.x86.exe
+export LONOS_BOOTLOADER_EXE=${LONOS_PROJDIR}/bin/lonos.os.loader.x86.exe
 export LONOS_OSDIR=${LONOS_PROJDIR}/os
-export LONOS_NATIVE_FILES=${LONOS_PROJDIR}/bin/lonos.native.o
+export LONOS_NATIVE_FILES=${LONOS_PROJDIR}/bin/x86/lonos.native.o
 export LONOS_LOGDIR=${LONOS_PROJDIR}/logs
 export LONOS_TMPDIR=${LONOS_PROJDIR}/tmp
 export LONOS_ISODIR=${LONOS_TMPDIR}/iso

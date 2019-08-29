@@ -20,7 +20,7 @@
         /// <summary>
         /// The Name of Kernel Entry Method. It's used by the Loader to determine it's address.
         /// </summary>
-        public static readonly string KernelEntryName = "System.Void lonos.kernel.core.Start::Main()";
+        public static readonly string KernelEntryName = "System.Void lonos.os.Core.x86.Start::Main()";
 
         /// <summary>
         /// If turned on, only Pages with Writeable=1 are writable.
