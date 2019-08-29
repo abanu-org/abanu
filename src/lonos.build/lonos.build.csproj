@@ -81,10 +81,6 @@
       <Project>{65F7691A-B355-4D98-BB97-0B19F13E2190}</Project>
       <Name>Mosa.Utility.BootImage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Platform.x64\Mosa.Platform.x64.csproj">
-      <Project>{F445DB8E-E25A-41EF-A158-C742F14E94E4}</Project>
-      <Name>Mosa.Platform.x64</Name>
-    </ProjectReference>
     <ProjectReference Include="..\lonos.kernel.config\lonos.kernel.config.csproj">
       <Project>{317E8C4B-089B-469B-8789-D76EB2F87504}</Project>
       <Name>lonos.kernel.config</Name>

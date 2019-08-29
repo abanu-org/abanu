@@ -1,17 +1,18 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.build", "lonos.build\lonos.build.csproj", "{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Compiler.Framework", "..\external\MOSA-Project\Source\Mosa.Compiler.Framework\Mosa.Compiler.Framework.csproj", "{75A12A8A-8C8F-4D1E-801B-689D8F781BF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Compiler.Framework", "..\external\MOSA-Project\Source\Mosa.Compiler.Framework\Mosa.Compiler.Framework.csproj", "{75A12A8A-8C8F-4D1E-801B-689D8F781BF4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mosa-Project", "Mosa-Project", "{2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compiler", "Compiler", "{36A674B9-1871-4391-BFA7-AA9D6B1C189F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Compiler.Common", "..\external\MOSA-Project\Source\Mosa.Compiler.Common\Mosa.Compiler.Common.csproj", "{0B1011A6-8FCD-4F9E-BBB8-8DB86E23D2E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Compiler.Common", "..\external\MOSA-Project\Source\Mosa.Compiler.Common\Mosa.Compiler.Common.csproj", "{0B1011A6-8FCD-4F9E-BBB8-8DB86E23D2E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Compiler.MosaTypeSystem", "..\external\MOSA-Project\Source\Mosa.Compiler.MosaTypeSystem\Mosa.Compiler.MosaTypeSystem.csproj", "{5F30A68E-05BF-40EA-B576-5EBCDE520559}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Compiler.MosaTypeSystem", "..\external\MOSA-Project\Source\Mosa.Compiler.MosaTypeSystem\Mosa.Compiler.MosaTypeSystem.csproj", "{5F30A68E-05BF-40EA-B576-5EBCDE520559}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utility", "Utility", "{BDCAA75B-C92B-461F-9B7F-490E180FCD07}"
 EndProject
@@ -40,8 +41,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.config", "lonos.kernel.config\lonos.kernel.config.csproj", "{317E8C4B-089B-469B-8789-D76EB2F87504}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Plug.Korlib.x86", "..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x86\Mosa.Plug.Korlib.x86.csproj", "{028BC31C-2EDC-492E-90A3-3714E38CE2CF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Kernel.x64", "..\external\MOSA-Project\Source\Mosa.Kernel.x64\Mosa.Kernel.x64.csproj", "{4CFF6607-4D83-46E6-A1D0-EF045311C982}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Plug.Korlib.x64", "..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x64\Mosa.Plug.Korlib.x64.csproj", "{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}"
 EndProject
@@ -119,14 +118,13 @@ Global
 		{028BC31C-2EDC-492E-90A3-3714E38CE2CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{028BC31C-2EDC-492E-90A3-3714E38CE2CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{028BC31C-2EDC-492E-90A3-3714E38CE2CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CFF6607-4D83-46E6-A1D0-EF045311C982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CFF6607-4D83-46E6-A1D0-EF045311C982}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CFF6607-4D83-46E6-A1D0-EF045311C982}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CFF6607-4D83-46E6-A1D0-EF045311C982}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{75A12A8A-8C8F-4D1E-801B-689D8F781BF4} = {36A674B9-1871-4391-BFA7-AA9D6B1C189F}
@@ -146,7 +144,9 @@ Global
 		{A47B7998-4EE8-4AF8-9373-C664FDEDDC61} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{17CE4F09-7CBF-49E9-84A7-178DB2CBD7C9} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{028BC31C-2EDC-492E-90A3-3714E38CE2CF} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
-		{4CFF6607-4D83-46E6-A1D0-EF045311C982} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3FEAB7AA-DC10-4A7D-AE25-5D7B6BD8D985}
 	EndGlobalSection
 EndGlobal
