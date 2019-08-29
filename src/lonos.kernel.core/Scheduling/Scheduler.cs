@@ -41,7 +41,7 @@ namespace lonos.kernel.core
 
             SignalThreadTerminationMethodAddress = GetAddress(SignalThreadTerminationMethod);
 
-            CreateThread(new KThreadStartOptions(IdleThread));
+            CreateThread(new ThreadStartOptions(IdleThread));
 
             //Debug, for breakpoint
             //clockTicks++;
@@ -161,8 +161,9 @@ namespace lonos.kernel.core
 
         private static object SyncRoot = new object();
 
-        public unsafe static void CreateThread(KThreadStartOptions options)
+        public unsafe static void CreateThread(ThreadStartOptions options)
         {
+            Thread thread;
             lock (SyncRoot)
             {
                 uint threadID = FindEmptyThreadSlot();
@@ -173,76 +174,76 @@ namespace lonos.kernel.core
                     threadID = FindEmptyThreadSlot();
                 }
 
-                var thread = Threads[threadID];
+                thread = Threads[threadID];
                 thread.Status = ThreadStatus.Creating;
-
-                // Debug:
-                //options.User = false;
-
-                thread.User = options.User;
-
-                var stackSize = options.StackSize;
-
-                var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
-                var debugPadding = 8u;
-                stackSize = stackPages * PageFrameManager.PageSize;
-                var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
-                Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
-                stackSize -= debugPadding;
-                var stackBottom = stack + (int)stackSize;
-
-                KernelMessage.Write("Create Thread {0}. EntryPoint: {1:X8} Stack: {2:X8}-{3:X8} Type: ", threadID, options.MethodAddr, (uint)stack, (uint)stackBottom - 1);
-                if (thread.User)
-                    KernelMessage.WriteLine("User");
-                else
-                    KernelMessage.WriteLine("Kernel");
-
-                if (options.User)
-                    KernelMessage.WriteLine("StackState at {0:X8}", (uint)thread.StackState);
-
-                var stackStateOffset = 8;
-
-                uint CS = 0x08;
-                if (options.User)
-                    CS = 0x1B;
-
-                var stateSize = options.User ? IDTTaskStack.Size : IDTStack.Size;
-
-                thread.StackTop = stack;
-                thread.StackBottom = stackBottom;
-
-                Intrinsic.Store32(stackBottom, 4, 0xFF00001);          // Debug Marker
-                Intrinsic.Store32(stackBottom, 0, 0xFF00002);          // Debug Marker
-
-                Intrinsic.Store32(stackBottom, -4, (uint)stackBottom);
-                Intrinsic.Store32(stackBottom, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
-
-                IDTTaskStack* stackState = null;
-                if (thread.User)
-                    stackState = (IDTTaskStack*)Memory.Allocate(IDTTaskStack.Size);
-                else
-                    stackState = (IDTTaskStack*)(stackBottom - 8 - IDTStack.Size); // IDTStackSize ist correct - we don't need the Task-Members.
-                thread.StackState = stackState;
-
-                stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
-                if (options.User)
-                {
-                    // Never set this values for Non-User, otherwiese you will override stack informations.
-                    stackState->TASK_SS = 0x23;
-                    stackState->TASK_ESP = (uint)stackBottom - 8;
-                }
-                if (options.User && options.AllowUserModeIOPort)
-                {
-                    byte IOPL = 3;
-                    stackState->Stack.EFLAGS = (X86_EFlags)((uint)stackState->Stack.EFLAGS).SetBits(12, 2, IOPL);
-                }
-
-                stackState->Stack.CS = CS;
-                stackState->Stack.EIP = options.MethodAddr;
-                stackState->Stack.EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
-
-                thread.Status = ThreadStatus.Created;
             }
+
+            // Debug:
+            //options.User = false;
+
+            thread.User = options.User;
+
+            var stackSize = options.StackSize;
+
+            var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
+            var debugPadding = 8u;
+            stackSize = stackPages * PageFrameManager.PageSize;
+            var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
+            Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
+            stackSize -= debugPadding;
+            var stackBottom = stack + (int)stackSize;
+
+            KernelMessage.Write("Create Thread {0}. EntryPoint: {1:X8} Stack: {2:X8}-{3:X8} Type: ", threadID, options.MethodAddr, (uint)stack, (uint)stackBottom - 1);
+            if (thread.User)
+                KernelMessage.WriteLine("User");
+            else
+                KernelMessage.WriteLine("Kernel");
+
+            if (options.User)
+                KernelMessage.WriteLine("StackState at {0:X8}", (uint)thread.StackState);
+
+            var stackStateOffset = 8;
+
+            uint CS = 0x08;
+            if (options.User)
+                CS = 0x1B;
+
+            var stateSize = options.User ? IDTTaskStack.Size : IDTStack.Size;
+
+            thread.StackTop = stack;
+            thread.StackBottom = stackBottom;
+
+            Intrinsic.Store32(stackBottom, 4, 0xFF00001);          // Debug Marker
+            Intrinsic.Store32(stackBottom, 0, 0xFF00002);          // Debug Marker
+
+            Intrinsic.Store32(stackBottom, -4, (uint)stackBottom);
+            Intrinsic.Store32(stackBottom, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
+
+            IDTTaskStack* stackState = null;
+            if (thread.User)
+                stackState = (IDTTaskStack*)Memory.Allocate(IDTTaskStack.Size);
+            else
+                stackState = (IDTTaskStack*)(stackBottom - 8 - IDTStack.Size); // IDTStackSize ist correct - we don't need the Task-Members.
+            thread.StackState = stackState;
+
+            stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
+            if (options.User)
+            {
+                // Never set this values for Non-User, otherwiese you will override stack informations.
+                stackState->TASK_SS = 0x23;
+                stackState->TASK_ESP = (uint)stackBottom - 8;
+            }
+            if (options.User && options.AllowUserModeIOPort)
+            {
+                byte IOPL = 3;
+                stackState->Stack.EFLAGS = (X86_EFlags)((uint)stackState->Stack.EFLAGS).SetBits(12, 2, IOPL);
+            }
+
+            stackState->Stack.CS = CS;
+            stackState->Stack.EIP = options.MethodAddr;
+            stackState->Stack.EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
+
+            thread.Status = ThreadStatus.Created;
         }
 
         private unsafe static void SaveThreadState(uint threadID, IntPtr stackState)
@@ -353,40 +354,6 @@ namespace lonos.kernel.core
 
                 thread.Status = ThreadStatus.Empty;
             }
-        }
-
-    }
-
-    //public struct LocalThreadStartInfo
-    //{
-    //    public uint MagicValue1;
-    //    public uint ThreadID;
-    //    public bool RequestAbort;
-    //    public uint MagicValue2;
-    //}
-
-    public struct KThreadStartOptions
-    {
-        public Addr MethodAddr;
-        public bool User;
-        public uint StackSize;
-        public bool AllowUserModeIOPort;
-
-        public KThreadStartOptions(ThreadStart start)
-        {
-            MethodAddr = Intrinsic.GetDelegateMethodAddress(start);
-            Memory.FreeObject(start);
-            User = false;
-            AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
-            StackSize = KConfig.DefaultStackSize;
-        }
-
-        public KThreadStartOptions(Addr methodAddr)
-        {
-            MethodAddr = methodAddr;
-            User = false;
-            AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
-            StackSize = KConfig.DefaultStackSize;
         }
 
     }

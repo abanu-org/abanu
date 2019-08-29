@@ -92,10 +92,10 @@ namespace lonos.kernel.core
         {
             if (!KConfig.SingleThread)
             {
-                Scheduler.CreateThread(new KThreadStartOptions(BackgroundWorker.ThreadMain));
-                Scheduler.CreateThread(new KThreadStartOptions(Thread0));
-                Scheduler.CreateThread(new KThreadStartOptions(Thread1) { User = true, AllowUserModeIOPort = true });
-                Scheduler.CreateThread(new KThreadStartOptions(Thread2) { User = true, AllowUserModeIOPort = true });
+                Scheduler.CreateThread(new ThreadStartOptions(BackgroundWorker.ThreadMain));
+                Scheduler.CreateThread(new ThreadStartOptions(Thread0));
+                Scheduler.CreateThread(new ThreadStartOptions(Thread1) { User = true, AllowUserModeIOPort = true });
+                Scheduler.CreateThread(new ThreadStartOptions(Thread2) { User = true, AllowUserModeIOPort = true });
             }
 
             KernelMessage.WriteLine("Enter Main Loop");
@@ -126,7 +126,7 @@ namespace lonos.kernel.core
         public static void StartThreading()
         {
             Scheduler.Setup();
-            Scheduler.CreateThread(new KThreadStartOptions(StartupStage2));
+            Scheduler.CreateThread(new ThreadStartOptions(StartupStage2));
             Scheduler.Start();
 
             while (true)

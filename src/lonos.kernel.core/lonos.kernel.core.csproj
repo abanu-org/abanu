@@ -35,7 +35,9 @@
   <ItemGroup>
     <Compile Include="BackgroundWorker.cs" />
     <Compile Include="Debug\AsmDebugFunction.cs" />
+    <Compile Include="Scheduling\KThreadStartOptions.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
+    <Compile Include="Scheduling\Thread.cs" />
     <Compile Include="Scheduling\ThreadStatus.cs" />
     <Compile Include="Start.cs" />
     <Compile Include="Memory\Memory.cs" />
