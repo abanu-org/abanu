@@ -34,11 +34,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DummyClass.cs" />
+    <Compile Include="Processes\Process.cs" />
+    <Compile Include="Processes\ProcessCreateOptions.cs" />
     <Compile Include="Processes\ProcessManager.cs" />
     <Compile Include="Syscalls\SysCallManager.cs" />
     <Compile Include="Tasks\BackgroundWorker.cs" />
     <Compile Include="Diagnostics\AsmDebugFunction.cs" />
-    <Compile Include="Scheduling\KThreadStartOptions.cs" />
+    <Compile Include="Scheduling\ThreadStartOptions.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\Thread.cs" />
     <Compile Include="Scheduling\ThreadStatus.cs" />

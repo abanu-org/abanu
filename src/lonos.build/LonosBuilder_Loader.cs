@@ -87,6 +87,7 @@ namespace lonos.Build
 
             Options.VBEVideo = true;
             Options.EmitAllSymbols = true;
+            //Options.EnableMethodScanner = true;
 
             Section sect = null;
             Options.CreateExtraSections = () =>

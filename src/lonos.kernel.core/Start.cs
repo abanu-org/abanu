@@ -8,6 +8,7 @@ using lonos.Kernel.Core.Elf;
 using lonos.Kernel.Core.External;
 using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.Processes;
 using lonos.Kernel.Core.Scheduling;
 using lonos.Kernel.Core.SysCalls;
 using lonos.Kernel.Core.Tasks;
@@ -97,17 +98,21 @@ namespace lonos.Kernel.Core
             if (KConfig.SingleThread)
                 StartupStage2();
             else
-                StartThreading();
+                ProcessManager.Setup(StartupStage2);
         }
 
         public static void StartupStage2()
         {
             if (!KConfig.SingleThread)
             {
-                Scheduler.CreateThread(new ThreadStartOptions(BackgroundWorker.ThreadMain));
-                Scheduler.CreateThread(new ThreadStartOptions(Thread0));
-                Scheduler.CreateThread(new ThreadStartOptions(Thread1) { User = true, AllowUserModeIOPort = true });
-                Scheduler.CreateThread(new ThreadStartOptions(Thread2) { User = true, AllowUserModeIOPort = true });
+                Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(BackgroundWorker.ThreadMain)).Start();
+                Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(Thread0)).Start();
+
+                var userProc = ProcessManager.CreateEmptyProcess(new ProcessCreateOptions { User = true });
+                userProc.Path = "/bulidin/testproc";
+                Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread1) { AllowUserModeIOPort = true });
+                Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true });
+                userProc.Start();
             }
 
             KernelMessage.WriteLine("Enter Main Loop");
@@ -133,16 +138,6 @@ namespace lonos.Kernel.Core
                 Memory.InitialKernelProtect_MakeWritable_BySize(kernelStack, 256 * 4096);
             }
             GDT.SetupUserMode(kernelStackBottom, tssAddr);
-        }
-
-        public static void StartThreading()
-        {
-            Scheduler.Setup();
-            Scheduler.CreateThread(new ThreadStartOptions(StartupStage2));
-            Scheduler.Start();
-
-            while (true)
-                Native.Hlt();
         }
 
         private static void Thread0()

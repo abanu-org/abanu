@@ -4,7 +4,7 @@
     {
         Empty = 0,
         Creating,
-        Created,
+        ScheduleForStart,
         Running,
         Terminated,
         Waiting

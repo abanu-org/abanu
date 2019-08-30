@@ -35,6 +35,9 @@ namespace lonos.Kernel.Core.Collections
                 _items = _emptyArray;
             else
                 _items = CreateArray(capacity);
+
+            _size = 0;
+            //KernelMessage.WriteLine("ctor, _items {0}, _size: ", _items.Length, _size);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
@@ -81,6 +84,7 @@ namespace lonos.Kernel.Core.Collections
                     _items = CreateArray(count);
                     c.CopyTo(_items, 0);
                     _size = count;
+                    //KernelMessage.WriteLine("Trace[2]: _size set to ", _size);
                 }
             }
             else
@@ -114,15 +118,18 @@ namespace lonos.Kernel.Core.Collections
                 {
                     if (value > 0)
                     {
+                        KernelMessage.WriteLine("capacity-value: {0}, _size: {1}", (uint)value, (uint)_size);
                         T[] newItems = CreateArray(value);
                         if (_size > 0)
                             Copy(_items, 0, newItems, 0, _size);
-                        if (_items != _emptyArray)
+                        if (_items.Length > 0)
                             DestryArray(_items);
                         _items = newItems;
                     }
                     else
                     {
+                        if (_items.Length > 0)
+                            DestryArray(_items);
                         _items = _emptyArray;
                     }
                 }
@@ -131,6 +138,8 @@ namespace lonos.Kernel.Core.Collections
 
         private void Copy(T[] source, int sourceIndex, T[] destination, int destinationIndex, int size)
         {
+            KernelMessage.WriteLine("Copy: {0}, {1}, {2}, {3}, {4}", (uint)source.Length, (uint)sourceIndex, (uint)destination.Length, (uint)destinationIndex, (uint)size);
+
             for (int i = 0; i < size; i++)
             {
                 destination[i + destinationIndex] = source[i + sourceIndex];
@@ -156,7 +165,7 @@ namespace lonos.Kernel.Core.Collections
         {
             get
             {
-                throw new NotImplementedException();
+                return this;
             }
         }
 
@@ -208,6 +217,8 @@ namespace lonos.Kernel.Core.Collections
 
         private void EnsureCapacity(int size)
         {
+            //KernelMessage.WriteLine("EnsureCapacity, items: {0}, currSize: {1} new size {2}", _items.Length, _size, size);
+
             if (_items.Length < size)
             {
                 var newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
@@ -229,6 +240,7 @@ namespace lonos.Kernel.Core.Collections
 
             _items[_size] = item;
             _size++;
+            //KernelMessage.WriteLine("Trace [1]: _size set to ", _size);
         }
 
         int IList.Add(object value)
@@ -313,6 +325,7 @@ namespace lonos.Kernel.Core.Collections
             EnsureCapacity(_size + 1);
 
             _size++;
+            //KernelMessage.WriteLine("Trace[3]: _size set to ", _size);
             for (int i = index; i < _size; i++)
             {
                 _items[i] = _items[i + 1];

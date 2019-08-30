@@ -10,7 +10,6 @@ namespace lonos.Kernel.Core.Scheduling
     public struct ThreadStartOptions
     {
         public Addr MethodAddr;
-        public bool User;
         public uint StackSize;
         public bool AllowUserModeIOPort;
 
@@ -18,7 +17,6 @@ namespace lonos.Kernel.Core.Scheduling
         {
             MethodAddr = Intrinsic.GetDelegateMethodAddress(start);
             Memory.FreeObject(start);
-            User = false;
             AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
             StackSize = KConfig.DefaultStackSize;
         }
@@ -26,7 +24,6 @@ namespace lonos.Kernel.Core.Scheduling
         public ThreadStartOptions(Addr methodAddr)
         {
             MethodAddr = methodAddr;
-            User = false;
             AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
             StackSize = KConfig.DefaultStackSize;
         }

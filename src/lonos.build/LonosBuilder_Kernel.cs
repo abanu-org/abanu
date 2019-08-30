@@ -109,6 +109,7 @@ namespace lonos.Build
             Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
+            //Options.EnableMethodScanner = true;
 
             //Options.VBEVideo = true;
 

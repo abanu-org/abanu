@@ -119,10 +119,26 @@ namespace lonos.Kernel.Core
             buf.WriteTo(Dev);
         }
 
-        public static void WriteLine(string format, int arg1)
+        public static void WriteLine(string format, int arg0)
         {
             var buf = new StringBuffer();
-            buf.Append(format, arg1);
+            buf.Append(format, (uint)arg0); //TODO
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
+        public static void WriteLine(string format, int arg0, int arg1)
+        {
+            var buf = new StringBuffer();
+            buf.Append(format, (uint)arg0, (uint)arg1); //TODO
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
+        public static void WriteLine(string format, int arg0, int arg1, int arg2)
+        {
+            var buf = new StringBuffer();
+            buf.Append(format, (uint)arg0, (uint)arg1, (uint)arg2); //TODO
             buf.Append('\n');
             buf.WriteTo(Dev);
         }
@@ -154,7 +170,7 @@ namespace lonos.Kernel.Core
         public static void WriteLine(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4)
         {
             var buf = new StringBuffer();
-            buf.Append(format, arg0, arg0, arg1, arg2, arg3);
+            buf.Append(format, arg0, arg1, arg2, arg3, arg4);
             buf.Append('\n');
             buf.WriteTo(Dev);
         }

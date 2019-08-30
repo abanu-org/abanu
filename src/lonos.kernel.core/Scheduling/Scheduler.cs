@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Processes;
+using lonos.Kernel.Core.PageManagement;
 
 namespace lonos.Kernel.Core.Scheduling
 {
@@ -30,7 +32,7 @@ namespace lonos.Kernel.Core.Scheduling
 
         public static uint ClockTicks { get { return (uint)clockTicks; } }
 
-        public static void Setup()
+        public static void Setup(ThreadStart followupTask)
         {
             Enabled = false;
             Threads = new Thread[ThreadCapacity];
@@ -44,7 +46,8 @@ namespace lonos.Kernel.Core.Scheduling
 
             SignalThreadTerminationMethodAddress = GetAddress(SignalThreadTerminationMethod);
 
-            CreateThread(new ThreadStartOptions(IdleThread));
+            CreateThread(ProcessManager.Idle, new ThreadStartOptions(IdleThread)).Start();
+            CreateThread(ProcessManager.System, new ThreadStartOptions(followupTask)).Start();
 
             //Debug, for breakpoint
             //clockTicks++;
@@ -57,6 +60,7 @@ namespace lonos.Kernel.Core.Scheduling
             SetThreadID(0);
             Enabled = true;
 
+            KernelMessage.WriteLine("Enable Scheduler");
             //Native.Cli();
             Native.Int(ClockIRQ);
 
@@ -149,7 +153,7 @@ namespace lonos.Kernel.Core.Scheduling
 
                 var thread = Threads[threadID];
 
-                if (thread.Status == ThreadStatus.Running || thread.Status == ThreadStatus.Created)
+                if (thread.Status == ThreadStatus.Running || thread.Status == ThreadStatus.ScheduleForStart)
                     return threadID;
 
                 if (currentThreadID == threadID)
@@ -164,7 +168,7 @@ namespace lonos.Kernel.Core.Scheduling
 
         private static object SyncRoot = new object();
 
-        public unsafe static void CreateThread(ThreadStartOptions options)
+        public unsafe static Thread CreateThread(Process proc, ThreadStartOptions options)
         {
             Thread thread;
             uint threadID;
@@ -185,7 +189,7 @@ namespace lonos.Kernel.Core.Scheduling
             // Debug:
             //options.User = false;
 
-            thread.User = options.User;
+            thread.User = proc.User;
 
             var stackSize = options.StackSize;
 
@@ -203,16 +207,16 @@ namespace lonos.Kernel.Core.Scheduling
             else
                 KernelMessage.WriteLine("Kernel");
 
-            if (options.User)
+            if (thread.User)
                 KernelMessage.WriteLine("StackState at {0:X8}", (uint)thread.StackState);
 
             var stackStateOffset = 8;
 
             uint CS = 0x08;
-            if (options.User)
+            if (thread.User)
                 CS = 0x1B;
 
-            var stateSize = options.User ? IDTTaskStack.Size : IDTStack.Size;
+            var stateSize = thread.User ? IDTTaskStack.Size : IDTStack.Size;
 
             thread.StackTop = stack;
             thread.StackBottom = stackBottom;
@@ -231,13 +235,13 @@ namespace lonos.Kernel.Core.Scheduling
             thread.StackState = stackState;
 
             stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
-            if (options.User)
+            if (thread.User)
             {
                 // Never set this values for Non-User, otherwiese you will override stack informations.
                 stackState->TASK_SS = 0x23;
                 stackState->TASK_ESP = (uint)stackBottom - 8;
             }
-            if (options.User && options.AllowUserModeIOPort)
+            if (thread.User && options.AllowUserModeIOPort)
             {
                 byte IOPL = 3;
                 stackState->Stack.EFLAGS = (X86_EFlags)((uint)stackState->Stack.EFLAGS).SetBits(12, 2, IOPL);
@@ -247,7 +251,13 @@ namespace lonos.Kernel.Core.Scheduling
             stackState->Stack.EIP = options.MethodAddr;
             stackState->Stack.EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
 
-            thread.Status = ThreadStatus.Created;
+            //lock (proc.Threads)
+            //{
+            thread.Process = proc;
+            proc.Threads.Add(thread);
+            //}
+
+            return thread;
         }
 
         private unsafe static void SaveThreadState(uint threadID, IntPtr stackState)
@@ -304,7 +314,7 @@ namespace lonos.Kernel.Core.Scheduling
 
             PIC.SendEndOfInterrupt(ClockIRQ);
 
-            if (thread.Status == ThreadStatus.Created)
+            if (thread.Status == ThreadStatus.ScheduleForStart)
                 thread.Status = ThreadStatus.Running;
 
             thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;

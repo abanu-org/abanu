@@ -169,13 +169,13 @@ namespace lonos.Kernel.Core
                 Append((char)value->Bytes[i]);
         }
 
-        public void Append(string value, int start)
+        public void AppendSubString(string value, int start)
         {
             if (value == null) return;
-            Append(value, start, value.Length - start);
+            AppendSubString(value, start, value.Length - start);
         }
 
-        public void Append(string value, int start, int length)
+        public void AppendSubString(string value, int start, int length)
         {
             if (value == null) return;
             for (var i = 0; i < length; i++)
@@ -425,7 +425,7 @@ namespace lonos.Kernel.Core
                    new Argument { _uint = arg1, type = ArgumentType._uint },
                    new Argument { _uint = arg2, type = ArgumentType._uint },
                    new Argument { _uint = arg3, type = ArgumentType._uint },
-                   new Argument { _uint = arg3, type = ArgumentType._uint }
+                   new Argument { _uint = arg4, type = ArgumentType._uint }
                   );
         }
 
