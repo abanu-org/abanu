@@ -31,7 +31,7 @@ namespace lonos.Kernel.Core
         public const uint UnitTestQueue = 0x01E00000;  // 30MB [Size=2MB] - previous: 5KB [Size=1KB] 0x00005000
         public const uint DebuggerBuffer = 0x00010000;  // 16KB [Size=64KB]
 
-        public const uint AppBaseVirt = 0x20100000;  // 2GB+1MB
+        public const uint AppBaseVirt = 0xA0100000;  // 2GB+1MB
     }
 
 }

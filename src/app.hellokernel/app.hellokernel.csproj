@@ -3,10 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>lonos.Kernel</RootNamespace>
-    <AssemblyName>lonos.kernel.api</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>app.HelloKernel</RootNamespace>
+    <AssemblyName>app.hellokernel</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ProjectGuid>{60A9975E-6EE8-42DE-9603-8602563FA623}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,10 +30,17 @@
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
+      <Project>{a47b7998-4ee8-4af8-9373-c664fdeddc65}</Project>
+      <Name>Mosa.Runtime.x86</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
@@ -43,20 +51,9 @@
       <Name>lonos.primitives</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Compile Include="Structs\FileHandle.cs" />
-    <Compile Include="Structs\MemoryRegion.cs" />
-    <Compile Include="IKernelApi.cs" />
-    <Compile Include="IFile.cs" />
-    <Compile Include="IBufferWriter.cs" />
-    <Compile Include="IPageFrameAllocator.cs" />
-    <Compile Include="Structs\Page.cs" />
-    <Compile Include="Structs\Atomic.cs" />
-    <Compile Include="Extensions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Elf\" />
-    <Folder Include="Fonts\" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

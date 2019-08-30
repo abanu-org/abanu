@@ -40,6 +40,7 @@ namespace lonos.Build
 
         public LonosBuilder_Kernel(string inputAssembly)
         {
+            Console.WriteLine("Compile " + inputAssembly);
             //Options = new Options()
             Options = new LauncherOptions()
             {

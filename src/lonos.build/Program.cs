@@ -43,12 +43,14 @@ namespace lonos.Build
                 }
             }
 
-            if (string.IsNullOrEmpty(value))
-                return "";
-
             var regex = new Regex(@"\$\{(\w+)\}", RegexOptions.RightToLeft);
-            foreach (Match m in regex.Matches(value))
-                value = value.Replace(m.Value, GetEnv(m.Groups[1].Value));
+
+            if (string.IsNullOrEmpty(value))
+                value = name;
+
+            if (!string.IsNullOrEmpty(value))
+                foreach (Match m in regex.Matches(value))
+                    value = value.Replace(m.Value, GetEnv(m.Groups[1].Value));
             return value;
         }
 
@@ -77,7 +79,7 @@ namespace lonos.Build
             }
             else if (args[0] == "--image=apps")
             {
-                file = GetEnv("${LONOS_PROJDIR}/bin/app.HelloKernel.exe");
+                file = GetEnv("${LONOS_PROJDIR}/bin/app.hellokernel.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
