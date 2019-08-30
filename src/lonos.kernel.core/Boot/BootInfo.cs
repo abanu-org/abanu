@@ -59,7 +59,8 @@ namespace lonos.Kernel.Core.Boot
         static void ApplyAddresses()
         {
             GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
-            PageTable.KernelSetup(GetMap(BootInfoMemoryType.PageTable)->Start, Header->PageTableType);
+            PageTable.ConfigureType(Header->PageTableType);
+            PageTable.KernelTable.KernelSetup(GetMap(BootInfoMemoryType.PageTable)->Start);
         }
 
         public static BootInfoMemory* GetMap(BootInfoMemoryType type)

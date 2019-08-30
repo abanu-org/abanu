@@ -34,7 +34,7 @@ namespace lonos.Kernel.Core.Devices
             // Map physical memory space to virtual memory space
             for (uint at = address; at < address + size; at += 4096)
             {
-                PageTable.MapVirtualAddressToPhysical(at, at);
+                PageTable.KernelTable.MapVirtualAddressToPhysical(at, at);
             }
 
             //return new Memory(new IntPtr(address), size);

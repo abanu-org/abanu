@@ -24,7 +24,7 @@ namespace lonos.Kernel.Core.Boot
         public uint VBEMode;
 
         public uint InstalledPhysicalMemory;
-        public PageTable.PageTableType PageTableType;
+        public PageTableType PageTableType;
 
         public bool FBPresent;
         public BootInfoFramebufferInfo FbInfo;

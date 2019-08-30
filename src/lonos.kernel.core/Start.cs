@@ -22,14 +22,14 @@ namespace lonos.Kernel.Core
 
         public unsafe static void Main()
         {
+            ManagedMemoy.InitializeGCMemory();
+            StartUp.InitializeAssembly();
+            //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
+
             BootInfo.SetupStage1();
 
             // Field needs to be explicit set, because InitializeAssembly is not invoked yet.
             Memory.InitialKernelProtect();
-
-            ManagedMemoy.InitializeGCMemory();
-            StartUp.InitializeAssembly();
-            //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
             ApiContext.Current = new ApiHost();
             Assert.Setup(AssertError);

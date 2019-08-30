@@ -19,7 +19,7 @@ namespace lonos.Kernel.Loader
             BootInfo->HeapSize = 0;
 
             BootInfo->InstalledPhysicalMemory = 128 * 1024 * 1024;
-            BootInfo->PageTableType = KConfig.UsePAE ? PageTable.PageTableType.PAE : PageTable.PageTableType.x86;
+            BootInfo->PageTableType = KConfig.UsePAE ? PageTableType.PAE : PageTableType.x86;
 
             SetupVideoInfo();
             SetupMemoryMap();

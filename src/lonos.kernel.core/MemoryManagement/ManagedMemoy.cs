@@ -13,7 +13,6 @@ namespace lonos.Kernel.Core.MemoryManagement
         public static void InitializeGCMemory()
         {
             // Wipe GCMemory from Bootloader
-            Memory.InitialKernelProtect_MakeWritable_BySize(Address.GCInitialMemory, Address.GCInitialMemorySize);
             MemoryOperation.Clear4(Address.GCInitialMemory, Address.GCInitialMemorySize);
         }
 

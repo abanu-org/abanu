@@ -57,9 +57,9 @@ namespace lonos.Kernel.Loader
             // Because IDT is not setup yet, that could handle this kind of exception.
 
             PageTable.ConfigureType(BootInfo_.BootInfo->PageTableType);
-            map = BootMemory.AllocateMemoryMap(PageTable.InitalMemoryAllocationSize, BootInfoMemoryType.PageTable);
+            map = BootMemory.AllocateMemoryMap(PageTable.KernelTable.InitalMemoryAllocationSize, BootInfoMemoryType.PageTable);
             BootInfo_.AddMap(map);
-            PageTable.Setup(map.Start);
+            PageTable.KernelTable.Setup(map.Start);
 
             // Because Kernel is compiled in virtual address space, we need to remap the pages
             MapKernelImage();
@@ -99,7 +99,7 @@ namespace lonos.Kernel.Loader
             KernelMessage.WriteLine("Mapping Kernel Image from physical {0:X8} to virtual {1:X8}", phys, phys + diff);
             while (addr < endPhys)
             {
-                PageTable.MapVirtualAddressToPhysical(addr + diff, addr);
+                PageTable.KernelTable.MapVirtualAddressToPhysical(addr + diff, addr);
                 addr += 0x1000;
             }
 

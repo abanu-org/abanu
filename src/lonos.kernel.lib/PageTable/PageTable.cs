@@ -9,116 +9,56 @@ namespace lonos.Kernel.Core.PageManagement
     /// <summary>
     /// Page Table
     /// </summary>
-    public unsafe static class PageTable
+    public unsafe abstract partial class PageTable : IPageTable
     {
 
-        public enum PageTableType
+        public static IPageTable KernelTable;
+
+        public static void ConfigureType(PageTableType type)
         {
-            x86,
-            PAE
-        }
-
-        public static PageTableType Type;
-
-        public static void ConfigureType(PageTableType type) => Type = type;
-
-        public static USize InitalMemoryAllocationSize
-        {
-            get
-            {
-                if (Type == PageTableType.x86)
-                    return PageTableX86.InitalMemoryAllocationSize;
-                else
-                    return PageTablePAE.InitalMemoryAllocationSize;
-            }
-        }
-
-        public static void Setup(Addr entriesAddr)
-        {
-            if (Type == PageTableType.x86)
-                PageTableX86.Setup(entriesAddr);
-            else
-                PageTablePAE.Setup(entriesAddr);
-        }
-
-        public static void KernelSetup(Addr entriesAddr, PageTableType type)
-        {
-            Type = type;
             if (type == PageTableType.x86)
-                PageTableX86.KernelSetup(entriesAddr);
+                KernelTable = new PageTableX86();
             else
-                PageTablePAE.KernelSetup(entriesAddr);
+                KernelTable = new PageTablePAE();
         }
 
-        public static void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true)
-        {
-            if (Type == PageTableType.x86)
-                PageTableX86.MapVirtualAddressToPhysical(virtualAddress, physicalAddress, present);
-            else
-                PageTablePAE.MapVirtualAddressToPhysical(virtualAddress, physicalAddress, present);
-        }
+        public abstract PageTableType Type { get; }
 
-        public static void EnableKernelWriteProtection()
+        public abstract USize InitalMemoryAllocationSize { get; }
+
+        public abstract void Setup(Addr entriesAddr);
+
+        public abstract void KernelSetup(Addr entriesAddr);
+
+        public abstract void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true);
+
+        public void EnableKernelWriteProtection()
         {
             // Set CR0.WP
             Native.SetCR0(Native.GetCR0() | 0x10000);
         }
 
-        public static void DisableKernelWriteProtection()
+        public void DisableKernelWriteProtection()
         {
             // Set CR0.WP
             Native.SetCR0((uint)(Native.GetCR0() & ~0x10000));
         }
 
-        public static void EnableExecutionProtection()
+        public virtual void EnableExecutionProtection() { }
+
+        public abstract void SetKernelWriteProtectionForAllInitialPages();
+
+        public virtual void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
         {
-            if (Type == PageTableType.PAE)
-                PageTablePAE.EnableExecutionProtection();
         }
 
-        public static void SetKernelWriteProtectionForAllInitialPages()
-        {
-            if (Type == PageTableType.x86)
-                PageTableX86.SetKernelWriteProtectionForAllInitialPages();
-            else
-                PageTablePAE.SetKernelWriteProtectionForAllInitialPages();
-        }
+        public abstract void Flush();
 
-        public static void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
-        {
-            if (Type == PageTableType.PAE)
-                PageTablePAE.SetExecutionProtectionForAllInitialPages(currentTextSection);
-        }
+        public abstract void Flush(Addr virtAddr);
 
-        public static void Flush()
-        {
-            if (Type == PageTableType.x86)
-                PageTableX86.Flush();
-            else
-                PageTablePAE.Flush();
-        }
+        public abstract void SetKernelWriteProtectionForRegion(uint virtAddr, uint size);
 
-        public static void Flush(Addr virtAddr)
-        {
-            if (Type == PageTableType.x86)
-                PageTableX86.Flush(virtAddr);
-            else
-                PageTablePAE.Flush(virtAddr);
-        }
-
-        public static void SetKernelWriteProtectionForRegion(uint virtAddr, uint size)
-        {
-            if (Type == PageTableType.x86)
-                PageTableX86.SetKernelWriteProtectionForRegion(virtAddr, size);
-            else
-                PageTablePAE.SetKernelWriteProtectionForRegion(virtAddr, size);
-        }
-
-        public static void SetExecutableForRegion(uint virtAddr, uint size)
-        {
-            if (Type == PageTableType.PAE)
-                PageTablePAE.SetExecutableForRegion(virtAddr, size);
-        }
+        public virtual void SetExecutableForRegion(uint virtAddr, uint size) { }
 
     }
 

@@ -29,7 +29,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             var p = head;
             for (var i = 0; i < pages; i++)
             {
-                PageTable.MapVirtualAddressToPhysical(_nextVirtAddr, p->PhysicalAddress);
+                PageTable.KernelTable.MapVirtualAddressToPhysical(_nextVirtAddr, p->PhysicalAddress);
                 _nextVirtAddr += 4096;
                 p = p->Next;
             }

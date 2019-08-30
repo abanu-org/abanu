@@ -143,9 +143,9 @@ namespace lonos.Kernel.Core.MemoryManagement
                 return;
 
             //KernelMessage.WriteLine("Unset CR0.WP");
-            PageTable.DisableKernelWriteProtection();
+            PageTable.KernelTable.DisableKernelWriteProtection();
 
-            PageTable.SetKernelWriteProtectionForAllInitialPages();
+            PageTable.KernelTable.SetKernelWriteProtectionForAllInitialPages();
 
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.GDT);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageTable);
@@ -154,12 +154,13 @@ namespace lonos.Kernel.Core.MemoryManagement
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelBssSegment);
             InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelDataSegment);
             //InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelROdataSegment);
+            InitialKernelProtect_MakeWritable_BySize(Address.GCInitialMemory, Address.GCInitialMemorySize);
 
             //KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
-            PageTable.Flush();
+            PageTable.KernelTable.Flush();
 
             //KernelMessage.WriteLine("Set CR0.WP");
-            PageTable.EnableKernelWriteProtection();
+            PageTable.KernelTable.EnableKernelWriteProtection();
         }
 
         private unsafe static void SetInitialExecutionProtection()
@@ -171,7 +172,7 @@ namespace lonos.Kernel.Core.MemoryManagement
                 //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
                 //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
 
-                PageTable.SetExecutionProtectionForAllInitialPages(&codeReg);
+                PageTable.KernelTable.SetExecutionProtectionForAllInitialPages(&codeReg);
                 //InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType.KernelTextSegment);
             }
         }
@@ -187,7 +188,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             if (!KConfig.UseKernelMemoryProtection)
                 return;
 
-            PageTable.SetKernelWriteProtectionForRegion(virtAddr, size);
+            PageTable.KernelTable.SetKernelWriteProtectionForRegion(virtAddr, size);
         }
 
         public unsafe static void InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType type)
@@ -201,7 +202,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             if (!KConfig.UseKernelMemoryProtection)
                 return;
 
-            PageTable.SetExecutableForRegion(virtAddr, size);
+            PageTable.KernelTable.SetExecutableForRegion(virtAddr, size);
         }
 
     }

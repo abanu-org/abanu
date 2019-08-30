@@ -9,12 +9,12 @@ namespace lonos.Kernel.Core.PageManagement
     /// <summary>
     /// Page Table
     /// </summary>
-    public unsafe static class PageTablePAE
+    public unsafe class PageTablePAE : PageTable
     {
 
-        public static uint AddrPageDirectoryPT;
-        public static uint AddrPageDirectory;
-        public static uint AddrPageTable;
+        public uint AddrPageDirectoryPT;
+        public uint AddrPageDirectory;
+        public uint AddrPageTable;
 
         public const uint EntriesPerPTTable = 4;
         public const uint PagesPerDictionaryEntry = 512;
@@ -29,9 +29,10 @@ namespace lonos.Kernel.Core.PageManagement
         private const uint InitalPageTableSize = PageTableEntry.EntrySize * InitialPageTableEntries;
         private const uint InitalPageDirectoryPTSize = 4096;
 
-        public const uint InitalMemoryAllocationSize = InitalPageDirectoryPTSize + InitalPageDirectorySize + InitalPageTableSize;
+        public override PageTableType Type => PageTableType.PAE;
+        public override USize InitalMemoryAllocationSize => InitalPageDirectoryPTSize + InitalPageDirectorySize + InitalPageTableSize;
 
-        private static void SetAddress(Addr entriesAddr)
+        private void SetAddress(Addr entriesAddr)
         {
             AddrPageDirectoryPT = entriesAddr;
             AddrPageDirectory = entriesAddr + InitalPageDirectoryPTSize;
@@ -41,7 +42,7 @@ namespace lonos.Kernel.Core.PageManagement
         /// <summary>
         /// Sets up the PageTable
         /// </summary>
-        public static void Setup(Addr entriesAddr)
+        public override void Setup(Addr entriesAddr)
         {
             KernelMessage.WriteLine("Setup PageTable");
             SetAddress(entriesAddr);
@@ -105,7 +106,7 @@ namespace lonos.Kernel.Core.PageManagement
             KernelMessage.Write("Enable Paging... ");
 
             if (KConfig.UseKernelMemoryProtection)
-                PageTable.EnableKernelWriteProtection();
+                EnableKernelWriteProtection();
 
             // Enable PAE
             Native.SetCR4(Native.GetCR4() | 0x20);
@@ -116,25 +117,25 @@ namespace lonos.Kernel.Core.PageManagement
             KernelMessage.WriteLine("Done");
         }
 
-        private static void PrintAddress()
+        private void PrintAddress()
         {
             KernelMessage.WriteLine("PageDirectoryPT: {0:X8}", AddrPageDirectoryPT);
             KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
             KernelMessage.WriteLine("PageTable: {0:X8}", AddrPageTable);
         }
 
-        private static bool WritableAddress(uint physAddr)
+        private bool WritableAddress(uint physAddr)
         {
             return false;
         }
 
-        public static void KernelSetup(Addr entriesAddr)
+        public override void KernelSetup(Addr entriesAddr)
         {
             SetAddress(entriesAddr);
             //PrintAddress();
         }
 
-        public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
+        public PageTableEntry* GetTableEntry(uint forVirtualAddress)
         //public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
         {
             var pageNum = forVirtualAddress >> 12;
@@ -147,7 +148,7 @@ namespace lonos.Kernel.Core.PageManagement
         /// </summary>
         /// <param name="virtualAddress">The virtual address.</param>
         /// <param name="physicalAddress">The physical address.</param>
-        public static void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true)
+        public override void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true)
         {
             //FUTURE: traverse page directory from CR3 --- do not assume page table is linearly allocated
 
@@ -174,13 +175,13 @@ namespace lonos.Kernel.Core.PageManagement
         /// </summary>
         /// <param name="virtualAddress">The virtual address.</param>
         /// <returns></returns>
-        public static uint GetPhysicalAddressFromVirtual(IntPtr virtualAddress)
+        public uint GetPhysicalAddressFromVirtual(IntPtr virtualAddress)
         {
             //FUTURE: traverse page directory from CR3 --- do not assume page table is linearly allocated
             return Intrinsic.Load32(new IntPtr(AddrPageTable), (((uint)virtualAddress.ToInt32() & 0xFFFFF000u) >> 10)) + ((uint)virtualAddress.ToInt32() & 0xFFFu);
         }
 
-        public static void SetKernelWriteProtectionForAllInitialPages()
+        public override void SetKernelWriteProtectionForAllInitialPages()
         {
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
             for (int index = 0; index < InitialPageTableEntries; index++)
@@ -190,7 +191,7 @@ namespace lonos.Kernel.Core.PageManagement
             }
         }
 
-        private static void EnableExecutionProtectionInternal()
+        private void EnableExecutionProtectionInternal()
         {
             // set IA32_EFER.NXE
             const uint EFER = 0xC0000080;
@@ -199,15 +200,15 @@ namespace lonos.Kernel.Core.PageManagement
         //[DllImport("x86/lonos.EnableExecutionProtection.o", EntryPoint = "EnableExecutionProtection")]
         //private extern static void EnableExecutionProtectionInternal();
 
-        public static void EnableExecutionProtection()
+        public override void EnableExecutionProtection()
         {
             EnableExecutionProtectionInternal();
         }
 
-        public static void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
+        public override void SetExecutionProtectionForAllInitialPages(LinkedMemoryRegion* currentTextSection)
         {
             // Must be enabled before setting the page bits, otherwise you get a PageFault exception because of using an reserved bit.
-            PageTable.EnableExecutionProtection();
+            EnableExecutionProtection();
 
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
             for (uint index = 0; index < InitialPageTableEntries; index++)
@@ -231,17 +232,17 @@ namespace lonos.Kernel.Core.PageManagement
             }
         }
 
-        public static void Flush()
+        public override void Flush()
         {
             Native.SetCR3(AddrPageDirectoryPT);
         }
 
-        public static void Flush(Addr virtAddr)
+        public override void Flush(Addr virtAddr)
         {
             Flush(); //TODO: Use Native.InvPg!
         }
 
-        public unsafe static void SetKernelWriteProtectionForRegion(uint virtAddr, uint size)
+        public unsafe override void SetKernelWriteProtectionForRegion(uint virtAddr, uint size)
         {
             //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
             var pages = KMath.DivCeil(size, 4096);
@@ -256,7 +257,7 @@ namespace lonos.Kernel.Core.PageManagement
             Flush();
         }
 
-        public unsafe static void SetExecutableForRegion(uint virtAddr, uint size)
+        public unsafe override void SetExecutableForRegion(uint virtAddr, uint size)
         {
             //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
             var pages = KMath.DivCeil(size, 4096);
