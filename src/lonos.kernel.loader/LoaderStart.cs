@@ -102,6 +102,7 @@ namespace lonos.Kernel.Loader
                 PageTable.KernelTable.MapVirtualAddressToPhysical(addr + diff, addr);
                 addr += 0x1000;
             }
+            PageTable.KernelTable.Flush();
 
             var map = new BootInfoMemory();
             map.Start = phys + diff;

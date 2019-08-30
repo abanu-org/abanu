@@ -133,7 +133,7 @@ namespace lonos.Kernel.Core.PageManagement
             //Native.Invlpg(virtualAddress); Not implemented in MOSA yet
 
             // workarround:
-            Flush();
+            //Flush();
         }
 
         /// <summary>

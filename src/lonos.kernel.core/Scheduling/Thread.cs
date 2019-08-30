@@ -18,6 +18,8 @@ namespace lonos.Kernel.Core.Scheduling
         public Process Process;
         public uint DataSelector;
         public IPageTable PageTable;
+        public uint ThreadID;
+        public bool Debug;
 
         public void FreeMemory()
         {

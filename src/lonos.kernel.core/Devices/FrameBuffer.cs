@@ -36,6 +36,7 @@ namespace lonos.Kernel.Core.Devices
             {
                 PageTable.KernelTable.MapVirtualAddressToPhysical(at, at);
             }
+            PageTable.KernelTable.Flush();
 
             //return new Memory(new IntPtr(address), size);
         }

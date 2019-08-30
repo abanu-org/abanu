@@ -33,6 +33,7 @@ namespace lonos.Kernel.Core.MemoryManagement
                 _nextVirtAddr += 4096;
                 p = p->Next;
             }
+            PageTable.KernelTable.Flush();
             return virt;
         }
 

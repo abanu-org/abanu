@@ -219,6 +219,7 @@ namespace lonos.Kernel.Core.Interrupts
 
         private static void key1()
         {
+            Screen.Clear();
         }
 
         private static void key2()

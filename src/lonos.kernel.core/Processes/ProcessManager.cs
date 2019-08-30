@@ -15,7 +15,7 @@ namespace lonos.Kernel.Core.Processes
     public static class ProcessManager
     {
 
-        private static uint NextCreateProcessID;
+        private static int NextCreateProcessID;
         public static Process Idle;
         public static Process System;
 
@@ -37,20 +37,58 @@ namespace lonos.Kernel.Core.Processes
         public static Process CreateEmptyProcess(ProcessCreateOptions options)
         {
             var proc = new Process();
-            proc.ProcessID = NextCreateProcessID++; // TODO: Interlocked
+            proc.ProcessID = (uint)Interlocked.Increment(ref NextCreateProcessID);
             proc.User = options.User;
             proc.PageTable = PageTable.KernelTable;
             return proc;
         }
 
-        public static void StartProcess(string path)
+        public static unsafe void StartProcess(string path)
         {
+            KernelMessage.WriteLine("Start proc: {0}", path);
             var elf = KernelElf.FromSectionName(path);
-            for (var i = 0; i < elf.SectionHeaderCount; i++)
+            for (uint i = 0; i < elf.SectionHeaderCount; i++)
             {
+                var section = elf.GetSectionHeader(i);
+                var name = elf.GeSectionName(section);
 
+                var size = section->Size;
+                var virtAddr = section->Addr;
+                var srcAddr = elf.GetSectionPhysAddr(section);
+
+                if (size == 0)
+                    continue;
+                if (virtAddr == Addr.Zero)
+                    continue;
+
+                var sb = new StringBuffer();
+                sb.Append("Map section ");
+                sb.Append(name);
+                sb.Append(" virt={0:X8} src={1:X8} size={2:X8}", virtAddr, srcAddr, size);
+                KernelMessage.WriteLine(sb);
+                //MemoryOperation.Copy4(elf.GetSectionPhysAddr(section), section->Addr, section->Size);
+                PageTable.KernelTable.Map(virtAddr, srcAddr, size);
             }
+            PageTable.KernelTable.Flush();
+            KernelMessage.WriteLine("proc sections are ready");
+
+            var entryPoint = GetEntryPointFromElf(elf);
+            KernelMessage.WriteLine("EntryPoint: {0:X8}", entryPoint);
+
+            var proc = CreateEmptyProcess(new ProcessCreateOptions() { });
+            Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint) { AllowUserModeIOPort = true, Debug = true });
+            proc.Start();
         }
+
+        private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)
+        {
+            var symName = "System.Void lonos.Kernel.Program::Main()"; // TODO
+            var sym = elf.GetSymbol(symName);
+            if (sym == (ElfSymbol*)0)
+                return Addr.Zero;
+            return sym->Value;
+        }
+
     }
 
 }

@@ -39,9 +39,9 @@ namespace lonos.Kernel.Core.Scheduling
             CurrentThreadID = 0;
             clockTicks = 0;
 
-            for (int i = 0; i < ThreadCapacity; i++)
+            for (uint i = 0; i < ThreadCapacity; i++)
             {
-                Threads[i] = new Thread();
+                Threads[i] = new Thread() { ThreadID = i };
             }
 
             SignalThreadTerminationMethodAddress = GetAddress(SignalThreadTerminationMethod);
@@ -190,6 +190,7 @@ namespace lonos.Kernel.Core.Scheduling
             //options.User = false;
 
             thread.User = proc.User;
+            thread.Debug = options.Debug;
 
             var stackSize = options.StackSize;
 
@@ -325,6 +326,13 @@ namespace lonos.Kernel.Core.Scheduling
 
             if (!thread.User)
                 thread.StackState = null; // just to be sure
+
+            if (thread.Debug)
+            {
+                KernelMessage.WriteLine("Debug TH");
+
+                Native.Nop();
+            }
 
             InterruptReturn(stackStateAddr, thread.DataSelector);
         }
