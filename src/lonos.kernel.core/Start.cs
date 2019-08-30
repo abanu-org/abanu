@@ -28,7 +28,6 @@ namespace lonos.Kernel.Core
 
             BootInfo.SetupStage1();
 
-            // Field needs to be explicit set, because InitializeAssembly is not invoked yet.
             Memory.InitialKernelProtect();
 
             ApiContext.Current = new ApiHost();
