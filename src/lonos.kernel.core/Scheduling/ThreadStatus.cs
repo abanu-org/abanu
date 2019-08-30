@@ -7,6 +7,5 @@
         ScheduleForStart,
         Running,
         Terminated,
-        Waiting
     };
 }

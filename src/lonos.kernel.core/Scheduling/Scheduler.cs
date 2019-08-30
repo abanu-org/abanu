@@ -17,7 +17,7 @@ namespace lonos.Kernel.Core.Scheduling
 {
     public static class Scheduler
     {
-        public const int ThreadCapacity = 10;
+        public const int ThreadCapacity = 256;
         public const int ClockIRQ = 0x20;
         public const int ThreadTerminationSignalIRQ = 254;
 
@@ -251,11 +251,13 @@ namespace lonos.Kernel.Core.Scheduling
             stackState->Stack.EIP = options.MethodAddr;
             stackState->Stack.EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
 
-            //lock (proc.Threads)
-            //{
-            thread.Process = proc;
-            proc.Threads.Add(thread);
-            //}
+            thread.DataSelector = thread.User ? 0x23u : 0x10u;
+
+            lock (proc.Threads)
+            {
+                thread.Process = proc;
+                proc.Threads.Add(thread);
+            }
 
             return thread;
         }
@@ -362,6 +364,20 @@ namespace lonos.Kernel.Core.Scheduling
             {
                 if (thread.Status != ThreadStatus.Terminated)
                     return;
+
+                if (thread.Process != null)
+                {
+                    var proc = thread.Process;
+                    lock (proc.Threads)
+                    {
+                        for (var i = 0; i < proc.Threads.Count; i++)
+                        {
+                            if (proc.Threads[i] == thread)
+                                proc.Threads.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
 
                 thread.FreeMemory();
                 KernelMessage.WriteLine("Thread disposed");
