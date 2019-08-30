@@ -56,7 +56,7 @@ namespace lonos.Kernel.Core.Elf
             return helper;
         }
 
-        unsafe static ElfHelper FromSectionName(string name)
+        public unsafe static ElfHelper FromSectionName(string name)
         {
             var sec = Main.GetSectionHeader(name);
             var addr = Main.GetSectionPhysAddr(sec);

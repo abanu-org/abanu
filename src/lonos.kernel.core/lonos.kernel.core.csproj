@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DummyClass.cs" />
+    <Compile Include="Processes\ProcessManager.cs" />
     <Compile Include="Syscalls\SysCallManager.cs" />
     <Compile Include="Tasks\BackgroundWorker.cs" />
     <Compile Include="Diagnostics\AsmDebugFunction.cs" />
