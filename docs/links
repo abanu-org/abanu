@@ -35,3 +35,6 @@ https://www.kernel.org/doc/gorman/html/understand/understand009.html
 
 # Great Binary Buddy Allocator:
 https://github.com/evanw/buddy-malloc
+
+# Simple OS Implementation, with good source documentation
+https://github.com/wookayin/pintos
