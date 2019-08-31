@@ -199,6 +199,10 @@ namespace lonos.Kernel.Core.Scheduling
             stackSize = stackPages * PageFrameManager.PageSize;
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
+
+            //if (thread.User)
+            //    thread.PageTable.MapSync(PageTable.KernelTable, (uint)stack, (uint)stack, stackSize);
+
             stackSize -= debugPadding;
             var stackBottom = stack + (int)stackSize;
 
@@ -305,6 +309,7 @@ namespace lonos.Kernel.Core.Scheduling
         private unsafe static void SwitchToThread(uint threadID)
         {
             var thread = Threads[threadID];
+            var proc = thread.Process;
 
             if (KConfig.TraceThreadSwitch)
                 KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackState->TASK_ESP);
@@ -322,6 +327,7 @@ namespace lonos.Kernel.Core.Scheduling
 
             thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;
 
+            uint pageDirAddr = proc.PageTable.GdtAddr;
             uint stackStateAddr = (uint)thread.StackState;
 
             if (!thread.User)
@@ -334,11 +340,11 @@ namespace lonos.Kernel.Core.Scheduling
                 Native.Nop();
             }
 
-            InterruptReturn(stackStateAddr, thread.DataSelector);
+            InterruptReturn(stackStateAddr, thread.DataSelector, pageDirAddr);
         }
 
         [DllImport("x86/lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
-        private extern static void InterruptReturn(uint stackStatePointer, uint dataSegment);
+        private extern static void InterruptReturn(uint stackStatePointer, uint dataSegment, uint pageTableAddr);
 
         private static uint FindEmptyThreadSlot()
         {

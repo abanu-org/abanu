@@ -74,6 +74,7 @@ namespace lonos.Kernel.Core.PageManagement
 
         public virtual void SetExecutableForRegion(uint virtAddr, uint size) { }
 
+        public abstract Addr GetPhysicalAddressFromVirtual(Addr virtualAddress);
     }
 
 }

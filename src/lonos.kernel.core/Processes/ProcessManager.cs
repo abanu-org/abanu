@@ -46,13 +46,16 @@ namespace lonos.Kernel.Core.Processes
 
         public static unsafe void StartProcess(string path)
         {
+            return;
             KernelMessage.WriteLine("Create proc: {0}", path);
 
             var proc = CreateEmptyProcess(new ProcessCreateOptions() { });
             proc.PageTable = PageTable.CreateInstance();
 
-            var pageTableAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
-            proc.PageTable.UserProcSetup(pageTableAddr);
+            // Warning: This is the virt Addr of PageTable structure!
+            var pageTableVirtAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
+            Memory.InitialKernelProtect_MakeWritable_BySize(pageTableVirtAddr, proc.PageTable.InitalMemoryAllocationSize);
+            proc.PageTable.UserProcSetup(pageTableVirtAddr); // we do not need the user virt Addr, because user will never have access to PageTable
 
             var elf = KernelElf.FromSectionName(path);
             for (uint i = 0; i < elf.SectionHeaderCount; i++)
@@ -85,8 +88,8 @@ namespace lonos.Kernel.Core.Processes
             var entryPoint = GetEntryPointFromElf(elf);
             KernelMessage.WriteLine("EntryPoint: {0:X8}", entryPoint);
 
-            Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint) { AllowUserModeIOPort = true, Debug = true });
-            //proc.Start();
+            var mainThread = Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint) { AllowUserModeIOPort = true, Debug = true });
+            proc.Start();
         }
 
         private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)

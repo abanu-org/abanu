@@ -19,6 +19,7 @@ end
 #set arch i386:x86-64:intel
 file os/lonos.os.core.x86.bin
 #file os/lonos.os.loader.x86.bin
+#file os/app.hellokernel.bin
 target remote | ./lonosctl debug qemu-kernel-run
 b *0x0
 #b *0xc010609f
