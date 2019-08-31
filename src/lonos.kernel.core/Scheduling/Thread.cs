@@ -17,7 +17,6 @@ namespace lonos.Kernel.Core.Scheduling
         public bool User;
         public Process Process;
         public uint DataSelector;
-        public IPageTable PageTable;
         public uint ThreadID;
         public bool Debug;
 

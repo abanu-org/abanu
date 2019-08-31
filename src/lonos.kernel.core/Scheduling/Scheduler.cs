@@ -200,8 +200,8 @@ namespace lonos.Kernel.Core.Scheduling
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
             Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
 
-            //if (thread.User)
-            //    thread.PageTable.MapSync(PageTable.KernelTable, (uint)stack, (uint)stack, stackSize);
+            if (thread.User && proc.PageTable != PageTable.KernelTable)
+                proc.PageTable.MapSync(PageTable.KernelTable, (uint)stack, (uint)stack, stackSize);
 
             stackSize -= debugPadding;
             var stackBottom = stack + (int)stackSize;
