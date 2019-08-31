@@ -31,6 +31,7 @@ namespace lonos.Kernel.Core.PageManagement
 
         public override PageTableType Type => PageTableType.PAE;
         public override USize InitalMemoryAllocationSize => InitalPageDirectoryPTSize + InitalPageDirectorySize + InitalPageTableSize;
+        public override Addr GdtAddr => AddrPageDirectory;
 
         private void SetAddress(Addr entriesAddr)
         {
@@ -244,6 +245,8 @@ namespace lonos.Kernel.Core.PageManagement
 
         public override void Flush()
         {
+            if (PageTable.KernelTable != this)
+                return;
             Native.SetCR3(AddrPageDirectoryPT);
         }
 

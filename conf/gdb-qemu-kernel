@@ -34,13 +34,13 @@ b *0x0
 #b System.Void lonos.kernel.core.IDTManager::IRQ32()
 
 # Invalid TSS
-b IDTManager.cs:448
+b System.Void lonos.Kernel.Core.Interrupts.IDTManager::IRQ10()
 
 # General Protection Exception
-b IDTManager.cs:467
+b System.Void lonos.Kernel.Core.Interrupts.IDTManager::IRQ13()
 
-# General Protection Exception
-b IDTManager.cs:474
+# Page Fault
+b System.Void lonos.Kernel.Core.Interrupts.IDTManager::IRQ14()
 
 #b *0xc010f128
 #watch *0x4506010

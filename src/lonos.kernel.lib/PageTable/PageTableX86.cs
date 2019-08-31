@@ -12,8 +12,8 @@ namespace lonos.Kernel.Core.PageManagement
     public unsafe class PageTableX86 : PageTable
     {
 
-        public static uint AddrPageDirectory;
-        public static uint AddrPageTable;
+        public uint AddrPageDirectory;
+        public uint AddrPageTable;
 
         public const uint PagesPerDictionaryEntry = 1024;
         public const uint EntriesPerPageEntryEntry = 1024;
@@ -27,6 +27,7 @@ namespace lonos.Kernel.Core.PageManagement
 
         public override PageTableType Type => PageTableType.x86;
         public override USize InitalMemoryAllocationSize => InitalPageDirectorySize + InitalPageTableSize;
+        public override Addr GdtAddr => AddrPageDirectory;
 
         /// <summary>
         /// Sets up the PageTable
@@ -169,6 +170,8 @@ namespace lonos.Kernel.Core.PageManagement
 
         public override void Flush()
         {
+            if (PageTable.KernelTable != this)
+                return;
             Native.SetCR3(AddrPageDirectory);
         }
 

@@ -36,6 +36,7 @@ namespace lonos.Kernel.Core.PageManagement
         public abstract PageTableType Type { get; }
 
         public abstract USize InitalMemoryAllocationSize { get; }
+        public abstract Addr GdtAddr { get; }
 
         public abstract void Setup(Addr entriesAddr);
 
