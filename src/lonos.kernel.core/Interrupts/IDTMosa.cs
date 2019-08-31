@@ -18,6 +18,7 @@ namespace Mosa.Kernel.x86
     public unsafe static class IDT
     {
 
+
         public static bool Enabled = false;
         private static void dummy(uint err) { }
         /// <summary>

@@ -44,6 +44,33 @@ namespace lonos.Kernel.Core.PageManagement
         /// </summary>
         public override void Setup(Addr entriesAddr)
         {
+            SetupBasicStructure(entriesAddr);
+
+            // Set CR3 register on processor - sets page directory
+            KernelMessage.WriteLine("Set CR3 to {0:X8}", AddrPageDirectoryPT);
+            Flush();
+
+            KernelMessage.Write("Enable Paging... ");
+
+            if (KConfig.UseKernelMemoryProtection)
+                EnableKernelWriteProtection();
+
+            // Enable PAE
+            Native.SetCR4(Native.GetCR4() | 0x20);
+
+            // Set CR0 register on processor - turns on virtual memory
+            Native.SetCR0(Native.GetCR0() | 0x80000000);
+
+            KernelMessage.WriteLine("Done");
+        }
+
+        public override void UserProcSetup(Addr entriesAddr)
+        {
+            SetupBasicStructure(entriesAddr);
+        }
+
+        private void SetupBasicStructure(Addr entriesAddr)
+        {
             KernelMessage.WriteLine("Setup PageTable");
             SetAddress(entriesAddr);
 
@@ -98,23 +125,6 @@ namespace lonos.Kernel.Core.PageManagement
 
             // Unmap the first page for null pointer exceptions
             MapVirtualAddressToPhysical(0x0, 0x0, false);
-
-            // Set CR3 register on processor - sets page directory
-            KernelMessage.WriteLine("Set CR3 to {0:X8}", AddrPageDirectoryPT);
-            Flush();
-
-            KernelMessage.Write("Enable Paging... ");
-
-            if (KConfig.UseKernelMemoryProtection)
-                EnableKernelWriteProtection();
-
-            // Enable PAE
-            Native.SetCR4(Native.GetCR4() | 0x20);
-
-            // Set CR0 register on processor - turns on virtual memory
-            Native.SetCR0(Native.GetCR0() | 0x80000000);
-
-            KernelMessage.WriteLine("Done");
         }
 
         private void PrintAddress()

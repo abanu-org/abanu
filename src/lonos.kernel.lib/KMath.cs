@@ -31,5 +31,10 @@ namespace lonos.Kernel
             return (value - 1) / dividor + 1;
         }
 
+        public static uint DivFloor(uint value, uint dividor)
+        {
+            return value / dividor;
+        }
+
     }
 }

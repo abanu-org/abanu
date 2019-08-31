@@ -1,4 +1,5 @@
 ﻿using lonos.Kernel.Core.Elf;
+using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.Scheduling;
 using Mosa.Runtime.x86;
@@ -45,7 +46,14 @@ namespace lonos.Kernel.Core.Processes
 
         public static unsafe void StartProcess(string path)
         {
-            KernelMessage.WriteLine("Start proc: {0}", path);
+            KernelMessage.WriteLine("Create proc: {0}", path);
+
+            var proc = CreateEmptyProcess(new ProcessCreateOptions() { });
+            proc.PageTable = PageTable.CreateInstance();
+
+            var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
+            proc.PageTable.UserProcSetup(page->PhysicalAddress);
+
             var elf = KernelElf.FromSectionName(path);
             for (uint i = 0; i < elf.SectionHeaderCount; i++)
             {
@@ -67,7 +75,8 @@ namespace lonos.Kernel.Core.Processes
                 sb.Append(" virt={0:X8} src={1:X8} size={2:X8}", virtAddr, srcAddr, size);
                 KernelMessage.WriteLine(sb);
                 //MemoryOperation.Copy4(elf.GetSectionPhysAddr(section), section->Addr, section->Size);
-                PageTable.KernelTable.Map(virtAddr, srcAddr, size);
+
+                proc.PageTable.Map(virtAddr, srcAddr, size);
             }
             PageTable.KernelTable.Flush();
             KernelMessage.WriteLine("proc sections are ready");
@@ -75,9 +84,8 @@ namespace lonos.Kernel.Core.Processes
             var entryPoint = GetEntryPointFromElf(elf);
             KernelMessage.WriteLine("EntryPoint: {0:X8}", entryPoint);
 
-            var proc = CreateEmptyProcess(new ProcessCreateOptions() { });
             Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint) { AllowUserModeIOPort = true, Debug = true });
-            proc.Start();
+            //proc.Start();
         }
 
         private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)

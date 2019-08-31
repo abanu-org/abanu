@@ -16,10 +16,21 @@ namespace lonos.Kernel.Core.PageManagement
 
         public static void ConfigureType(PageTableType type)
         {
+
+            KernelTable = CreateInstance(type);
+        }
+
+        public static IPageTable CreateInstance()
+        {
+            return CreateInstance(KernelTable.Type);
+        }
+
+        private static IPageTable CreateInstance(PageTableType type)
+        {
             if (type == PageTableType.x86)
-                KernelTable = new PageTableX86();
+                return new PageTableX86();
             else
-                KernelTable = new PageTablePAE();
+                return new PageTablePAE();
         }
 
         public abstract PageTableType Type { get; }
@@ -29,6 +40,8 @@ namespace lonos.Kernel.Core.PageManagement
         public abstract void Setup(Addr entriesAddr);
 
         public abstract void KernelSetup(Addr entriesAddr);
+
+        public abstract void UserProcSetup(Addr entriesAddr);
 
         public abstract void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true);
 

@@ -64,6 +64,8 @@ namespace lonos.Kernel.Core.Diagnostics
             Screen.NextLine();
             DumpStackTrace();
 
+            KernelMessage.WriteLine("Kernel Panic: {0}", message);
+
             while (true)
             {
                 // keep debugger running

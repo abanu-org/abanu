@@ -34,6 +34,8 @@ namespace lonos.Kernel.Core.PageManagement
 
         void Setup(Addr entriesAddr);
 
+        void UserProcSetup(Addr entriesAddr);
+
         void KernelSetup(Addr entriesAddr);
 
         void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true);

@@ -388,6 +388,7 @@ namespace lonos.Kernel.Core
                    new Argument(),
                    new Argument(),
                    new Argument(),
+                   new Argument(),
                    new Argument());
         }
 
@@ -403,6 +404,7 @@ namespace lonos.Kernel.Core
                    new Argument { _uint = arg1, type = ArgumentType._uint },
                    new Argument { _uint = arg2, type = ArgumentType._uint },
                    new Argument(),
+                   new Argument(),
                    new Argument()
                   );
         }
@@ -414,6 +416,7 @@ namespace lonos.Kernel.Core
                    new Argument { _uint = arg1, type = ArgumentType._uint },
                    new Argument { _uint = arg2, type = ArgumentType._uint },
                    new Argument { _uint = arg3, type = ArgumentType._uint },
+                   new Argument(),
                    new Argument()
                   );
         }
@@ -425,7 +428,20 @@ namespace lonos.Kernel.Core
                    new Argument { _uint = arg1, type = ArgumentType._uint },
                    new Argument { _uint = arg2, type = ArgumentType._uint },
                    new Argument { _uint = arg3, type = ArgumentType._uint },
-                   new Argument { _uint = arg4, type = ArgumentType._uint }
+                   new Argument { _uint = arg4, type = ArgumentType._uint },
+                   new Argument()
+                  );
+        }
+
+        public unsafe void Append(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5)
+        {
+            Append(format,
+                   new Argument { _uint = arg0, type = ArgumentType._uint },
+                   new Argument { _uint = arg1, type = ArgumentType._uint },
+                   new Argument { _uint = arg2, type = ArgumentType._uint },
+                   new Argument { _uint = arg3, type = ArgumentType._uint },
+                   new Argument { _uint = arg4, type = ArgumentType._uint },
+                   new Argument { _uint = arg5, type = ArgumentType._uint }
                   );
         }
 
@@ -443,7 +459,7 @@ namespace lonos.Kernel.Core
             _string = 2
         }
 
-        private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4)
+        private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4, Argument arg5)
         {
             var indexBuffer = new StringBuffer();
             indexBuffer.length = 0;
@@ -483,6 +499,9 @@ namespace lonos.Kernel.Core
                             break;
                         case '4':
                             Append(arg4, argsBuffer);
+                            break;
+                        case '5':
+                            Append(arg5, argsBuffer);
                             break;
                     }
 

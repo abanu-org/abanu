@@ -30,7 +30,10 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         public static Page* AllocatePage(PageFrameRequestFlags flags)
         {
-            return Default.AllocatePage(flags);
+            var p = Default.AllocatePage(flags);
+            //if (p->PhysicalAddress == 0x01CA4000)
+            //    Panic.Error("DEBUG-MARKER");
+            return p;
         }
 
         public static void Free(Page* page)
@@ -61,7 +64,10 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         public Page* AllocatePage(PageFrameRequestFlags flags)
         {
-            return GetPhysPage(Allocate(1));
+            var p = Allocate(1);
+            //if (p->PhysicalAddress == 0x01CA4000)
+            //    Panic.Error("DEBUG-MARKER");
+            return p;
         }
 
         public void Free(Page* page)
@@ -86,6 +92,11 @@ namespace lonos.Kernel.Core.MemoryManagement
             kmap = KernelMemoryMapManager.Allocate(PageCount * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
             PageArray = (Page*)kmap.Start;
             lastAllocatedPage = PageArray;
+
+            var firstSelfPageNum = KMath.DivFloor(kmap.Start, 4096);
+            var selfPages = KMath.DivFloor(kmap.Size, 4096);
+
+            KernelMessage.WriteLine("Page Frame Array allocated {0} pages, beginning with page {1}", selfPages, firstSelfPageNum);
 
             Memory.InitialKernelProtect_MakeWritable_BySize(kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
@@ -119,6 +130,13 @@ namespace lonos.Kernel.Core.MemoryManagement
                 if (PageArray[i].Status == PageStatus.Free)
                     FreePages++;
 
+            //if (GetPhysPage(0x01CA3000)->Status != PageStatus.Used)
+            //{
+            //    Panic.Error("01CA3000!!!");
+            //}
+            //KernelMessage.WriteLine("DEBUG-MARKER");
+            //DumpPage(GetPhysPage(0x01CA3000));
+
             KernelMessage.WriteLine("Pages Free: {0}", FreePages);
         }
 
@@ -131,39 +149,56 @@ namespace lonos.Kernel.Core.MemoryManagement
                     continue;
 
                 var mapPages = KMath.DivCeil(map.Size, 4096);
-                KernelMessage.WriteLine("Mark Pages from {0:X8}, Size {1:X8}, Pages {2}, Type {3}", map.Start, map.Size, mapPages, (uint)status);
+                var fistPageNum = KMath.DivFloor(map.Start, 4096);
+                KernelMessage.WriteLine("Mark Pages from {0:X8}, Size {1:X8}, Type {2}, FirstPage {3}, Pages {4}, Status {5}", map.Start, map.Size, (uint)map.Type, (uint)fistPageNum, mapPages, (uint)status);
 
-                for (var p = 0; p < mapPages; p++)
+                for (var p = fistPageNum; p < fistPageNum + mapPages; p++)
                 {
-                    var addr = map.Start + p * 4096;
+                    var addr = p * 4096;
                     if (addr >= BootInfo.Header->InstalledPhysicalMemory)
+                    {
+                        KernelMessage.WriteLine("addr >= BootInfo.Header->InstalledPhysicalMemory");
                         break;
-                    GetPhysPage(addr)->Status = status;
+                    }
+                    var page = GetPageByNum(p);
+                    page->Status = status;
                 }
             }
+        }
+
+        private void DumpPage(Page* p)
+        {
+            KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", p->PageNum, p->PhysicalAddress, (uint)p->Status, (uint)p, (uint)p / 4096);
         }
 
         public void Dump()
         {
             var sb = new StringBuffer();
+
             for (uint i = 0; i < PageCount; i++)
             {
                 var p = &PageArray[i];
-                sb.Clear();
-                sb.Append("Page {0} at {1:X8}: {2}\n", p->PageNum, p->PhysicalAddress, (uint)p->Status);
+                if (i % 64 == 0)
+                {
+                    sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, p->PageNum, p->PhysicalAddress, (uint)p);
+                    sb.WriteTo(DeviceManager.Serial1);
+                    sb.Clear();
+                }
+                sb.Append((int)p->Status);
                 sb.WriteTo(DeviceManager.Serial1);
+                sb.Clear();
             }
         }
 
-        public Page* GetPhysPage(Addr addr)
+        public Page* GetPhysPage(Addr physAddr)
         {
-            if (addr >= BootInfo.Header->InstalledPhysicalMemory)
-                return null;
-            return &PageArray[(uint)addr / PageSize];
+            return GetPageByNum((uint)physAddr / PageSize);
         }
 
         public Page* GetPageByNum(uint pageNum)
         {
+            if (pageNum > PageCount)
+                return null;
             return &PageArray[pageNum];
         }
 
@@ -179,11 +214,19 @@ namespace lonos.Kernel.Core.MemoryManagement
             lock (this)
             {
                 if (num == 0)
+                {
                     KernelMessage.WriteLine("Requesting zero pages");
+                    return null;
+                }
 
                 //KernelMessage.WriteLine("Request {0} pages...", num);
 
-                var cnt = 0;
+                uint statBlocks = 0;
+                uint statFreeBlocks = 0;
+                int statMaxBlockPages = 0;
+                uint statRangeChecks = 0;
+
+                uint cnt = 0;
 
                 if (lastAllocatedPage == null)
                     lastAllocatedPage = PageArray;
@@ -191,16 +234,22 @@ namespace lonos.Kernel.Core.MemoryManagement
                 Page* p = lastAllocatedPage->Next;
                 while (true)
                 {
+                    statBlocks++;
+
                     if (p == null)
                         p = PageArray;
 
                     if (p->Status == PageStatus.Free)
                     {
+                        statFreeBlocks++;
                         var head = p;
 
                         // Found free Page. Check now free range.
                         for (var i = 0; i < num; i++)
                         {
+                            statRangeChecks++;
+                            statMaxBlockPages = Math.Max(statMaxBlockPages, i);
+
                             if (p == null)
                                 break; // Reached end. SorRange is incomplete
                             if (p->Status != PageStatus.Free) // Used -> so we can abort the searach
@@ -214,6 +263,9 @@ namespace lonos.Kernel.Core.MemoryManagement
                                 p = head;
                                 for (var n = 0; n < num; n++)
                                 {
+                                    if (p->Status != PageStatus.Free)
+                                        Panic.Error("Page is not Free. PageFrame Array corrupted?");
+
                                     p->Status = PageStatus.Used;
                                     p->Head = head;
                                     p->Tail = head->Tail;
@@ -223,6 +275,12 @@ namespace lonos.Kernel.Core.MemoryManagement
                                 lastAllocatedPage = p;
 
                                 //KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress + 4096 - 1);
+
+                                //if (head->PhysicalAddress == 0x01CA4000)
+                                //{
+                                //    KernelMessage.WriteLine("DEBUG-MARKER 2");
+                                //    DumpPage(head);
+                                //}
 
                                 return head;
                             }
@@ -240,7 +298,9 @@ namespace lonos.Kernel.Core.MemoryManagement
                         break;
                 }
 
-                Panic.Error("PageFrameAllocator: No free Page found");
+                KernelMessage.WriteLine("Blocks={0} FreeBlocks={1} MaxBlockPages={2} RangeChecks={3} cnt={4}", statBlocks, statFreeBlocks, (uint)statMaxBlockPages, statRangeChecks, cnt);
+                Dump();
+                Panic.Error("PageFrameAllocator: Could not allocate " + num + " Pages.");
                 return null;
             }
         }

@@ -41,6 +41,7 @@ namespace lonos.Kernel.Core.Interrupts
             KernelMessage.WriteLine("Setup IDT");
 
             IDTAddr = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default)->PhysicalAddress;
+            Memory.InitialKernelProtect_MakeWritable_BySize(IDTAddr, 4096);
             KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
 
             // Setup IDT table
