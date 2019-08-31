@@ -51,10 +51,9 @@ namespace lonos.Kernel.Core.Processes
             var proc = CreateEmptyProcess(new ProcessCreateOptions() { });
             proc.PageTable = PageTable.CreateInstance();
 
-            // Warning: This is the virt Addr of PageTable structure!
-            var pageTableVirtAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
-            Memory.InitialKernelProtect_MakeWritable_BySize(pageTableVirtAddr, proc.PageTable.InitalMemoryAllocationSize);
-            proc.PageTable.UserProcSetup(pageTableVirtAddr); // we do not need the user virt Addr, because user will never have access to PageTable
+            var pageTableAddr = RawVirtualFrameAllocator.RequestIdentityMappedVirtalMemoryPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
+            Memory.InitialKernelProtect_MakeWritable_BySize(pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
+            proc.PageTable.UserProcSetup(pageTableAddr);
 
             var elf = KernelElf.FromSectionName(path);
             for (uint i = 0; i < elf.SectionHeaderCount; i++)

@@ -41,6 +41,16 @@ namespace lonos.Kernel.Core.MemoryManagement
             Default.Free(page);
         }
 
+        public static Page* GetPhysPage(Addr physAddr)
+        {
+            return Default.GetPhysPage(physAddr);
+        }
+
+        public static Page* GetPageByNum(uint pageNum)
+        {
+            return Default.GetPageByNum(pageNum);
+        }
+
         public static uint PagesAvailable
         {
             get
