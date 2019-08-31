@@ -114,7 +114,7 @@ namespace lonos.Kernel.Core
                 Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true });
                 userProc.Start();
 
-                //ProcessManager.StartProcess("app.HelloKernel");
+                ProcessManager.StartProcess("app.HelloKernel");
             }
 
             KernelMessage.WriteLine("Enter Main Loop");

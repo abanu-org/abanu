@@ -30,7 +30,7 @@
         /// <summary>
         /// Use PAE-Paging instead of 32 Bit Paging.
         /// </summary>
-        public const bool UsePAE = true && Cpu == KConfigCpu.x64;
+        public const bool UsePAE = false && Cpu == KConfigCpu.x64;
 
         /// <summary>
         /// If tuned on, only Pages with NXE=1 are executable.
