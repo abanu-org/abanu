@@ -27,7 +27,7 @@ namespace lonos.Kernel.Core.PageManagement
 
         public override PageTableType Type => PageTableType.x86;
         public override USize InitalMemoryAllocationSize => InitalPageDirectorySize + InitalPageTableSize;
-        public override Addr GdtAddr => AddrPageDirectory;
+        public override Addr VirtAddr => AddrPageDirectory;
 
         /// <summary>
         /// Sets up the PageTable
@@ -63,8 +63,6 @@ namespace lonos.Kernel.Core.PageManagement
             AddrPageDirectory = entriesAddr;
             AddrPageTable = entriesAddr + InitalPageDirectorySize;
 
-            PrintAddress();
-
             // Setup Page Directory
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
             PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
@@ -92,10 +90,13 @@ namespace lonos.Kernel.Core.PageManagement
 
             // Unmap the first page for null pointer exceptions
             MapVirtualAddressToPhysical(0x0, 0x0, false);
+
+            PrintAddress();
         }
 
         private void PrintAddress()
         {
+            KernelMessage.WriteLine("PageDirectoryPhys: {0:X8}", this.GetPageTablePhysAddr());
             KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
             KernelMessage.WriteLine("PageTable: {0:X8}", AddrPageTable);
         }
@@ -154,8 +155,12 @@ namespace lonos.Kernel.Core.PageManagement
         /// <returns></returns>
         public override Addr GetPhysicalAddressFromVirtual(Addr virtualAddress)
         {
+            //KernelMessage.WriteLine("GetPhysFromVirt: v={0:X8} 1={0:x}")
+
             //FUTURE: traverse page directory from CR3 --- do not assume page table is linearly allocated
-            return Intrinsic.Load32(new IntPtr(AddrPageTable), ((virtualAddress & 0xFFFFF000u) >> 10)) + (virtualAddress & 0xFFFu);
+            //return Intrinsic.Load32(new IntPtr(AddrPageTable), ((virtualAddress & 0xFFFFF000u) >> 10)) + (virtualAddress & 0xFFFu);
+            var entry = GetTableEntry(virtualAddress);
+            return entry->PhysicalAddress;
         }
 
         public override void SetKernelWriteProtectionForAllInitialPages()

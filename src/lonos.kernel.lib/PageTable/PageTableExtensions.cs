@@ -53,6 +53,11 @@
             if (flush)
                 table.Flush();
         }
+
+        public static Addr GetPageTablePhysAddr(this IPageTable table)
+        {
+            return PageTable.KernelTable.GetPhysicalAddressFromVirtual(table.VirtAddr);
+        }
     }
 
 }

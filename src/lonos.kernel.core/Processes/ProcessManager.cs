@@ -46,7 +46,6 @@ namespace lonos.Kernel.Core.Processes
 
         public static unsafe void StartProcess(string path)
         {
-            return;
             KernelMessage.WriteLine("Create proc: {0}", path);
 
             var proc = CreateEmptyProcess(new ProcessCreateOptions() { });

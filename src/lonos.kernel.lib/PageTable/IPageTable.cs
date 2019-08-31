@@ -13,7 +13,7 @@ namespace lonos.Kernel.Core.PageManagement
         PageTableType Type { get; }
 
         USize InitalMemoryAllocationSize { get; }
-        Addr GdtAddr { get; }
+        Addr VirtAddr { get; }
 
         void Setup(Addr entriesAddr);
 

@@ -327,7 +327,8 @@ namespace lonos.Kernel.Core.Scheduling
 
             thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;
 
-            uint pageDirAddr = proc.PageTable.GdtAddr;
+            uint pageDirAddr = proc.PageTable.GetPageTablePhysAddr();
+            KernelMessage.WriteLine("PageDirAddr: {0:X8}", pageDirAddr);
             uint stackStateAddr = (uint)thread.StackState;
 
             if (!thread.User)

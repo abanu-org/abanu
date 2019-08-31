@@ -31,7 +31,7 @@ namespace lonos.Kernel.Core.PageManagement
 
         public override PageTableType Type => PageTableType.PAE;
         public override USize InitalMemoryAllocationSize => InitalPageDirectoryPTSize + InitalPageDirectorySize + InitalPageTableSize;
-        public override Addr GdtAddr => AddrPageDirectory;
+        public override Addr VirtAddr => AddrPageDirectoryPT;
 
         private void SetAddress(Addr entriesAddr)
         {
@@ -76,8 +76,6 @@ namespace lonos.Kernel.Core.PageManagement
             SetAddress(entriesAddr);
 
             MemoryOperation.Clear4(AddrPageDirectoryPT, InitalMemoryAllocationSize);
-
-            PrintAddress();
 
             // uint mask = 0x00004000;
             // uint v1 = 0x00000007;
@@ -126,10 +124,13 @@ namespace lonos.Kernel.Core.PageManagement
 
             // Unmap the first page for null pointer exceptions
             MapVirtualAddressToPhysical(0x0, 0x0, false);
+
+            PrintAddress();
         }
 
         private void PrintAddress()
         {
+            KernelMessage.WriteLine("PageDirectoryPTPhys: {0:X8}", this.GetPageTablePhysAddr());
             KernelMessage.WriteLine("PageDirectoryPT: {0:X8}", AddrPageDirectoryPT);
             KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
             KernelMessage.WriteLine("PageTable: {0:X8}", AddrPageTable);
