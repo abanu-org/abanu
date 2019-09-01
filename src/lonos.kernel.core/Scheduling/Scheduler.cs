@@ -237,7 +237,7 @@ namespace lonos.Kernel.Core.Scheduling
             IDTTaskStack* stackState = null;
             if (thread.User)
             {
-                stackState = (IDTTaskStack*)Memory.Allocate(IDTTaskStack.Size);
+                stackState = (IDTTaskStack*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
                 if (proc.PageTable != PageTable.KernelTable)
                     proc.PageTable.MapCopy(PageTable.KernelTable, (uint)stackState, IDTTaskStack.Size);
             }

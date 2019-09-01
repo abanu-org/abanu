@@ -189,10 +189,11 @@ namespace lonos.Kernel.Core.PageManagement
         /// <returns></returns>
         public override Addr GetPhysicalAddressFromVirtual(Addr virtualAddress)
         {
+            //var entry = GetTableEntry(virtualAddress);
+            //KernelMessage.WriteLine("GetPhysFromVirt: v={0:X8} 1={1:X8}", virtualAddress, entry->PhysicalAddress + (virtualAddress & 0xFFFu));
             //FUTURE: traverse page directory from CR3 --- do not assume page table is linearly allocated
             //return Intrinsic.Load32(new IntPtr(AddrPageTable), ((virtualAddress & 0xFFFFF000u) >> 10)) + (virtualAddress & 0xFFFu);
-            var entry = GetTableEntry(virtualAddress);
-            return entry->PhysicalAddress;
+            return GetTableEntry(virtualAddress)->PhysicalAddress + (virtualAddress & 0xFFFu);
         }
 
         public override void SetKernelWriteProtectionForAllInitialPages()

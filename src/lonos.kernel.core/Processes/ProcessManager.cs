@@ -52,6 +52,7 @@ namespace lonos.Kernel.Core.Processes
             var proc = CreateEmptyProcess(new ProcessCreateOptions() { User = true });
             proc.PageTable = PageTable.CreateInstance();
 
+            // Setup User PageTable
             var pageTableAddr = RawVirtualFrameAllocator.RequestIdentityMappedVirtalMemoryPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
             MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
             proc.PageTable.UserProcSetup(pageTableAddr);
@@ -60,6 +61,7 @@ namespace lonos.Kernel.Core.Processes
             proc.PageTable.SetExecutable(BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.MapCopy(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
 
+            // Setup ELF Sections
             var elf = KernelElf.FromSectionName(path);
             for (uint i = 0; i < elf.SectionHeaderCount; i++)
             {
@@ -82,6 +84,7 @@ namespace lonos.Kernel.Core.Processes
                 KernelMessage.WriteLine(sb);
                 //MemoryOperation.Copy4(elf.GetSectionPhysAddr(section), section->Addr, section->Size);
 
+                // Map the Sections
                 proc.PageTable.Map(virtAddr, srcAddr, size);
                 if (name->Equals(".text"))
                     proc.PageTable.SetExecutable(virtAddr, size);
@@ -89,6 +92,7 @@ namespace lonos.Kernel.Core.Processes
             }
             KernelMessage.WriteLine("proc sections are ready");
 
+            // Detect Thread-Main
             var entryPoint = GetEntryPointFromElf(elf);
             KernelMessage.WriteLine("EntryPoint: {0:X8}", entryPoint);
 

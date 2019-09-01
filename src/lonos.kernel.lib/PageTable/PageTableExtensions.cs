@@ -1,4 +1,5 @@
 ﻿using lonos.Kernel.Core.Boot;
+using Mosa.Runtime.x86;
 
 namespace lonos.Kernel.Core.PageManagement
 {

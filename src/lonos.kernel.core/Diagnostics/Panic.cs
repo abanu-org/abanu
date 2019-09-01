@@ -31,6 +31,7 @@ namespace lonos.Kernel.Core.Diagnostics
 
         public static void Error(string message)
         {
+            Native.Cli();
 
             //Screen.Goto(0, 0);
             //Screen.Color = 11;
