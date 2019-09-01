@@ -106,16 +106,18 @@ namespace lonos.Kernel.Core
         {
             if (!KConfig.SingleThread)
             {
-                Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(BackgroundWorker.ThreadMain)).Start();
-                Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(Thread0)).Start();
+                Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(BackgroundWorker.ThreadMain) { DebugName = "BackgroundWorker" }).Start();
+                Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(Thread0) { DebugName = "KernelThread0" }).Start();
 
                 var userProc = ProcessManager.CreateEmptyProcess(new ProcessCreateOptions { User = true });
                 userProc.Path = "/bulidin/testproc";
-                Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread1) { AllowUserModeIOPort = true });
-                Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true });
+                Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread1) { AllowUserModeIOPort = true, DebugName = "UserThread1" });
+                Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2" });
                 userProc.Start();
 
                 ProcessManager.StartProcess("app.HelloKernel");
+
+                //ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
             }
 
             KernelMessage.WriteLine("Enter Main Loop");
@@ -123,6 +125,7 @@ namespace lonos.Kernel.Core
         }
 
         public static Addr tssAddr = null;
+        public static Addr kernelStack = null;
         public static Addr kernelStackBottom = null;
         public static USize kernelStackSize = null;
 
@@ -136,7 +139,7 @@ namespace lonos.Kernel.Core
                 kernelStackSize = 256 * 4096;
                 tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
                 PageTable.KernelTable.WritableBySize(tssAddr, 4096);
-                var kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+                kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 kernelStackBottom = kernelStack + kernelStackSize;
 
                 KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", tssAddr, kernelStack, kernelStackBottom - 1);

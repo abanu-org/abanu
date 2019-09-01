@@ -19,6 +19,7 @@ namespace lonos.Kernel.Core.Scheduling
         public uint DataSelector;
         public uint ThreadID;
         public bool Debug;
+        public string DebugName;
 
         public void FreeMemory()
         {

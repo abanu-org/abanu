@@ -46,8 +46,8 @@ namespace lonos.Kernel.Core.Scheduling
 
             SignalThreadTerminationMethodAddress = GetAddress(SignalThreadTerminationMethod);
 
-            CreateThread(ProcessManager.Idle, new ThreadStartOptions(IdleThread)).Start();
-            CreateThread(ProcessManager.System, new ThreadStartOptions(followupTask)).Start();
+            CreateThread(ProcessManager.Idle, new ThreadStartOptions(IdleThread) { DebugName = "Idle" }).Start();
+            CreateThread(ProcessManager.System, new ThreadStartOptions(followupTask) { DebugName = "KernelMain" }).Start();
 
             //Debug, for breakpoint
             //clockTicks++;
@@ -191,6 +191,7 @@ namespace lonos.Kernel.Core.Scheduling
 
             thread.User = proc.User;
             thread.Debug = options.Debug;
+            thread.DebugName = options.DebugName;
 
             var stackSize = options.StackSize;
 
@@ -208,12 +209,13 @@ namespace lonos.Kernel.Core.Scheduling
 
             KernelMessage.Write("Create Thread {0}. EntryPoint: {1:X8} Stack: {2:X8}-{3:X8} Type: ", threadID, options.MethodAddr, (uint)stack, (uint)stackBottom - 1);
             if (thread.User)
-                KernelMessage.WriteLine("User");
+                KernelMessage.Write("User");
             else
-                KernelMessage.WriteLine("Kernel");
-
-            if (thread.User)
-                KernelMessage.WriteLine("StackState at {0:X8}", (uint)thread.StackState);
+                KernelMessage.Write("Kernel");
+            if (thread.DebugName != null)
+                KernelMessage.WriteLine(" Thread DebugName: {0}", thread.DebugName);
+            else
+                KernelMessage.WriteLine();
 
             var stackStateOffset = 8;
 
@@ -245,6 +247,9 @@ namespace lonos.Kernel.Core.Scheduling
             }
             thread.StackState = stackState;
 
+            if (thread.User)
+                KernelMessage.WriteLine("StackState at {0:X8}", (uint)stackState);
+
             stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
             if (thread.User)
             {
@@ -252,7 +257,8 @@ namespace lonos.Kernel.Core.Scheduling
                 stackState->TASK_SS = 0x23;
                 stackState->TASK_ESP = (uint)stackBottom - 8;
 
-                proc.PageTable.MapCopy(PageTable.KernelTable, lonos.Kernel.Core.Start.tssAddr, lonos.Kernel.Core.Start.kernelStackSize);
+                proc.PageTable.MapCopy(PageTable.KernelTable, lonos.Kernel.Core.Start.kernelStack, lonos.Kernel.Core.Start.kernelStackSize);
+                proc.PageTable.MapCopy(PageTable.KernelTable, lonos.Kernel.Core.Start.tssAddr, 4096);
             }
             if (thread.User && options.AllowUserModeIOPort)
             {
@@ -297,7 +303,13 @@ namespace lonos.Kernel.Core.Scheduling
             }
 
             if (KConfig.TraceThreadSwitch)
-                KernelMessage.WriteLine("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, ESP={3:X8}, EIP={4:X8}", threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->TASK_ESP, thread.StackState->Stack.EIP);
+            {
+                KernelMessage.Write("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, EIP={3:X8}", threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->Stack.EIP);
+                if (thread.User)
+                    KernelMessage.WriteLine(" ESP={0:X8}", thread.StackState->TASK_ESP);
+                else
+                    KernelMessage.WriteLine();
+            }
         }
 
         public static Thread GetCurrentThread()
@@ -328,7 +340,7 @@ namespace lonos.Kernel.Core.Scheduling
             var proc = thread.Process;
 
             if (KConfig.TraceThreadSwitch)
-                KernelMessage.WriteLine("Switching to Thread {0}. ThreadStack: {1:X8}", threadID, (uint)thread.StackState->TASK_ESP);
+                KernelMessage.WriteLine("Switching to Thread {0}. StackState: {1:X8}", threadID, (uint)thread.StackState);
 
             //Assert.True(thread != null, "invalid thread id");
 

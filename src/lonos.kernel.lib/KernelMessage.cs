@@ -26,6 +26,11 @@ namespace lonos.Kernel.Core
             Dev.Write(value);
         }
 
+        public static void WriteLine()
+        {
+            Dev.Write('\n');
+        }
+
         public static void WriteLine(string value)
         {
             Dev.Write(value);

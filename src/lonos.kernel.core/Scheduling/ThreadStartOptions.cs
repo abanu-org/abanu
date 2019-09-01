@@ -13,6 +13,7 @@ namespace lonos.Kernel.Core.Scheduling
         public uint StackSize;
         public bool AllowUserModeIOPort;
         public bool Debug;
+        public string DebugName;
 
         public ThreadStartOptions(ThreadStart start)
         {
@@ -21,6 +22,7 @@ namespace lonos.Kernel.Core.Scheduling
             AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
             StackSize = KConfig.DefaultStackSize;
             Debug = false;
+            DebugName = null;
         }
 
         public ThreadStartOptions(Addr methodAddr)
@@ -29,6 +31,7 @@ namespace lonos.Kernel.Core.Scheduling
             AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
             StackSize = KConfig.DefaultStackSize;
             Debug = false;
+            DebugName = null;
         }
 
     }

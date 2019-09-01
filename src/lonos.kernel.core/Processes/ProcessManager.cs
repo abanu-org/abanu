@@ -90,7 +90,7 @@ namespace lonos.Kernel.Core.Processes
             var entryPoint = GetEntryPointFromElf(elf);
             KernelMessage.WriteLine("EntryPoint: {0:X8}", entryPoint);
 
-            var mainThread = Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint) { AllowUserModeIOPort = true, Debug = true });
+            var mainThread = Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint) { AllowUserModeIOPort = true, Debug = true, DebugName = "UserProcMainThread" });
             proc.Start();
         }
 
