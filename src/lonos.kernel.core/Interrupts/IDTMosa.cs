@@ -7,6 +7,8 @@ using System;
 using lonos.Kernel.Core;
 using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Scheduling;
+using lonos.Kernel.Core.PageManagement;
 
 //TODO: Name in compiler
 namespace Mosa.Kernel.x86
@@ -35,6 +37,15 @@ namespace Mosa.Kernel.x86
 
             var stack = (IDTStack*)stackStatePointer;
             var irq = stack->Interrupt;
+
+            uint pageTableAddr = 0;
+            var thread = Scheduler.GetCurrentThread();
+            if (thread != null)
+            {
+                pageTableAddr = thread.Process.PageTable.GetPageTablePhysAddr();
+                if (KConfig.TraceThreadSwitch)
+                    KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
+            }
 
             if (irq == (uint)KnownInterrupt.PageFault)
             {
@@ -89,6 +100,9 @@ namespace Mosa.Kernel.x86
             interruptInfo.Handler(stack);
 
             PIC.SendEndOfInterrupt(irq);
+
+            if (pageTableAddr > 0)
+                Native.SetCR3(pageTableAddr);
         }
 
     }

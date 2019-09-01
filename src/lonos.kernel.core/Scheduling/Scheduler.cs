@@ -21,7 +21,7 @@ namespace lonos.Kernel.Core.Scheduling
         public const int ClockIRQ = 0x20;
         public const int ThreadTerminationSignalIRQ = 254;
 
-        private static bool Enabled;
+        public static bool Enabled;
         private static IntPtr SignalThreadTerminationMethodAddress;
 
         private static Thread[] Threads;
@@ -300,7 +300,15 @@ namespace lonos.Kernel.Core.Scheduling
                 KernelMessage.WriteLine("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, ESP={3:X8}, EIP={4:X8}", threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->TASK_ESP, thread.StackState->Stack.EIP);
         }
 
-        private static uint GetCurrentThreadID()
+        public static Thread GetCurrentThread()
+        {
+            if (!Enabled)
+                return null;
+
+            return Threads[GetCurrentThreadID()];
+        }
+
+        public static uint GetCurrentThreadID()
         {
             return CurrentThreadID;
 
@@ -336,7 +344,7 @@ namespace lonos.Kernel.Core.Scheduling
             thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;
 
             uint pageDirAddr = proc.PageTable.GetPageTablePhysAddr();
-            KernelMessage.WriteLine("PageDirAddr: {0:X8}", pageDirAddr);
+            //KernelMessage.WriteLine("PageDirAddr: {0:X8}", pageDirAddr);
             uint stackStateAddr = (uint)thread.StackState;
             uint dataSelector = thread.DataSelector;
 
