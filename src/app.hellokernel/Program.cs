@@ -1,6 +1,9 @@
-﻿using System;
+﻿using lonos.Kernel.Core;
+using Mosa.Runtime.x86;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +14,29 @@ namespace lonos.Kernel
     {
         public static void Main()
         {
-            Test1();
+            SysCallTest();
             while (true) { }
         }
 
-        [DllImport("asm/app.helloworld.test1.o", EntryPoint = "Test1")]
-        public extern static void Test1();
+        [DllImport("x86/app.HelloKernel.o", EntryPoint = "SysCallInt")]
+        public extern static uint SysCallInt(uint command, uint arg1);
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static uint SysCall(uint command, uint arg1)
+        {
+            var result = SysCallInt(command, arg1);
+            return result;
+        }
+
+        public static Addr RequestPages(USize pages)
+        {
+            return SysCall(20, pages);
+        }
+
+        public static void SysCallTest()
+        {
+            var addr = RequestPages(38);
+        }
 
         private static void Dummy()
         {
