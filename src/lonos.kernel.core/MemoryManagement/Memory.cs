@@ -147,14 +147,14 @@ namespace lonos.Kernel.Core.MemoryManagement
 
             PageTable.KernelTable.SetKernelWriteProtectionForAllInitialPages();
 
-            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.GDT);
-            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.PageTable);
-            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.InitialStack);
-            //InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelElfVirt);
-            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelBssSegment);
-            InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelDataSegment);
-            //InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelROdataSegment);
-            InitialKernelProtect_MakeWritable_BySize(Address.GCInitialMemory, Address.GCInitialMemorySize);
+            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.GDT);
+            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.PageTable);
+            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.InitialStack);
+            //PageTable.KernelTable.InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelElfVirt);
+            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.KernelBssSegment);
+            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.KernelDataSegment);
+            //PageTable.KernelTable.InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelROdataSegment);
+            PageTable.KernelTable.WritableBySize(Address.GCInitialMemory, Address.GCInitialMemorySize);
 
             //KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
             PageTable.KernelTable.Flush();
@@ -175,34 +175,6 @@ namespace lonos.Kernel.Core.MemoryManagement
                 PageTable.KernelTable.SetExecutionProtectionForAllInitialPages(&codeReg);
                 //InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType.KernelTextSegment);
             }
-        }
-
-        public unsafe static void InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType type)
-        {
-            var mm = BootInfo.GetMap(type);
-            InitialKernelProtect_MakeWritable_BySize(mm->Start, mm->Size);
-        }
-
-        public unsafe static void InitialKernelProtect_MakeWritable_BySize(uint virtAddr, uint size)
-        {
-            if (!KConfig.UseKernelMemoryProtection)
-                return;
-
-            PageTable.KernelTable.SetKernelWriteProtectionForRegion(virtAddr, size);
-        }
-
-        public unsafe static void InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType type)
-        {
-            var mm = BootInfo.GetMap(type);
-            InitialKernelProtect_MakeExecutable_BySize(mm->Start, mm->Size);
-        }
-
-        public unsafe static void InitialKernelProtect_MakeExecutable_BySize(uint virtAddr, uint size)
-        {
-            if (!KConfig.UseKernelMemoryProtection)
-                return;
-
-            PageTable.KernelTable.SetExecutableForRegion(virtAddr, size);
         }
 
     }

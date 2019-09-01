@@ -4,6 +4,7 @@ using Mosa.Kernel.x86;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.Diagnostics;
 using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.PageManagement;
 
 namespace lonos.Kernel.Core.Devices
 {
@@ -38,7 +39,7 @@ namespace lonos.Kernel.Core.Devices
             Serial.SetupPort(Serial.COM1);
             Serial1 = new SerialDevice(Serial.COM1);
 
-            Memory.InitialKernelProtect_MakeWritable_BySize(Screen.ScreenMemoryAddress, Screen.ScreenMemorySize);
+            PageTable.KernelTable.WritableBySize(Screen.ScreenMemoryAddress, Screen.ScreenMemorySize);
             Screen.EarlyInitialization();
             BiosTextScreen = new BiosTextScreenDevice();
 

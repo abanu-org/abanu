@@ -1,6 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
@@ -35,13 +36,16 @@ namespace lonos.Kernel.Core.Interrupts
         internal static InterruptInfo[] handlers;
 
         static Addr IDTAddr;
+        public static InterruptControlBlock* ControlBlock;
 
         public static void Setup()
         {
             KernelMessage.WriteLine("Setup IDT");
 
+            InitControlBlock();
+
             IDTAddr = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default)->PhysicalAddress;
-            Memory.InitialKernelProtect_MakeWritable_BySize(IDTAddr, 4096);
+            PageTable.KernelTable.WritableBySize(IDTAddr, 4096);
             KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
 
             // Setup IDT table
@@ -95,6 +99,15 @@ namespace lonos.Kernel.Core.Interrupts
             Mosa.Kernel.x86.IDT.Enabled = true
             ;
             KernelMessage.WriteLine("done");
+        }
+
+        private static void InitControlBlock()
+        {
+            var p = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default)->PhysicalAddress;
+            PageTable.KernelTable.Map(Address.InterruptControlBlock, p, 4096, flush: true);
+            PageTable.KernelTable.WritableBySize(Address.InterruptControlBlock, 4096);
+            ControlBlock = (InterruptControlBlock*)Address.InterruptControlBlock;
+            ControlBlock->KernelPageTableAddr = PageTable.KernelTable.GetPageTablePhysAddr();
         }
 
         public static void Flush()

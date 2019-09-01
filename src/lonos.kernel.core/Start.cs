@@ -8,6 +8,7 @@ using lonos.Kernel.Core.Elf;
 using lonos.Kernel.Core.External;
 using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.Processes;
 using lonos.Kernel.Core.Scheduling;
 using lonos.Kernel.Core.SysCalls;
@@ -121,23 +122,26 @@ namespace lonos.Kernel.Core
             AppMain();
         }
 
+        public static Addr tssAddr = null;
+        public static Addr kernelStackBottom = null;
+        public static USize kernelStackSize = null;
+
         public static void InitializeUserMode()
         {
             if (!KConfig.UseUserMode)
                 return;
 
-            Addr tssAddr = null;
-            Addr kernelStackBottom = null;
             if (KConfig.UseTaskStateSegment)
             {
+                kernelStackSize = 256 * 4096;
                 tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
-                Memory.InitialKernelProtect_MakeWritable_BySize(tssAddr, 4096);
+                PageTable.KernelTable.WritableBySize(tssAddr, 4096);
                 var kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
-                kernelStackBottom = kernelStack + 256 * 4096;
+                kernelStackBottom = kernelStack + kernelStackSize;
 
                 KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", tssAddr, kernelStack, kernelStackBottom - 1);
 
-                Memory.InitialKernelProtect_MakeWritable_BySize(kernelStack, 256 * 4096);
+                PageTable.KernelTable.WritableBySize(kernelStack, 256 * 4096);
             }
             GDT.SetupUserMode(kernelStackBottom, tssAddr);
         }

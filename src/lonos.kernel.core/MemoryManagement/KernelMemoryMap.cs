@@ -1,4 +1,5 @@
 ﻿using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.PageManagement;
 using System;
 
 namespace lonos.Kernel.Core.MemoryManagement
@@ -127,7 +128,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             // 80KB should be enough
             // TODO: Check if really 80KB are available after this address.
             InitialMap = new KernelMemoryMap(addr, 0x1000 * 20, BootInfoMemoryType.KernelMemoryMap);
-            Memory.InitialKernelProtect_MakeWritable_BySize(InitialMap.Start, InitialMap.Size);
+            PageTable.KernelTable.WritableBySize(InitialMap.Start, InitialMap.Size);
 
             Header = (KernelMemoryMapHeader*)InitialMap.Start;
 

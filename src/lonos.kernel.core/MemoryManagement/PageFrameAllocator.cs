@@ -3,6 +3,7 @@ using lonos.Kernel.Core.Diagnostics;
 using lonos.Kernel.Core.Devices;
 using Mosa.Runtime;
 using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.PageManagement;
 
 //using Mosa.Kernel.x86;
 
@@ -108,7 +109,7 @@ namespace lonos.Kernel.Core.MemoryManagement
 
             KernelMessage.WriteLine("Page Frame Array allocated {0} pages, beginning with page {1}", selfPages, firstSelfPageNum);
 
-            Memory.InitialKernelProtect_MakeWritable_BySize(kmap.Start, kmap.Size);
+            PageTable.KernelTable.WritableBySize(kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
 
             for (uint i = 0; i < PageCount; i++)

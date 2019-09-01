@@ -198,10 +198,10 @@ namespace lonos.Kernel.Core.Scheduling
             var debugPadding = 8u;
             stackSize = stackPages * PageFrameManager.PageSize;
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
-            Memory.InitialKernelProtect_MakeWritable_BySize((uint)stack, stackSize);
+            PageTable.KernelTable.WritableBySize((uint)stack, stackSize);
 
             if (thread.User && proc.PageTable != PageTable.KernelTable)
-                proc.PageTable.MapSync(PageTable.KernelTable, (uint)stack, (uint)stack, stackSize);
+                proc.PageTable.MapCopy(PageTable.KernelTable, (uint)stack, stackSize);
 
             stackSize -= debugPadding;
             var stackBottom = stack + (int)stackSize;
@@ -234,9 +234,15 @@ namespace lonos.Kernel.Core.Scheduling
 
             IDTTaskStack* stackState = null;
             if (thread.User)
+            {
                 stackState = (IDTTaskStack*)Memory.Allocate(IDTTaskStack.Size);
+                if (proc.PageTable != PageTable.KernelTable)
+                    proc.PageTable.MapCopy(PageTable.KernelTable, (uint)stackState, IDTTaskStack.Size);
+            }
             else
+            {
                 stackState = (IDTTaskStack*)(stackBottom - 8 - IDTStack.Size); // IDTStackSize ist correct - we don't need the Task-Members.
+            }
             thread.StackState = stackState;
 
             stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
@@ -245,6 +251,8 @@ namespace lonos.Kernel.Core.Scheduling
                 // Never set this values for Non-User, otherwiese you will override stack informations.
                 stackState->TASK_SS = 0x23;
                 stackState->TASK_ESP = (uint)stackBottom - 8;
+
+                proc.PageTable.MapCopy(PageTable.KernelTable, lonos.Kernel.Core.Start.tssAddr, lonos.Kernel.Core.Start.kernelStackSize);
             }
             if (thread.User && options.AllowUserModeIOPort)
             {
@@ -330,6 +338,7 @@ namespace lonos.Kernel.Core.Scheduling
             uint pageDirAddr = proc.PageTable.GetPageTablePhysAddr();
             KernelMessage.WriteLine("PageDirAddr: {0:X8}", pageDirAddr);
             uint stackStateAddr = (uint)thread.StackState;
+            uint dataSelector = thread.DataSelector;
 
             if (!thread.User)
                 thread.StackState = null; // just to be sure
@@ -341,7 +350,7 @@ namespace lonos.Kernel.Core.Scheduling
                 Native.Nop();
             }
 
-            InterruptReturn(stackStateAddr, thread.DataSelector, pageDirAddr);
+            InterruptReturn(stackStateAddr, dataSelector, pageDirAddr);
         }
 
         [DllImport("x86/lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]

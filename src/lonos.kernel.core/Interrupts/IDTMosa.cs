@@ -28,6 +28,8 @@ namespace Mosa.Kernel.x86
         private unsafe static void ProcessInterrupt(uint stackStatePointer)
         {
             Native.SetSegments(0x10, 0x10, 0x10, 0x10, 0x10);
+            var block = (InterruptControlBlock*)Address.InterruptControlBlock;
+            Native.SetCR3(block->KernelPageTableAddr);
 
             //KernelMessage.WriteLine("Interrupt occured");
 

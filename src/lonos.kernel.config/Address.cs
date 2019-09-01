@@ -25,6 +25,8 @@ namespace lonos.Kernel.Core
         public const uint KernelBootInfo = InitialStack + 0x1000; // 10MB+4KB
         public const uint OriginalKernelElfSection = KernelBootInfo + 0x1000;  //10MB+8KB
 
+        public const uint InterruptControlBlock = 0xC0000000;
+
         public const uint ReserveMemory = 0x00100000;  // 1MB
         public const uint MaximumMemory = 0xFFFFFFFF;  // 4GB
 

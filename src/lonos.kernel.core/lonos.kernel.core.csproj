@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A72ED046-DE1C-4688-981B-6086C091047F}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>lonos.Kernel.Core</RootNamespace>
     <AssemblyName>lonos.kernel.core</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ProjectGuid>{A72ED046-DE1C-4688-981B-6086C091047F}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,7 +20,6 @@
     <ConsolePause>false</ConsolePause>
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -30,10 +29,11 @@
     <ConsolePause>false</ConsolePause>
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DummyClass.cs" />
+    <Compile Include="Interrupts\InterruptControlBlock.cs" />
+    <Compile Include="MemoryManagement\PageTableExtensions.cs" />
     <Compile Include="Processes\Process.cs" />
     <Compile Include="Processes\ProcessCreateOptions.cs" />
     <Compile Include="Processes\ProcessManager.cs" />

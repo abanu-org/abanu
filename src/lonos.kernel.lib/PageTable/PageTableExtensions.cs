@@ -1,4 +1,6 @@
-﻿namespace lonos.Kernel.Core.PageManagement
+﻿using lonos.Kernel.Core.Boot;
+
+namespace lonos.Kernel.Core.PageManagement
 {
     public static class PageTableExtensions
     {
@@ -20,9 +22,9 @@
         /// <summary>
         /// Maps two tables at the same time, with same virt and phys address
         /// </summary>
-        public static void MapShare(this IPageTable table, IPageTable sharedTable, Addr virtAddr, Addr physAddr, USize length, bool present = true, bool flush = false)
+        public static void MapDual(this IPageTable table, IPageTable sharedTable, Addr virtAddr, Addr physAddr, USize length, bool present = true, bool flush = false)
         {
-            KernelMessage.WriteLine("MapShare: virt={0:X8}, phys={0:X8}, length={0:X8}", virtAddr, physAddr, length);
+            KernelMessage.WriteLine("MapDual: virt={0:X8}, phys={1:X8}, length={2:X8}", virtAddr, physAddr, length);
             var pages = KMath.DivCeil(length, 4096);
             for (var i = 0; i < pages; i++)
             {
@@ -37,15 +39,16 @@
         }
 
         /// <summary>
-        /// Sync specific mappings with another table
+        /// Sync specific mappings with another table.
         /// </summary>
-        public static void MapSync(this IPageTable table, IPageTable sharedTable, Addr virtAddr, Addr physAddr, USize length, bool present = true, bool flush = false)
+        public static void MapCopy(this IPageTable table, IPageTable fromTable, Addr virtAddr, USize length, bool present = true, bool flush = false)
         {
-            KernelMessage.WriteLine("MapShare: virt={0:X8}, phys={0:X8}, length={0:X8}", virtAddr, physAddr, length);
+            KernelMessage.WriteLine("MapCopy: virt={0:X8}, length={1:X8}", virtAddr, length);
             var pages = KMath.DivCeil(length, 4096);
             for (var i = 0; i < pages; i++)
             {
-                sharedTable.MapVirtualAddressToPhysical(virtAddr, physAddr, present);
+                var physAddr = fromTable.GetPhysicalAddressFromVirtual(virtAddr);
+                table.MapVirtualAddressToPhysical(virtAddr, physAddr, present);
 
                 virtAddr += 4096;
                 physAddr += 4096;

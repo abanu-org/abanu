@@ -1,4 +1,5 @@
-﻿using lonos.Kernel.Core.Elf;
+﻿using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.Elf;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.Scheduling;
@@ -48,12 +49,15 @@ namespace lonos.Kernel.Core.Processes
         {
             KernelMessage.WriteLine("Create proc: {0}", path);
 
-            var proc = CreateEmptyProcess(new ProcessCreateOptions() { });
+            var proc = CreateEmptyProcess(new ProcessCreateOptions() { User = true });
             proc.PageTable = PageTable.CreateInstance();
 
             var pageTableAddr = RawVirtualFrameAllocator.RequestIdentityMappedVirtalMemoryPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
-            Memory.InitialKernelProtect_MakeWritable_BySize(pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
+            PageTable.KernelTable.WritableBySize(pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
             proc.PageTable.UserProcSetup(pageTableAddr);
+
+            proc.PageTable.MapCopy(PageTable.KernelTable, BootInfoMemoryType.KernelTextSegment);
+            proc.PageTable.MapCopy(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
 
             var elf = KernelElf.FromSectionName(path);
             for (uint i = 0; i < elf.SectionHeaderCount; i++)
