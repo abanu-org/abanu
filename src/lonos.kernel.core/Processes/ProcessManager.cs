@@ -57,6 +57,7 @@ namespace lonos.Kernel.Core.Processes
             proc.PageTable.UserProcSetup(pageTableAddr);
 
             proc.PageTable.MapCopy(PageTable.KernelTable, BootInfoMemoryType.KernelTextSegment);
+            proc.PageTable.ExecutableByMapType(BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.MapCopy(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
 
             var elf = KernelElf.FromSectionName(path);
@@ -82,8 +83,9 @@ namespace lonos.Kernel.Core.Processes
                 //MemoryOperation.Copy4(elf.GetSectionPhysAddr(section), section->Addr, section->Size);
 
                 proc.PageTable.Map(virtAddr, srcAddr, size);
-                proc.PageTable.SetExecutableForRegion(virtAddr, size);
-                //PageTable.KernelTable.Map(virtAddr, srcAddr, size);
+                if (name->Equals(".text"))
+                    proc.PageTable.SetExecutableForRegion(virtAddr, size);
+
             }
             KernelMessage.WriteLine("proc sections are ready");
 

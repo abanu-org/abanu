@@ -10,7 +10,7 @@
         /// Sets the target CPU-Type. For Feature-Detection.
         /// Hint: Official Bochs emulator is x86 only.
         /// </summary>
-        public const KConfigCpu Cpu = KConfigCpu.x86;
+        public const KConfigCpu Cpu = KConfigCpu.x64;
 
         /// <summary>
         /// Sets the compile architecture.
@@ -30,7 +30,7 @@
         /// <summary>
         /// Use PAE-Paging instead of 32 Bit Paging.
         /// </summary>
-        public const bool UsePAE = false && Cpu == KConfigCpu.x64;
+        public const bool UsePAE = true && Cpu == KConfigCpu.x64;
 
         /// <summary>
         /// If tuned on, only Pages with NXE=1 are executable.

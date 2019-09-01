@@ -41,6 +41,11 @@ namespace lonos
             return true;
         }
 
+        public bool Equals(NullTerminatedString value)
+        {
+            return Equals(&value);
+        }
+
         public bool Equals(string value)
         {
             var len1 = GetLength();
@@ -58,6 +63,26 @@ namespace lonos
                     return false;
 
             return true;
+        }
+
+        public static unsafe bool operator ==(NullTerminatedString value1, string value2)
+        {
+            return value1.Equals(value2);
+        }
+
+        public static unsafe bool operator !=(NullTerminatedString value1, string value2)
+        {
+            return !value1.Equals(value2);
+        }
+
+        public static unsafe bool operator ==(NullTerminatedString value1, NullTerminatedString* value2)
+        {
+            return value1.Equals(value2);
+        }
+
+        public static unsafe bool operator !=(NullTerminatedString value1, NullTerminatedString* value2)
+        {
+            return !value1.Equals(value2);
         }
 
     }

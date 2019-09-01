@@ -130,8 +130,8 @@ function debug {
 		qemu-kernel-run)
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
-			#qemu_app=qemu-system-x86_64
-			qemu_app=qemu-system-i386
+			qemu_app=qemu-system-x86_64
+			#qemu_app=qemu-system-i386
 			$qemu_app -kernel os/lonos.os.image.x86.bin -serial file:/home/sebastian/projects/lonos/logs/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_PROJDIR}/logs/emulator.log
 			;;
 
