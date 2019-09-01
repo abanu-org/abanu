@@ -199,7 +199,7 @@ namespace lonos.Kernel.Core.Scheduling
             var debugPadding = 8u;
             stackSize = stackPages * PageFrameManager.PageSize;
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
-            PageTable.KernelTable.WritableBySize((uint)stack, stackSize);
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, (uint)stack, stackSize);
 
             if (thread.User && proc.PageTable != PageTable.KernelTable)
                 proc.PageTable.MapCopy(PageTable.KernelTable, (uint)stack, stackSize);

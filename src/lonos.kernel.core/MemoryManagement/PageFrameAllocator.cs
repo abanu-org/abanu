@@ -109,7 +109,7 @@ namespace lonos.Kernel.Core.MemoryManagement
 
             KernelMessage.WriteLine("Page Frame Array allocated {0} pages, beginning with page {1}", selfPages, firstSelfPageNum);
 
-            PageTable.KernelTable.WritableBySize(kmap.Start, kmap.Size);
+            PageTableExtensions.SetWritable(PageTable.KernelTable, kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
 
             for (uint i = 0; i < PageCount; i++)

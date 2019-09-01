@@ -258,7 +258,7 @@ namespace lonos.Kernel.Core.PageManagement
             Flush(); //TODO: Use Native.InvPg!
         }
 
-        public unsafe override void SetKernelWriteProtectionForRegion(uint virtAddr, uint size)
+        public unsafe override void SetWritable(uint virtAddr, uint size)
         {
             //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
             var pages = KMath.DivCeil(size, 4096);
@@ -273,7 +273,7 @@ namespace lonos.Kernel.Core.PageManagement
             Flush();
         }
 
-        public unsafe override void SetExecutableForRegion(uint virtAddr, uint size)
+        public unsafe override void SetExecutable(uint virtAddr, uint size)
         {
             //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
             var pages = KMath.DivCeil(size, 4096);

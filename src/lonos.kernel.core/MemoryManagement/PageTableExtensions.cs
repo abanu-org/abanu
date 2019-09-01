@@ -19,34 +19,33 @@ namespace lonos.Kernel.Core.MemoryManagement
             table.MapCopy(fromTable, mm->Start, mm->Size, present, flush);
         }
 
-        public unsafe static void WritableByMapType(this IPageTable table, BootInfoMemoryType type)
+        public unsafe static void SetWritable(this IPageTable table, BootInfoMemoryType type)
         {
             var mm = BootInfo.GetMap(type);
-            WritableBySize(table, mm->Start, mm->Size);
+            SetWritable(table, mm->Start, mm->Size);
         }
 
-        public unsafe static void WritableBySize(this IPageTable table, uint virtAddr, uint size)
+        public unsafe static void SetWritable(this IPageTable table, uint virtAddr, uint size)
         {
             if (!KConfig.UseKernelMemoryProtection)
                 return;
 
-            table.SetKernelWriteProtectionForRegion(virtAddr, size);
+            table.SetWritable(virtAddr, size);
         }
 
-        public unsafe static void ExecutableByMapType(this IPageTable table, BootInfoMemoryType type)
+        public unsafe static void SetExecutable(this IPageTable table, BootInfoMemoryType type)
         {
             var mm = BootInfo.GetMap(type);
-            ExecutableBySize(table, mm->Start, mm->Size);
+            SetExecutable(table, mm->Start, mm->Size);
         }
 
-        public unsafe static void ExecutableBySize(this IPageTable table, uint virtAddr, uint size)
+        public unsafe static void SetExecutable(this IPageTable table, uint virtAddr, uint size)
         {
             if (!KConfig.UseKernelMemoryProtection)
                 return;
 
-            table.SetExecutableForRegion(virtAddr, size);
+            table.SetExecutable(virtAddr, size);
         }
-
 
     }
 }

@@ -45,7 +45,7 @@ namespace lonos.Kernel.Core.Interrupts
             InitControlBlock();
 
             IDTAddr = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default)->PhysicalAddress;
-            PageTable.KernelTable.WritableBySize(IDTAddr, 4096);
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, IDTAddr, 4096);
             KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
 
             // Setup IDT table
@@ -105,7 +105,7 @@ namespace lonos.Kernel.Core.Interrupts
         {
             var p = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default)->PhysicalAddress;
             PageTable.KernelTable.Map(Address.InterruptControlBlock, p, 4096, flush: true);
-            PageTable.KernelTable.WritableBySize(Address.InterruptControlBlock, 4096);
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
             ControlBlock = (InterruptControlBlock*)Address.InterruptControlBlock;
             ControlBlock->KernelPageTableAddr = PageTable.KernelTable.GetPageTablePhysAddr();
         }

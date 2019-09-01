@@ -39,7 +39,7 @@ namespace lonos.Kernel.Core.Devices
             Serial.SetupPort(Serial.COM1);
             Serial1 = new SerialDevice(Serial.COM1);
 
-            PageTable.KernelTable.WritableBySize(Screen.ScreenMemoryAddress, Screen.ScreenMemorySize);
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, Screen.ScreenMemoryAddress, Screen.ScreenMemorySize);
             Screen.EarlyInitialization();
             BiosTextScreen = new BiosTextScreenDevice();
 

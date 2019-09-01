@@ -147,14 +147,14 @@ namespace lonos.Kernel.Core.MemoryManagement
 
             PageTable.KernelTable.SetKernelWriteProtectionForAllInitialPages();
 
-            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.GDT);
-            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.PageTable);
-            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.InitialStack);
+            PageTable.KernelTable.SetWritable(BootInfoMemoryType.GDT);
+            PageTable.KernelTable.SetWritable(BootInfoMemoryType.PageTable);
+            PageTable.KernelTable.SetWritable(BootInfoMemoryType.InitialStack);
             //PageTable.KernelTable.InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelElfVirt);
-            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.KernelBssSegment);
-            PageTable.KernelTable.WritableByMapType(BootInfoMemoryType.KernelDataSegment);
+            PageTable.KernelTable.SetWritable(BootInfoMemoryType.KernelBssSegment);
+            PageTable.KernelTable.SetWritable(BootInfoMemoryType.KernelDataSegment);
             //PageTable.KernelTable.InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelROdataSegment);
-            PageTable.KernelTable.WritableBySize(Address.GCInitialMemory, Address.GCInitialMemorySize);
+            PageTableExtensions.SetWritable(PageTable.KernelTable, Address.GCInitialMemory, Address.GCInitialMemorySize);
 
             //KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
             PageTable.KernelTable.Flush();

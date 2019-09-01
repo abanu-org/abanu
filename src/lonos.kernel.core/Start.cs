@@ -138,13 +138,13 @@ namespace lonos.Kernel.Core
             {
                 kernelStackSize = 256 * 4096;
                 tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
-                PageTable.KernelTable.WritableBySize(tssAddr, 4096);
+                MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, tssAddr, 4096);
                 kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 kernelStackBottom = kernelStack + kernelStackSize;
 
                 KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", tssAddr, kernelStack, kernelStackBottom - 1);
 
-                PageTable.KernelTable.WritableBySize(kernelStack, 256 * 4096);
+                MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, kernelStack, 256 * 4096);
             }
             GDT.SetupUserMode(kernelStackBottom, tssAddr);
         }

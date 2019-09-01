@@ -36,9 +36,9 @@ namespace lonos.Kernel.Core.PageManagement
         void Flush();
         void Flush(Addr virtAddr);
 
-        void SetKernelWriteProtectionForRegion(uint virtAddr, uint size);
+        void SetWritable(uint virtAddr, uint size);
 
-        void SetExecutableForRegion(uint virtAddr, uint size);
+        void SetExecutable(uint virtAddr, uint size);
 
         Addr GetPhysicalAddressFromVirtual(Addr virtualAddress);
 

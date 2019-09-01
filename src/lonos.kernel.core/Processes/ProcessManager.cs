@@ -53,11 +53,11 @@ namespace lonos.Kernel.Core.Processes
             proc.PageTable = PageTable.CreateInstance();
 
             var pageTableAddr = RawVirtualFrameAllocator.RequestIdentityMappedVirtalMemoryPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
-            PageTable.KernelTable.WritableBySize(pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
             proc.PageTable.UserProcSetup(pageTableAddr);
 
             proc.PageTable.MapCopy(PageTable.KernelTable, BootInfoMemoryType.KernelTextSegment);
-            proc.PageTable.ExecutableByMapType(BootInfoMemoryType.KernelTextSegment);
+            proc.PageTable.SetExecutable(BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.MapCopy(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
 
             var elf = KernelElf.FromSectionName(path);
@@ -84,7 +84,7 @@ namespace lonos.Kernel.Core.Processes
 
                 proc.PageTable.Map(virtAddr, srcAddr, size);
                 if (name->Equals(".text"))
-                    proc.PageTable.SetExecutableForRegion(virtAddr, size);
+                    proc.PageTable.SetExecutable(virtAddr, size);
 
             }
             KernelMessage.WriteLine("proc sections are ready");

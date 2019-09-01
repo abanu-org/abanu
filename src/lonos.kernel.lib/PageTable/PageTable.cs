@@ -70,9 +70,9 @@ namespace lonos.Kernel.Core.PageManagement
 
         public abstract void Flush(Addr virtAddr);
 
-        public abstract void SetKernelWriteProtectionForRegion(uint virtAddr, uint size);
+        public abstract void SetWritable(uint virtAddr, uint size);
 
-        public virtual void SetExecutableForRegion(uint virtAddr, uint size) { }
+        public virtual void SetExecutable(uint virtAddr, uint size) { }
 
         public abstract Addr GetPhysicalAddressFromVirtual(Addr virtualAddress);
     }
