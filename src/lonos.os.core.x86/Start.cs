@@ -6,7 +6,7 @@ namespace lonos.os.Core.x86
     {
         public static void Main()
         {
-            Kernel.Core.Start.Main();
+            Kernel.Core.KernelStart.Main();
             Kernel.Core.x86.DummyClass.DummyCall();
             while (true)
             { }

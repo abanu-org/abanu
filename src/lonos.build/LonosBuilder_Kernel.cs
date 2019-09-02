@@ -161,7 +161,7 @@ namespace lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"os","app.HelloKernel.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"os","app.hellokernel.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
