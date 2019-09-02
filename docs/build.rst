@@ -21,6 +21,7 @@ Visit Microsoft App Store, and Download the App `Debian <https://www.microsoft.c
 
 Populate the Debian System with Packages:
 
+.. code-block:: bash
   wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
 
 This will take a while. After that, you have a fully featured build environment. To launch graphical applications like Geany or Qalculate, you need XLaunch. We can do this all via command line:
@@ -53,5 +54,5 @@ Now you can run lonos in qemu:
 
    ./lonosctl debug qemu-kernel
 
-	
+
 
