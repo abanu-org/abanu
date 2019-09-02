@@ -23,7 +23,7 @@ Visit Microsoft App Store, and Download the App `Debian <https://www.microsoft.c
 
 Populate the Debian System with Packages:
 
-.. code-block:: sh
+.. code-block:: console
 
   wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
 
@@ -45,7 +45,7 @@ You can launch now `XLaunch` from Start menu. Simply follow the wizard without m
 
 Open the Debian app and finish the install instructions. Whem command prompt is ready, start a dedicated Terminal:
 
-.. code-block:: bash
+.. code-block:: sh
 
   export DISPLAY=:0 && xfce4-terminal &
 
@@ -54,7 +54,7 @@ Now you can run unix applications even with graphical user interface.
 Download and build Lonos
 ------------------------
 
-.. code-block:: bash
+.. code-block:: sh
 
   git clone --recursive https://github.com/lonos-project/lonos.git
   cd lonos 
@@ -63,7 +63,7 @@ Download and build Lonos
 
 Now you can run lonos in qemu:
 
-.. code-block:: bash
+.. code-block:: sh
 
    ./lonosctl debug qemu-kernel
 
