@@ -13,6 +13,8 @@ Before installing any Linux distros for WSL, you must ensure that the "Windows S
 
 1. Open PowerShell as Administrator and run:
 	
+.. code-block:: powershell
+
 	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 
 2. Restart your computer when prompted.
@@ -21,7 +23,7 @@ Visit Microsoft App Store, and Download the App `Debian <https://www.microsoft.c
 
 Populate the Debian System with Packages:
 
-.. code-block:: bash
+.. code-block:: sh
 
   wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
 
