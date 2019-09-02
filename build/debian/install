@@ -27,4 +27,4 @@ apt-get install -y  dotnet-sdk-2.2
 apt-get install -y colordiff man  rsync gdb python3-pygments htop ncdu zsh
 
 # gui addons:
-apt-get install-y  monodevelop bochs bochs-x geany qalculate-gtk
+apt-get install-y  monodevelop bochs bochs-x geany qalculate-gtk xfce4-terminal
