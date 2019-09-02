@@ -27,7 +27,7 @@ Populate the Debian System with Packages:
 
 This will take a while. After that, you have a fully featured build environment. To launch graphical applications like Geany or Qalculate, you need XLaunch. We can do this all via command line:
 
-In Windows, install the packetmanager ´chocolatey <https://chocolatey.org>´__ . Open a PowerShell with Administrator rights and run:
+In Windows, install the packetmanager `chocolatey <https://chocolatey.org>´__. Open a PowerShell with Administrator rights and run:
 
 .. code-block:: powershell
 
