@@ -23,7 +23,7 @@ Visit Microsoft App Store, and Download the App `Debian <https://www.microsoft.c
 
 Populate the Debian System with Packages:
 
-.. code-block:: console
+.. code-block:: sh
 
   wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
 
