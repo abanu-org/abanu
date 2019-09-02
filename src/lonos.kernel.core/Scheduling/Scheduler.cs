@@ -257,8 +257,8 @@ namespace lonos.Kernel.Core.Scheduling
                 stackState->TASK_SS = 0x23;
                 stackState->TASK_ESP = (uint)stackBottom - 8;
 
-                proc.PageTable.MapCopy(PageTable.KernelTable, lonos.Kernel.Core.Start.kernelStack, lonos.Kernel.Core.Start.kernelStackSize);
-                proc.PageTable.MapCopy(PageTable.KernelTable, lonos.Kernel.Core.Start.tssAddr, 4096);
+                proc.PageTable.MapCopy(PageTable.KernelTable, KernelStart.kernelStack, KernelStart.kernelStackSize);
+                proc.PageTable.MapCopy(PageTable.KernelTable, KernelStart.tssAddr, 4096);
             }
             if (thread.User && options.AllowUserModeIOPort)
             {

@@ -44,7 +44,7 @@
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\Thread.cs" />
     <Compile Include="Scheduling\ThreadStatus.cs" />
-    <Compile Include="Start.cs" />
+    <Compile Include="KernelStart.cs" />
     <Compile Include="MemoryManagement\Memory.cs" />
     <Compile Include="Elf\KernelElf.cs" />
     <Compile Include="MemoryManagement\ManagedMemoy.cs" />
