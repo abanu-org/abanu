@@ -4,5 +4,5 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-	build
+   build
    about-this-documentation
