@@ -19,12 +19,12 @@ wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > mi
 apt-get update \
     && apt-get upgrade -y
 
-apt-get install -y qemu-system-x86 git curl mono-complete mtools xorriso nasm build-essential git
+apt-get install -y qemu-system-x86 git curl mono-complete mtools xorriso nasm build-essential git git-lfs
 #grub2-common grub-efi-ia32 grub-efi-amd64 grub-pc grub-rescue-pc
 apt-get install -y  dotnet-sdk-2.2
 
 # console addons:
-apt-get install -y colordiff man  rsync gdb
+apt-get install -y colordiff man  rsync gdb python3-pygments htop ncdu zsh
 
 # gui addons:
-apt-get install-y  monodevelop bochs geany
+apt-get install-y  monodevelop bochs bochs-x geany qalculate-gtk
