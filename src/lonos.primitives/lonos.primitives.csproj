@@ -7,6 +7,7 @@
     <RootNamespace>lonos</RootNamespace>
     <AssemblyName>lonos.primitives</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <Project>{6C26D569-E0B9-45C7-B51F-28CEA0254431}</Project>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -58,10 +58,6 @@
       <Project>{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}</Project>
       <Name>lonos.kernel.api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lonos.primitives\lonos.primitives.csproj">
-      <Project>{32985313-c07a-41ef-b68b-597496a9106e}</Project>
-      <Name>lonos.primitives</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -66,7 +66,7 @@
       <Name>lonos.kernel.config</Name>
     </ProjectReference>
     <ProjectReference Include="..\lonos.primitives\lonos.primitives.csproj">
-      <Project>{32985313-c07a-41ef-b68b-597496a9106e}</Project>
+      <Project>{814ad96b-e6b2-465d-8c99-4a8e7fbd2541}</Project>
       <Name>lonos.primitives</Name>
     </ProjectReference>
   </ItemGroup>

@@ -39,10 +39,6 @@
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lonos.primitives\lonos.primitives.csproj">
-      <Project>{32985313-c07a-41ef-b68b-597496a9106e}</Project>
-      <Name>lonos.primitives</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Structs\FileHandle.cs" />
