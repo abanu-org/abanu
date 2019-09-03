@@ -47,7 +47,7 @@
       <Name>Mosa.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="..\lonos.primitives\lonos.primitives.csproj">
-      <Project>{814ad96b-e6b2-465d-8c99-4a8e7fbd2541}</Project>
+      <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
       <Name>lonos.primitives</Name>
     </ProjectReference>
   </ItemGroup>
