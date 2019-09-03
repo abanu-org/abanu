@@ -9,10 +9,12 @@ namespace lonos.Kernel.Core.Scheduling
     public unsafe class Thread
     {
         public ThreadStatus Status = ThreadStatus.Empty;
-        public IntPtr StackBottom;
-        public IntPtr StackTop;
+        public Addr StackBottom;
+        public Addr StackTop;
         //public IntPtr StackStatePointer;
         public IDTTaskStack* StackState;
+        public Addr KernelStackBottom;
+        public Addr KernelStackTop;
         public uint Ticks;
         public bool User;
         public Process Process;
