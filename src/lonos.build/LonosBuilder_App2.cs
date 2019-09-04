@@ -19,9 +19,8 @@ using lonos.Kernel.Core;
 
 namespace lonos.Build
 {
-    public class LonosBuilder_Kernel : IBuilderEvent, IStarterEvent
+    public class LonosBuilder_App2 : IBuilderEvent, IStarterEvent
     {
-        //public Options Options { get; }
         public LauncherOptions Options { get; }
 
         public string TestAssemblyPath { get; set; }
@@ -38,7 +37,7 @@ namespace lonos.Build
 
         private Thread ProcessThread;
 
-        public LonosBuilder_Kernel(string inputAssembly)
+        public LonosBuilder_App2(string inputAssembly)
         {
             Console.WriteLine("Compile " + inputAssembly);
             //Options = new Options()
@@ -73,7 +72,7 @@ namespace lonos.Build
                 Height = 480,
                 Depth = 32,
                 //BaseAddress = 0x00500000,
-                BaseAddress = Address.KernelBaseVirt,
+                BaseAddress = Address.AppBaseVirt2,
                 //EmitRelocations = false,
                 //EmitSymbols = false,
                 //Emitx86IRQMethods = true,
@@ -101,7 +100,6 @@ namespace lonos.Build
             //Options.Emitx86IRQMethods = true;
             Options.EmitAllSymbols = true;
 
-
             Options.EnableSSA = false;
             Options.EnableIROptimizations = false;
             Options.EnableSparseConditionalConstantPropagation = false;
@@ -112,106 +110,6 @@ namespace lonos.Build
             //Options.EnableMethodScanner = true;
 
             //Options.VBEVideo = true;
-
-            Section sect = null;
-            Options.CreateExtraSections = () =>
-            {
-                return new List<Section>
-                {
-                    new Section
-                    {
-                        Name = "native",
-                        Type = SectionType.ProgBits,
-                        AddressAlignment = 0x1000,
-                        EmitMethod = (section, writer) =>
-                        {
-                            var data = File.ReadAllBytes(Program.GetEnv("LONOS_NATIVE_FILES"));
-                            writer.Write(data);
-                            section.Size = (uint)data.Length;
-                        }
-                    },
-                    new Section
-                    {
-                        Name = "consolefont.regular",
-                        Type = SectionType.ProgBits,
-                        AddressAlignment = 0x1000,
-                        EmitMethod = (section, writer) =>
-                        {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-Terminus14.psf"));
-                            writer.Write(data);
-                            section.Size = (uint)data.Length;
-                        }
-                    },
-                    new Section
-                    {
-                        Name = "consolefont.bold",
-                        Type = SectionType.ProgBits,
-                        AddressAlignment = 0x1000,
-                        EmitMethod = (section, writer) =>
-                        {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-TerminusBold14.psf"));
-                            writer.Write(data);
-                            section.Size = (uint)data.Length;
-                        }
-                    },
-                    new Section
-                    {
-                        Name = "app.HelloKernel",
-                        Type = SectionType.ProgBits,
-                        AddressAlignment = 0x1000,
-                        EmitMethod = (section, writer) =>
-                        {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"os","app.hellokernel.bin"));
-                            writer.Write(data);
-                            section.Size = (uint)data.Length;
-                        }
-                    },
-                    new Section
-                    {
-                        Name = "app.HelloService",
-                        Type = SectionType.ProgBits,
-                        AddressAlignment = 0x1000,
-                        EmitMethod = (section, writer) =>
-                        {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"os","app.helloservice.bin"));
-                            writer.Write(data);
-                            section.Size = (uint)data.Length;
-                        }
-                    },
-                    new Section
-                    {
-                        Name = "elf.header",
-                        Type = SectionType.ProgBits,
-                        AddressAlignment = 0x1000,
-                        Address = 0x4FF000,
-                        Size=0x1000,
-                        EmitMethod = (section, writer) =>
-                        {
-                            sect = section; //TODO: Could set outsite
-                            writer.Write(new byte[]{1,2,3,4,5,6,7,8,9});
-                            section.Size=0x1000;
-                        }
-                    }
-                };
-            };
-
-            Options.CreateExtraProgramHeaders = () =>
-             {
-                 return new List<ProgramHeader>
-                 {
-                    new ProgramHeader
-                    {
-                        Alignment = sect.AddressAlignment,
-                        Offset = sect.Offset,
-                        VirtualAddress = sect.Address,
-                        PhysicalAddress = sect.Address,
-                        FileSize = 0x1000,
-                        MemorySize = 0x1000,
-                        Type = ProgramHeaderType.Load,
-                        Flags = ProgramHeaderFlags.Read
-                    }
-                 };
-             };
 
             AppLocations = new AppLocations();
 

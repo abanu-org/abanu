@@ -77,9 +77,16 @@ namespace lonos.Build
                 var builder = new LonosBuilder_Kernel(file);
                 builder.Build();
             }
-            else if (args[0] == "--image=apps")
+            else if (args[0] == "--image=app")
             {
                 file = GetEnv("${LONOS_PROJDIR}/bin/app.hellokernel.exe");
+
+                var builder = new LonosBuilder_App(file);
+                builder.Build();
+            }
+            else if (args[0] == "--image=app2")
+            {
+                file = GetEnv("${LONOS_PROJDIR}/bin/app.helloservice.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();

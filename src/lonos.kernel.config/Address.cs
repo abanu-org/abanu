@@ -35,6 +35,7 @@ namespace lonos.Kernel.Core
         public const uint DebuggerBuffer = 0x00010000;  // 16KB [Size=64KB]
 
         public const uint AppBaseVirt = 0xA0100000;  // 2GB+1MB
+        public const uint AppBaseVirt2 = 0xB0100000;  // 2GB+1MB
     }
 
 }

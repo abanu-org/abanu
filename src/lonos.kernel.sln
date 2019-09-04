@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.os.loader.x86", "lono
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.primitives", "lonos.primitives\lonos.primitives.csproj", "{D61BA40B-253D-445B-A6AC-1B080AAC9B80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app.helloservice", "app.helloservice\app.helloservice.csproj", "{737EFC20-F822-4F84-B5C3-3B9728A189E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,10 @@ Global
 		{D61BA40B-253D-445B-A6AC-1B080AAC9B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D61BA40B-253D-445B-A6AC-1B080AAC9B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D61BA40B-253D-445B-A6AC-1B080AAC9B80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{737EFC20-F822-4F84-B5C3-3B9728A189E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{737EFC20-F822-4F84-B5C3-3B9728A189E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{737EFC20-F822-4F84-B5C3-3B9728A189E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{737EFC20-F822-4F84-B5C3-3B9728A189E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -164,6 +170,7 @@ Global
 		{BD177211-DECC-4473-B37B-883A9A58B279} = {96E60B22-5A58-4822-83A9-C67A2EAC053F}
 		{7E387209-732C-489D-A759-39D43FB21AFC} = {96E60B22-5A58-4822-83A9-C67A2EAC053F}
 		{D61BA40B-253D-445B-A6AC-1B080AAC9B80} = {6E65583B-2752-4CD3-BA18-58BB97F822DC}
+		{737EFC20-F822-4F84-B5C3-3B9728A189E5} = {7338F830-60F6-4A6B-8854-671681C2A1D7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {466F2218-2333-4818-8AF5-BE480C2139BC}

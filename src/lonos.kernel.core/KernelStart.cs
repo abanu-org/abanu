@@ -115,6 +115,7 @@ namespace lonos.Kernel.Core
                 Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2" });
                 userProc.Start();
 
+                ProcessManager.StartProcess("app.HelloService");
                 ProcessManager.StartProcess("app.HelloKernel");
 
                 //ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
