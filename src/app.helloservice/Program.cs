@@ -15,6 +15,7 @@ namespace lonos.Kernel
         // TODO: Rename to Init
         public static void Main()
         {
+            while (true) { }
         }
 
         public static void Func1()

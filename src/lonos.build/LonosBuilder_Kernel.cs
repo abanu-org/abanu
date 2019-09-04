@@ -166,18 +166,18 @@ namespace lonos.Build
                             section.Size = (uint)data.Length;
                         }
                     },
-                    //new Section
-                    //{
-                    //    Name = "app.HelloService",
-                    //    Type = SectionType.ProgBits,
-                    //    AddressAlignment = 0x1000,
-                    //    EmitMethod = (section, writer) =>
-                    //    {
-                    //        var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"os","app.helloservice.bin"));
-                    //        writer.Write(data);
-                    //        section.Size = (uint)data.Length;
-                    //    }
-                    //},
+                    new Section
+                    {
+                        Name = "app.HelloService",
+                        Type = SectionType.ProgBits,
+                        AddressAlignment = 0x1000,
+                        EmitMethod = (section, writer) =>
+                        {
+                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"os","app.helloservice.bin"));
+                            writer.Write(data);
+                            section.Size = (uint)data.Length;
+                        }
+                    },
                     new Section
                     {
                         Name = "elf.header",

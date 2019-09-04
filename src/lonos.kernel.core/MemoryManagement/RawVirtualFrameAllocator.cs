@@ -13,10 +13,10 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         public static void Setup()
         {
-            _startVirtAddr = 0x40000000; //1gb
+            _startVirtAddr = Address.VirtMapStart;
             _nextVirtAddr = _startVirtAddr;
 
-            _identityStartVirtAddr = 0x6400000; //100mb
+            _identityStartVirtAddr = Address.IdentityMapStart;
             _identityNextVirtAddr = _identityStartVirtAddr;
 
         }
