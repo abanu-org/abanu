@@ -55,13 +55,15 @@ namespace lonos.Kernel.Core.Scheduling
             //AsmDebugFunction.DebugFunction1();
         }
 
-        public static void Start()
+        public unsafe static void Start()
         {
             SetThreadID(0);
             Enabled = true;
 
             KernelMessage.WriteLine("Enable Scheduler");
             //Native.Cli();
+            GDT.tss->esp0 = Threads[0].kernelStackBottom;
+            GDT.LoadTaskRegister();
             Native.Int(ClockIRQ);
 
             // Normally, you should never get here
@@ -217,6 +219,18 @@ namespace lonos.Kernel.Core.Scheduling
             else
                 KernelMessage.WriteLine();
 
+            // -- kernel stack
+            thread.kernelStackSize = 256 * 4096;
+            //thhread.tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, KernelStart.tssAddr, 4096);
+            thread.kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+            thread.kernelStackBottom = thread.kernelStack + thread.kernelStackSize;
+
+            KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", KernelStart.tssAddr, thread.kernelStack, thread.kernelStackBottom - 1);
+
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, thread.kernelStack, 256 * 4096);
+
+            // ---
             var stackStateOffset = 8;
 
             uint CS = 0x08;
@@ -257,7 +271,7 @@ namespace lonos.Kernel.Core.Scheduling
                 stackState->TASK_SS = 0x23;
                 stackState->TASK_ESP = (uint)stackBottom - 8;
 
-                proc.PageTable.MapCopy(PageTable.KernelTable, KernelStart.kernelStack, KernelStart.kernelStackSize);
+                proc.PageTable.MapCopy(PageTable.KernelTable, thread.kernelStack, thread.kernelStackSize);
                 proc.PageTable.MapCopy(PageTable.KernelTable, KernelStart.tssAddr, 4096);
             }
             if (thread.User && options.AllowUserModeIOPort)
@@ -362,6 +376,8 @@ namespace lonos.Kernel.Core.Scheduling
 
             if (!thread.User)
                 thread.StackState = null; // just to be sure
+
+            GDT.tss->esp0 = thread.kernelStackBottom;
 
             if (thread.Debug)
             {

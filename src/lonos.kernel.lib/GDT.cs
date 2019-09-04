@@ -65,7 +65,9 @@ namespace lonos.Kernel.Core
             KernelMessage.WriteLine("Done");
         }
 
-        public static void SetupUserMode(Addr kernelStackPointer, Addr tssAddr)
+        public static TaskStateSegment* tss;
+
+        public static void SetupUserMode(Addr tssAddr)
         {
             KernelMessage.WriteLine("Setup GDT UserMode");
 
@@ -97,8 +99,8 @@ namespace lonos.Kernel.Core
             if (KConfig.UseTaskStateSegment)
             {
                 //TSS
-                var tss = AddTSS();
-                tss->esp0 = kernelStackPointer;
+                tss = AddTSS();
+                ///tss->esp0 = kernelStackPointer;
                 tss->ss0 = 0x10;
                 tss->trace_bitmap = 0xdfff;
 
@@ -116,10 +118,7 @@ namespace lonos.Kernel.Core
             if (KConfig.UseTaskStateSegment)
             {
                 KernelMessage.WriteLine("LoadTaskRegister...");
-                ushort TS = 0x28;
-                if (KConfig.UseUserMode)
-                    TS |= 0x3;
-                LoadTaskRegister(TS);
+                //LoadTaskRegister();
 
                 //Debug, for breakpoint
                 //clockTicks++;
@@ -136,6 +135,14 @@ namespace lonos.Kernel.Core
 
         [DllImport("x86/lonos.LoadTaskRegister.o", EntryPoint = "LoadTaskRegister")]
         private extern static void LoadTaskRegister(ushort taskSegmentSelector);
+
+        public static void LoadTaskRegister()
+        {
+            ushort TS = 0x28;
+            if (KConfig.UseUserMode)
+                TS |= 0x3;
+            LoadTaskRegister(TS);
+        }
 
         private static TaskStateSegment* AddTSS()
         {

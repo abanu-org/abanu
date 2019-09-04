@@ -53,7 +53,7 @@
         /// <summary>
         /// Traces every Thread switch
         /// </summary>
-        public const bool TraceThreadSwitch = false;
+        public const bool TraceThreadSwitch = true;
 
         /// <summary>
         /// If false, no User Segments will be created.
