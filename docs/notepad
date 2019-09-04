@@ -1,0 +1,22 @@
+Idea how to sovle the syscall problem:
+
+if timer then
+	switch to next task
+		save registers
+else if INT then
+	if is task return event then ; special SysCall, when SysCall is finished
+		take value from stack
+		destroy temp stack
+		store result vaue in EAX
+		resume task on remaining stack
+	else
+		if short kernel func then
+			call short func
+			iret to user original task
+		else if long task then
+			save registers
+			create new stack on stack, assign with current thread, but new syscalls target adress
+			switch to target
+		end if
+	end if
+end if
