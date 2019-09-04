@@ -16,7 +16,7 @@ end
 ########################
 # specific configuration
 
-set arch i386:x86-64:intel
+#set arch i386:x86-64:intel
 file os/lonos.os.core.x86.bin
 #file os/lonos.os.loader.x86.bin
 #file os/app.hellokernel.bin

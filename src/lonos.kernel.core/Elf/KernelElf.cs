@@ -2,6 +2,7 @@
 using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
 using Mosa.Kernel.x86;
+using lonos.Kernel.Core.Diagnostics;
 
 namespace lonos.Kernel.Core.Elf
 {
@@ -59,6 +60,8 @@ namespace lonos.Kernel.Core.Elf
         public unsafe static ElfHelper FromSectionName(string name)
         {
             var sec = Main.GetSectionHeader(name);
+            if (sec == null)
+                Panic.Error("Could not find section " + name);
             var addr = Main.GetSectionPhysAddr(sec);
             KernelMessage.WriteLine("Found embedded ELF at {0:X8}", addr);
             return FromAddress(addr);

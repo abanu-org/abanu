@@ -10,7 +10,7 @@ namespace lonos.Kernel.Core
 
         public const uint InitialStack = 0x00A00000; // 10MB (stack grows down)
 
-        private const uint InitialAllocStart = 0x04000000; // 64 MB
+        private const uint InitialAllocStart = KernelBasePhys + OriginalKernelElfSize + 128 * 4096; // 64 MB
 
         public const uint GCInitialMemory = InitialAllocStart;
         public const uint GCInitialMemorySize = 1024 * 1024 * 3; // 3MB
@@ -19,7 +19,12 @@ namespace lonos.Kernel.Core
         public const uint InitialDynamicPage = InitialAllocStart + GCInitialMemorySize;
         public const uint LoaderBasePhys = 0x00200000;  // 2MB
 
-        public const uint KernelBasePhys = 0x01400000;  // 20MB
+        /// <summary>
+        /// lonos.os.core.x86.bin
+        /// </summary>
+        public const uint OriginalKernelElfSize = 15 * 1024 * 1024;
+
+        public const uint KernelBasePhys = OriginalKernelElfSection + OriginalKernelElfSize + 128 * 4096;  // 20MB
         public const uint KernelBaseVirt = 0xC0100000;  // 3GB+1MB
         public const uint KernelElfSection = KernelBasePhys - 0x1000; // 20MB+4KB
         public const uint KernelBootInfo = InitialStack + 0x1000; // 10MB+4KB

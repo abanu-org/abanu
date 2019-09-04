@@ -10,7 +10,7 @@
         /// Sets the target CPU-Type. For Feature-Detection.
         /// Hint: Official Bochs emulator is x86 only.
         /// </summary>
-        public const KConfigCpu Cpu = KConfigCpu.x64;
+        public const KConfigCpu Cpu = KConfigCpu.x86;
 
         /// <summary>
         /// Sets the compile architecture.
