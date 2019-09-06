@@ -33,6 +33,8 @@ b *0x0
 #b LoaderStart.cs:61
 
 #b System.Void lonos.kernel.core.IDTManager::IRQ32()
+b SysCallManager.cs:90
+b Thread.cs:68
 
 # Invalid TSS
 b System.Void lonos.Kernel.Core.Interrupts.IDTManager::IRQ10()

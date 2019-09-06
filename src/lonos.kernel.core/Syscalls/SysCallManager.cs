@@ -34,6 +34,8 @@ namespace lonos.Kernel.Core.SysCalls
         private static void SetCommands()
         {
             SetCommand(KnownSysCallCommand.RequestPages, cmd_RequestPage);
+            SetCommand(KnownSysCallCommand.ServiceFunc1, cmd_CallServiceFunc1);
+            SetCommand(KnownSysCallCommand.ServiceReturn, cmd_ServiceReturn);
         }
 
 
@@ -46,6 +48,33 @@ namespace lonos.Kernel.Core.SysCalls
             nextVirtPage += (pages * 4096);
             Scheduler.GetCurrentThread().Process.PageTable.Map(nextVirtPage, page->PhysicalAddress, pages * 4096);
             return virtAddr;
+        }
+
+        private static uint cmd_CallServiceFunc1(uint arg0)
+        {
+            var serv = KernelStart.serv;
+            serv.SwitchToThreadMethod();
+
+            // will never get here, because service will call cmd_ExitServiceFunc, thats switching this this thread directly
+            return 0;
+        }
+
+        private static uint cmd_ServiceReturn(uint result)
+        {
+            var servThread = Scheduler.GetCurrentThread();
+            var parent = servThread.ParentThread;
+
+            servThread.ParentThread = null;
+            parent.ChildThread = null;
+
+            servThread.Status = ThreadStatus.Terminated;
+
+            if (parent.StackState != null)
+                parent.StackState->Stack.EAX = result;
+
+            Scheduler.SwitchToThread(parent.ThreadID);
+
+            return 0;
         }
 
         public static void SetCommand(KnownSysCallCommand command, DSysCallInfoHandler handler)
@@ -70,7 +99,9 @@ namespace lonos.Kernel.Core.SysCalls
 
     public enum KnownSysCallCommand
     {
-        RequestPages = 20
+        RequestPages = 20,
+        ServiceReturn = 21,
+        ServiceFunc1 = 22
     }
 
     public class SysCallInfo

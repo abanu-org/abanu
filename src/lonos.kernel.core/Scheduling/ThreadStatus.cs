@@ -6,6 +6,7 @@
         Creating,
         ScheduleForStart,
         Running,
+        Waiting,
         Terminated,
     };
 }

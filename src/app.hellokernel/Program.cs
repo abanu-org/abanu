@@ -33,9 +33,15 @@ namespace lonos.Kernel
             return SysCall(20, pages);
         }
 
+        public static Addr ServiceFunc1(uint demoArg)
+        {
+            return SysCall(22, demoArg);
+        }
+
         public static void SysCallTest()
         {
-            var addr = RequestPages(38);
+            //var addr = RequestPages(38);
+            var result = ServiceFunc1(38);
         }
 
         private static void Dummy()

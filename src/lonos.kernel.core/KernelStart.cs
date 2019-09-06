@@ -102,6 +102,8 @@ namespace lonos.Kernel.Core
                 ProcessManager.Setup(StartupStage2);
         }
 
+        public static Service serv;
+
         public static void StartupStage2()
         {
             if (!KConfig.SingleThread)
@@ -115,8 +117,11 @@ namespace lonos.Kernel.Core
                 Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2" });
                 userProc.Start();
 
-                ProcessManager.StartProcess("app.HelloService");
-                ProcessManager.StartProcess("app.HelloKernel");
+                var proc = ProcessManager.StartProcess("app.HelloService");
+                serv = new Service(proc);
+
+                var p2 = ProcessManager.StartProcess("app.HelloKernel");
+                p2.Threads[0].Debug = true;
 
                 //ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
             }

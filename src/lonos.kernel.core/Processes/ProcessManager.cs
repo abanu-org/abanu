@@ -45,11 +45,12 @@ namespace lonos.Kernel.Core.Processes
             return proc;
         }
 
-        public static unsafe void StartProcess(string path)
+        public static unsafe Process StartProcess(string path)
         {
             KernelMessage.WriteLine("Create proc: {0}", path);
 
             var proc = CreateEmptyProcess(new ProcessCreateOptions() { User = true });
+            proc.Path = path;
             proc.PageTable = PageTable.CreateInstance();
 
             // Setup User PageTable
@@ -98,6 +99,8 @@ namespace lonos.Kernel.Core.Processes
 
             var mainThread = Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint) { AllowUserModeIOPort = true, Debug = true, DebugName = "UserProcMainThread" });
             proc.Start();
+
+            return proc;
         }
 
         private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)

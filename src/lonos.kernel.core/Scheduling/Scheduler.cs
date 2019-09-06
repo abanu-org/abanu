@@ -198,6 +198,7 @@ namespace lonos.Kernel.Core.Scheduling
             var stackSize = options.StackSize;
 
             var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
+            KernelMessage.WriteLine("Requesting {0} stack pages", stackPages);
             var debugPadding = 8u;
             stackSize = stackPages * PageFrameManager.PageSize;
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
@@ -348,7 +349,7 @@ namespace lonos.Kernel.Core.Scheduling
             //Native.SetFS(threadID);
         }
 
-        private unsafe static void SwitchToThread(uint threadID)
+        public unsafe static void SwitchToThread(uint threadID)
         {
             var thread = Threads[threadID];
             var proc = thread.Process;
