@@ -8,10 +8,9 @@
 [github-issues-link]: https://github.com/lonos-project/lonos/issues
 [github-license]: https://img.shields.io/badge/license-GPL-blue.svg
 [github-license-link]: https://raw.githubusercontent.com/lonos-project/lonos/master/LICENSE.txt
+[![Join the chat at https://gitter.im/lonos-project/lonos](https://badges.gitter.im/lonos-project/lonos.svg)](https://gitter.im/lonos-project/lonos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Build instructions
-
-[![Join the chat at https://gitter.im/lonos-project/lonos](https://badges.gitter.im/lonos-project/lonos.svg)](https://gitter.im/lonos-project/lonos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Quick start: http://docs.lonos.io/en/latest/build.html
 
