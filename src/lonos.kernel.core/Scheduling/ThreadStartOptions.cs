@@ -14,6 +14,7 @@ namespace lonos.Kernel.Core.Scheduling
         public bool AllowUserModeIOPort;
         public bool Debug;
         public string DebugName;
+        public uint ArgumentBufferSize;
 
         public ThreadStartOptions(ThreadStart start)
         {
@@ -23,6 +24,7 @@ namespace lonos.Kernel.Core.Scheduling
             StackSize = KConfig.DefaultStackSize;
             Debug = false;
             DebugName = null;
+            ArgumentBufferSize = 0;
         }
 
         public ThreadStartOptions(Addr methodAddr)
@@ -32,6 +34,7 @@ namespace lonos.Kernel.Core.Scheduling
             StackSize = KConfig.DefaultStackSize;
             Debug = false;
             DebugName = null;
+            ArgumentBufferSize = 0;
         }
 
     }

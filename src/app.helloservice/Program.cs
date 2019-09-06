@@ -12,17 +12,21 @@ namespace lonos.Kernel
 {
     public static class Program
     {
-        // TODO: Rename to Init
+
         public static void Main()
+        { }
+
+        // TODO: Rename to Init
+        public static void Main2(uint demoArg)
         {
             while (true) { }
         }
 
-        public static void Func1()
+        public static void Func1(uint arg1)
         {
-            //var arg2 = arg1 += 10;
-            uint arg2 = 60;
-            SysCall(21, 68); // 21=Service Return, 69=result
+            var arg2 = arg1 += 10;
+            //uint arg2 = 60;
+            SysCall(21, arg1); // 21=Service Return, 69=result
         }
 
         // TODO: Naming!

@@ -45,7 +45,7 @@ namespace lonos.Kernel.Core.Processes
             return proc;
         }
 
-        public static unsafe Process StartProcess(string path)
+        public static unsafe Process StartProcess(string path, uint argumentBufferSize = 0)
         {
             KernelMessage.WriteLine("Create proc: {0}", path);
 
@@ -97,7 +97,12 @@ namespace lonos.Kernel.Core.Processes
             var entryPoint = GetEntryPointFromElf(elf);
             KernelMessage.WriteLine("EntryPoint: {0:X8}", entryPoint);
 
-            var mainThread = Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint) { AllowUserModeIOPort = true, Debug = true, DebugName = "UserProcMainThread" });
+            var mainThread = Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint)
+            {
+                ArgumentBufferSize = argumentBufferSize,
+                AllowUserModeIOPort = true,
+                DebugName = "UserProcMainThread"
+            });
             proc.Start();
 
             return proc;
@@ -105,7 +110,7 @@ namespace lonos.Kernel.Core.Processes
 
         private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)
         {
-            var symName = "System.Void lonos.Kernel.Program::Main()"; // TODO
+            var symName = "System.Void lonos.Kernel.Program::Main2(System.UInt32)"; // TODO
             var sym = elf.GetSymbol(symName);
             if (sym == (ElfSymbol*)0)
                 return Addr.Zero;

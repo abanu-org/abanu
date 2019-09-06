@@ -196,6 +196,8 @@ namespace lonos.Kernel.Core.Scheduling
             thread.DebugName = options.DebugName;
 
             var stackSize = options.StackSize;
+            var argBufSize = options.ArgumentBufferSize;
+            thread.ArgumentBufferSize = options.ArgumentBufferSize;
 
             var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
             KernelMessage.WriteLine("Requesting {0} stack pages", stackPages);
@@ -232,7 +234,8 @@ namespace lonos.Kernel.Core.Scheduling
             MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, thread.kernelStack, 256 * 4096);
 
             // ---
-            var stackStateOffset = 8;
+            uint stackStateOffset = 8;
+            stackStateOffset += argBufSize;
 
             uint CS = 0x08;
             if (thread.User)
@@ -247,7 +250,9 @@ namespace lonos.Kernel.Core.Scheduling
             Intrinsic.Store32(stackBottom, 0, 0xFF00002);          // Debug Marker
 
             Intrinsic.Store32(stackBottom, -4, (uint)stackBottom);
-            Intrinsic.Store32(stackBottom, -8, SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
+            Intrinsic.Store32(stackBottom, -(8 + (int)argBufSize), SignalThreadTerminationMethodAddress.ToInt32());  // Address of method that will raise a interrupt signal to terminate thread
+
+            uint argAddr = (uint)stackBottom - argBufSize;
 
             IDTTaskStack* stackState = null;
             if (thread.User)
@@ -270,7 +275,7 @@ namespace lonos.Kernel.Core.Scheduling
             {
                 // Never set this values for Non-User, otherwiese you will override stack informations.
                 stackState->TASK_SS = 0x23;
-                stackState->TASK_ESP = (uint)stackBottom - 8;
+                stackState->TASK_ESP = (uint)stackBottom - (uint)stackStateOffset;
 
                 proc.PageTable.MapCopy(PageTable.KernelTable, thread.kernelStack, thread.kernelStackSize);
                 proc.PageTable.MapCopy(PageTable.KernelTable, KernelStart.tssAddr, 4096);
@@ -283,7 +288,7 @@ namespace lonos.Kernel.Core.Scheduling
 
             stackState->Stack.CS = CS;
             stackState->Stack.EIP = options.MethodAddr;
-            stackState->Stack.EBP = (uint)(stackBottom - stackStateOffset).ToInt32();
+            stackState->Stack.EBP = (uint)(stackBottom - (int)stackStateOffset).ToInt32();
 
             thread.DataSelector = thread.User ? 0x23u : 0x10u;
 

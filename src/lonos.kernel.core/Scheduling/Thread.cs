@@ -3,6 +3,7 @@ using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.Processes;
+using Mosa.Runtime;
 using Mosa.Runtime.x86;
 using System;
 
@@ -25,9 +26,16 @@ namespace lonos.Kernel.Core.Scheduling
         public uint ThreadID;
         public bool Debug;
         public string DebugName;
+        public uint ArgumentBufferSize;
 
         public Thread ChildThread;
         public Thread ParentThread;
+
+        public void SetArgument(uint offsetBytes, uint value)
+        {
+            var argAddr = (uint*)((uint)StackBottom - ArgumentBufferSize + offsetBytes - 4);
+            argAddr[0] = value;
+        }
 
         public void FreeMemory()
         {
@@ -66,7 +74,8 @@ namespace lonos.Kernel.Core.Scheduling
             var elf = KernelElf.FromSectionName(Process.Path);
             var methodAddr = GetEntryPointFromElf(elf);
             var cThread = Scheduler.GetCurrentThread();
-            var th = Scheduler.CreateThread(Process, new ThreadStartOptions(methodAddr));
+            var th = Scheduler.CreateThread(Process, new ThreadStartOptions(methodAddr) { ArgumentBufferSize = 4 });
+            th.SetArgument(0, arg0);
 
             // Connect Threads
             cThread.ChildThread = th;
@@ -81,7 +90,7 @@ namespace lonos.Kernel.Core.Scheduling
 
         private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)
         {
-            var symName = "System.Void lonos.Kernel.Program::Func1()"; // TODO
+            var symName = "System.Void lonos.Kernel.Program::Func1(System.UInt32)"; // TODO
             var sym = elf.GetSymbol(symName);
             if (sym == (ElfSymbol*)0)
                 return Addr.Zero;

@@ -12,9 +12,12 @@ namespace lonos.Kernel
 {
     public static class Program
     {
+
         public static void Main()
+        { }
+        public static void Main2(uint demoArg)
         {
-            SysCallTest();
+            SysCallTest(demoArg);
             while (true) { }
         }
 
@@ -38,10 +41,10 @@ namespace lonos.Kernel
             return SysCall(22, demoArg);
         }
 
-        public static void SysCallTest()
+        public static void SysCallTest(uint demoArg)
         {
             //var addr = RequestPages(38);
-            var result = ServiceFunc1(38);
+            var result = ServiceFunc1(demoArg);
             result++;
         }
 
