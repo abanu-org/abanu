@@ -13,6 +13,8 @@
 
 [![Join the chat at https://gitter.im/lonos-project/lonos](https://badges.gitter.im/lonos-project/lonos.svg)](https://gitter.im/lonos-project/lonos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+Quick start: http://docs.lonos.io/en/latest/build.html
+
 Prerequisites:
 - .NET Framework 4.7.2 or latest Mono
 - NASM Assembler (`sudo apt-get install nasm`)
