@@ -45,6 +45,9 @@ This is a research project / proof of concept. So it isn't a fully functional OS
 - Scrollable screen output
 - Setup GDT
 - Basic Interrupts
+- Basic Memory Protection
+- Task-Switching
+- User-Mode
 
 ## Contributing
 
