@@ -20,7 +20,9 @@ namespace lonos.Kernel
 
         public static void Func1()
         {
-            SysCall(21, 69); // 21=Service Return, 69=result
+            //var arg2 = arg1 += 10;
+            uint arg2 = 60;
+            SysCall(21, 68); // 21=Service Return, 69=result
         }
 
         // TODO: Naming!

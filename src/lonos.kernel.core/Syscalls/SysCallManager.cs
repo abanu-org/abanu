@@ -53,7 +53,7 @@ namespace lonos.Kernel.Core.SysCalls
         private static uint cmd_CallServiceFunc1(uint arg0)
         {
             var serv = KernelStart.serv;
-            serv.SwitchToThreadMethod();
+            serv.SwitchToThreadMethod(arg0);
 
             // will never get here, because service will call cmd_ExitServiceFunc, thats switching this this thread directly
             return 0;
@@ -89,6 +89,9 @@ namespace lonos.Kernel.Core.SysCalls
         public static void InterruptHandler(IDTStack* stack)
         {
             KernelMessage.WriteLine("Got SysCall {0}, arg0={1}", stack->EAX, stack->ECX);
+
+            Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
+
             stack->EAX = Commands[stack->EAX].Handler(stack->ECX);
         }
 

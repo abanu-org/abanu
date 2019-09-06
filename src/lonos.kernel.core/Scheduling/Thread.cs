@@ -3,6 +3,7 @@ using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.Processes;
+using Mosa.Runtime.x86;
 using System;
 
 namespace lonos.Kernel.Core.Scheduling
@@ -60,7 +61,7 @@ namespace lonos.Kernel.Core.Scheduling
         }
 
         // Methods is always called within Interrupt with Interrupt disabled
-        public void SwitchToThreadMethod()
+        public unsafe void SwitchToThreadMethod(uint arg0)
         {
             var elf = KernelElf.FromSectionName(Process.Path);
             var methodAddr = GetEntryPointFromElf(elf);
@@ -71,6 +72,8 @@ namespace lonos.Kernel.Core.Scheduling
             cThread.ChildThread = th;
             cThread.Status = ThreadStatus.Waiting;
             th.ParentThread = cThread;
+
+            //th.StackState->Stack.ECX = arg0;
 
             th.Start();
             Scheduler.SwitchToThread(th.ThreadID);

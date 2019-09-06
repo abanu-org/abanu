@@ -20,6 +20,7 @@ end
 file os/lonos.os.core.x86.bin
 #file os/lonos.os.loader.x86.bin
 #file os/app.hellokernel.bin
+#file os/app.helloservice.bin
 target remote | ./lonosctl debug qemu-kernel-run
 b *0x0
 #b *0xc010609f
@@ -33,7 +34,7 @@ b *0x0
 #b LoaderStart.cs:61
 
 #b System.Void lonos.kernel.core.IDTManager::IRQ32()
-b SysCallManager.cs:90
+b SysCallManager.cs:92
 b Thread.cs:68
 
 # Invalid TSS

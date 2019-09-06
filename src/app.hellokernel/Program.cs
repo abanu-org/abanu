@@ -42,6 +42,7 @@ namespace lonos.Kernel
         {
             //var addr = RequestPages(38);
             var result = ServiceFunc1(38);
+            result++;
         }
 
         private static void Dummy()

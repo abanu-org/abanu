@@ -296,7 +296,7 @@ namespace lonos.Kernel.Core.Scheduling
             return thread;
         }
 
-        private unsafe static void SaveThreadState(uint threadID, IntPtr stackState)
+        public unsafe static void SaveThreadState(uint threadID, IntPtr stackState)
         {
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
 
@@ -365,8 +365,7 @@ namespace lonos.Kernel.Core.Scheduling
 
             PIC.SendEndOfInterrupt(ClockIRQ);
 
-            if (thread.Status == ThreadStatus.ScheduleForStart)
-                thread.Status = ThreadStatus.Running;
+            thread.Status = ThreadStatus.Running;
 
             thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;
 
