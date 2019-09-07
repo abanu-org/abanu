@@ -34,7 +34,7 @@ b *0x0
 #b LoaderStart.cs:61
 
 #b lonos.kernel.core.IDTManager::IRQ32()
-b SysCallManager.cs:92
+b SysCallManager.cs:121
 b Thread.cs:68
 
 # Invalid TSS

@@ -120,10 +120,10 @@ namespace lonos.Kernel.Core
                 var proc = ProcessManager.StartProcess("app.HelloService");
                 serv = new Service(proc);
 
-                var p2 = ProcessManager.StartProcess("app.HelloKernel", 12);
-                p2.Threads[0].SetArgument(0, 0x90);
-                p2.Threads[0].SetArgument(4, 0x94);
-                p2.Threads[0].SetArgument(8, 0x98);
+                var p2 = ProcessManager.StartProcess("app.HelloKernel");
+                //p2.Threads[0].SetArgument(0, 0x90);
+                //p2.Threads[0].SetArgument(4, 0x94);
+                //p2.Threads[0].SetArgument(8, 0x98);
                 p2.Threads[0].Debug = true;
 
                 //ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;

@@ -188,6 +188,14 @@ namespace lonos.Kernel.Core
             buf.WriteTo(Dev);
         }
 
+        public static void WriteLine(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6)
+        {
+            var buf = new StringBuffer();
+            buf.Append(format, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
         public static void Write(uint value)
         {
             var sb = new StringBuffer();

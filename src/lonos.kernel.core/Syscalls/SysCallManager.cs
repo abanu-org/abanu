@@ -6,6 +6,7 @@ using lonos.Kernel.Core.Scheduling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,9 +41,9 @@ namespace lonos.Kernel.Core.SysCalls
 
 
         private static uint nextVirtPage;
-        private static uint cmd_RequestPage(uint arg0)
+        private static uint cmd_RequestPage(SysCallArgs* args)
         {
-            var pages = arg0;
+            var pages = args->Arg1;
             var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
             var virtAddr = nextVirtPage;
             nextVirtPage += (pages * 4096);
@@ -50,16 +51,28 @@ namespace lonos.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        private static uint cmd_CallServiceFunc1(uint arg0)
+        private static uint cmd_CallServiceFunc1(SysCallArgs* args)
         {
             var serv = KernelStart.serv;
-            serv.SwitchToThreadMethod(arg0);
+
+            //0xAABBCCDD
+
+            //var servArgs = new ServiceArgs
+            //{
+            //    Arg1 = args.Arg2,
+            //    Arg2 = args.Arg3,
+            //    Arg3 = args.Arg4,
+            //    Arg4 = args.Arg5,
+            //    Arg5 = args.Arg6,
+            //};
+
+            serv.SwitchToThreadMethod(args);
 
             // will never get here, because service will call cmd_ExitServiceFunc, thats switching this this thread directly
             return 0;
         }
 
-        private static uint cmd_ServiceReturn(uint result)
+        private static uint cmd_ServiceReturn(SysCallArgs* args)
         {
             var servThread = Scheduler.GetCurrentThread();
             var parent = servThread.ParentThread;
@@ -70,7 +83,7 @@ namespace lonos.Kernel.Core.SysCalls
             servThread.Status = ThreadStatus.Terminated;
 
             if (parent.StackState != null)
-                parent.StackState->Stack.EAX = result;
+                parent.StackState->Stack.EAX = args->Arg2;
 
             Scheduler.SwitchToThread(parent.ThreadID);
 
@@ -88,17 +101,31 @@ namespace lonos.Kernel.Core.SysCalls
 
         public static void InterruptHandler(IDTStack* stack)
         {
-            KernelMessage.WriteLine("Got SysCall {0}, arg0={1}", stack->EAX, stack->ECX);
+            var args = new SysCallArgs
+            {
+                Command = stack->EAX,
+                Arg1 = stack->EBX,
+                Arg2 = stack->ECX,
+                Arg3 = stack->EDX,
+                Arg4 = stack->ESI,
+                Arg5 = stack->EDI,
+                Arg6 = stack->EBP
+            };
+
+            const uint commandMask = BitsMask.Bits10;
+            var commandNum = args.Command & commandMask;
+
+            KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", args.Command, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
 
-            stack->EAX = Commands[stack->EAX].Handler(stack->ECX);
+            stack->EAX = Commands[commandNum].Handler(&args);
         }
 
         private static SysCallInfo[] Commands;
     }
 
-    public delegate uint DSysCallInfoHandler(uint arg0);
+    public unsafe delegate uint DSysCallInfoHandler(SysCallArgs* args);
 
     public enum KnownSysCallCommand
     {
@@ -114,5 +141,44 @@ namespace lonos.Kernel.Core.SysCalls
         //public string Name;
         public DSysCallInfoHandler Handler;
     }
+
+    [StructLayout(LayoutKind.Explicit, Size = 4 * 7)]
+    public struct SysCallArgs
+    {
+        public const uint Size = 4 * 7;
+
+        [FieldOffset(0)]
+        public uint Command;
+
+        [FieldOffset(4)]
+        public uint Arg1;
+
+        [FieldOffset(8)]
+        public uint Arg2;
+
+        [FieldOffset(12)]
+        public uint Arg3;
+
+        [FieldOffset(16)]
+        public uint Arg4;
+
+        [FieldOffset(20)]
+        public uint Arg5;
+
+        [FieldOffset(24)]
+        public uint Arg6;
+    }
+
+    //[StructLayout(LayoutKind.Sequential, Size = 4 * 5)]
+    //public struct ServiceArgs
+    //{
+    //    public const uint Size = 4 * 5;
+
+    //    public uint Arg1;
+    //    public uint Arg2;
+    //    public uint Arg3;
+    //    public uint Arg4;
+    //    public uint Arg5;
+    //}
 
 }

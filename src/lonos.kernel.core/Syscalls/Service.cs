@@ -1,5 +1,6 @@
 ﻿using lonos.Kernel.Core.Elf;
 using lonos.Kernel.Core.Processes;
+using lonos.Kernel.Core.SysCalls;
 
 namespace lonos.Kernel.Core.Scheduling
 {
@@ -14,11 +15,13 @@ namespace lonos.Kernel.Core.Scheduling
         }
 
         // Methods is always called within Interrupt with Interrupt disabled
-        public unsafe void SwitchToThreadMethod(uint arg0)
+        public unsafe void SwitchToThreadMethod(SysCallArgs* args)
         {
             var elf = KernelElf.FromSectionName(Process.Path);
             var methodAddr = GetEntryPointFromElf(elf);
-            var th = CreateThread(methodAddr, 4);
+            var th = CreateThread(methodAddr, SysCallArgs.Size);
+            var argAddr = (SysCallArgs*)th.GetArgumentAddr(0);
+            argAddr[0] = *(args);
             SwitchToThread(th);
         }
 
@@ -44,7 +47,7 @@ namespace lonos.Kernel.Core.Scheduling
 
         private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)
         {
-            var symName = "lonos.Kernel.Program::Func1(System.UInt32)"; // TODO
+            var symName = "lonos.Kernel.Program::Func1(lonos.Kernel.SysCallArgs)"; // TODO
             var sym = elf.GetSymbol(symName);
             if (sym == (ElfSymbol*)0)
                 return Addr.Zero;
