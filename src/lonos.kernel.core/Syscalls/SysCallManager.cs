@@ -34,16 +34,16 @@ namespace lonos.Kernel.Core.SysCalls
 
         private static void SetCommands()
         {
-            SetCommand(KnownSysCallCommand.RequestPages, cmd_RequestPage);
+            SetCommand(KnownSysCallCommand.RequestMemory, cmd_RequestMemory);
             SetCommand(KnownSysCallCommand.ServiceFunc1, cmd_CallServiceFunc1);
             SetCommand(KnownSysCallCommand.ServiceReturn, cmd_ServiceReturn);
         }
 
 
         private static uint nextVirtPage;
-        private static uint cmd_RequestPage(SysCallArgs* args)
+        private static uint cmd_RequestMemory(SystemMessage* args)
         {
-            var pages = args->Arg1;
+            var pages = KMath.DivCeil(args->Arg1, 4096);
             var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
             var virtAddr = nextVirtPage;
             nextVirtPage += (pages * 4096);
@@ -51,7 +51,7 @@ namespace lonos.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        private static uint cmd_CallServiceFunc1(SysCallArgs* args)
+        private static uint cmd_CallServiceFunc1(SystemMessage* args)
         {
             var serv = KernelStart.serv;
 
@@ -72,7 +72,7 @@ namespace lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint cmd_ServiceReturn(SysCallArgs* args)
+        private static uint cmd_ServiceReturn(SystemMessage* args)
         {
             var servThread = Scheduler.GetCurrentThread();
             var parent = servThread.ParentThread;
@@ -101,7 +101,7 @@ namespace lonos.Kernel.Core.SysCalls
 
         public static void InterruptHandler(IDTStack* stack)
         {
-            var args = new SysCallArgs
+            var args = new SystemMessage
             {
                 Command = stack->EAX,
                 Arg1 = stack->EBX,
@@ -125,11 +125,11 @@ namespace lonos.Kernel.Core.SysCalls
         private static SysCallInfo[] Commands;
     }
 
-    public unsafe delegate uint DSysCallInfoHandler(SysCallArgs* args);
+    public unsafe delegate uint DSysCallInfoHandler(SystemMessage* args);
 
     public enum KnownSysCallCommand
     {
-        RequestPages = 20,
+        RequestMemory = 20,
         ServiceReturn = 21,
         ServiceFunc1 = 22
     }
@@ -140,33 +140,6 @@ namespace lonos.Kernel.Core.SysCalls
         //public uint Arguments;
         //public string Name;
         public DSysCallInfoHandler Handler;
-    }
-
-    [StructLayout(LayoutKind.Explicit, Size = 4 * 7)]
-    public struct SysCallArgs
-    {
-        public const uint Size = 4 * 7;
-
-        [FieldOffset(0)]
-        public uint Command;
-
-        [FieldOffset(4)]
-        public uint Arg1;
-
-        [FieldOffset(8)]
-        public uint Arg2;
-
-        [FieldOffset(12)]
-        public uint Arg3;
-
-        [FieldOffset(16)]
-        public uint Arg4;
-
-        [FieldOffset(20)]
-        public uint Arg5;
-
-        [FieldOffset(24)]
-        public uint Arg6;
     }
 
     //[StructLayout(LayoutKind.Sequential, Size = 4 * 5)]

@@ -46,9 +46,17 @@
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>
     </ProjectReference>
+    <ProjectReference Include="..\lonos.kernel.api\lonos.kernel.api.csproj">
+      <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
+      <Name>lonos.kernel.api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\lonos.primitives\lonos.primitives.csproj">
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
       <Name>lonos.primitives</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lonos.runtime\lonos.runtime.csproj">
+      <Project>{4d9c0633-1433-4a92-a148-80e8e91155fd}</Project>
+      <Name>lonos.runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

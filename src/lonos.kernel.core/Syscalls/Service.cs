@@ -15,12 +15,12 @@ namespace lonos.Kernel.Core.Scheduling
         }
 
         // Methods is always called within Interrupt with Interrupt disabled
-        public unsafe void SwitchToThreadMethod(SysCallArgs* args)
+        public unsafe void SwitchToThreadMethod(SystemMessage* args)
         {
             var elf = KernelElf.FromSectionName(Process.Path);
             var methodAddr = GetEntryPointFromElf(elf);
-            var th = CreateThread(methodAddr, SysCallArgs.Size);
-            var argAddr = (SysCallArgs*)th.GetArgumentAddr(0);
+            var th = CreateThread(methodAddr, SystemMessage.Size);
+            var argAddr = (SystemMessage*)th.GetArgumentAddr(0);
             argAddr[0] = *(args);
             SwitchToThread(th);
         }
@@ -45,10 +45,11 @@ namespace lonos.Kernel.Core.Scheduling
             Scheduler.SwitchToThread(th.ThreadID);
         }
 
+        private static string DispatchSymbol = "lonos.Runtime.MessageManager::Dispatch(lonos.Kernel.SystemMessage)";
+
         private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)
         {
-            var symName = "lonos.Kernel.Program::Func1(lonos.Kernel.SysCallArgs)"; // TODO
-            var sym = elf.GetSymbol(symName);
+            var sym = elf.GetSymbol(DispatchSymbol);
             if (sym == (ElfSymbol*)0)
                 return Addr.Zero;
             return sym->Value;

@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>app.HelloKernel</RootNamespace>
-    <AssemblyName>app.hellokernel</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>lonos.Runtime</RootNamespace>
+    <AssemblyName>lonos.runtime</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <ProjectGuid>{E97F2133-634F-488C-933A-B78D6A1F0B69}</ProjectGuid>
+    <ProjectGuid>{4D9C0633-1433-4A92-A148-80E8E91155FD}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,9 +30,6 @@
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
@@ -54,14 +51,12 @@
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
       <Name>lonos.primitives</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lonos.runtime\lonos.runtime.csproj">
-      <Project>{4d9c0633-1433-4a92-a148-80e8e91155fd}</Project>
-      <Name>lonos.runtime</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="ApplicationStartup.cs" />
+    <Compile Include="MessageManager.cs" />
+    <Compile Include="SysCalls.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

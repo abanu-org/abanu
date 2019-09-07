@@ -54,6 +54,7 @@
     <Compile Include="Structs\Page.cs" />
     <Compile Include="Structs\Atomic.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="SystemMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elf\" />
