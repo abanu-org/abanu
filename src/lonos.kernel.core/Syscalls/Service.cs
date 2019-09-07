@@ -44,7 +44,7 @@ namespace lonos.Kernel.Core.Scheduling
 
         private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)
         {
-            var symName = "System.Void lonos.Kernel.Program::Func1(System.UInt32)"; // TODO
+            var symName = "lonos.Kernel.Program::Func1(System.UInt32)"; // TODO
             var sym = elf.GetSymbol(symName);
             if (sym == (ElfSymbol*)0)
                 return Addr.Zero;

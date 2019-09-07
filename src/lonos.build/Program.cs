@@ -3,6 +3,8 @@
 using System;
 using System.Text.RegularExpressions;
 using System.IO;
+using Mosa.Compiler.MosaTypeSystem;
+using System.Text;
 
 namespace lonos.Build
 {
@@ -54,8 +56,28 @@ namespace lonos.Build
             return value;
         }
 
+        public static string GetSignature(string name, MosaMethodSignature sig, bool shortSig, bool includeReturnType = true)
+        {
+            if (shortSig)
+                return null;
+
+            var result = new StringBuilder();
+            result.Append(name);
+            result.Append("(");
+            for (int i = 0; i < sig.Parameters.Count; i++)
+            {
+                if (i != 0)
+                    result.Append(",");
+                result.Append(sig.Parameters[i].ParameterType.FullName);
+            }
+            result.Append(")");
+            return result.ToString();
+        }
+
         private static void Main(string[] args)
         {
+            Mosa.Compiler.MosaTypeSystem.SignatureName.GetSignatureOverride = GetSignature;
+
             Console.WriteLine("Starting Build...");
 
             var file = "";

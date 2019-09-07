@@ -25,26 +25,26 @@ target remote | ./lonosctl debug qemu-kernel-run
 b *0x0
 #b *0xc010609f
 
-#hbreak System.Void lonos.kernel.core.Start::Main()
-#hbreak System.Void lonos.kernel.core.IDTManager::SetTableEntries()
+#hbreak lonos.kernel.core.Start::Main()
+#hbreak lonos.kernel.core.IDTManager::SetTableEntries()
 #hbreak src/lonos.kernel.core/Start.cs:63
 #hbreak src/lonos.kernel.core/KList.cs:45
 #b PageTableX64.cs:75
 #b PageTableX64.cs:109
 #b LoaderStart.cs:61
 
-#b System.Void lonos.kernel.core.IDTManager::IRQ32()
+#b lonos.kernel.core.IDTManager::IRQ32()
 b SysCallManager.cs:92
 b Thread.cs:68
 
 # Invalid TSS
-b System.Void lonos.Kernel.Core.Interrupts.IDTManager::IRQ10()
+b lonos.Kernel.Core.Interrupts.IDTManager::IRQ10()
 
 # General Protection Exception
-b System.Void lonos.Kernel.Core.Interrupts.IDTManager::IRQ13()
+b lonos.Kernel.Core.Interrupts.IDTManager::IRQ13()
 
 # Page Fault
-b System.Void lonos.Kernel.Core.Interrupts.IDTManager::IRQ14()
+b lonos.Kernel.Core.Interrupts.IDTManager::IRQ14()
 
 #b *0xc010f128
 #watch *0x4506010
