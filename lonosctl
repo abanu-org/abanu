@@ -37,6 +37,38 @@ function configure {
 	esac
 }
 
+function clean {
+	case $1 in
+		all)
+			clean packages
+			clean bin
+			clean os
+			clean logs
+			;;
+
+		bin)
+			rm -rf bin
+			rm -rf external/MOSA-Project/bin
+			;;
+
+		logs)
+			rm -rf logs
+			;;
+
+		os)
+			rm -rf os
+			;;
+
+		packages)
+			rm -rf external/MOSA-Project/Source/packages
+			;;
+
+		*)
+			echo $"Usage: lonosctl clean {all|bin|os||logs|packages}"
+			exit 1
+	esac
+}
+
 function patch {
 	case $1 in
 		apply)
@@ -330,6 +362,10 @@ case $1 in
 		configure ${@:2}
 		;;
 
+	clean)
+		clean ${@:2}
+		;;
+
 	build)
 		build ${@:2}
 		;;
@@ -356,7 +392,7 @@ case $1 in
 		;;
 
 	*)
-		echo $"Usage: lonosctl {configure|build|run|logs}"
+		echo $"Usage: lonosctl {configure|build|run|debug|clean|logs}"
 		exit 1
 esac
 
