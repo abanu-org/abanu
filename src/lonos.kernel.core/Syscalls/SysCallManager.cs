@@ -34,9 +34,9 @@ namespace lonos.Kernel.Core.SysCalls
 
         private static void SetCommands()
         {
-            SetCommand(KnownSysCallCommand.RequestMemory, cmd_RequestMemory);
-            SetCommand(KnownSysCallCommand.ServiceFunc1, cmd_CallServiceFunc1);
-            SetCommand(KnownSysCallCommand.ServiceReturn, cmd_ServiceReturn);
+            SetCommand(SysCallTarget.RequestMemory, cmd_RequestMemory);
+            SetCommand(SysCallTarget.ServiceFunc1, cmd_CallServiceFunc1);
+            SetCommand(SysCallTarget.ServiceReturn, cmd_ServiceReturn);
         }
 
 
@@ -90,7 +90,7 @@ namespace lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        public static void SetCommand(KnownSysCallCommand command, DSysCallInfoHandler handler)
+        public static void SetCommand(SysCallTarget command, DSysCallInfoHandler handler)
         {
             Commands[(uint)command] = new SysCallInfo
             {
@@ -103,7 +103,7 @@ namespace lonos.Kernel.Core.SysCalls
         {
             var args = new SystemMessage
             {
-                Command = stack->EAX,
+                Target = (SysCallTarget)stack->EAX,
                 Arg1 = stack->EBX,
                 Arg2 = stack->ECX,
                 Arg3 = stack->EDX,
@@ -113,9 +113,9 @@ namespace lonos.Kernel.Core.SysCalls
             };
 
             const uint commandMask = BitsMask.Bits10;
-            var commandNum = args.Command & commandMask;
+            var commandNum = (uint)args.Target & commandMask;
 
-            KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", args.Command, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
+            KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
 
@@ -127,16 +127,9 @@ namespace lonos.Kernel.Core.SysCalls
 
     public unsafe delegate uint DSysCallInfoHandler(SystemMessage* args);
 
-    public enum KnownSysCallCommand
-    {
-        RequestMemory = 20,
-        ServiceReturn = 21,
-        ServiceFunc1 = 22
-    }
-
     public class SysCallInfo
     {
-        public KnownSysCallCommand CommandID;
+        public SysCallTarget CommandID;
         //public uint Arguments;
         //public string Name;
         public DSysCallInfoHandler Handler;

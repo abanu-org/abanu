@@ -168,6 +168,18 @@ namespace lonos.Build
                     },
                     new Section
                     {
+                        Name = "service.Basic",
+                        Type = SectionType.ProgBits,
+                        AddressAlignment = 0x1000,
+                        EmitMethod = (section, writer) =>
+                        {
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","lonos.service.basic.bin"));
+                            writer.Write(data);
+                            section.Size = (uint)data.Length;
+                        }
+                    },
+                    new Section
+                    {
                         Name = "elf.header",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,

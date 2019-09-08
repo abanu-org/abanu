@@ -14,7 +14,7 @@ namespace lonos.Kernel
         public const uint Size = 4 * 7;
 
         [FieldOffset(0)]
-        public uint Command;
+        public SysCallTarget Target;
 
         [FieldOffset(4)]
         public uint Arg1;
@@ -33,6 +33,29 @@ namespace lonos.Kernel
 
         [FieldOffset(24)]
         public uint Arg6;
+
+        public SystemMessage(uint target, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0)
+        {
+            Target = (SysCallTarget)target;
+            Arg1 = arg1;
+            Arg2 = arg2;
+            Arg3 = arg3;
+            Arg4 = arg4;
+            Arg5 = arg5;
+            Arg6 = arg6;
+        }
+
+        public SystemMessage(SysCallTarget target, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0)
+        {
+            Target = target;
+            Arg1 = arg1;
+            Arg2 = arg2;
+            Arg3 = arg3;
+            Arg4 = arg4;
+            Arg5 = arg5;
+            Arg6 = arg6;
+        }
+
     }
 
 }

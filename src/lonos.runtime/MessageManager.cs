@@ -32,6 +32,16 @@ namespace lonos.Runtime
             return SysCallInt(msg);
         }
 
+        public unsafe static uint Send(SysCallTarget target, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0)
+        {
+            return SysCallInt(new SystemMessage(target, arg1, arg2, arg3, arg4, arg5, arg6));
+        }
+
+        public unsafe static uint Send(uint target, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0, uint arg4 = 0, uint arg5 = 0, uint arg6 = 0)
+        {
+            return SysCallInt(new SystemMessage(target, arg1, arg2, arg3, arg4, arg5, arg6));
+        }
+
     }
 
 }

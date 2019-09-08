@@ -26,7 +26,7 @@ namespace lonos.Kernel
 
         public unsafe static void MessageReceived(SystemMessage* msg)
         {
-            MessageManager.Send(SysCallTarget.ServiceReturn, msg->Arg1 + 10);
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, msg->Arg1 + 10));
         }
 
     }

@@ -136,6 +136,8 @@ function build {
 			build native
 			build app
 			build app2
+			build service.basic
+			build app.shell
 			build loader
 			build kernel
 			build image
@@ -163,6 +165,14 @@ function build {
 			;;
 		app2)
 			(cd bin && mono -O=all ./lonos.build.exe --image=app2)
+			;;
+
+		app.shell)
+			(cd bin && mono -O=all ./lonos.build.exe --image=app.shell)
+			;;
+
+		service.basic)
+			(cd bin && mono -O=all ./lonos.build.exe --image=service.basic)
 			;;
 
 		loader)

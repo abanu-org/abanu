@@ -31,7 +31,7 @@ namespace lonos.Build
 
         private static void Main(string[] args)
         {
-//            Mosa.Compiler.MosaTypeSystem.SignatureName.GetSignatureOverride = GetSignature;
+            //            Mosa.Compiler.MosaTypeSystem.SignatureName.GetSignatureOverride = GetSignature;
 
             Console.WriteLine("Starting Build...");
 
@@ -64,6 +64,20 @@ namespace lonos.Build
             else if (args[0] == "--image=app2")
             {
                 file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.helloservice.exe");
+
+                var builder = new LonosBuilder_App(file);
+                builder.Build();
+            }
+            else if (args[0] == "--image=service.basic")
+            {
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/lonos.service.basic.exe");
+
+                var builder = new LonosBuilder_App(file);
+                builder.Build();
+            }
+            else if (args[0] == "--image=app.shell")
+            {
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.shell.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
