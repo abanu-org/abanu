@@ -53,6 +53,14 @@ namespace lonos.Kernel.Core
             buf.WriteTo(Dev);
         }
 
+        public static void WriteLine(string format, string arg0, uint arg1)
+        {
+            var buf = new StringBuffer();
+            buf.Append(format, arg0, arg1); //TODO
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
         public static void Path(string prefix, string value)
         {
             Write(prefix);

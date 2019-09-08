@@ -229,6 +229,10 @@ namespace lonos.Kernel.Core.MemoryManagement
                     KernelMessage.WriteLine("Requesting zero pages");
                     return null;
                 }
+                else if (num > 1)
+                {
+                    KernelMessage.WriteLine("Requesting {0} pages", num);
+                }
 
                 //KernelMessage.WriteLine("Request {0} pages...", num);
 

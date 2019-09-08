@@ -11,17 +11,34 @@ namespace lonos.Runtime
         public static void Init()
         {
             initialMemoryNextAddr = SysCalls.RequestMemory(3 * 1024 * 1024);
+            InitializAssembly();
+        }
+
+        #region InitAssembly
+
+        private static void InitializAssembly()
+        {
             Mosa.Runtime.StartUp.InitializeAssembly();
         }
+
+        /// <summary>
+        /// This method needs be be directly after InitializeAssembly, because of missing prologue and epilogue,
+        /// otherwiese it will "call" (move to) the next available method, and with missing method arguments.
+        /// </summary>
+        private static void BugFixDummyCall()
+        {
+        }
+
+        #endregion
 
         [Plug("Mosa.Runtime.GC::AllocateMemory")]
         private static unsafe IntPtr _AllocateMemory(uint size)
         {
-            return AllocateMemory(size);
+            return (IntPtr)AllocateMemory(size);
         }
 
-        private static Addr initialMemoryNextAddr;
-        private static IntPtr AllocateMemory(uint size)
+        private static uint initialMemoryNextAddr;
+        private static uint AllocateMemory(uint size)
         {
             var retAddr = initialMemoryNextAddr;
             initialMemoryNextAddr += size;

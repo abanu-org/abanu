@@ -7,7 +7,7 @@ namespace lonos.Kernel.Core.PageManagement
     {
         public static void Map(this IPageTable table, Addr virtAddr, Addr physAddr, USize length, bool present = true, bool flush = false)
         {
-            KernelMessage.WriteLine("Map: virt={0:X8}, phys={0:X8}, length={0:X8}", virtAddr, physAddr, length);
+            KernelMessage.WriteLine("Map: virt={0:X8}, phys={1:X8}, length={2:X8}", virtAddr, physAddr, length);
             var pages = KMath.DivCeil(length, 4096);
             for (var i = 0; i < pages; i++)
             {

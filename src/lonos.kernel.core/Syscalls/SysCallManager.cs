@@ -47,7 +47,7 @@ namespace lonos.Kernel.Core.SysCalls
             var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
             var virtAddr = nextVirtPage;
             nextVirtPage += (pages * 4096);
-            Scheduler.GetCurrentThread().Process.PageTable.Map(nextVirtPage, page->PhysicalAddress, pages * 4096);
+            Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
             return virtAddr;
         }
 

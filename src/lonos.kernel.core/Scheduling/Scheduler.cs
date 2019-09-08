@@ -19,7 +19,6 @@ namespace lonos.Kernel.Core.Scheduling
     {
         public const int ThreadCapacity = 256;
         public const int ClockIRQ = 0x20;
-        public const int ThreadTerminationSignalIRQ = 254;
 
         public static bool Enabled;
         private static IntPtr SignalThreadTerminationMethodAddress;

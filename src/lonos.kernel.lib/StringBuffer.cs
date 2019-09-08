@@ -393,6 +393,18 @@ namespace lonos.Kernel.Core
                    new Argument());
         }
 
+        public unsafe void Append(string format, string arg0, uint arg1)
+        {
+            Append(format,
+                   new Argument { _string = arg0, type = ArgumentType._string },
+                   new Argument { _uint = arg1, type = ArgumentType._uint },
+                   new Argument(),
+                   new Argument(),
+                   new Argument(),
+                   new Argument(),
+                   new Argument());
+        }
+
         public unsafe void Append(string format, uint arg0, uint arg1)
         {
             Append(format, arg0, arg1, 0);

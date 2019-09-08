@@ -103,6 +103,7 @@ namespace lonos.Kernel.Core.Processes
                 AllowUserModeIOPort = true,
                 DebugName = "UserProcMainThread"
             });
+            KernelMessage.WriteLine("Starting {0} on Thread {1}", path, mainThread.ThreadID);
             proc.Start();
 
             return proc;
