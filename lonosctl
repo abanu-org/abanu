@@ -87,7 +87,27 @@ function reset {
 			;;
 
 		*)
-			echo $"Usage: lonosctl clean {all|git}"
+			echo $"Usage: lonosctl reset {all|git}"
+			exit 1
+	esac
+}
+
+function update {
+	case $1 in
+		all)
+			update git
+			;;
+
+		git)
+			cd external/MOSA-Project
+			git pull
+			cd ../../
+			git pull
+			git submodule update --recursive
+			;;
+
+		*)
+			echo $"Usage: lonosctl reset {all|git}"
 			exit 1
 	esac
 }
@@ -389,6 +409,10 @@ case $1 in
 		clean ${@:2}
 		;;
 
+	update)
+		update ${@:2}
+		;;
+
 	reset)
 		reset ${@:2}
 		;;
@@ -419,7 +443,7 @@ case $1 in
 		;;
 
 	*)
-		echo $"Usage: lonosctl {configure|build|run|debug|clean|reset|logs}"
+		echo $"Usage: lonosctl {configure|build|run|debug|clean|reset|logs|update}"
 		exit 1
 esac
 
