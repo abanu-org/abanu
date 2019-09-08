@@ -19,29 +19,17 @@ using lonos.Kernel.Core;
 
 namespace lonos.Build
 {
-    public class LonosBuilder_Kernel : IBuilderEvent, IStarterEvent
+    public class LonosBuilder_Kernel : LonosBuilder
     {
-        //public Options Options { get; }
-        public LauncherOptions Options { get; }
 
-        public string TestAssemblyPath { get; set; }
-        public string Platform { get; set; }
-        public string InputAssembly { get; set; }
-        public AppLocations AppLocations { get; set; }
-
-        public TypeSystem TypeSystem { get; internal set; }
-        public MosaLinker Linker { get; internal set; }
-
-        protected Starter Starter;
-        protected Process Process;
-        protected string ImageFile;
-
-        private Thread ProcessThread;
-
-        public LonosBuilder_Kernel(string inputAssembly)
+        public LonosBuilder_Kernel(string inputAssembly) : base(inputAssembly)
         {
-            Console.WriteLine("Compile " + inputAssembly);
-            //Options = new Options()
+        }
+
+        public override void Configure()
+        {
+            InputAssembly = Program.GetEnv("LONOS_EXE");
+
             Options = new LauncherOptions()
             {
                 EnableSSA = true,
@@ -196,8 +184,8 @@ namespace lonos.Build
             };
 
             Options.CreateExtraProgramHeaders = () =>
-             {
-                 return new List<ProgramHeader>
+            {
+                return new List<ProgramHeader>
                  {
                     new ProgramHeader
                     {
@@ -211,53 +199,7 @@ namespace lonos.Build
                         Flags = ProgramHeaderFlags.Read
                     }
                  };
-             };
-
-            AppLocations = new AppLocations();
-
-            AppLocations.FindApplications();
-
-            InputAssembly = inputAssembly;
-        }
-
-        public bool Build()
-        {
-            TestAssemblyPath = AppContext.BaseDirectory;
-            Options.Paths.Add(TestAssemblyPath);
-            Options.SourceFile = Path.Combine(TestAssemblyPath, InputAssembly);
-
-            var builder = new Builder(Options, AppLocations, this);
-
-            var start = DateTime.UtcNow;
-            builder.Compile();
-            Console.WriteLine((DateTime.UtcNow - start).ToString());
-
-            Linker = builder.Linker;
-            TypeSystem = builder.TypeSystem;
-            ImageFile = Options.BootLoaderImage ?? builder.ImageFile;
-
-            return !builder.HasCompileError;
-        }
-
-        void IBuilderEvent.NewStatus(string status)
-        {
-            Console.WriteLine(status);
-        }
-
-        DateTime date = DateTime.UtcNow;
-        void IBuilderEvent.UpdateProgress(int total, int at)
-        {
-            var d = DateTime.UtcNow;
-            if (d.Second != date.Second)
-            {
-                Console.WriteLine(total + " / " + at);
-            }
-            date = d;
-        }
-
-        void IStarterEvent.NewStatus(string status)
-        {
-            //Console.WriteLine(status);
+            };
         }
 
     }

@@ -56,7 +56,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LonosBuilder_App2.cs" />
+    <Compile Include="LonosBuilder.cs" />
     <Compile Include="LonosBuilder_App.cs" />
     <Compile Include="LonosBuilder_Kernel.cs" />
     <Compile Include="Program.cs" />
