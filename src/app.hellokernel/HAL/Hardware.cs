@@ -1,0 +1,147 @@
+﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+
+using lonos;
+using lonos.Runtime;
+using Mosa.DeviceSystem;
+using Mosa.Runtime.x86;
+using System;
+
+namespace Mosa.CoolWorld.x86.HAL
+{
+    /// <summary>
+    /// Hardware
+    /// </summary>
+    public sealed class Hardware : BaseHardwareAbstraction
+    {
+        /// <summary>
+        /// Gets the size of the page.
+        /// </summary>
+        public override uint PageSize { get { return 4096; } }
+
+        /// <summary>
+        /// Gets a block of memory from the kernel
+        /// </summary>
+        /// <param name="address">The address.</param>
+        /// <param name="size">The size.</param>
+        /// <returns></returns>
+        public override ConstrainedPointer GetPhysicalMemory(IntPtr address, uint size)
+        {
+            var virtAddr = (Addr)SysCalls.GetPhysicalMemory(address, size);
+
+            return new ConstrainedPointer(virtAddr, size);
+        }
+
+        /// <summary>
+        /// Disables all interrupts.
+        /// </summary>
+        public override void DisableAllInterrupts()
+        {
+            Native.Cli();
+        }
+
+        /// <summary>
+        /// Enables all interrupts.
+        /// </summary>
+        public override void EnableAllInterrupts()
+        {
+            Native.Sti();
+        }
+
+        /// <summary>
+        /// Processes the interrupt.
+        /// </summary>
+        /// <param name="irq">The irq.</param>
+        public override void ProcessInterrupt(byte irq)
+        {
+            DeviceSystem.HAL.ProcessInterrupt(irq);
+        }
+
+        /// <summary>
+        /// Sleeps the specified milliseconds.
+        /// </summary>
+        /// <param name="milliseconds">The milliseconds.</param>
+        public override void Sleep(uint milliseconds)
+        {
+        }
+
+        /// <summary>
+        /// Allocates the virtual memory.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="alignment">The alignment.</param>
+        /// <returns></returns>
+        public override ConstrainedPointer AllocateVirtualMemory(uint size, uint alignment)
+        {
+            var address = (IntPtr)SysCalls.RequestMemory(size);
+
+            return new ConstrainedPointer(address, size);
+        }
+
+        /// <summary>
+        /// Gets the physical address.
+        /// </summary>
+        /// <param name="memory">The memory.</param>
+        /// <returns></returns>
+        public override IntPtr TranslateVirtualToPhysicalAddress(IntPtr virtualAddress)
+        {
+            return (IntPtr)SysCalls.TranslateVirtualToPhysicalAddress(virtualAddress);
+        }
+
+        /// <summary>
+        /// Requests an IO read/write port interface from the kernel
+        /// </summary>
+        /// <param name="port">The port number.</param>
+        /// <returns></returns>
+        public override BaseIOPortReadWrite GetReadWriteIOPort(ushort port)
+        {
+            return new X86IOPortReadWrite(port);
+        }
+
+        /// <summary>
+        /// Requests an IO read/write port interface from the kernel
+        /// </summary>
+        /// <param name="port">The port number.</param>
+        /// <returns></returns>
+        public override BaseIOPortRead GetReadIOPort(ushort port)
+        {
+            return new X86IOPortReadWrite(port);
+        }
+
+        /// <summary>
+        /// Requests an IO write port interface from the kernel
+        /// </summary>
+        /// <param name="port">The port number.</param>
+        /// <returns></returns>
+        public override BaseIOPortWrite GetWriteIOPort(ushort port)
+        {
+            return new X86IOPortWrite(port);
+        }
+
+        /// <summary>
+        /// Debugs the write.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public override void DebugWrite(string message)
+        {
+            //Boot.Console.Write(message);
+        }
+
+        /// <summary>
+        /// Debugs the write line.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public override void DebugWriteLine(string message)
+        {
+            //Boot.Console.WriteLine(message);
+        }
+
+        /// <summary>
+        /// Aborts with the specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public override void Abort(string message)
+        {
+            //Panic.Error(message);
+        }
+    }
+}

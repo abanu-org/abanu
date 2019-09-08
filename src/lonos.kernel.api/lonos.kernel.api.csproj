@@ -45,7 +45,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KnownSysCallCommand.cs" />
+    <Compile Include="SysCallTarget.cs" />
     <Compile Include="Structs\FileHandle.cs" />
     <Compile Include="Structs\MemoryRegion.cs" />
     <Compile Include="IKernelApi.cs" />

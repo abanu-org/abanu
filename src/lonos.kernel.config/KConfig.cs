@@ -51,9 +51,19 @@
         public const bool UseTaskStateSegment = true;
 
         /// <summary>
-        /// Traces every Thread switch
+        /// Trace every Thread switch
         /// </summary>
-        public const bool TraceThreadSwitch = true;
+        public const bool TraceThreadSwitch = false;
+
+        /// <summary>
+        /// Trace every SysCall
+        /// </summary>
+        public const bool TraceSysCall = false;
+
+        /// <summary>
+        /// Trace every Interrupt except Clock
+        /// </summary>
+        public const bool TraceInterrupts = false;
 
         /// <summary>
         /// If false, no User Segments will be created.

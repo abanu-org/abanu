@@ -34,6 +34,18 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.DeviceDriver\Mosa.DeviceDriver.csproj">
+      <Project>{4dbd4c50-bec5-48d9-b471-9fb0a7f69999}</Project>
+      <Name>Mosa.DeviceDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.DeviceSystem\Mosa.DeviceSystem.csproj">
+      <Project>{6509477a-7360-4937-a1b9-26fed0a75cda}</Project>
+      <Name>Mosa.DeviceSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.FileSystem\Mosa.FileSystem.csproj">
+      <Project>{d89972fd-a930-4d0c-b393-1895e78fafab}</Project>
+      <Name>Mosa.FileSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
@@ -61,7 +73,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="HAL\Hardware.cs" />
+    <Compile Include="IOPort.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="HAL\X86IOPort.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

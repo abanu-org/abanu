@@ -359,7 +359,7 @@ function _qemu {
 
 function create_efi_disk {
 	disk=${LONOS_OSDIR}/lonos.kernel.core.x86-efi.disk.img
-	size=20440 #kb
+	size=40880 #kb
 	let "block=((size * 1024) / (512 * 16 * 16)) - 1"
 	echo $block
 	dd if=/dev/zero of=$disk bs=1k count=$size

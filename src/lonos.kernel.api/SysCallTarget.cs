@@ -8,7 +8,9 @@
         RequestMessageBuffer = 23,
         WriteDebugMessage = 24,
         GetProcessIDForCommand = 25,
-
+        GetPhysicalMemory = 26,
+        TranslateVirtualToPhysicalAddress = 27,
+        WriteDebugChar = 28,
     }
 
 }

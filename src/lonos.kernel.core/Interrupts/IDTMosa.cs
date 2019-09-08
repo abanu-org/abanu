@@ -45,7 +45,7 @@ namespace Mosa.Kernel.x86
             {
                 DataSelector = (ushort)thread.DataSelector;
                 pageTableAddr = thread.Process.PageTable.GetPageTablePhysAddr();
-                if (KConfig.TraceThreadSwitch)
+                if (KConfig.TraceInterrupts)
                     KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
             }
 
@@ -72,20 +72,24 @@ namespace Mosa.Kernel.x86
 
             if (interruptInfo.CountStatistcs)
                 IDTManager.RaisedCountCustom++;
-            if (interruptInfo.Trace)
-                KernelMessage.WriteLine("Interrupt: {0}", irq);
 
-            var col = Screen.column;
-            var row = Screen.row;
-            Screen.column = 0;
-            Screen.Goto(2, 35);
-            Screen.Write("Interrupts: ");
-            Screen.Write(IDTManager.RaisedCount);
-            Screen.Goto(3, 35);
-            Screen.Write("IntNoClock: ");
-            Screen.Write(IDTManager.RaisedCountCustom);
-            Screen.row = row;
-            Screen.column = col;
+            if (KConfig.TraceInterrupts)
+            {
+                if (interruptInfo.Trace)
+                    KernelMessage.WriteLine("Interrupt: {0}", irq);
+
+                var col = Screen.column;
+                var row = Screen.row;
+                Screen.column = 0;
+                Screen.Goto(2, 35);
+                Screen.Write("Interrupts: ");
+                Screen.Write(IDTManager.RaisedCount);
+                Screen.Goto(3, 35);
+                Screen.Write("IntNoClock: ");
+                Screen.Write(IDTManager.RaisedCountCustom);
+                Screen.row = row;
+                Screen.column = col;
+            }
 
             if (irq < 0 || irq > 255)
                 Panic.Error("Invalid Interrupt");

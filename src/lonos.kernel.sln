@@ -66,6 +66,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.service.basic", "lono
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app.shell", "app.shell\app.shell.csproj", "{C905EA31-3072-4523-A6FC-C154489FD2F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.DeviceSystem", "..\external\MOSA-Project\Source\Mosa.DeviceSystem\Mosa.DeviceSystem.csproj", "{6509477A-7360-4937-A1B9-26FED0A75CDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.DeviceDriver", "..\external\MOSA-Project\Source\Mosa.DeviceDriver\Mosa.DeviceDriver.csproj", "{4DBD4C50-BEC5-48D9-B471-9FB0A7F69999}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.FileSystem", "..\external\MOSA-Project\Source\Mosa.FileSystem\Mosa.FileSystem.csproj", "{D89972FD-A930-4D0C-B393-1895E78FAFAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -164,6 +170,18 @@ Global
 		{C905EA31-3072-4523-A6FC-C154489FD2F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C905EA31-3072-4523-A6FC-C154489FD2F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C905EA31-3072-4523-A6FC-C154489FD2F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6509477A-7360-4937-A1B9-26FED0A75CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6509477A-7360-4937-A1B9-26FED0A75CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6509477A-7360-4937-A1B9-26FED0A75CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6509477A-7360-4937-A1B9-26FED0A75CDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DBD4C50-BEC5-48D9-B471-9FB0A7F69999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DBD4C50-BEC5-48D9-B471-9FB0A7F69999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DBD4C50-BEC5-48D9-B471-9FB0A7F69999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DBD4C50-BEC5-48D9-B471-9FB0A7F69999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D89972FD-A930-4D0C-B393-1895E78FAFAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D89972FD-A930-4D0C-B393-1895E78FAFAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D89972FD-A930-4D0C-B393-1895E78FAFAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D89972FD-A930-4D0C-B393-1895E78FAFAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -194,6 +212,9 @@ Global
 		{4D9C0633-1433-4A92-A148-80E8E91155FD} = {7691F114-85AC-4D01-9B2D-6BD9A091A949}
 		{481DD672-7A67-43EB-B18C-88F4EA97CDF0} = {23E1ACEA-F353-4B4B-A063-41B0F989B933}
 		{C905EA31-3072-4523-A6FC-C154489FD2F4} = {7338F830-60F6-4A6B-8854-671681C2A1D7}
+		{6509477A-7360-4937-A1B9-26FED0A75CDA} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+		{4DBD4C50-BEC5-48D9-B471-9FB0A7F69999} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+		{D89972FD-A930-4D0C-B393-1895E78FAFAB} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {466F2218-2333-4818-8AF5-BE480C2139BC}

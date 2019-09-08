@@ -38,9 +38,12 @@ namespace lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.RequestMemory, cmd_RequestMemory);
             SetCommand(SysCallTarget.RequestMessageBuffer, cmd_RequestMessageBuffer);
             SetCommand(SysCallTarget.WriteDebugMessage, cmd_WriteDebugMessage);
+            SetCommand(SysCallTarget.WriteDebugChar, cmd_WriteDebugChar);
             SetCommand(SysCallTarget.ServiceFunc1, cmd_CallServiceFunc1);
             SetCommand(SysCallTarget.GetProcessIDForCommand, cmd_GetProcessIDForCommand);
             SetCommand(SysCallTarget.ServiceReturn, cmd_ServiceReturn);
+            SetCommand(SysCallTarget.GetPhysicalMemory, cmd_GetPhysicalMemory);
+            SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, cmd_TranslateVirtualToPhysicalAddress);
         }
 
 
@@ -53,6 +56,22 @@ namespace lonos.Kernel.Core.SysCalls
             nextVirtPage += (pages * 4096);
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
             return virtAddr;
+        }
+
+        private static uint cmd_GetPhysicalMemory(SystemMessage* args)
+        {
+            var physAddr = args->Arg1;
+            var pages = KMath.DivCeil(args->Arg2, 4096);
+            var virtAddr = nextVirtPage;
+            nextVirtPage += (pages * 4096);
+            Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, physAddr, pages * 4096);
+            return virtAddr;
+        }
+
+        private static uint cmd_TranslateVirtualToPhysicalAddress(SystemMessage* args)
+        {
+            var virtAddr = args->Arg1;
+            return Scheduler.GetCurrentThread().Process.PageTable.GetPhysicalAddressFromVirtual(virtAddr);
         }
 
         private static uint cmd_RequestMessageBuffer(SystemMessage* args)
@@ -84,6 +103,13 @@ namespace lonos.Kernel.Core.SysCalls
             for (var i = 0; i < length; i++)
                 KernelMessage.Write(data[i]);
 
+            return 0;
+        }
+
+        private static uint cmd_WriteDebugChar(SystemMessage* args)
+        {
+            var c = (char)args->Arg1;
+            KernelMessage.Write(c);
             return 0;
         }
 
@@ -166,7 +192,8 @@ namespace lonos.Kernel.Core.SysCalls
 
             var commandNum = GetCommandNum(args.Target);
 
-            KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
+            if (KConfig.TraceSysCall)
+                KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
 

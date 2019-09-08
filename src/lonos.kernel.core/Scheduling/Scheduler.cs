@@ -383,8 +383,6 @@ namespace lonos.Kernel.Core.Scheduling
 
             if (thread.Debug)
             {
-                KernelMessage.WriteLine("Debug TH");
-
                 Native.Nop();
             }
 
