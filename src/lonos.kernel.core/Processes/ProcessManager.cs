@@ -1,4 +1,5 @@
 ﻿using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.Collections;
 using lonos.Kernel.Core.Elf;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
@@ -23,6 +24,8 @@ namespace lonos.Kernel.Core.Processes
 
         public static void Setup(ThreadStart followupTask)
         {
+            ProcessList = new KList<Process>();
+
             Idle = CreateEmptyProcess(new ProcessCreateOptions());
             Idle.Path = "/system/idle";
 
@@ -40,9 +43,22 @@ namespace lonos.Kernel.Core.Processes
         {
             var proc = new Process();
             proc.ProcessID = (uint)Interlocked.Increment(ref NextCreateProcessID);
+            lock (ProcessList)
+                ProcessList.Add(proc);
             proc.User = options.User;
             proc.PageTable = PageTable.KernelTable;
             return proc;
+        }
+
+        public static KList<Process> ProcessList;
+
+        public static Process GetProcess(uint processID)
+        {
+            lock (ProcessList)
+                for (var i = 0; i < ProcessList.Count; i++)
+                    if (ProcessList[i].ProcessID == processID)
+                        return ProcessList[i];
+            return null;
         }
 
         public static unsafe Process StartProcess(string path, uint argumentBufferSize = 0)

@@ -19,7 +19,11 @@ namespace lonos.Kernel
         {
             ApplicationRuntime.Init();
 
-            var result = MessageManager.Send(SysCallTarget.ServiceFunc1, 55);
+            //var result = MessageManager.Send(SysCallTarget.ServiceFunc1, 55);
+
+            var writeDebugMessageProcID = SysCalls.GetProcessIDForCommand(SysCallTarget.WriteDebugMessage);
+            var buf = SysCalls.RequestMessageBuffer(4096, writeDebugMessageProcID);
+            SysCalls.WriteDebugMessage(buf, "Hello Kernel!");
 
             while (true) { }
         }

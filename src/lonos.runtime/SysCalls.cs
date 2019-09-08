@@ -8,11 +8,21 @@ namespace lonos.Runtime
     /// <summary>
     /// Pure calls. This is no Framwork. No helpers!
     /// </summary>
-    public static class SysCalls
+    public unsafe static class SysCalls
     {
         public static uint RequestMemory(uint size)
         {
             return MessageManager.Send(SysCallTarget.RequestMemory, size);
+        }
+
+        public static uint GetProcessIDForCommand(SysCallTarget target)
+        {
+            return MessageManager.Send(SysCallTarget.GetProcessIDForCommand);
+        }
+
+        public static MemoryRegion RequestMessageBuffer(uint size, uint targetProcessID)
+        {
+            return new MemoryRegion(MessageManager.Send(SysCallTarget.RequestMessageBuffer, size, targetProcessID), size);
         }
 
         // TODO: Datetime
@@ -20,6 +30,15 @@ namespace lonos.Runtime
         {
             throw new NotImplementedException();
         }
+
+        public static void WriteDebugMessage(MemoryRegion buf, string message)
+        {
+            var data = (char*)buf.Start;
+            for (var i = 0; i < message.Length; i++)
+                data[i] = message[i];
+            MessageManager.Send(SysCallTarget.WriteDebugMessage, buf.Start, (uint)message.Length);
+        }
+
     }
 
 }

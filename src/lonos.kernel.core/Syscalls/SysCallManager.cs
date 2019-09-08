@@ -2,6 +2,7 @@
 using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.Processes;
 using lonos.Kernel.Core.Scheduling;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,10 @@ namespace lonos.Kernel.Core.SysCalls
         private static void SetCommands()
         {
             SetCommand(SysCallTarget.RequestMemory, cmd_RequestMemory);
+            SetCommand(SysCallTarget.RequestMessageBuffer, cmd_RequestMessageBuffer);
+            SetCommand(SysCallTarget.WriteDebugMessage, cmd_WriteDebugMessage);
             SetCommand(SysCallTarget.ServiceFunc1, cmd_CallServiceFunc1);
+            SetCommand(SysCallTarget.GetProcessIDForCommand, cmd_GetProcessIDForCommand);
             SetCommand(SysCallTarget.ServiceReturn, cmd_ServiceReturn);
         }
 
@@ -49,6 +53,38 @@ namespace lonos.Kernel.Core.SysCalls
             nextVirtPage += (pages * 4096);
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
             return virtAddr;
+        }
+
+        private static uint cmd_RequestMessageBuffer(SystemMessage* args)
+        {
+            var size = args->Arg1;
+            var targetProcessID = args->Arg2;
+            var pages = KMath.DivCeil(size, 4096);
+            var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
+            var virtAddr = nextVirtPage;
+            nextVirtPage += (pages * 4096);
+            Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
+            var targetProc = ProcessManager.System;
+            if (targetProcessID > 0)
+                targetProc = ProcessManager.GetProcess(targetProcessID);
+            targetProc.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
+
+            // TODO: implement TargetProcess.RegisterMessageBuffer, because of individual VirtAddr
+
+            return virtAddr;
+        }
+
+        private static uint cmd_WriteDebugMessage(SystemMessage* args)
+        {
+            // TODO: Security
+            var start = args->Arg1;
+            var length = args->Arg2;
+            var data = (char*)start;
+
+            for (var i = 0; i < length; i++)
+                KernelMessage.Write(data[i]);
+
+            return 0;
         }
 
         private static uint cmd_CallServiceFunc1(SystemMessage* args)
@@ -72,6 +108,14 @@ namespace lonos.Kernel.Core.SysCalls
             return 0;
         }
 
+        private static uint cmd_GetProcessIDForCommand(SystemMessage* args)
+        {
+            var proc = Commands[GetCommandNum(args->Target)].Process;
+            if (proc == null)
+                proc = ProcessManager.System;
+            return proc.ProcessID;
+        }
+
         private static uint cmd_ServiceReturn(SystemMessage* args)
         {
             var servThread = Scheduler.GetCurrentThread();
@@ -90,13 +134,21 @@ namespace lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        public static void SetCommand(SysCallTarget command, DSysCallInfoHandler handler)
+        public static void SetCommand(SysCallTarget command, DSysCallInfoHandler handler, Process proc = null)
         {
             Commands[(uint)command] = new SysCallInfo
             {
                 CommandID = command,
                 Handler = handler,
+                Process = proc
             };
+        }
+
+        const uint CommandMask = BitsMask.Bits10;
+
+        private static uint GetCommandNum(SysCallTarget target)
+        {
+            return (uint)target & CommandMask;
         }
 
         public static void InterruptHandler(IDTStack* stack)
@@ -112,8 +164,7 @@ namespace lonos.Kernel.Core.SysCalls
                 Arg6 = stack->EBP
             };
 
-            const uint commandMask = BitsMask.Bits10;
-            var commandNum = (uint)args.Target & commandMask;
+            var commandNum = GetCommandNum(args.Target);
 
             KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
 
@@ -133,6 +184,7 @@ namespace lonos.Kernel.Core.SysCalls
         //public uint Arguments;
         //public string Name;
         public DSysCallInfoHandler Handler;
+        public Process Process;
     }
 
     //[StructLayout(LayoutKind.Sequential, Size = 4 * 5)]
