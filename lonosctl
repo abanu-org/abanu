@@ -72,7 +72,8 @@ function clean {
 function reset {
 	case $1 in
 		all)
-			reset git
+			#reset git
+			echo Skipping reset git. Call reset git manually.
 			;;
 
 		git)
