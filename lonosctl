@@ -69,6 +69,28 @@ function clean {
 	esac
 }
 
+function reset {
+	case $1 in
+		all)
+			reset git
+			;;
+
+		git)
+			cd external/MOSA-Project
+			git clean -xfd
+			git reset --hard
+			cd ../../
+			git clean -xfd
+			git reset --hard
+			git submodule update --recursive
+			;;
+
+		*)
+			echo $"Usage: lonosctl clean {all|git}"
+			exit 1
+	esac
+}
+
 function patch {
 	case $1 in
 		apply)
@@ -366,6 +388,10 @@ case $1 in
 		clean ${@:2}
 		;;
 
+	reset)
+		reset ${@:2}
+		;;
+
 	build)
 		build ${@:2}
 		;;
@@ -392,7 +418,7 @@ case $1 in
 		;;
 
 	*)
-		echo $"Usage: lonosctl {configure|build|run|debug|clean|logs}"
+		echo $"Usage: lonosctl {configure|build|run|debug|clean|reset|logs}"
 		exit 1
 esac
 
