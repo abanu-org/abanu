@@ -128,7 +128,7 @@ namespace lonos.Build
             loaderFile = GetEnv("${LONOS_OSDIR}/lonos.os.loader.x86.bin");
 
             var kernelFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.core.x86.bin");
-            kernelFile = GetEnv("${LONOS_OSDIR}/os/lonos.os.core.x86.bin");
+            kernelFile = GetEnv("${LONOS_OSDIR}/lonos.os.core.x86.bin");
 
             var kernelBytes = File.ReadAllBytes(kernelFile);
 
