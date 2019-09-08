@@ -125,10 +125,10 @@ namespace lonos.Build
         public static void LinkImages()
         {
             var loaderFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.loader.x86.bin");
-            loaderFile = "/home/sebastian/projects/lonos/os/lonos.os.loader.x86.bin";
+            loaderFile = GetEnv("${LONOS_OSDIR}/lonos.os.loader.x86.bin");
 
             var kernelFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.core.x86.bin");
-            kernelFile = "/home/sebastian/projects/lonos/os/lonos.os.core.x86.bin";
+            kernelFile = GetEnv("${LONOS_OSDIR}/os/lonos.os.core.x86.bin");
 
             var kernelBytes = File.ReadAllBytes(kernelFile);
 
