@@ -31,7 +31,7 @@ namespace lonos.Build
 
         private static void Main(string[] args)
         {
-            Mosa.Compiler.MosaTypeSystem.SignatureName.GetSignatureOverride = GetSignature;
+//            Mosa.Compiler.MosaTypeSystem.SignatureName.GetSignatureOverride = GetSignature;
 
             Console.WriteLine("Starting Build...");
 
