@@ -20,7 +20,10 @@ namespace lonos.Kernel.Core.Interrupts
         CoProcessorError = 16,
         SIMDFloatinPointException = 19,
         ClockTimer = 32,
-        Keyboard = 33
+        Keyboard = 33,
+
+        // Custom Interrupts
+        TerminateCurrentThread = 254
     }
 
 }

@@ -217,6 +217,11 @@ namespace lonos.Kernel.Core.Interrupts
             }
         }
 
+        public static void TermindateCurrentThread(IDTStack* stack)
+        {
+            Scheduler.TerminateCurrentThread();
+        }
+
         private static void key1()
         {
             Screen.Clear();

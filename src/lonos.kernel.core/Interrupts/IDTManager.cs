@@ -91,6 +91,7 @@ namespace lonos.Kernel.Core.Interrupts
             SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptsHandlers.SIMDFloatinPointException);
             SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
             SetInterruptHandler(KnownInterrupt.Keyboard, InterruptsHandlers.Keyboard);
+            SetInterruptHandler(KnownInterrupt.TerminateCurrentThread, InterruptsHandlers.TermindateCurrentThread);
 
             KernelMessage.Write("Enabling interrupts...");
 

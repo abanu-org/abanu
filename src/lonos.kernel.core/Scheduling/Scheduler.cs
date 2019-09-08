@@ -12,13 +12,13 @@ using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.Diagnostics;
 using lonos.Kernel.Core.Processes;
 using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.SysCalls;
 
 namespace lonos.Kernel.Core.Scheduling
 {
     public static class Scheduler
     {
         public const int ThreadCapacity = 256;
-        public const int ClockIRQ = 0x20;
 
         public static bool Enabled;
         private static IntPtr SignalThreadTerminationMethodAddress;
@@ -43,7 +43,7 @@ namespace lonos.Kernel.Core.Scheduling
                 Threads[i] = new Thread() { ThreadID = i };
             }
 
-            SignalThreadTerminationMethodAddress = GetAddress(SignalThreadTerminationMethod);
+            SignalThreadTerminationMethodAddress = GetAddress(SignalKernelThreadTerminationMethod);
 
             CreateThread(ProcessManager.Idle, new ThreadStartOptions(IdleThread) { DebugName = "Idle" }).Start();
             CreateThread(ProcessManager.System, new ThreadStartOptions(followupTask) { DebugName = "KernelMain" }).Start();
@@ -60,10 +60,10 @@ namespace lonos.Kernel.Core.Scheduling
             Enabled = true;
 
             KernelMessage.WriteLine("Enable Scheduler");
-            //Native.Cli();
+            IDTManager.SetPrivilegeLevel((uint)KnownInterrupt.TerminateCurrentThread, 0x03);
             GDT.tss->esp0 = Threads[0].kernelStackBottom;
             GDT.LoadTaskRegister();
-            Native.Int(ClockIRQ);
+            Native.Int((int)KnownInterrupt.ClockTimer);
 
             // Normally, you should never get here
             Panic.Error("Main-Thread still alive");
@@ -106,14 +106,13 @@ namespace lonos.Kernel.Core.Scheduling
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void SignalThreadTerminationMethod()
+        public static void SignalKernelThreadTerminationMethod()
         {
             // No local variables are allowd, because the stack could be totally empty.
             // Just make a call
-            TerminateCurrentThread();
+            Native.Int((int)KnownInterrupt.TerminateCurrentThread);
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void TerminateCurrentThread()
         {
             KernelMessage.WriteLine("Terminating Thread");
@@ -133,9 +132,8 @@ namespace lonos.Kernel.Core.Scheduling
             if (thread.Status == ThreadStatus.Running)
                 thread.Status = ThreadStatus.Terminated;
 
-            // We are scheduled now for termination
-            while (true)
-                Native.Nop();
+            var nextThreadID = GetNextThread(thread.ThreadID);
+            SwitchToThread(nextThreadID);
         }
 
         private static uint GetNextThread(uint currentThreadID)
@@ -367,7 +365,7 @@ namespace lonos.Kernel.Core.Scheduling
 
             SetThreadID(threadID);
 
-            PIC.SendEndOfInterrupt(ClockIRQ);
+            PIC.SendEndOfInterrupt((int)KnownInterrupt.ClockTimer);
 
             thread.Status = ThreadStatus.Running;
 

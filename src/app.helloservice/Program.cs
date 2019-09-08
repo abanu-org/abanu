@@ -24,9 +24,9 @@ namespace lonos.Kernel
             while (true) { }
         }
 
-        public unsafe static void MessageReceived()
+        public unsafe static void MessageReceived(SystemMessage* msg)
         {
-            //MessageManager.Send(new SystemMessage { Command = 21, Arg2 = args->Arg1 + 10 });
+            MessageManager.Send(new SystemMessage { Command = 21, Arg2 = msg->Arg1 + 10 });
         }
 
     }

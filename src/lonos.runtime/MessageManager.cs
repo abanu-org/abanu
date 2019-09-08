@@ -10,21 +10,21 @@ using System.Threading.Tasks;
 namespace lonos.Runtime
 {
 
-    public unsafe delegate void OnMessageReceivedDelegate();
+    public unsafe delegate void OnMessageReceivedDelegate(SystemMessage* msg);
 
     public static class MessageManager
     {
 
         public static OnMessageReceivedDelegate OnMessageReceived;
 
-        public unsafe static void Dispatch(SystemMessage args)
+        public unsafe static void Dispatch(SystemMessage msg)
         {
             if (OnMessageReceived != null)
-                OnMessageReceived();
+                OnMessageReceived(&msg);
         }
 
         [DllImport("x86/app.HelloKernel.o", EntryPoint = "SysCallInt")]
-        private extern static uint SysCallInt(SystemMessage args);
+        private extern static uint SysCallInt(SystemMessage msg);
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public unsafe static uint Send(SystemMessage msg)
