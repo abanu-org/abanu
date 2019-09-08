@@ -46,7 +46,7 @@ namespace lonos.Build
                 PlatformType = PlatformType.x86,
                 LinkerFormatType = LinkerFormatType.Elf32,
                 EmulatorMemoryInMB = 128,
-                DestinationDirectory = Program.GetEnv("LONOS_OSDIR"),
+                DestinationDirectory = BuildUtility.GetEnv("LONOS_OSDIR"),
                 FileSystem = FileSystem.FAT16,
 
                 //UseMultiThreadingCompiler = false,

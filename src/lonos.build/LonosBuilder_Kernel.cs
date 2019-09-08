@@ -28,7 +28,7 @@ namespace lonos.Build
 
         public override void Configure()
         {
-            InputAssembly = Program.GetEnv("LONOS_EXE");
+            InputAssembly = BuildUtility.GetEnv("LONOS_EXE");
 
             Options = new LauncherOptions()
             {
@@ -48,7 +48,7 @@ namespace lonos.Build
                 PlatformType = PlatformType.x86,
                 LinkerFormatType = LinkerFormatType.Elf32,
                 EmulatorMemoryInMB = 128,
-                DestinationDirectory = Program.GetEnv("LONOS_OSDIR"),
+                DestinationDirectory = BuildUtility.GetEnv("LONOS_OSDIR"),
                 FileSystem = FileSystem.FAT16,
 
                 //UseMultiThreadingCompiler = false,
@@ -113,7 +113,7 @@ namespace lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Program.GetEnv("LONOS_NATIVE_FILES"));
+                            var data = File.ReadAllBytes(BuildUtility.GetEnv("LONOS_NATIVE_FILES"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
@@ -125,7 +125,7 @@ namespace lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-Terminus14.psf"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-Terminus14.psf"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
@@ -137,7 +137,7 @@ namespace lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-TerminusBold14.psf"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-TerminusBold14.psf"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
@@ -149,7 +149,7 @@ namespace lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"os","app.hellokernel.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","app.hellokernel.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
@@ -161,7 +161,7 @@ namespace lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(Program.GetEnv("LONOS_PROJDIR"),"os","app.helloservice.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","app.helloservice.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }

@@ -1,60 +1,15 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
 using System;
-using System.Text.RegularExpressions;
 using System.IO;
 using Mosa.Compiler.MosaTypeSystem;
 using System.Text;
 
 namespace lonos.Build
 {
+
     internal static class Program
     {
-
-        public static string GetEnv(string name)
-        {
-            var value = Environment.GetEnvironmentVariable(name);
-            if (string.IsNullOrEmpty(value))
-            {
-                switch (name)
-                {
-                    case "LONOS_PROJDIR":
-                        value = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(typeof(Program).Assembly.Location).AbsolutePath));
-                        break;
-                    case "LONOS_OSDIR":
-                        value = "${LONOS_PROJDIR}/os";
-                        break;
-                    case "LONOS_NATIVE_FILES":
-                        value = "${LONOS_PROJDIR}/bin/x86/lonos.native.o";
-                        break;
-                    case "LONOS_BOOTLOADER_EXE":
-                        value = "${LONOS_PROJDIR}/bin/lonos.os.loader.x86.exe";
-                        break;
-                    case "LONOS_EXE":
-                        value = "${LONOS_PROJDIR}/bin/lonos.os.core.x86.exe";
-                        break;
-                    case "LONOS_LOGDIR":
-                        value = "${LONOS_PROJDIR}/logs";
-                        break;
-                    case "LONOS_ISODIR":
-                        value = "${LONOS_PROJDIR}/iso";
-                        break;
-                    case "LONOS_TOOLSDIR":
-                        value = "${LONOS_PROJDIR}/tools";
-                        break;
-                }
-            }
-
-            var regex = new Regex(@"\$\{(\w+)\}", RegexOptions.RightToLeft);
-
-            if (string.IsNullOrEmpty(value))
-                value = name;
-
-            if (!string.IsNullOrEmpty(value))
-                foreach (Match m in regex.Matches(value))
-                    value = value.Replace(m.Value, GetEnv(m.Groups[1].Value));
-            return value;
-        }
 
         public static string GetSignature(string name, MosaMethodSignature sig, bool shortSig, bool includeReturnType = true)
         {
@@ -87,28 +42,28 @@ namespace lonos.Build
 
             if (args[0] == "--image=loader")
             {
-                file = GetEnv("LONOS_BOOTLOADER_EXE");
+                file = BuildUtility.GetEnv("LONOS_BOOTLOADER_EXE");
 
                 var builderBoot = new LonosBuilder_Loader(file);
                 builderBoot.Build();
             }
             else if (args[0] == "--image=kernel")
             {
-                file = GetEnv("LONOS_EXE");
+                file = BuildUtility.GetEnv("LONOS_EXE");
 
                 var builder = new LonosBuilder_Kernel(file);
                 builder.Build();
             }
             else if (args[0] == "--image=app")
             {
-                file = GetEnv("${LONOS_PROJDIR}/bin/app.hellokernel.exe");
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.hellokernel.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
             else if (args[0] == "--image=app2")
             {
-                file = GetEnv("${LONOS_PROJDIR}/bin/app.helloservice.exe");
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.helloservice.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
@@ -124,11 +79,11 @@ namespace lonos.Build
 
         public static void LinkImages()
         {
-            var loaderFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.loader.x86.bin");
-            loaderFile = GetEnv("${LONOS_OSDIR}/lonos.os.loader.x86.bin");
+            var loaderFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "lonos.os.loader.x86.bin");
+            loaderFile = BuildUtility.GetEnv("${LONOS_OSDIR}/lonos.os.loader.x86.bin");
 
-            var kernelFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.core.x86.bin");
-            kernelFile = GetEnv("${LONOS_OSDIR}/lonos.os.core.x86.bin");
+            var kernelFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "lonos.os.core.x86.bin");
+            kernelFile = BuildUtility.GetEnv("${LONOS_OSDIR}/lonos.os.core.x86.bin");
 
             var kernelBytes = File.ReadAllBytes(kernelFile);
 
@@ -173,7 +128,7 @@ namespace lonos.Build
             writer.Write(memSize);
 
             var bytes = ms.ToArray();
-            var outFile = Path.Combine(Program.GetEnv("LONOS_OSDIR"), "lonos.os.image.x86.bin");
+            var outFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "lonos.os.image.x86.bin");
             File.WriteAllBytes(outFile, bytes);
 
         }
