@@ -54,6 +54,7 @@
     <Compile Include="BitMask.cs" />
     <Compile Include="BitMask64.cs" />
     <Compile Include="BitsMask.cs" />
+    <Compile Include="FNVHash.cs" />
     <Compile Include="NullTerminatedString.cs" />
     <Compile Include="SSize.cs" />
     <Compile Include="USize.cs" />
