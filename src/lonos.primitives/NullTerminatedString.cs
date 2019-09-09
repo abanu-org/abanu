@@ -85,6 +85,32 @@ namespace lonos
             return !value1.Equals(value2);
         }
 
+        public static unsafe bool operator ==(NullTerminatedString value1, NullTerminatedString value2)
+        {
+            return value1.Equals(value2);
+        }
+
+        public static unsafe bool operator !=(NullTerminatedString value1, NullTerminatedString value2)
+        {
+            return !value1.Equals(value2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (obj is NullTerminatedString)
+                return (NullTerminatedString)obj == this;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return FNVHash.ComputeInt32(Bytes, GetLength());
+        }
+
     }
 
 }
