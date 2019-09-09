@@ -15,8 +15,8 @@ namespace lonos.Kernel.Core
         public FrameBufferTextScreenDevice(FrameBuffer dev)
         {
             this.dev = dev;
-            Columns = 640 / 8;
-            Rows = 480 / 14;
+            Columns = dev.width / CharWidth;
+            Rows = dev.height / CharHeight;
         }
 
         public unsafe SSize Write(byte* buf, USize count)
@@ -58,14 +58,30 @@ namespace lonos.Kernel.Core
 
         private void NextLine()
         {
-            _row++;
             _col = 0;
+            if (_row >= Rows - 1)
+                Scroll();
+            else
+                _row++;
         }
+
+        private void Scroll()
+        {
+            // TODO: Scroll
+            _row = 0;
+            dev.FillRectangle(0, 0, 0, dev.width, dev.height);
+        }
+
+        private uint CharHeight = 14;
+        private uint CharWidth = 8;
 
         // important Note: Not not cause Console Output while drawing
         // otherwise, a stack overflow will occur!
         internal unsafe void DrawChar(FrameBuffer fb, uint screenX, uint screenY, uint charIdx)
         {
+            if (screenX >= Columns || screenY >= Rows)
+                return;
+
             var fontSec = KernelElf.Main.GetSectionHeader("consolefont.regular");
             var fontSecAddr = KernelElf.Main.GetSectionPhysAddr(fontSec);
 

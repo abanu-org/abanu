@@ -9,8 +9,8 @@ namespace lonos.Kernel.Core.Devices
     {
 
         private Addr addr;
-        private uint width;
-        private uint height;
+        public uint width;
+        public uint height;
         private uint pitch;
         private uint depth;
 
@@ -59,6 +59,9 @@ namespace lonos.Kernel.Core.Devices
 
         public unsafe void SetPixel(uint color, uint x, uint y)
         {
+            if (x >= width || y >= height)
+                return;
+
             //memory.Write8(GetOffset(x, y), (byte)color);
             ((uint*)addr)[GetOffset(x, y)] = (uint)color;
 
