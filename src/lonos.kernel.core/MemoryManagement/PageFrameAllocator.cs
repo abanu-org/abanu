@@ -1,9 +1,9 @@
 ﻿using System;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Devices;
-using Mosa.Runtime;
 using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.Devices;
+using lonos.Kernel.Core.Diagnostics;
 using lonos.Kernel.Core.PageManagement;
+using Mosa.Runtime;
 
 //using Mosa.Kernel.x86;
 

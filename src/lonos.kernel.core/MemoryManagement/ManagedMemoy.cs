@@ -1,6 +1,6 @@
 ﻿using System;
-using Mosa.Runtime;
 using Mosa.Kernel.x86;
+using Mosa.Runtime;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
 

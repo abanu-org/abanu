@@ -1,10 +1,10 @@
 ﻿using System;
-using Mosa.Runtime;
-using Mosa.Kernel.x86;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.Diagnostics;
 using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
+using Mosa.Kernel.x86;
+using Mosa.Runtime;
 
 namespace lonos.Kernel.Core.Devices
 {
