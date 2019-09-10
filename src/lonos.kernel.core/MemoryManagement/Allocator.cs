@@ -1,5 +1,9 @@
 ﻿using System;
 using lonos.Kernel.Core.Diagnostics;
+//using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
+using System.Runtime.InteropServices;
+
+#pragma warning disable SA1649 // File name should match first type name
 
 #if BITS_64
 using malloc_meta = System.UInt64;
@@ -9,8 +13,6 @@ using malloc_meta = System.UInt32;
 using size_t = System.UInt32;
 #endif
 
-//using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
-using System.Runtime.InteropServices;
 
 // Do not modify this Allocator very much
 // Future: Assign mmap-metod dynamicly.

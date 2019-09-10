@@ -75,23 +75,23 @@ namespace lonos.Kernel.Core.Interrupts
                 handlers[i] = info;
             }
 
-            SetInterruptHandler(KnownInterrupt.DivideError, InterruptsHandlers.DivideError);
-            SetInterruptHandler(KnownInterrupt.ArithmeticOverflowException, InterruptsHandlers.ArithmeticOverflowException);
-            SetInterruptHandler(KnownInterrupt.BoundCheckError, InterruptsHandlers.BoundCheckError);
-            SetInterruptHandler(KnownInterrupt.InvalidOpcode, InterruptsHandlers.InvalidOpcode);
-            SetInterruptHandler(KnownInterrupt.CoProcessorNotAvailable, InterruptsHandlers.CoProcessorNotAvailable);
-            SetInterruptHandler(KnownInterrupt.DoubleFault, InterruptsHandlers.DoubleFault);
-            SetInterruptHandler(KnownInterrupt.CoProcessorSegmentOverrun, InterruptsHandlers.CoProcessorSegmentOverrun);
-            SetInterruptHandler(KnownInterrupt.InvalidTSS, InterruptsHandlers.InvalidTSS);
-            SetInterruptHandler(KnownInterrupt.SegmentNotPresent, InterruptsHandlers.SegmentNotPresent);
-            SetInterruptHandler(KnownInterrupt.StackException, InterruptsHandlers.StackException);
-            SetInterruptHandler(KnownInterrupt.GeneralProtectionException, InterruptsHandlers.GeneralProtectionException);
-            SetInterruptHandler(KnownInterrupt.PageFault, InterruptsHandlers.PageFault);
-            SetInterruptHandler(KnownInterrupt.CoProcessorError, InterruptsHandlers.CoProcessorError);
-            SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptsHandlers.SIMDFloatinPointException);
-            SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptsHandlers.ClockTimer);
-            SetInterruptHandler(KnownInterrupt.Keyboard, InterruptsHandlers.Keyboard);
-            SetInterruptHandler(KnownInterrupt.TerminateCurrentThread, InterruptsHandlers.TermindateCurrentThread);
+            SetInterruptHandler(KnownInterrupt.DivideError, InterruptHandlers.DivideError);
+            SetInterruptHandler(KnownInterrupt.ArithmeticOverflowException, InterruptHandlers.ArithmeticOverflowException);
+            SetInterruptHandler(KnownInterrupt.BoundCheckError, InterruptHandlers.BoundCheckError);
+            SetInterruptHandler(KnownInterrupt.InvalidOpcode, InterruptHandlers.InvalidOpcode);
+            SetInterruptHandler(KnownInterrupt.CoProcessorNotAvailable, InterruptHandlers.CoProcessorNotAvailable);
+            SetInterruptHandler(KnownInterrupt.DoubleFault, InterruptHandlers.DoubleFault);
+            SetInterruptHandler(KnownInterrupt.CoProcessorSegmentOverrun, InterruptHandlers.CoProcessorSegmentOverrun);
+            SetInterruptHandler(KnownInterrupt.InvalidTSS, InterruptHandlers.InvalidTSS);
+            SetInterruptHandler(KnownInterrupt.SegmentNotPresent, InterruptHandlers.SegmentNotPresent);
+            SetInterruptHandler(KnownInterrupt.StackException, InterruptHandlers.StackException);
+            SetInterruptHandler(KnownInterrupt.GeneralProtectionException, InterruptHandlers.GeneralProtectionException);
+            SetInterruptHandler(KnownInterrupt.PageFault, InterruptHandlers.PageFault);
+            SetInterruptHandler(KnownInterrupt.CoProcessorError, InterruptHandlers.CoProcessorError);
+            SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptHandlers.SIMDFloatinPointException);
+            SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptHandlers.ClockTimer);
+            SetInterruptHandler(KnownInterrupt.Keyboard, InterruptHandlers.Keyboard);
+            SetInterruptHandler(KnownInterrupt.TerminateCurrentThread, InterruptHandlers.TermindateCurrentThread);
 
             KernelMessage.Write("Enabling interrupts...");
 

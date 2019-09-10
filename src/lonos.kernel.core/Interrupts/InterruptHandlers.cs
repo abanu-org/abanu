@@ -10,7 +10,7 @@ using Mosa.Runtime.x86;
 namespace lonos.Kernel.Core.Interrupts
 {
 
-    public static unsafe class InterruptsHandlers
+    public static unsafe class InterruptHandlers
     {
 
         private static void Error(IDTStack* stack, string message)
