@@ -295,7 +295,6 @@ namespace lonos.Kernel.Core
             KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
             //Memory.FreeObject(s);
 
-
         }
 
         public static void AppMain()

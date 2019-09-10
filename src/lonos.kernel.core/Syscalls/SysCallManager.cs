@@ -46,7 +46,6 @@ namespace lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, cmd_TranslateVirtualToPhysicalAddress);
         }
 
-
         private static uint nextVirtPage;
 
         private static uint cmd_RequestMemory(SystemMessage* args)

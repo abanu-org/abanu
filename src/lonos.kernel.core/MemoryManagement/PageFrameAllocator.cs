@@ -7,10 +7,8 @@ using lonos.Kernel.Core.PageManagement;
 
 //using Mosa.Kernel.x86;
 
-
 namespace lonos.Kernel.Core.MemoryManagement
 {
-
 
     public static unsafe class PageFrameManager
     {

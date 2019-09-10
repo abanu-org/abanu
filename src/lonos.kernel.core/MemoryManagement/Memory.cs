@@ -24,7 +24,6 @@ namespace lonos.Kernel.Core.MemoryManagement
             KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameManager.PagesAvailable * 4096) / 1024 / 1024);
         }
 
-
         private static uint RequiredPagesForSize(USize size)
         {
             return KMath.DivCeil(size, 4096);

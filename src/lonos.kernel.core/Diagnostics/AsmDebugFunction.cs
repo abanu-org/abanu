@@ -13,6 +13,5 @@ namespace lonos.Kernel.Core.Diagnostics
         [DllImport("x86/lonos.DebugFunction1.o", EntryPoint = "DebugFunction1")]
         public static extern void DebugFunction1();
 
-
     }
 }
