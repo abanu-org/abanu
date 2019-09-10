@@ -9,7 +9,7 @@
     "settings": {
         "documentationRules": {
             "companyName": "Lonos Project",
-            "copyrightText": "Copyright (c) {companyName}. All rights reserved.\nLicensed under the {licenseName} license. See {licenseFile} file in the project root for full license information.",
+            "copyrightText": "This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io\nLicensed under the {licenseName} license. See {licenseFile} file in the project root for full license information.",
             "xmlHeader": false,
             "variables": {
                 "licenseName": "GNU 2.0",
