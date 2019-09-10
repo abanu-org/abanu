@@ -130,7 +130,7 @@ namespace Lonos.Kernel.Core.Processes
 
         private static unsafe Addr GetEntryPointFromElf(ElfHelper elf)
         {
-            var symName = "lonos.Kernel.Program::Main()"; // TODO
+            var symName = "Lonos.Kernel.Program::Main()"; // TODO
             var sym = elf.GetSymbol(symName);
             if (sym == (ElfSymbol*)0)
                 return Addr.Zero;

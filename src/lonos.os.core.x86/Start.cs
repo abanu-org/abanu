@@ -1,6 +1,6 @@
 ﻿using Lonos.Kernel.Core;
 
-namespace Lonos.os.Core.x86
+namespace Lonos.OS.Core.x86
 {
     public static class Start
     {
