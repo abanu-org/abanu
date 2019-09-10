@@ -51,7 +51,7 @@ namespace lonos.Kernel.Core.Elf
                 PhyOffset = elfStart,
                 SectionHeaderArray = (ElfSectionHeader*)(elfStart + elfHeader->ShOff),
                 SectionHeaderCount = elfHeader->ShNum,
-                StringTableSectionHeaderIndex = elfHeader->ShStrNdx
+                StringTableSectionHeaderIndex = elfHeader->ShStrNdx,
             };
             helper.Init();
             return helper;

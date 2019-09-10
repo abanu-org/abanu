@@ -65,7 +65,7 @@ namespace lonos.Kernel.Core.Interrupts
                     Interrupt = i,
                     CountStatistcs = true,
                     Trace = true,
-                    Handler = UndefinedHandler
+                    Handler = UndefinedHandler,
                 };
                 if (i == (int)KnownInterrupt.ClockTimer)
                 {

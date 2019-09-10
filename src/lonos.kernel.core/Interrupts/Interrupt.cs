@@ -24,7 +24,7 @@ namespace lonos.Kernel.Core.Interrupts
         Keyboard = 33,
 
         // Custom Interrupts
-        TerminateCurrentThread = 254
+        TerminateCurrentThread = 254,
     }
 
 }

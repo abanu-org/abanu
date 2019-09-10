@@ -166,7 +166,7 @@ namespace lonos.Kernel.Core.SysCalls
             {
                 CommandID = command,
                 Handler = handler,
-                Process = proc
+                Process = proc,
             };
         }
 
@@ -187,7 +187,7 @@ namespace lonos.Kernel.Core.SysCalls
                 Arg3 = stack->EDX,
                 Arg4 = stack->ESI,
                 Arg5 = stack->EDI,
-                Arg6 = stack->EBP
+                Arg6 = stack->EBP,
             };
 
             var commandNum = GetCommandNum(args.Target);
