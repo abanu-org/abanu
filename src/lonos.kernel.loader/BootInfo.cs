@@ -36,14 +36,16 @@ namespace Lonos.Kernel.Loader
             KernelMessage.WriteLine("FrameBuffer present: {0}", Multiboot.FBPresent ? "yes" : "no");
             BootInfo->FBPresent = Multiboot.FBPresent;
 
-            BootInfo->FbInfo = new BootInfoFramebufferInfo();
-            BootInfo->FbInfo.FbAddr = Multiboot.multiBootInfo->FbAddr;
-            BootInfo->FbInfo.FbPitch = Multiboot.multiBootInfo->FbPitch;
-            BootInfo->FbInfo.FbWidth = Multiboot.multiBootInfo->FbWidth;
-            BootInfo->FbInfo.FbHeight = Multiboot.multiBootInfo->FbHeight;
-            BootInfo->FbInfo.FbBpp = Multiboot.multiBootInfo->FbBpp;
-            BootInfo->FbInfo.FbType = Multiboot.multiBootInfo->FbType;
-            BootInfo->FbInfo.ColorInfo = Multiboot.multiBootInfo->ColorInfo;
+            BootInfo->FbInfo = new BootInfoFramebufferInfo
+            {
+                FbAddr = Multiboot.multiBootInfo->FbAddr,
+                FbPitch = Multiboot.multiBootInfo->FbPitch,
+                FbWidth = Multiboot.multiBootInfo->FbWidth,
+                FbHeight = Multiboot.multiBootInfo->FbHeight,
+                FbBpp = Multiboot.multiBootInfo->FbBpp,
+                FbType = Multiboot.multiBootInfo->FbType,
+                ColorInfo = Multiboot.multiBootInfo->ColorInfo
+            };
         }
 
         static uint MemoryMapReserve = 30;

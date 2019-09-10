@@ -491,10 +491,14 @@ namespace Lonos.Kernel.Core
 
         private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4, Argument arg5, Argument arg6)
         {
-            var indexBuffer = new StringBuffer();
-            indexBuffer.length = 0;
-            var argsBuffer = new StringBuffer();
-            argsBuffer.length = 0;
+            var indexBuffer = new StringBuffer
+            {
+                length = 0
+            };
+            var argsBuffer = new StringBuffer
+            {
+                length = 0
+            };
 
             var inParam = false;
             var inArg = false;

@@ -99,27 +99,33 @@ namespace Lonos.Kernel.Core.PageManagement
 
             for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
             {
-                pte[pidx] = new PageTableEntry();
-                pte[pidx].Present = true;
-                pte[pidx].Writable = true;
-                pte[pidx].User = true;
-                pte[pidx].PhysicalAddress = (uint)(pidx * 4096);
+                pte[pidx] = new PageTableEntry
+                {
+                    Present = true,
+                    Writable = true,
+                    User = true,
+                    PhysicalAddress = (uint)(pidx * 4096)
+                };
             }
 
             for (int didx = 0; didx < InitialDirectoryEntries; didx++)
             {
-                pde[didx] = new PageDirectoryEntry();
-                pde[didx].Present = true;
-                pde[didx].Writable = true;
-                pde[didx].User = true;
-                pde[didx].PageTableEntry = &pte[didx * PagesPerDictionaryEntry];
+                pde[didx] = new PageDirectoryEntry
+                {
+                    Present = true,
+                    Writable = true,
+                    User = true,
+                    PageTableEntry = &pte[didx * PagesPerDictionaryEntry]
+                };
             }
 
             for (int ptidx = 0; ptidx < InitialDirectoryPTEntries; ptidx++)
             {
-                pdpt[ptidx] = new PageDirectoryPointerTableEntry();
-                pdpt[ptidx].Present = true;
-                pdpt[ptidx].PageDirectoryEntry = &pde[ptidx * PagesPerDictionaryEntry];
+                pdpt[ptidx] = new PageDirectoryPointerTableEntry
+                {
+                    Present = true,
+                    PageDirectoryEntry = &pde[ptidx * PagesPerDictionaryEntry]
+                };
             }
 
             // Unmap the first page for null pointer exceptions

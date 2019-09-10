@@ -39,10 +39,12 @@ namespace Lonos.Kernel.Loader
         static Addr PageStartAddr;
         public static BootInfoMemory AllocateMemoryMap(USize size, BootInfoMemoryType type)
         {
-            var map = new BootInfoMemory();
-            map.Start = PageStartAddr;
-            map.Size = size;
-            map.Type = type;
+            var map = new BootInfoMemory
+            {
+                Start = PageStartAddr,
+                Size = size,
+                Type = type
+            };
             PageStartAddr += size;
 
             KernelMessage.WriteLine("Allocated MemoryMap of Type {0} at {1:X8} with Size {2:X8}", (uint)type, map.Start, map.Size);

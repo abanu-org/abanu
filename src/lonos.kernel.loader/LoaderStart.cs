@@ -104,10 +104,12 @@ namespace Lonos.Kernel.Loader
             }
             PageTable.KernelTable.Flush();
 
-            var map = new BootInfoMemory();
-            map.Start = phys + diff;
-            map.Size = OriginalKernelElf.TotalFileSize;
-            map.Type = BootInfoMemoryType.KernelElfVirt;
+            var map = new BootInfoMemory
+            {
+                Start = phys + diff,
+                Size = OriginalKernelElf.TotalFileSize,
+                Type = BootInfoMemoryType.KernelElfVirt
+            };
             BootInfo_.AddMap(map);
         }
 

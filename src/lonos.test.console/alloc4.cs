@@ -309,11 +309,7 @@ namespace Lonos.test.malloc4
             malloc_meta* meta = get_meta(ptr);
             //MALLOC_LOCK;
 
-            var __size = GET_SIZE(meta);
-
             meta = fusion(meta, PAGE_SIZE);
-
-            var __size2 = GET_SIZE(meta);
 
             if (GET_SIZE(meta) >= PAGE_SIZE)
             {
