@@ -48,7 +48,7 @@ namespace Lonos.Kernel.Loader
             };
         }
 
-        static uint MemoryMapReserve = 30;
+        const uint MemoryMapReserve = 30;
 
         static void SetupMemoryMap()
         {

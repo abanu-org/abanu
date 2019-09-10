@@ -19,17 +19,14 @@ namespace Lonos.Kernel.Loader
         }
 
         [Plug("Mosa.Runtime.GC::AllocateMemory")]
-        static unsafe private IntPtr _AllocateMemory(uint size)
+        static unsafe private IntPtr AllocateMemoryPlug(uint size)
         {
             return AllocateMemory(size);
         }
 
         private static uint nextAddr;
-        private static uint cnt;
         static public IntPtr AllocateMemory(uint size)
         {
-            cnt++;
-
             var retAddr = nextAddr;
             nextAddr += size;
 

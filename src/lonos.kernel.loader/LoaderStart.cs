@@ -152,7 +152,6 @@ namespace Lonos.Kernel.Loader
 
         public unsafe static void DumpElfInfo()
         {
-            var secArray = OriginalKernelElf.SectionHeaderArray;
             var secLength = OriginalKernelElf.SectionHeaderCount;
 
             KernelMessage.WriteLine("Found {0} Kernel Sections:", secLength);

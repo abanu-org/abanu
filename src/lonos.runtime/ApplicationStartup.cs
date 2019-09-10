@@ -32,7 +32,7 @@ namespace Lonos.Runtime
         #endregion
 
         [Plug("Mosa.Runtime.GC::AllocateMemory")]
-        private static unsafe IntPtr _AllocateMemory(uint size)
+        private static unsafe IntPtr AllocateMemoryPlug(uint size)
         {
             return (IntPtr)AllocateMemory(size);
         }
