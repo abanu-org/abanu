@@ -510,9 +510,6 @@ namespace Lonos.Kernel.Core
 
                 if (format[i] == '}')
                 {
-                    inParam = false;
-                    inArg = false;
-
                     switch (indexBuffer[0])
                     {
                         case '0':
@@ -587,15 +584,12 @@ namespace Lonos.Kernel.Core
 
             if (size != -1)
                 count = (uint)size;
-
-
-            uint charIdx = 0;
             var origPos = (uint)Length;
             Length += count;
             for (uint i = 0; i < count; i++)
             {
                 uint digit = val % digits;
-                charIdx = count - 1 - i;
+                uint charIdx = count - 1 - i;
                 if (digit < 10)
                     this[origPos + charIdx] = (char)('0' + digit);
                 else

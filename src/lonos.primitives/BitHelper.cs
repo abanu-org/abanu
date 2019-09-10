@@ -151,7 +151,7 @@
 
         public static uint SetBits(this uint self, byte index, byte count, uint value, byte sourceIndex)
         {
-            value = value >> sourceIndex;
+            value >>= sourceIndex;
             uint mask = 0xFFFFFFFFU >> (32 - count);
             uint bits = (value & mask) << index;
             return (self & ~(mask << index)) | bits;
@@ -236,7 +236,7 @@
 
         public static ulong SetBits(this ulong self, byte index, byte count, ulong value, byte sourceIndex)
         {
-            value = value >> sourceIndex;
+            value >>= sourceIndex;
             ulong mask = 0xFFFFFFFFFFFFFFFFU >> (64 - count);
             ulong bits = (value & mask) << index;
             return (self & ~(mask << index)) | bits;

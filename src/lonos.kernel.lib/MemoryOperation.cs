@@ -55,7 +55,7 @@ namespace Lonos.Kernel.Core
 
         public static void Clear4(Addr start, USize bytes)
         {
-            for (uint at = start; at < (start + bytes); at = at + 4)
+            for (uint at = start; at < (start + bytes); at += 4)
                 Native.Set32(at, 0);
         }
 

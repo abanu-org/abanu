@@ -72,7 +72,7 @@ namespace Lonos.test.malloc4
             return (A) > (B) ? (B) : (A);
         }
 
-        private static void SET_INUSE(malloc_meta* P) 
+        private static void SET_INUSE(malloc_meta* P)
         {
             P->size &= ~MAX_SHIFT_BIT;
         }
@@ -333,12 +333,12 @@ namespace Lonos.test.malloc4
         {
             if (size == 0)
                 return null;
-
-            void* ptr = null;
             size = internal_size(size);
 
             if (size > MALLOC_MAX_SIZE)
                 return null;
+
+            void* ptr;
             if (size > PAGE_SIZE)
             {
                 ptr = large_malloc(size);
@@ -409,12 +409,10 @@ namespace Lonos.test.malloc4
         void* calloc(size_t nmenb, size_t size)
         {
             size_t mem_size = nmenb * size;
-            void* ptr = null;
-
             if (mem_size == 0)
                 return null;
 
-            ptr = malloc(mem_size);
+            void* ptr = malloc(mem_size);
             if (ptr == null)
                 return null;
             memset(ptr, 0, mem_size);

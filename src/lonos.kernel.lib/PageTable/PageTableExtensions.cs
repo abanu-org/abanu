@@ -52,7 +52,6 @@ namespace Lonos.Kernel.Core.PageManagement
                 table.MapVirtualAddressToPhysical(virtAddr, physAddr, present);
 
                 virtAddr += 4096;
-                physAddr += 4096;
             }
             if (flush)
                 table.Flush();

@@ -107,7 +107,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private static size_t SET_SIZE(malloc_meta* P, size_t NSIZE)
         {
-            return P->Size = IS_FREE(P) | (NSIZE);
+            return P->Size = IS_FREE(P) | NSIZE;
         }
 
         private static size_t MALLOC_MAX_SIZE = ~MAX_SHIFT_BIT;
