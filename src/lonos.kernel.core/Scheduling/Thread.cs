@@ -35,6 +35,7 @@ namespace lonos.Kernel.Core.Scheduling
             var argAddr = (uint*)GetArgumentAddr(offsetBytes);
             argAddr[0] = value;
         }
+
         public Addr GetArgumentAddr(uint offsetBytes)
         {
             return (StackBottom - ArgumentBufferSize + offsetBytes - 4);

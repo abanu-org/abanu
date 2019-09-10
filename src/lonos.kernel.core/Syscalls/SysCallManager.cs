@@ -48,6 +48,7 @@ namespace lonos.Kernel.Core.SysCalls
 
 
         private static uint nextVirtPage;
+
         private static uint cmd_RequestMemory(SystemMessage* args)
         {
             var pages = KMath.DivCeil(args->Arg1, 4096);

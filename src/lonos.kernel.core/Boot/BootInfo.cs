@@ -1,5 +1,6 @@
 ﻿using lonos.Kernel.Core.PageManagement;
 using System;
+
 namespace lonos.Kernel.Core.Boot
 {
     public static unsafe class BootInfo

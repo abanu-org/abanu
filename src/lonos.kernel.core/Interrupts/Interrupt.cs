@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace lonos.Kernel.Core.Interrupts
 {
 

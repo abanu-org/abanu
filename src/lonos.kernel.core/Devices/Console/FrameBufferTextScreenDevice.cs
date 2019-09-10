@@ -33,6 +33,7 @@ namespace lonos.Kernel.Core
         private uint _col;
 
         public uint Columns { get; private set; }
+
         public uint Rows { get; private set; }
 
         private void Write(char c)

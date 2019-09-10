@@ -109,6 +109,7 @@ namespace lonos.Kernel.Core.Collections
             {
                 return _items.Length;
             }
+
             set
             {
                 if (value < _size)
