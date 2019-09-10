@@ -34,7 +34,7 @@ namespace Lonos.Kernel.Core.Interrupts
 
         #endregion Data Members
 
-        internal static InterruptInfo[] handlers;
+        internal static InterruptInfo[] Handlers;
 
         private static Addr IDTAddr;
         public static InterruptControlBlock* ControlBlock;
@@ -58,7 +58,7 @@ namespace Lonos.Kernel.Core.Interrupts
             SetTableEntries();
             KernelMessage.WriteLine("done");
 
-            handlers = new InterruptInfo[256];
+            Handlers = new InterruptInfo[256];
             for (var i = 0; i <= 255; i++)
             {
                 var info = new InterruptInfo
@@ -73,7 +73,7 @@ namespace Lonos.Kernel.Core.Interrupts
                     info.Trace = false;
                     info.CountStatistcs = false;
                 }
-                handlers[i] = info;
+                Handlers[i] = info;
             }
 
             SetInterruptHandler(KnownInterrupt.DivideError, InterruptHandlers.DivideError);
@@ -134,7 +134,7 @@ namespace Lonos.Kernel.Core.Interrupts
         {
             if (interruptHandler == null)
                 interruptHandler = UndefinedHandler;
-            handlers[interrupt].Handler = interruptHandler;
+            Handlers[interrupt].Handler = interruptHandler;
         }
 
         #region SetTable Entries

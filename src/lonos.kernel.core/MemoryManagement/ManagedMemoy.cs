@@ -20,12 +20,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
         }
 
         [Plug("Mosa.Runtime.GC::AllocateMemory")]
-        private static unsafe IntPtr _AllocateMemory(uint size)
+        private static unsafe IntPtr AllocateMemoryPlug(uint size)
         {
             return AllocateMemory(size);
         }
 
-        internal static bool useAllocator;
+        internal static bool UseAllocator;
 
         public static uint EarlyBootBytesUsed => currentSize;
 
@@ -46,7 +46,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //Screen.row = row;
             //Screen.column = col;
 
-            if (useAllocator)
+            if (UseAllocator)
                 return Memory.Allocate(size, GFP.GFP_KERNEL);
 
             return AllocateMemory_EarlyBoot(size);

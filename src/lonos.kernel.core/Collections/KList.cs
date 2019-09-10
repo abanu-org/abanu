@@ -221,7 +221,8 @@ namespace Lonos.Kernel.Core.Collections
             if (_items.Length < size)
             {
                 var newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
-                if (newCapacity < size) newCapacity = size;
+                if (newCapacity < size)
+                    newCapacity = size;
                 Capacity = newCapacity;
             }
         }

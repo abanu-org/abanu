@@ -10,23 +10,23 @@ namespace Lonos.Kernel.Core.Devices
     {
 
         private Addr addr;
-        public uint width;
-        public uint height;
+        public uint Width;
+        public uint Height;
         private uint pitch;
         private uint depth;
 
         public FrameBuffer(Addr addr, uint width, uint height, uint pitch, uint depth)
         {
             this.addr = addr;
-            this.width = width;
-            this.height = height;
+            this.Width = width;
+            this.Height = height;
             this.pitch = pitch;
             this.depth = depth;
         }
 
         public void Init()
         {
-            uint memorySize = (uint)(pitch * height * (4));
+            uint memorySize = (uint)(pitch * Height * (4));
             RequestPhysicalMemory(addr, memorySize);
         }
 
@@ -60,7 +60,7 @@ namespace Lonos.Kernel.Core.Devices
 
         public unsafe void SetPixel(uint color, uint x, uint y)
         {
-            if (x >= width || y >= height)
+            if (x >= Width || y >= Height)
                 return;
 
             //memory.Write8(GetOffset(x, y), (byte)color);

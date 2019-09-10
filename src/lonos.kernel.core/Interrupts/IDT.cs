@@ -30,8 +30,8 @@ namespace Mosa.Kernel.x86
         /// <param name="stackStatePointer">The stack state pointer.</param>
         private static unsafe void ProcessInterrupt(uint stackStatePointer)
         {
-            ushort DataSelector = 0x10;
-            Native.SetSegments(DataSelector, DataSelector, DataSelector, DataSelector, DataSelector);
+            ushort dataSelector = 0x10;
+            Native.SetSegments(dataSelector, dataSelector, dataSelector, dataSelector, dataSelector);
             var block = (InterruptControlBlock*)Address.InterruptControlBlock;
             Native.SetCR3(block->KernelPageTableAddr);
 
@@ -44,7 +44,7 @@ namespace Mosa.Kernel.x86
             var thread = Scheduler.GetCurrentThread();
             if (thread != null)
             {
-                DataSelector = (ushort)thread.DataSelector;
+                dataSelector = (ushort)thread.DataSelector;
                 pageTableAddr = thread.Process.PageTable.GetPageTablePhysAddr();
                 if (KConfig.TraceInterrupts)
                     KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
@@ -56,7 +56,7 @@ namespace Mosa.Kernel.x86
                 return;
             }
 
-            var interruptInfo = IDTManager.handlers[irq];
+            var interruptInfo = IDTManager.Handlers[irq];
 
             IDTManager.RaisedCount++;
 
@@ -100,7 +100,7 @@ namespace Mosa.Kernel.x86
             if (pageTableAddr > 0)
                 Native.SetCR3(pageTableAddr);
 
-            Native.SetSegments(DataSelector, DataSelector, DataSelector, DataSelector, 0x10);
+            Native.SetSegments(dataSelector, dataSelector, dataSelector, dataSelector, 0x10);
         }
 
     }

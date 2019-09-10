@@ -8,7 +8,6 @@ namespace Lonos.Kernel.Core.Interrupts
     /// <summary>
     /// IDT Stack
     /// </summary>
-
     [StructLayout(LayoutKind.Explicit)]
     public struct IDTTaskStack
     {

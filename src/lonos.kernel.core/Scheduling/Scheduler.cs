@@ -61,7 +61,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
             KernelMessage.WriteLine("Enable Scheduler");
             IDTManager.SetPrivilegeLevel((uint)KnownInterrupt.TerminateCurrentThread, 0x03);
-            GDT.tss->esp0 = Threads[0].kernelStackBottom;
+            GDT.tss->esp0 = Threads[0].KernelStackBottom;
             GDT.LoadTaskRegister();
             Native.Int((int)KnownInterrupt.ClockTimer);
 
@@ -220,23 +220,23 @@ namespace Lonos.Kernel.Core.Scheduling
                 KernelMessage.WriteLine();
 
             // -- kernel stack
-            thread.kernelStackSize = 256 * 4096;
+            thread.KernelStackSize = 256 * 4096;
             //thhread.tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
-            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, KernelStart.tssAddr, 4096);
-            thread.kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
-            thread.kernelStackBottom = thread.kernelStack + thread.kernelStackSize;
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, KernelStart.TssAddr, 4096);
+            thread.KernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+            thread.KernelStackBottom = thread.KernelStack + thread.KernelStackSize;
 
-            KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", KernelStart.tssAddr, thread.kernelStack, thread.kernelStackBottom - 1);
+            KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", KernelStart.TssAddr, thread.KernelStack, thread.KernelStackBottom - 1);
 
-            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, thread.kernelStack, 256 * 4096);
+            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, thread.KernelStack, 256 * 4096);
 
             // ---
             uint stackStateOffset = 8;
             stackStateOffset += argBufSize;
 
-            uint CS = 0x08;
+            uint cS = 0x08;
             if (thread.User)
-                CS = 0x1B;
+                cS = 0x1B;
 
             var stateSize = thread.User ? IDTTaskStack.Size : IDTStack.Size;
 
@@ -274,16 +274,16 @@ namespace Lonos.Kernel.Core.Scheduling
                 stackState->TASK_SS = 0x23;
                 stackState->TASK_ESP = (uint)stackBottom - (uint)stackStateOffset;
 
-                proc.PageTable.MapCopy(PageTable.KernelTable, thread.kernelStack, thread.kernelStackSize);
-                proc.PageTable.MapCopy(PageTable.KernelTable, KernelStart.tssAddr, 4096);
+                proc.PageTable.MapCopy(PageTable.KernelTable, thread.KernelStack, thread.KernelStackSize);
+                proc.PageTable.MapCopy(PageTable.KernelTable, KernelStart.TssAddr, 4096);
             }
             if (thread.User && options.AllowUserModeIOPort)
             {
-                byte IOPL = 3;
-                stackState->Stack.EFLAGS = (X86_EFlags)((uint)stackState->Stack.EFLAGS).SetBits(12, 2, IOPL);
+                byte iOPL = 3;
+                stackState->Stack.EFLAGS = (X86_EFlags)((uint)stackState->Stack.EFLAGS).SetBits(12, 2, iOPL);
             }
 
-            stackState->Stack.CS = CS;
+            stackState->Stack.CS = cS;
             stackState->Stack.EIP = options.MethodAddr;
             stackState->Stack.EBP = (uint)(stackBottom - (int)stackStateOffset).ToInt32();
 
@@ -379,7 +379,7 @@ namespace Lonos.Kernel.Core.Scheduling
             if (!thread.User)
                 thread.StackState = null; // just to be sure
 
-            GDT.tss->esp0 = thread.kernelStackBottom;
+            GDT.tss->esp0 = thread.KernelStackBottom;
 
             if (thread.Debug)
             {

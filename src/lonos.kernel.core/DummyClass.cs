@@ -11,6 +11,8 @@ namespace Lonos.Kernel.Core
 {
     public static class DummyClass
     {
-        public static void DummyCall() { }
+        public static void DummyCall()
+        {
+        }
     }
 }

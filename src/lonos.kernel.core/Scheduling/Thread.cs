@@ -18,9 +18,9 @@ namespace Lonos.Kernel.Core.Scheduling
         public Addr StackTop;
         //public IntPtr StackStatePointer;
         public IDTTaskStack* StackState;
-        public Addr kernelStack = null;
-        public Addr kernelStackBottom = null;
-        public USize kernelStackSize = null;
+        public Addr KernelStack = null;
+        public Addr KernelStackBottom = null;
+        public USize KernelStackSize = null;
         public uint Ticks;
         public bool User;
         public Process Process;

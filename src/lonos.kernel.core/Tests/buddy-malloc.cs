@@ -199,7 +199,8 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
     private static List_t* List_pop(List_t* list)
     {
         List_t* back = list->prev;
-        if (back == list) return null;
+        if (back == list)
+            return null;
         List_remove(back);
         return back;
     }

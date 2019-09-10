@@ -20,8 +20,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var ptr = (byte*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(KMath.AlignValueCeil(Allocator.headSize, 4096));
             for (var i = 0; i < Allocator.headSize; i++)
                 *(ptr + i) = 0;
-            kmallocAllocator.list_heads = (malloc_meta**)ptr;
-            ManagedMemoy.useAllocator = true;
+            kmallocAllocator.List_heads = (malloc_meta**)ptr;
+            ManagedMemoy.UseAllocator = true;
             KernelMessage.WriteLine("EarlyBootBytesUsed: {0} bytes", ManagedMemoy.EarlyBootBytesUsed);
 
             KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameManager.PagesAvailable * 4096) / 1024 / 1024);
@@ -121,7 +121,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
         }
 
-        public struct Pgprot_t { }
+        public struct Pgprot_t
+        {
+        }
 
         public static unsafe Addr MapVirtualPages(Page* pages, uint count, ulong flags, Pgprot_t protection)
         {

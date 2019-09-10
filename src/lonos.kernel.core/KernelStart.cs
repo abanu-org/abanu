@@ -105,7 +105,7 @@ namespace Lonos.Kernel.Core
                 ProcessManager.Setup(StartupStage2);
         }
 
-        public static Service serv;
+        public static Service Serv;
 
         public static void StartupStage2()
         {
@@ -121,7 +121,7 @@ namespace Lonos.Kernel.Core
                 userProc.Start();
 
                 var proc = ProcessManager.StartProcess("app.HelloService");
-                serv = new Service(proc);
+                Serv = new Service(proc);
 
                 var p2 = ProcessManager.StartProcess("app.HelloKernel");
                 //p2.Threads[0].SetArgument(0, 0x90);
@@ -136,7 +136,7 @@ namespace Lonos.Kernel.Core
             AppMain();
         }
 
-        public static Addr tssAddr = null;
+        public static Addr TssAddr = null;
         //public static Addr kernelStack = null;
         //public static Addr kernelStackBottom = null;
         //public static USize kernelStackSize = null;
@@ -149,8 +149,8 @@ namespace Lonos.Kernel.Core
             if (KConfig.UseTaskStateSegment)
             {
                 //kernelStackSize = 256 * 4096;
-                tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
-                MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, tssAddr, 4096);
+                TssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
+                MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, TssAddr, 4096);
                 //kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 //kernelStackBottom = kernelStack + kernelStackSize;
 
@@ -158,7 +158,7 @@ namespace Lonos.Kernel.Core
 
                 //MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, kernelStack, 256 * 4096);
             }
-            GDT.SetupUserMode(tssAddr);
+            GDT.SetupUserMode(TssAddr);
         }
 
         private static void Thread0()

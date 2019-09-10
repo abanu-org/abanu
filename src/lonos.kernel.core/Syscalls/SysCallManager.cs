@@ -118,7 +118,7 @@ namespace Lonos.Kernel.Core.SysCalls
 
         private static uint Cmd_CallServiceFunc1(SystemMessage* args)
         {
-            var serv = KernelStart.serv;
+            var serv = KernelStart.Serv;
 
             //0xAABBCCDD
 

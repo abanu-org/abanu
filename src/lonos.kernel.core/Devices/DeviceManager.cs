@@ -22,7 +22,7 @@ namespace Lonos.Kernel.Core.Devices
         public static IFile Null;
         public static IFile KMsg;
 
-        internal static FrameBuffer fb;
+        internal static FrameBuffer Fb;
 
         /// <summary>
         /// Pseudeo devices
@@ -64,10 +64,10 @@ namespace Lonos.Kernel.Core.Devices
 
             KernelMessage.WriteLine("InitFrameBuffer");
 
-            fb = new FrameBuffer(BootInfo.Header->FbInfo.FbAddr, BootInfo.Header->FbInfo.FbWidth, BootInfo.Header->FbInfo.FbHeight, BootInfo.Header->FbInfo.FbPitch, 8);
-            fb.Init();
+            Fb = new FrameBuffer(BootInfo.Header->FbInfo.FbAddr, BootInfo.Header->FbInfo.FbWidth, BootInfo.Header->FbInfo.FbHeight, BootInfo.Header->FbInfo.FbPitch, 8);
+            Fb.Init();
 
-            FrameBufferTextScreen = new FrameBufferTextScreenDevice(fb);
+            FrameBufferTextScreen = new FrameBufferTextScreenDevice(Fb);
             Console.SetOutputDevice(FrameBufferTextScreen);
         }
 

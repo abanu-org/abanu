@@ -17,8 +17,8 @@ namespace Lonos.Kernel.Core
         public FrameBufferTextScreenDevice(FrameBuffer dev)
         {
             this.dev = dev;
-            Columns = dev.width / CharWidth;
-            Rows = dev.height / CharHeight;
+            Columns = dev.Width / CharWidth;
+            Rows = dev.Height / CharHeight;
         }
 
         public unsafe SSize Write(byte* buf, USize count)
@@ -72,7 +72,7 @@ namespace Lonos.Kernel.Core
         {
             // TODO: Scroll
             _row = 0;
-            dev.FillRectangle(0, 0, 0, dev.width, dev.height);
+            dev.FillRectangle(0, 0, 0, dev.Width, dev.Height);
         }
 
         private uint CharHeight = 14;
