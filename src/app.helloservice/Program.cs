@@ -1,5 +1,5 @@
-﻿using lonos.Kernel.Core;
-using lonos.Runtime;
+﻿using Lonos.Kernel.Core;
+using Lonos.Runtime;
 using Mosa.Runtime.x86;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.Kernel
+namespace Lonos.Kernel
 {
 
     public static class Program

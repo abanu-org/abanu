@@ -1,7 +1,7 @@
 ﻿using System;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
     public class MemoryOperation
     {
@@ -29,7 +29,8 @@ namespace lonos.Kernel.Core
 
             var src = (uint*)source;
             var dst = (uint*)destination;
-            for (var i = 0; i < count; i++) {
+            for (var i = 0; i < count; i++)
+            {
                 dst[i] = src[i];
             }
         }

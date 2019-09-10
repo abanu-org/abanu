@@ -1,7 +1,7 @@
-﻿using lonos.Kernel.Core.Boot;
+﻿using Lonos.Kernel.Core.Boot;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.PageManagement
+namespace Lonos.Kernel.Core.PageManagement
 {
     public static class PageTableExtensions
     {

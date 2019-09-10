@@ -1,4 +1,4 @@
-﻿namespace lonos.Kernel.Core
+﻿namespace Lonos.Kernel.Core
 {
     /// <summary>
     /// Static Kernel Configuration.

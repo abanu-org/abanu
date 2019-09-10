@@ -3,11 +3,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.Diagnostics;
 using Mosa.Kernel.x86;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.Elf
+namespace Lonos.Kernel.Core.Elf
 {
 
     public static unsafe class KernelElf

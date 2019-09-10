@@ -7,15 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using lonos.Kernel.Core.Boot;
-using lonos.Kernel.Core.Collections;
-using lonos.Kernel.Core.Elf;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Scheduling;
+using Lonos.Kernel.Core.Boot;
+using Lonos.Kernel.Core.Collections;
+using Lonos.Kernel.Core.Elf;
+using Lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Scheduling;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.Processes
+namespace Lonos.Kernel.Core.Processes
 {
 
     public static class ProcessManager

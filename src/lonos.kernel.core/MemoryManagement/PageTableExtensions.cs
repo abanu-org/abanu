@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using lonos.Kernel.Core.Boot;
-using lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Boot;
+using Lonos.Kernel.Core.PageManagement;
 
-namespace lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement
 {
     public static unsafe class PageTableExtensions
     {

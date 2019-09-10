@@ -1,10 +1,10 @@
 ﻿using System;
-using lonos.Kernel.Core;
-using lonos.Kernel.Core.Boot;
-using lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core;
+using Lonos.Kernel.Core.Boot;
+using Lonos.Kernel.Core.PageManagement;
 using Mosa.Kernel.x86;
 
-namespace lonos.Kernel.Loader
+namespace Lonos.Kernel.Loader
 {
     public unsafe class BootInfo_
     {

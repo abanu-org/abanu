@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
 
     [Flags]

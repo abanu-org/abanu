@@ -1,4 +1,4 @@
-﻿namespace lonos.Kernel.Core.PageManagement
+﻿namespace Lonos.Kernel.Core.PageManagement
 {
     public enum PageTableType
     {

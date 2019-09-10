@@ -5,7 +5,7 @@ using System;
 using Mosa.Kernel.x86;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.Diagnostics
+namespace Lonos.Kernel.Core.Diagnostics
 {
     /// <summary>
     /// Panic

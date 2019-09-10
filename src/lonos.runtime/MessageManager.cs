@@ -1,4 +1,4 @@
-﻿using lonos.Kernel;
+﻿using Lonos.Kernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.Runtime
+namespace Lonos.Runtime
 {
 
     public unsafe delegate void OnMessageReceivedDelegate(SystemMessage* msg);

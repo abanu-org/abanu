@@ -2,13 +2,13 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Scheduling;
-using lonos.Kernel.Core.SysCalls;
+using Lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.Scheduling;
+using Lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.Interrupts
+namespace Lonos.Kernel.Core.Interrupts
 {
 
     public static unsafe class InterruptHandlers

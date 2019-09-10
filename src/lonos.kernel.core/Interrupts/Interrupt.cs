@@ -3,7 +3,7 @@
 
 using System;
 
-namespace lonos.Kernel.Core.Interrupts
+namespace Lonos.Kernel.Core.Interrupts
 {
 
     public enum KnownInterrupt : uint

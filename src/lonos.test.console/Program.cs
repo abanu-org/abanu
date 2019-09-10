@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace lonos.test.console
+namespace Lonos.test.console
 {
     class MainClass
     {
@@ -11,7 +11,7 @@ namespace lonos.test.console
             Console.WriteLine("Hello World!");
             //new AllocTest().run();
 
-            new lonos.test.malloc4.Tester().run();
+            new Lonos.test.malloc4.Tester().run();
 
             Console.ReadLine();
         }

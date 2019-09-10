@@ -1,4 +1,4 @@
-﻿namespace lonos.Kernel
+﻿namespace Lonos.Kernel
 {
     public enum SysCallTarget
     {

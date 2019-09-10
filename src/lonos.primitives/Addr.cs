@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Versioning;
 using System;
 
-namespace lonos
+namespace Lonos
 {
     [Serializable]
     public struct Addr

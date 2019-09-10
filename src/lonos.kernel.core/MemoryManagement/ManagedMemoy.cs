@@ -7,7 +7,7 @@ using Mosa.Runtime;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement
 {
 
     internal static class ManagedMemoy

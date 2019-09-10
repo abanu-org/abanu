@@ -2,10 +2,10 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.Boot;
-using lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Boot;
+using Lonos.Kernel.Core.PageManagement;
 
-namespace lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement
 {
 
     public struct KernelMemoryMap

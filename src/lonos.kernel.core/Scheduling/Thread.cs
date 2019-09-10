@@ -2,14 +2,14 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Processes;
+using Lonos.Kernel.Core.Interrupts;
+using Lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Processes;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.Scheduling
+namespace Lonos.Kernel.Core.Scheduling
 {
     public unsafe class Thread
     {

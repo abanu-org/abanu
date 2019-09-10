@@ -1,4 +1,4 @@
-﻿namespace lonos
+﻿namespace Lonos
 {
     /// <summary>
     /// Represents the HEX value of a bit position

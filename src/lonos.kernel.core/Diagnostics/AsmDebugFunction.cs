@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.Kernel.Core.Diagnostics
+namespace Lonos.Kernel.Core.Diagnostics
 {
     public static class AsmDebugFunction
     {

@@ -1,6 +1,6 @@
-﻿using lonos.Kernel.Loader;
+﻿using Lonos.Kernel.Loader;
 
-namespace lonos.os.Loader.x86
+namespace Lonos.os.Loader.x86
 {
     public static class Start
     {

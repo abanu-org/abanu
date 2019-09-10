@@ -2,9 +2,9 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.Devices;
+using Lonos.Kernel.Core.Devices;
 
-namespace lonos.Kernel.Core.Diagnostics
+namespace Lonos.Kernel.Core.Diagnostics
 {
 
     public class KernelMessageDevice : IFile

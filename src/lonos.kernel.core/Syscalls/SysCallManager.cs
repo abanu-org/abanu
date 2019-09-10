@@ -7,14 +7,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using lonos.Kernel.Core.Collections;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Processes;
-using lonos.Kernel.Core.Scheduling;
+using Lonos.Kernel.Core.Collections;
+using Lonos.Kernel.Core.Interrupts;
+using Lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Processes;
+using Lonos.Kernel.Core.Scheduling;
 
-namespace lonos.Kernel.Core.SysCalls
+namespace Lonos.Kernel.Core.SysCalls
 {
     public static unsafe class SysCallManager
     {

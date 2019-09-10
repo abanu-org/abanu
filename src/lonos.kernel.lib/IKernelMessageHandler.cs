@@ -1,4 +1,4 @@
-﻿namespace lonos.Kernel.Core
+﻿namespace Lonos.Kernel.Core
 {
     //public interface IKernelMessageHandler : IBufferWriter
     //{

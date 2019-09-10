@@ -15,7 +15,7 @@ using Mosa.Runtime.x86;
 using Mosa.Runtime;
 using System.Runtime.CompilerServices;
 
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
 
     unsafe public static class GDT

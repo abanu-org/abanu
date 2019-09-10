@@ -1,6 +1,6 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
     public static class ScreenColor
     {

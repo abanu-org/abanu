@@ -3,7 +3,7 @@
 
 using System;
 
-namespace lonos.Kernel.Core.Api
+namespace Lonos.Kernel.Core.Api
 {
 
     internal class ApiHost : IKernelApi

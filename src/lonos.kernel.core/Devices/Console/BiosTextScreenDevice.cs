@@ -3,7 +3,7 @@
 
 using System;
 
-namespace lonos.Kernel.Core.Devices
+namespace Lonos.Kernel.Core.Devices
 {
 
     public class BiosTextScreenDevice : IFile

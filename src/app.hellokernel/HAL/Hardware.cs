@@ -1,7 +1,7 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using lonos;
-using lonos.Runtime;
+using Lonos;
+using Lonos.Runtime;
 using Mosa.DeviceSystem;
 using Mosa.Runtime.x86;
 using System;

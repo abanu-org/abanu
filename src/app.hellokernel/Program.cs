@@ -1,5 +1,5 @@
-﻿using lonos.Kernel.Core;
-using lonos.Runtime;
+﻿using Lonos.Kernel.Core;
+using Lonos.Runtime;
 using Mosa.CoolWorld.x86.HAL;
 using Mosa.DeviceDriver;
 using Mosa.DeviceDriver.ISA;
@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.Kernel
+namespace Lonos.Kernel
 {
 
     public static class Program

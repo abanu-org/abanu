@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
     public enum X86_EFlags : uint
     {

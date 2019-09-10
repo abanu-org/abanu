@@ -1,5 +1,5 @@
 ﻿
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
 
     public interface IUnixKernelApi

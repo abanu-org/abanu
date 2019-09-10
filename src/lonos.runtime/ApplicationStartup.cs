@@ -1,8 +1,8 @@
-﻿using lonos.Kernel.Core;
+﻿using Lonos.Kernel.Core;
 using Mosa.Runtime.Plug;
 using System;
 
-namespace lonos.Runtime
+namespace Lonos.Runtime
 {
 
     public static class ApplicationRuntime

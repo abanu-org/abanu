@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace lonos.test.malloc4
+namespace Lonos.test.malloc4
 {
 
     public unsafe class Tester

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.Kernel
+namespace Lonos.Kernel
 {
 
     [StructLayout(LayoutKind.Explicit, Size = 4 * 7)]

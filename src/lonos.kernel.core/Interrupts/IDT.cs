@@ -2,16 +2,18 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Scheduling;
+using Lonos.Kernel.Core;
+using Lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.Interrupts;
+using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Scheduling;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
 //TODO: Name in compiler
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 namespace Mosa.Kernel.x86
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 {
 
     /// <summary>

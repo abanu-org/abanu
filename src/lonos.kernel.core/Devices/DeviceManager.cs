@@ -2,14 +2,14 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.Boot;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Boot;
+using Lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.PageManagement;
 using Mosa.Kernel.x86;
 using Mosa.Runtime;
 
-namespace lonos.Kernel.Core.Devices
+namespace Lonos.Kernel.Core.Devices
 {
 
     public static class DeviceManager

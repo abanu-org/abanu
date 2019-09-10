@@ -2,15 +2,15 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.Boot;
-using lonos.Kernel.Core.Devices;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Boot;
+using Lonos.Kernel.Core.Devices;
+using Lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.PageManagement;
 using Mosa.Runtime;
 
 //using Mosa.Kernel.x86;
 
-namespace lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement
 {
 
     /// <summary>

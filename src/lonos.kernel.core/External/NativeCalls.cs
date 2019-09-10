@@ -3,10 +3,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using lonos.Kernel.Core.Elf;
+using Lonos.Kernel.Core.Elf;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.External
+namespace Lonos.Kernel.Core.External
 {
 
     public static class NativeCalls

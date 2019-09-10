@@ -1,8 +1,8 @@
-﻿using lonos.Kernel;
-using lonos.Kernel.Core;
+﻿using Lonos.Kernel;
+using Lonos.Kernel.Core;
 using System;
 
-namespace lonos.Runtime
+namespace Lonos.Runtime
 {
 
     /// <summary>

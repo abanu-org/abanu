@@ -2,11 +2,11 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.ConsoleFonts;
-using lonos.Kernel.Core.Devices;
-using lonos.Kernel.Core.Elf;
+using Lonos.Kernel.Core.ConsoleFonts;
+using Lonos.Kernel.Core.Devices;
+using Lonos.Kernel.Core.Elf;
 
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
 
     public class FrameBufferTextScreenDevice : IFile

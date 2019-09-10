@@ -1,5 +1,5 @@
 ﻿using System;
-namespace lonos.test.console.Alloc3
+namespace Lonos.test.console.Alloc3
 {
 
     public struct page

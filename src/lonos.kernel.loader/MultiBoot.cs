@@ -2,7 +2,7 @@
 
 using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
-using lonos.Kernel.Core;
+using Lonos.Kernel.Core;
 
 namespace Mosa.Kernel.x86
 {

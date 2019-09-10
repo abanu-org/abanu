@@ -4,9 +4,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.MemoryManagement;
 
-namespace lonos.Kernel.Core.Collections
+namespace Lonos.Kernel.Core.Collections
 {
 
     /// <summary>

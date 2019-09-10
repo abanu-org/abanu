@@ -1,7 +1,7 @@
 ﻿using System;
-using lonos.Kernel.Core;
+using Lonos.Kernel.Core;
 
-namespace lonos.test.console.alloc2
+namespace Lonos.test.console.alloc2
 {
 
     unsafe struct list_head

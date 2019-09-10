@@ -2,7 +2,7 @@
 using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
 
-namespace lonos.Kernel.Core.Elf
+namespace Lonos.Kernel.Core.Elf
 {
 
     [StructLayout(LayoutKind.Explicit)]

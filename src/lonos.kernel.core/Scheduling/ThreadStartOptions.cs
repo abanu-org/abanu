@@ -2,10 +2,10 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System.Threading;
-using lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.MemoryManagement;
 using Mosa.Runtime;
 
-namespace lonos.Kernel.Core.Scheduling
+namespace Lonos.Kernel.Core.Scheduling
 {
 
     public struct ThreadStartOptions

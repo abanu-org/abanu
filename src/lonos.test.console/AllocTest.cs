@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Linq;
 
 
-namespace lonos.test.console
+namespace Lonos.test.console
 {
 
     public unsafe class AllocTest

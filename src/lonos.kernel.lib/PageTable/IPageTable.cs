@@ -1,11 +1,11 @@
-﻿using lonos.Kernel.Core;
+﻿using Lonos.Kernel.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.Kernel.Core.PageManagement
+namespace Lonos.Kernel.Core.PageManagement
 {
 
     public unsafe interface IPageTable

@@ -1,4 +1,4 @@
-﻿namespace lonos
+﻿namespace Lonos
 {
     public static class BitHelper
     {

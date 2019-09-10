@@ -2,24 +2,24 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.Api;
-using lonos.Kernel.Core.Boot;
-using lonos.Kernel.Core.Collections;
-using lonos.Kernel.Core.Devices;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Elf;
-using lonos.Kernel.Core.External;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Processes;
-using lonos.Kernel.Core.Scheduling;
-using lonos.Kernel.Core.SysCalls;
-using lonos.Kernel.Core.Tasks;
+using Lonos.Kernel.Core.Api;
+using Lonos.Kernel.Core.Boot;
+using Lonos.Kernel.Core.Collections;
+using Lonos.Kernel.Core.Devices;
+using Lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.Elf;
+using Lonos.Kernel.Core.External;
+using Lonos.Kernel.Core.Interrupts;
+using Lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Processes;
+using Lonos.Kernel.Core.Scheduling;
+using Lonos.Kernel.Core.SysCalls;
+using Lonos.Kernel.Core.Tasks;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
 
     public static class KernelStart

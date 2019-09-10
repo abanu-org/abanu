@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace lonos
+namespace Lonos
 {
 
     unsafe public struct NullTerminatedString

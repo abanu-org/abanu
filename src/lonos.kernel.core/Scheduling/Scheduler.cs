@@ -5,16 +5,16 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Processes;
-using lonos.Kernel.Core.SysCalls;
+using Lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.Interrupts;
+using Lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Processes;
+using Lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.Scheduling
+namespace Lonos.Kernel.Core.Scheduling
 {
     public static class Scheduler
     {

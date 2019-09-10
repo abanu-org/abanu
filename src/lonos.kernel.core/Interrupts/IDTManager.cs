@@ -4,13 +4,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.SysCalls;
+using Lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
-namespace lonos.Kernel.Core.Interrupts
+namespace Lonos.Kernel.Core.Interrupts
 {
     public unsafe delegate void InterruptHandler(IDTStack* stack);
 

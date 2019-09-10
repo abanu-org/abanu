@@ -4,7 +4,7 @@ using Mosa.Runtime;
 using Mosa.Runtime.x86;
 using System;
 
-namespace lonos.Kernel.Core
+namespace Lonos.Kernel.Core
 {
     /// <summary>
     /// Screen

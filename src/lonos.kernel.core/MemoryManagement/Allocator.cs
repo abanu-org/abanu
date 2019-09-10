@@ -2,7 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.Diagnostics;
 //using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
 using System.Runtime.InteropServices;
 
@@ -21,7 +21,7 @@ using size_t = System.UInt32;
 // Do not modify this Allocator very much
 // Future: Assign mmap-metod dynamicly.
 
-namespace lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement
 {
 
     public unsafe struct malloc_list
