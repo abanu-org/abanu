@@ -543,4 +543,3 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
     }
 
 }
-

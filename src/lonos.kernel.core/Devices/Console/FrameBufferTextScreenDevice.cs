@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using lonos.Kernel.Core.ConsoleFonts;
 using lonos.Kernel.Core.Devices;
 using lonos.Kernel.Core.Elf;

@@ -212,12 +212,12 @@ namespace lonos.Kernel.Core
         //     // PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
         //     // for (int index = 0; index < 1024; index++)
         //     // {
-        //     // 	pde[index].Writable = false;
+        //     //   pde[index].Writable = false;
         //     // }
 
         //     // PageTable.PageTableEntry* pte = (PageTable.PageTableEntry*)PageTable.AddrPageTable;
         //     // for (int index = 0; index < 1024 * 32; index++)
-        //     // 	pte[index].Writable = false;
+        //     //   pte[index].Writable = false;
 
         //     // InitialKernelProtect_MakeWritable_ByRegion(0, 90 * 1024 * 1024);
 
