@@ -16,7 +16,7 @@ namespace lonos.Kernel.Core.Interrupts
     /// <summary>
     /// IDT
     /// </summary>
-    public unsafe static class IDTManager
+    public static unsafe class IDTManager
     {
 
         #region Data Members

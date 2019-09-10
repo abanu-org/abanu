@@ -20,7 +20,7 @@ using PointerType = System.UInt32;
 using PointerType = System.UInt64;
 #endif
 
-unsafe public abstract class BinaryBuddyAllocator_TestImplementation
+public unsafe abstract class BinaryBuddyAllocator_TestImplementation
 {
 
     /*

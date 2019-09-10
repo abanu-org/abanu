@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace lonos.Kernel.Core.MemoryManagement
 {
-    public unsafe static class PageTableExtensions
+    public static unsafe class PageTableExtensions
     {
         /// <summary>
         /// Sync specific mappings with another table.
@@ -19,13 +19,13 @@ namespace lonos.Kernel.Core.MemoryManagement
             table.MapCopy(fromTable, mm->Start, mm->Size, present, flush);
         }
 
-        public unsafe static void SetWritable(this IPageTable table, BootInfoMemoryType type)
+        public static unsafe void SetWritable(this IPageTable table, BootInfoMemoryType type)
         {
             var mm = BootInfo.GetMap(type);
             SetWritable(table, mm->Start, mm->Size);
         }
 
-        public unsafe static void SetWritable(this IPageTable table, uint virtAddr, uint size)
+        public static unsafe void SetWritable(this IPageTable table, uint virtAddr, uint size)
         {
             if (!KConfig.UseKernelMemoryProtection)
                 return;
@@ -33,13 +33,13 @@ namespace lonos.Kernel.Core.MemoryManagement
             table.SetWritable(virtAddr, size);
         }
 
-        public unsafe static void SetExecutable(this IPageTable table, BootInfoMemoryType type)
+        public static unsafe void SetExecutable(this IPageTable table, BootInfoMemoryType type)
         {
             var mm = BootInfo.GetMap(type);
             SetExecutable(table, mm->Start, mm->Size);
         }
 
-        public unsafe static void SetExecutable(this IPageTable table, uint virtAddr, uint size)
+        public static unsafe void SetExecutable(this IPageTable table, uint virtAddr, uint size)
         {
             if (!KConfig.UseKernelMemoryProtection)
                 return;

@@ -2,10 +2,10 @@
 using System;
 namespace lonos.Kernel.Core.Boot
 {
-    public unsafe static class BootInfo
+    public static unsafe class BootInfo
     {
 
-        public unsafe static BootInfoHeader* Header;
+        public static unsafe BootInfoHeader* Header;
 
         public static bool Present;
 

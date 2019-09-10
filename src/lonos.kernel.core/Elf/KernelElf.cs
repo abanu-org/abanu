@@ -7,7 +7,7 @@ using lonos.Kernel.Core.Diagnostics;
 namespace lonos.Kernel.Core.Elf
 {
 
-    unsafe public static class KernelElf
+    public static unsafe class KernelElf
     {
         public static ElfHelper Main;
         public static ElfHelper Native;
@@ -37,7 +37,7 @@ namespace lonos.Kernel.Core.Elf
             return helper;
         }*/
 
-        unsafe static ElfHelper FromAddress(Addr elfStart)
+        static unsafe ElfHelper FromAddress(Addr elfStart)
         {
             var elfHeader = (ElfHeader*)elfStart;
 
@@ -57,7 +57,7 @@ namespace lonos.Kernel.Core.Elf
             return helper;
         }
 
-        public unsafe static ElfHelper FromSectionName(string name)
+        public static unsafe ElfHelper FromSectionName(string name)
         {
             var sec = Main.GetSectionHeader(name);
             if (sec == null)

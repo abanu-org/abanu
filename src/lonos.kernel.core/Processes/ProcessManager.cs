@@ -125,7 +125,7 @@ namespace lonos.Kernel.Core.Processes
             return proc;
         }
 
-        private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)
+        private static unsafe Addr GetEntryPointFromElf(ElfHelper elf)
         {
             var symName = "lonos.Kernel.Program::Main()"; // TODO
             var sym = elf.GetSymbol(symName);

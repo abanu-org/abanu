@@ -22,7 +22,7 @@ namespace lonos.Kernel.Core
     public static class KernelStart
     {
 
-        public unsafe static void Main()
+        public static unsafe void Main()
         {
             ManagedMemoy.InitializeGCMemory();
             StartUp.InitializeAssembly();

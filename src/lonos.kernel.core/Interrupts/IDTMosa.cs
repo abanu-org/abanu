@@ -17,7 +17,7 @@ namespace Mosa.Kernel.x86
     /// <summary>
     /// IDT
     /// </summary>
-    public unsafe static class IDT
+    public static unsafe class IDT
     {
 
 
@@ -27,7 +27,7 @@ namespace Mosa.Kernel.x86
         /// Interrupts the handler.
         /// </summary>
         /// <param name="stackStatePointer">The stack state pointer.</param>
-        private unsafe static void ProcessInterrupt(uint stackStatePointer)
+        private static unsafe void ProcessInterrupt(uint stackStatePointer)
         {
             ushort DataSelector = 0x10;
             Native.SetSegments(DataSelector, DataSelector, DataSelector, DataSelector, DataSelector);

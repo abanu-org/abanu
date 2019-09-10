@@ -28,7 +28,7 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         static uint currentSize;
         public static uint AllocationCount;
-        static public IntPtr AllocateMemory(uint size)
+        public static IntPtr AllocateMemory(uint size)
         {
             AllocationCount++;
 

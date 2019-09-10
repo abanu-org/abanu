@@ -10,7 +10,7 @@ using lonos.Kernel.Core.SysCalls;
 namespace lonos.Kernel.Core.Interrupts
 {
 
-    public unsafe static class InterruptsHandlers
+    public static unsafe class InterruptsHandlers
     {
 
         private static void Error(IDTStack* stack, string message)

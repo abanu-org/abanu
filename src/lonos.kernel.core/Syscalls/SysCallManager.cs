@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace lonos.Kernel.Core.SysCalls
 {
-    public unsafe static class SysCallManager
+    public static unsafe class SysCallManager
     {
 
         public const uint IRQ = 250;
