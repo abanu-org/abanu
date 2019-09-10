@@ -105,7 +105,7 @@ namespace Lonos.Kernel.Core
             {
                 for (uint x = 0; x < columns; x++)
                 {
-                    var bt = BitHelper.IsBitSet(charMem[(charSize * charIdx) + ((y * bytesPerRow) + (x / 8))], (byte)(7 - (x % 8)));
+                    var bt = BitHelper.IsBitSet(charMem[(charSize * charIdx) + (y * bytesPerRow) + (x / 8)], (byte)(7 - (x % 8)));
                     if (bt)
                     {
                         fb.SetPixel(int.MaxValue / 2, (screenX * columns) + x, (screenY * rows) + y);

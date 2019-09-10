@@ -56,7 +56,7 @@ namespace Lonos.Kernel.Core.SysCalls
             var pages = KMath.DivCeil(args->Arg1, 4096);
             var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
             var virtAddr = nextVirtPage;
-            nextVirtPage += (pages * 4096);
+            nextVirtPage += pages * 4096;
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
             return virtAddr;
         }
@@ -66,7 +66,7 @@ namespace Lonos.Kernel.Core.SysCalls
             var physAddr = args->Arg1;
             var pages = KMath.DivCeil(args->Arg2, 4096);
             var virtAddr = nextVirtPage;
-            nextVirtPage += (pages * 4096);
+            nextVirtPage += pages * 4096;
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, physAddr, pages * 4096);
             return virtAddr;
         }
@@ -84,7 +84,7 @@ namespace Lonos.Kernel.Core.SysCalls
             var pages = KMath.DivCeil(size, 4096);
             var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
             var virtAddr = nextVirtPage;
-            nextVirtPage += (pages * 4096);
+            nextVirtPage += pages * 4096;
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
             var targetProc = ProcessManager.System;
             if (targetProcessID > 0)

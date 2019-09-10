@@ -41,7 +41,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
         public Addr GetArgumentAddr(uint offsetBytes)
         {
-            return (StackBottom - ArgumentBufferSize + offsetBytes - 4);
+            return StackBottom - ArgumentBufferSize + offsetBytes - 4;
         }
 
         public void FreeMemory()

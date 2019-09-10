@@ -24,7 +24,7 @@ namespace Lonos.Kernel.Core.Scheduling
             var methodAddr = GetEntryPointFromElf(elf);
             var th = CreateThread(methodAddr, SystemMessage.Size);
             var argAddr = (SystemMessage*)th.GetArgumentAddr(0);
-            argAddr[0] = *(args);
+            argAddr[0] = *args;
             SwitchToThread(th);
         }
 

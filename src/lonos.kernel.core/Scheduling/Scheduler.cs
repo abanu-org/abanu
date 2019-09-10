@@ -312,7 +312,7 @@ namespace Lonos.Kernel.Core.Scheduling
             if (thread.User)
             {
                 Assert.IsSet(thread.StackState, "thread.StackState is null");
-                *(thread.StackState) = *((IDTTaskStack*)stackState);
+                *thread.StackState = *(IDTTaskStack*)stackState;
             }
             else
             {

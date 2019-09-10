@@ -61,7 +61,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
  * Given a bucket index, the size of the allocations in that bucket can be
  * found with "(size_t)1 << (MAX_ALLOC_LOG2 - bucket)".
  */
-    protected const byte BUCKET_COUNT = (MAX_ALLOC_LOG2 - MIN_ALLOC_LOG2 + 1);
+    protected const byte BUCKET_COUNT = MAX_ALLOC_LOG2 - MIN_ALLOC_LOG2 + 1;
 
     /*
  * Free lists are stored as circular doubly-linked lists. Every possible
