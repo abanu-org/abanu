@@ -1,16 +1,16 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using System;
+using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Scheduling;
+using lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
-using System;
-using lonos.Kernel.Core.Scheduling;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.SysCalls;
 
 namespace lonos.Kernel.Core.Interrupts
 {
 
-    public unsafe static class InterruptsHandlers
+    public static unsafe class InterruptsHandlers
     {
 
         private static void Error(IDTStack* stack, string message)

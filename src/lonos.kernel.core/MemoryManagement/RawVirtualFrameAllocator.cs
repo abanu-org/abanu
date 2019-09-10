@@ -1,5 +1,6 @@
-﻿using lonos.Kernel.Core.PageManagement;
-using System;
+﻿using System;
+using lonos.Kernel.Core.PageManagement;
+
 namespace lonos.Kernel.Core.MemoryManagement
 {
     public static class RawVirtualFrameAllocator
@@ -26,7 +27,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// Consumer: Kernel, Memory allocators
         /// Shoud be used for larger Chunks.
         /// </summary>
-        internal unsafe static Addr RequestRawVirtalMemoryPages(uint pages)
+        internal static unsafe Addr RequestRawVirtalMemoryPages(uint pages)
         {
             Addr virt = _nextVirtAddr;
             var head = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
@@ -47,9 +48,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Returns pages, where virtAddr equals physAddr.
         /// </summary>
-        /// <param name="pages"></param>
-        /// <returns></returns>
-        internal unsafe static Addr RequestIdentityMappedVirtalMemoryPages(uint pages)
+        internal static unsafe Addr RequestIdentityMappedVirtalMemoryPages(uint pages)
         {
             Addr virt = _identityNextVirtAddr;
             var head = PageFrameManager.GetPhysPage(virt);
@@ -68,7 +67,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return virt;
         }
 
-        internal unsafe static void FreeRawVirtalMemoryPages(Addr virtAddr)
+        internal static unsafe void FreeRawVirtalMemoryPages(Addr virtAddr)
         {
 
         }

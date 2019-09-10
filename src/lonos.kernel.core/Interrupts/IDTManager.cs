@@ -1,13 +1,13 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
-using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace lonos.Kernel.Core.Interrupts
 {
@@ -16,7 +16,7 @@ namespace lonos.Kernel.Core.Interrupts
     /// <summary>
     /// IDT
     /// </summary>
-    public unsafe static class IDTManager
+    public static unsafe class IDTManager
     {
 
         #region Data Members
@@ -35,7 +35,7 @@ namespace lonos.Kernel.Core.Interrupts
 
         internal static InterruptInfo[] handlers;
 
-        static Addr IDTAddr;
+        private static Addr IDTAddr;
         public static InterruptControlBlock* ControlBlock;
 
         public static void Setup()
@@ -50,7 +50,7 @@ namespace lonos.Kernel.Core.Interrupts
 
             // Setup IDT table
             Mosa.Runtime.Internal.MemoryClear(new IntPtr((uint)IDTAddr), 6);
-            Intrinsic.Store16(new IntPtr((uint)IDTAddr), Offset.TotalSize * 256 - 1);
+            Intrinsic.Store16(new IntPtr((uint)IDTAddr), (Offset.TotalSize * 256) - 1);
             Intrinsic.Store32(new IntPtr((uint)IDTAddr), 2, IDTAddr + 6);
 
             KernelMessage.Write("Set IDT table entries...");
@@ -1967,7 +1967,7 @@ namespace lonos.Kernel.Core.Interrupts
         /// <param name="flags">The flags.</param>
         private static void Set(uint irq, uint address, ushort select, byte flags)
         {
-            var entry = new IntPtr(IDTAddr + 6 + irq * Offset.TotalSize);
+            var entry = new IntPtr(IDTAddr + 6 + (irq * Offset.TotalSize));
             Intrinsic.Store16(entry, Offset.BaseLow, (ushort)(address & 0xFFFF));
             Intrinsic.Store16(entry, Offset.BaseHigh, (ushort)(address >> 16 & 0xFFFF));
             Intrinsic.Store16(entry, Offset.Select, select);
@@ -1977,7 +1977,7 @@ namespace lonos.Kernel.Core.Interrupts
 
         public static void SetPrivilegeLevel(uint irq, byte privLevel)
         {
-            var entry = new IntPtr(IDTAddr + 6 + irq * Offset.TotalSize);
+            var entry = new IntPtr(IDTAddr + 6 + (irq * Offset.TotalSize));
             var value = Intrinsic.Load8(entry, Offset.Flags);
             value = value.SetBits(5, 2, privLevel);
             Intrinsic.Store8(entry, Offset.Flags, value);

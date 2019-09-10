@@ -1,18 +1,17 @@
 ﻿// Adopted Implementation from: MOSA Project
 
-using Mosa.Runtime;
-using Mosa.Runtime.x86;
 using System;
 using System.Runtime.CompilerServices;
-using System.Threading;
-
 using System.Runtime.InteropServices;
+using System.Threading;
+using lonos.Kernel.Core.Diagnostics;
 using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Processes;
 using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.Processes;
 using lonos.Kernel.Core.SysCalls;
+using Mosa.Runtime;
+using Mosa.Runtime.x86;
 
 namespace lonos.Kernel.Core.Scheduling
 {
@@ -54,7 +53,7 @@ namespace lonos.Kernel.Core.Scheduling
             //AsmDebugFunction.DebugFunction1();
         }
 
-        public unsafe static void Start()
+        public static unsafe void Start()
         {
             SetThreadID(0);
             Enabled = true;
@@ -167,7 +166,7 @@ namespace lonos.Kernel.Core.Scheduling
 
         private static object SyncRoot = new object();
 
-        public unsafe static Thread CreateThread(Process proc, ThreadStartOptions options)
+        public static unsafe Thread CreateThread(Process proc, ThreadStartOptions options)
         {
             Thread thread;
             uint threadID;
@@ -298,7 +297,7 @@ namespace lonos.Kernel.Core.Scheduling
             return thread;
         }
 
-        public unsafe static void SaveThreadState(uint threadID, IntPtr stackState)
+        public static unsafe void SaveThreadState(uint threadID, IntPtr stackState)
         {
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
 
@@ -312,7 +311,7 @@ namespace lonos.Kernel.Core.Scheduling
             if (thread.User)
             {
                 Assert.IsSet(thread.StackState, "thread.StackState is null");
-                *(thread.StackState) = *((IDTTaskStack*)stackState);
+                *thread.StackState = *(IDTTaskStack*)stackState;
             }
             else
             {
@@ -351,7 +350,7 @@ namespace lonos.Kernel.Core.Scheduling
             //Native.SetFS(threadID);
         }
 
-        public unsafe static void SwitchToThread(uint threadID)
+        public static unsafe void SwitchToThread(uint threadID)
         {
             var thread = Threads[threadID];
             var proc = thread.Process;
@@ -390,7 +389,7 @@ namespace lonos.Kernel.Core.Scheduling
         }
 
         [DllImport("x86/lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
-        private extern static void InterruptReturn(uint stackStatePointer, uint dataSegment, uint pageTableAddr);
+        private static extern void InterruptReturn(uint stackStatePointer, uint dataSegment, uint pageTableAddr);
 
         private static uint FindEmptyThreadSlot()
         {
@@ -417,7 +416,7 @@ namespace lonos.Kernel.Core.Scheduling
             }
         }
 
-        private unsafe static void ResetThread(uint threadID)
+        private static unsafe void ResetThread(uint threadID)
         {
             var thread = Threads[threadID];
             lock (thread)

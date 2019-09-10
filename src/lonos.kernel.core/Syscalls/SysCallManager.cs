@@ -1,19 +1,19 @@
-﻿using lonos.Kernel.Core.Collections;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Processes;
-using lonos.Kernel.Core.Scheduling;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using lonos.Kernel.Core.Collections;
+using lonos.Kernel.Core.Interrupts;
+using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.Processes;
+using lonos.Kernel.Core.Scheduling;
 
 namespace lonos.Kernel.Core.SysCalls
 {
-    public unsafe static class SysCallManager
+    public static unsafe class SysCallManager
     {
 
         public const uint IRQ = 250;
@@ -53,7 +53,7 @@ namespace lonos.Kernel.Core.SysCalls
             var pages = KMath.DivCeil(args->Arg1, 4096);
             var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
             var virtAddr = nextVirtPage;
-            nextVirtPage += (pages * 4096);
+            nextVirtPage += pages * 4096;
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
             return virtAddr;
         }
@@ -63,7 +63,7 @@ namespace lonos.Kernel.Core.SysCalls
             var physAddr = args->Arg1;
             var pages = KMath.DivCeil(args->Arg2, 4096);
             var virtAddr = nextVirtPage;
-            nextVirtPage += (pages * 4096);
+            nextVirtPage += pages * 4096;
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, physAddr, pages * 4096);
             return virtAddr;
         }
@@ -81,7 +81,7 @@ namespace lonos.Kernel.Core.SysCalls
             var pages = KMath.DivCeil(size, 4096);
             var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
             var virtAddr = nextVirtPage;
-            nextVirtPage += (pages * 4096);
+            nextVirtPage += pages * 4096;
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, page->PhysicalAddress, pages * 4096);
             var targetProc = ProcessManager.System;
             if (targetProcessID > 0)
@@ -170,7 +170,7 @@ namespace lonos.Kernel.Core.SysCalls
             };
         }
 
-        const uint CommandMask = BitsMask.Bits10;
+        private const uint CommandMask = BitsMask.Bits10;
 
         private static uint GetCommandNum(SysCallTarget target)
         {

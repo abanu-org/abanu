@@ -31,7 +31,7 @@ namespace lonos.test.malloc4
             {
                 fixed (malloc_data* ptr = &this)
                 {
-                    var bptr = ((byte*)ptr);
+                    var bptr = (byte*)ptr;
                     return bptr;
                 }
             }
@@ -64,12 +64,12 @@ namespace lonos.test.malloc4
 
         private static malloc_meta* MIN(malloc_meta* A, malloc_meta* B)
         {
-            return (A) > (B) ? (B) : (A);
+            return A > B ? B : A;
         }
 
         private static size_t MIN(size_t A, size_t B)
         {
-            return (A) > (B) ? (B) : (A);
+            return A > B ? B : A;
         }
 
         private static void SET_INUSE(malloc_meta* P) 
@@ -136,7 +136,7 @@ namespace lonos.test.malloc4
             while (n > (cur << res))
                 res++;
 
-            return (res);
+            return res;
         }
 
         private static size_t size_to_page_number(size_t size)
@@ -200,7 +200,7 @@ namespace lonos.test.malloc4
             size_t addr = (size_t)s;
             addr ^= GET_SIZE(s);
 
-            return (malloc_meta*)(addr);
+            return (malloc_meta*)addr;
         }
 
         static malloc_meta* get_meta(void* ptr)

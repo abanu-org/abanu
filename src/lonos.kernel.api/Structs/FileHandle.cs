@@ -26,7 +26,7 @@ namespace lonos.Kernel.Core
         [NonVersionable]
 		public unsafe FileHandle(ulong value)
         {
-            _value = (void*)((uint)value);
+            _value = (void*)(uint)value;
         }
 
         [NonVersionable]
@@ -39,20 +39,20 @@ namespace lonos.Kernel.Core
         {
 			if (obj is FileHandle)
             {
-				return (_value == ((FileHandle)obj)._value);
+				return _value == ((FileHandle)obj)._value;
             }
             return false;
         }
 
         public unsafe override int GetHashCode()
         {
-            return ((int)_value);
+            return (int)_value;
         }
 
         [NonVersionable]
         public unsafe uint ToUInt32()
         {
-            return ((uint)_value);
+            return (uint)_value;
         }
 
         [NonVersionable]

@@ -38,7 +38,7 @@ namespace Mosa.Kernel.x86
         /// <value>
         ///     <c>true</c> if this instance is multiboot enabled; otherwise, <c>false</c>.
         /// </value>
-        public static bool IsMultibootEnabled => (multiBootInfo != null);
+        public static bool IsMultibootEnabled => multiBootInfo != null;
 
         /// <summary>
         /// Gets the flags.
@@ -166,12 +166,12 @@ namespace Mosa.Kernel.x86
         /// <value>True if VBE is present.</value>
         public static bool VBEPresent
         {
-            get { return ((Flags & (1 << 11)) == (1 << 11)); }
+            get { return (Flags & (1 << 11)) == (1 << 11); }
         }
 
         public static bool FBPresent
         {
-            get { return ((Flags & (1 << 12)) == (1 << 12)); }
+            get { return (Flags & (1 << 12)) == (1 << 12); }
         }
 
         /// <summary>

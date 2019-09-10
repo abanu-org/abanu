@@ -8,12 +8,12 @@ namespace lonos.Kernel
 
         public static uint AlignValueCeil(uint value, uint dividor)
         {
-            return (value / dividor) * dividor + dividor;
+            return value / dividor * dividor + dividor;
         }
 
         public static uint AlignValueFloor(uint value, uint dividor)
         {
-            return (value / dividor) * dividor;
+            return value / dividor * dividor;
         }
 
         public static uint DivCeil(uint value, uint dividor)

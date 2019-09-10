@@ -1,21 +1,22 @@
-﻿using lonos.Kernel.Core.PageManagement;
-using System;
+﻿using System;
+using lonos.Kernel.Core.PageManagement;
+
 namespace lonos.Kernel.Core.Boot
 {
-    public unsafe static class BootInfo
+    public static class BootInfo
     {
 
-        public unsafe static BootInfoHeader* Header;
+        public static unsafe BootInfoHeader* Header;
 
         public static bool Present;
 
-        public static void SetupStage1()
+        public static unsafe void SetupStage1()
         {
             Header = (BootInfoHeader*)Address.KernelBootInfo;
             ApplyAddresses();
         }
 
-        public static void SetupStage2()
+        public static unsafe void SetupStage2()
         {
             if (Header->Magic != BootInfoHeader.BootInfoMagic)
             {
@@ -56,14 +57,14 @@ namespace lonos.Kernel.Core.Boot
         //     return Addr.Zero;
         // }
 
-        static void ApplyAddresses()
+        private static unsafe void ApplyAddresses()
         {
             GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
             PageTable.ConfigureType(Header->PageTableType);
             PageTable.KernelTable.KernelSetup(GetMap(BootInfoMemoryType.PageTable)->Start);
         }
 
-        public static BootInfoMemory* GetMap(BootInfoMemoryType type)
+        public static unsafe BootInfoMemory* GetMap(BootInfoMemoryType type)
         {
             var mapLen = Header->MemoryMapLength;
             //KernelMessage.WriteLine("Maps: {0}", mapLen);

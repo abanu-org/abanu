@@ -350,7 +350,7 @@ namespace lonos.Kernel.Core
             char* first;
             fixed (char* ptr = chars)
             {
-                first = (ptr + this.length);
+                first = ptr + this.length;
             }
 
             len = count;

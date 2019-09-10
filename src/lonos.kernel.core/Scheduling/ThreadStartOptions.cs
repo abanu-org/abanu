@@ -1,8 +1,8 @@
 ﻿// Adopted Implementation from: MOSA Project
 
+using System.Threading;
 using lonos.Kernel.Core.MemoryManagement;
 using Mosa.Runtime;
-using System.Threading;
 
 namespace lonos.Kernel.Core.Scheduling
 {

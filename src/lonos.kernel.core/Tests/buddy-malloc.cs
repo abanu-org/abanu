@@ -14,13 +14,15 @@
  * for larger allocations again.
  */
 
+#pragma warning disable SA1121 // Use built-in type alias
+
 #if BITS_32
 using PointerType = System.UInt32;
 #else
 using PointerType = System.UInt64;
 #endif
 
-unsafe public abstract class BinaryBuddyAllocator_TestImplementation
+public unsafe abstract class BinaryBuddyAllocator_TestImplementation
 {
 
     /*
@@ -29,15 +31,15 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
          * right after this header (i.e. the size occupies the 8 bytes before the
          * returned address).
          */
-    const byte HEADER_SIZE = 8;
+    private const byte HEADER_SIZE = 8;
 
     /*
      * The minimum allocation size is 16 bytes because we have an 8-byte header and
      * we need to stay 8-byte aligned.
      */
-    const byte MIN_ALLOC_LOG2 = 4;
+    private const byte MIN_ALLOC_LOG2 = 4;
     //#define MIN_ALLOC ((size_t)1 << MIN_ALLOC_LOG2)
-    const byte MIN_ALLOC = 1 << MIN_ALLOC_LOG2;
+    private const byte MIN_ALLOC = 1 << MIN_ALLOC_LOG2;
 
     /*
  * The maximum allocation size is currently set to 2gb. This is the total size
@@ -46,8 +48,8 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
  * heaps will have multiple allocations, so the real maximum allocation limit
  * is at most 1gb.
  */
-    const byte MAX_ALLOC_LOG2 = 31;
-    const uint MAX_ALLOC = unchecked((uint)(1 << MAX_ALLOC_LOG2));
+    private const byte MAX_ALLOC_LOG2 = 31;
+    private const uint MAX_ALLOC = unchecked((uint)(1 << MAX_ALLOC_LOG2));
 
     /*
  * Allocations are done in powers of two starting from MIN_ALLOC and ending at
@@ -57,7 +59,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
  * Given a bucket index, the size of the allocations in that bucket can be
  * found with "(size_t)1 << (MAX_ALLOC_LOG2 - bucket)".
  */
-    protected const byte BUCKET_COUNT = (MAX_ALLOC_LOG2 - MIN_ALLOC_LOG2 + 1);
+    protected const byte BUCKET_COUNT = MAX_ALLOC_LOG2 - MIN_ALLOC_LOG2 + 1;
 
     /*
  * Free lists are stored as circular doubly-linked lists. Every possible
@@ -88,7 +90,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
  * root. Instead, we have the tree start out small and grow the size of the
  * tree as we use more memory. The size of the tree is tracked by this value.
  */
-    byte bucket_limit;
+    private byte bucket_limit;
 
     /*
  * This array represents a linearized binary tree of bits. Every possible
@@ -156,7 +158,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
      * list is an entry where both links point to itself. This makes insertion
      * and removal simpler because they don't need any branches.
      */
-    static void list_init(list_t* list)
+    private static void list_init(list_t* list)
     {
         list->prev = list;
         list->next = list;
@@ -166,7 +168,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
      * Append the provided entry to the end of the list. This assumes the entry
      * isn't in a list already because it overwrites the linked list pointers.
      */
-    static void list_push(list_t* list, list_t* entry)
+    private static void list_push(list_t* list, list_t* entry)
     {
         list_t* prev = list->prev;
         entry->prev = prev;
@@ -181,7 +183,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
      * because the lists are circular, so the list's pointers will automatically
      * be updated if the first or last entries are removed.
      */
-    static void list_remove(list_t* entry)
+    private static void list_remove(list_t* entry)
     {
         list_t* prev = entry->prev;
         list_t* next = entry->next;
@@ -192,7 +194,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
     /*
      * Remove and return the first entry in the list or NULL if the list is empty.
      */
-    static list_t* list_pop(list_t* list)
+    private static list_t* list_pop(list_t* list)
     {
         list_t* back = list->prev;
         if (back == list) return null;
@@ -206,7 +208,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
      * required to be provided here since having them means we can avoid the loop
      * and have this function return in constant time.
      */
-    page* ptr_for_node(uint index, byte bucket)
+    private page* ptr_for_node(uint index, byte bucket)
     {
         //return (void*)(((PointerType)base_ptr) + ((index - (PointerType)(1 << bucket) + 1) << (MAX_ALLOC_LOG2 - bucket)));
         return &firstPage[index];
@@ -219,7 +221,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
      * address. There are often many nodes that all map to the same address, so
      * the bucket is needed to uniquely identify a node.
      */
-    uint node_for_ptr(page* ptr, byte bucket)
+    private uint node_for_ptr(page* ptr, byte bucket)
     {
         //return (uint)((((uint)((PointerType)ptr - (PointerType)base_ptr)) >> (MAX_ALLOC_LOG2 - bucket)) + (1 << bucket) - 1);
         return (uint)((PointerType)((PointerType)ptr - (PointerType)firstPage) / (PointerType)sizeof(page));
@@ -258,7 +260,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
  * tree by repeatedly doubling it in size until the root lies at the provided
  * bucket index. Each doubling lowers the bucket limit by 1.
  */
-    bool lower_bucket_limit(byte bucket)
+    private bool lower_bucket_limit(byte bucket)
     {
         while (bucket < bucket_limit)
         {
@@ -441,7 +443,7 @@ unsafe public abstract class BinaryBuddyAllocator_TestImplementation
              */
             while (bucket < original_bucket)
             {
-                i = i * 2 + 1;
+                i = (i * 2) + 1;
                 bucket++;
                 flip_parent_is_split(i);
                 list_push(&buckets[bucket], (list_t*)ptr_for_node(i + 1, bucket));
