@@ -7,6 +7,7 @@ using lonos.Kernel.Core.Diagnostics;
 using System.Runtime.InteropServices;
 
 #pragma warning disable SA1649 // File name should match first type name
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 
 #if BITS_64
 using malloc_meta = System.UInt64;
@@ -27,7 +28,7 @@ namespace lonos.Kernel.Core.MemoryManagement
     {
         public malloc_meta* next;
         public malloc_meta* prev;
-    };
+    }
 
     public unsafe struct malloc_data
     {
@@ -46,13 +47,13 @@ namespace lonos.Kernel.Core.MemoryManagement
             }
         }
 
-    };
+    }
 
     public unsafe struct malloc_meta
     {
         public size_t size;
         public malloc_data data;
-    };
+    }
 
     public unsafe class Allocator
     {
@@ -153,7 +154,7 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         private void add_to_free_list(malloc_meta* new_)
         {
-            malloc_meta** list_head = &list_heads[order(GET_SIZE(new_)) - MIN_SHIFT]; ;
+            malloc_meta** list_head = &list_heads[order(GET_SIZE(new_)) - MIN_SHIFT];
 
             SET_FREE(new_);
             new_->data.free.next = *list_head;
@@ -369,7 +370,9 @@ namespace lonos.Kernel.Core.MemoryManagement
             if (size <= PAGE_SIZE)
             {
                 if (size == GET_SIZE(meta))
+                {
                     return ptr;
+                }
                 else if (size > GET_SIZE(meta))
                 {
                     size_t previous_size = GET_SIZE(meta) - META_SIZE;

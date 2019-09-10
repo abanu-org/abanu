@@ -146,7 +146,9 @@ namespace lonos.Kernel.Core.MemoryManagement
                 var map = BootInfo.Header->MemoryMapArray[i];
                 var kmap = new KernelMemoryMap(map.Start, map.Size, map.Type);
                 if (kmap.Type == BootInfoMemoryType.SystemUsable)
+                {
                     Header->SystemUsable.Add(kmap);
+                }
                 else
                 {
                     Header->Used.Add(kmap);

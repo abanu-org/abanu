@@ -34,7 +34,7 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         private static void FreeRawVirtualMemory(uint size)
         {
-            KernelMessage.WriteLine("NotImplemented"); ;
+            KernelMessage.WriteLine("NotImplemented");
         }
 
         private static Allocator kmallocAllocator;
@@ -124,9 +124,9 @@ namespace lonos.Kernel.Core.MemoryManagement
         {
         }
 
-        public struct pgprot_t { }
+        public struct Pgprot_t { }
 
-        public static unsafe Addr MapVirtualPages(Page* pages, uint count, ulong flags, pgprot_t protection)
+        public static unsafe Addr MapVirtualPages(Page* pages, uint count, ulong flags, Pgprot_t protection)
         {
             return Addr.Zero;
         }

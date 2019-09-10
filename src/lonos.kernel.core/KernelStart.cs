@@ -52,8 +52,8 @@ namespace lonos.Kernel.Core
             KernelMessage.WriteLine("KConfig.UsePAE: {0}", KConfig.UsePAE);
             KernelMessage.WriteLine("Apply PageTableType: {0}", (uint)BootInfo.Header->PageTableType);
 
-            ulongtest1();
-            ulongtest2();
+            Ulongtest1();
+            Ulongtest2();
 
             // Detect environment (Memory Maps, Video Mode, etc.)
             BootInfo.SetupStage2();
@@ -245,7 +245,7 @@ namespace lonos.Kernel.Core
         //     }
         // }
 
-        private static void ulongtest1()
+        private static void Ulongtest1()
         {
             uint mask = 0x00004000;
             uint v1 = 0x00000007;
@@ -260,7 +260,7 @@ namespace lonos.Kernel.Core
             KernelMessage.WriteLine("bla2: {0:X8}", r2Int);
         }
 
-        private static unsafe void ulongtest2()
+        private static unsafe void Ulongtest2()
         {
             ulong addr = 0x0000000019ad000;
             ulong data = 40004005;

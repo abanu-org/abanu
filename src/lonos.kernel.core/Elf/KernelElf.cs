@@ -25,21 +25,6 @@ namespace lonos.Kernel.Core.Elf
             Native = FromSectionName("native");
         }
 
-        /// <summary>
-        /// Currently unused, because Kernel is loaded via from kernel.loader
-        /// </summary>
-        /*unsafe static ElfHelper FromMultiBootInfo(MultiBootInfo* multiBootInfo)
-        {
-            var helper = new ElfHelper
-            {
-                SectionHeaderArray = (ElfSectionHeader*)multiBootInfo->ElfSectionHeader->Addr,
-                StringTableSectionHeaderIndex = multiBootInfo->ElfSectionHeader->Shndx,
-                SectionHeaderCount = multiBootInfo->ElfSectionHeader->Count
-            };
-            helper.Init();
-            return helper;
-        }*/
-
         private static unsafe ElfHelper FromAddress(Addr elfStart)
         {
             var elfHeader = (ElfHeader*)elfStart;

@@ -198,22 +198,22 @@ namespace lonos.Kernel.Core.Interrupts
             switch (code)
             {
                 case 0x02:
-                    key1();
+                    Key1();
                     break;
                 case 0x03:
-                    key2();
+                    Key2();
                     break;
                 case 0x04:
-                    key3();
+                    Key3();
                     break;
                 case 0x05:
-                    key4();
+                    Key4();
                     break;
                 case 0x06:
-                    key5();
+                    Key5();
                     break;
                 case 0x07:
-                    key6();
+                    Key6();
                     break;
             }
         }
@@ -223,28 +223,28 @@ namespace lonos.Kernel.Core.Interrupts
             Scheduler.TerminateCurrentThread();
         }
 
-        private static void key1()
+        private static void Key1()
         {
             Screen.Clear();
         }
 
-        private static void key2()
+        private static void Key2()
         {
         }
 
-        private static void key3()
+        private static void Key3()
         {
         }
 
-        private static void key4()
+        private static void Key4()
         {
         }
 
-        private static void key5()
+        private static void Key5()
         {
         }
 
-        private static void key6()
+        private static void Key6()
         {
         }
 

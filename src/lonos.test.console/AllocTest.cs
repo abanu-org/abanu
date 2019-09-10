@@ -18,7 +18,7 @@ namespace lonos.test.console
         public void run()
         {
             malloc = new MyAlloc();
-            malloc.init();
+            malloc.Init();
             for (var i = 0; i < 10000; i++)
             {
                 if (hash.Count > 3 && rnd.Next(2) == 0)
@@ -43,9 +43,9 @@ namespace lonos.test.console
         public void Alloc(uint size)
         {
             var data = new byte[size];
-            var bucket = BinaryBuddyAllocator_TestImplementation.bucket_for_request(size + 8);
+            var bucket = BinaryBuddyAllocator_TestImplementation.Bucket_for_request(size + 8);
             rnd.NextBytes(data);
-            var page = malloc.malloc(bucket);
+            var page = malloc.Malloc(bucket);
             for (var i = 0; i < size; i++)
             {
                 ((byte*)page->ptr)[i] = data[i];
@@ -60,7 +60,7 @@ namespace lonos.test.console
             var keys = hash.Keys.ToList();
             var ptr = keys[rnd.Next(keys.Count - 1)];
             hash.Remove(ptr);
-            malloc.free((BinaryBuddyAllocator_TestImplementation.page*)ptr);
+            malloc.Free((BinaryBuddyAllocator_TestImplementation.Page*)ptr);
         }
 
         private void Check()
@@ -84,7 +84,7 @@ namespace lonos.test.console
         private void* addr;
 
 
-        protected override bool parent_is_split(uint index)
+        protected override bool Parent_is_split(uint index)
         {
             index = (index - 1) / 2;
             return firstPage[index].parent_is_split;
@@ -93,7 +93,7 @@ namespace lonos.test.console
         /*
          * Given the index of a node, this flips the "is split" flag of the parent.
          */
-        protected override void flip_parent_is_split(uint index)
+        protected override void Flip_parent_is_split(uint index)
         {
             index = (index - 1) / 2;
             firstPage[index].parent_is_split = !firstPage[index].parent_is_split;
@@ -102,9 +102,9 @@ namespace lonos.test.console
         public MyAlloc()
         {
             addr = (void*)Marshal.AllocHGlobal(128 * 1024 * 1024);
-            buckets = (list_t*)Marshal.AllocHGlobal(sizeof(list_t) * BUCKET_COUNT);
-            var nodeIsSplitSize = sizeof(page) * 32768;
-            firstPage = (page*)Marshal.AllocHGlobal(nodeIsSplitSize);
+            buckets = (List_t*)Marshal.AllocHGlobal(sizeof(List_t) * BUCKET_COUNT);
+            var nodeIsSplitSize = sizeof(Page) * 32768;
+            firstPage = (Page*)Marshal.AllocHGlobal(nodeIsSplitSize);
             var data = (byte*)Marshal.AllocHGlobal(32768*4096);
 
             for (var i = 0; i < 32768; i++)
@@ -113,12 +113,12 @@ namespace lonos.test.console
             }
         }
 
-        protected override unsafe bool brk(void* addr)
+        protected override unsafe bool Brk(void* addr)
         {
             return true;
         }
 
-        protected override unsafe void* sbrk(uint size)
+        protected override unsafe void* Sbrk(uint size)
         {
             return addr;
         }

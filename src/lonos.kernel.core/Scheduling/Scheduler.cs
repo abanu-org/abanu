@@ -76,7 +76,7 @@ namespace lonos.Kernel.Core.Scheduling
                 Native.Hlt();
         }
 
-        private static void dummy(uint local)
+        private static void Dummy(uint local)
         {
         }
 

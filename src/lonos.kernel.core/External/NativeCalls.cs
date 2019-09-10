@@ -28,12 +28,12 @@ namespace lonos.Kernel.Core.External
             bochsDebugAddr = KernelElf.Native.GetPhysAddrOfSymbol("bochs_debug");
         }
 
-        public static void proc1()
+        public static void Proc1()
         {
             Native.Call(prog1Addr);
         }
 
-        public static void proc2()
+        public static void Proc2()
         {
             Native.Call(prog2Addr);
         }

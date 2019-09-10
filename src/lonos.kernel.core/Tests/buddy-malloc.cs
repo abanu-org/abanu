@@ -16,6 +16,7 @@
  */
 
 #pragma warning disable SA1649 // File name should match first type name
+#pragma warning disable SA1307 // Accessible fields should begin with upper-case letter
 
 #if BITS_32
 using PointerType = System.UInt32;
@@ -69,10 +70,10 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
  * "sizeof(list_t)". MIN_ALLOC is currently 16 bytes, so this will be true for
  * both 32-bit and 64-bit.
  */
-    protected unsafe struct list_t
+    protected unsafe struct List_t
     {
-        public list_t* prev;
-        public list_t* next;
+        public List_t* prev;
+        public List_t* next;
     }
 
     /*
@@ -81,7 +82,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
  * MAX_ALLOC (i.e. the whole address space).
  */
 
-    protected list_t* buckets;
+    protected List_t* buckets;
 
     /*
  * We could initialize the allocator by giving it one free block the size of
@@ -159,7 +160,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
      * list is an entry where both links point to itself. This makes insertion
      * and removal simpler because they don't need any branches.
      */
-    private static void list_init(list_t* list)
+    private static void List_init(List_t* list)
     {
         list->prev = list;
         list->next = list;
@@ -169,9 +170,9 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
      * Append the provided entry to the end of the list. This assumes the entry
      * isn't in a list already because it overwrites the linked list pointers.
      */
-    private static void list_push(list_t* list, list_t* entry)
+    private static void List_push(List_t* list, List_t* entry)
     {
-        list_t* prev = list->prev;
+        List_t* prev = list->prev;
         entry->prev = prev;
         entry->next = list;
         prev->next = entry;
@@ -184,10 +185,10 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
      * because the lists are circular, so the list's pointers will automatically
      * be updated if the first or last entries are removed.
      */
-    private static void list_remove(list_t* entry)
+    private static void List_remove(List_t* entry)
     {
-        list_t* prev = entry->prev;
-        list_t* next = entry->next;
+        List_t* prev = entry->prev;
+        List_t* next = entry->next;
         prev->next = next;
         next->prev = prev;
     }
@@ -195,11 +196,11 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
     /*
      * Remove and return the first entry in the list or NULL if the list is empty.
      */
-    private static list_t* list_pop(list_t* list)
+    private static List_t* List_pop(List_t* list)
     {
-        list_t* back = list->prev;
+        List_t* back = list->prev;
         if (back == list) return null;
-        list_remove(back);
+        List_remove(back);
         return back;
     }
 
@@ -209,40 +210,40 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
      * required to be provided here since having them means we can avoid the loop
      * and have this function return in constant time.
      */
-    private page* ptr_for_node(uint index, byte bucket)
+    private Page* Ptr_for_node(uint index, byte bucket)
     {
         //return (void*)(((PointerType)base_ptr) + ((index - (PointerType)(1 << bucket) + 1) << (MAX_ALLOC_LOG2 - bucket)));
         return &firstPage[index];
     }
 
-    public page* firstPage;
+    public Page* firstPage;
 
     /*
      * This maps from an address of memory to the node that represents that
      * address. There are often many nodes that all map to the same address, so
      * the bucket is needed to uniquely identify a node.
      */
-    private uint node_for_ptr(page* ptr, byte bucket)
+    private uint Node_for_ptr(Page* ptr, byte bucket)
     {
         //return (uint)((((uint)((PointerType)ptr - (PointerType)base_ptr)) >> (MAX_ALLOC_LOG2 - bucket)) + (1 << bucket) - 1);
-        return (uint)((PointerType)((PointerType)ptr - (PointerType)firstPage) / (PointerType)sizeof(page));
+        return (uint)((PointerType)((PointerType)ptr - (PointerType)firstPage) / (PointerType)sizeof(Page));
     }
 
     /*
      * Given the index of a node, this returns the "is split" flag of the parent.
      */
-    protected abstract bool parent_is_split(uint index);
+    protected abstract bool Parent_is_split(uint index);
 
     /*
      * Given the index of a node, this flips the "is split" flag of the parent.
      */
-    protected abstract void flip_parent_is_split(uint index);
+    protected abstract void Flip_parent_is_split(uint index);
 
     /*
      * Given the requested size passed to "malloc", this function returns the index
      * of the smallest bucket that can fit that size.
      */
-    public static byte bucket_for_request(uint request)
+    public static byte Bucket_for_request(uint request)
     {
         byte bucket = BUCKET_COUNT - 1;
         uint size = MIN_ALLOC;
@@ -261,11 +262,11 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
  * tree by repeatedly doubling it in size until the root lies at the provided
  * bucket index. Each doubling lowers the bucket limit by 1.
  */
-    private bool lower_bucket_limit(byte bucket)
+    private bool Lower_bucket_limit(byte bucket)
     {
         while (bucket < bucket_limit)
         {
-            uint root = node_for_ptr(firstPage, bucket_limit);
+            uint root = Node_for_ptr(firstPage, bucket_limit);
             void* right_child;
 
             /*
@@ -274,11 +275,11 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
              * clear the root free list, increase the bucket limit, and add a single
              * block with the newly-expanded address space to the new root free list.
              */
-            if (!parent_is_split(root))
+            if (!Parent_is_split(root))
             {
-                list_remove((list_t*)firstPage);
-                list_init(&buckets[--bucket_limit]);
-                list_push(&buckets[bucket_limit], (list_t*)firstPage);
+                List_remove((List_t*)firstPage);
+                List_init(&buckets[--bucket_limit]);
+                List_push(&buckets[bucket_limit], (List_t*)firstPage);
                 continue;
             }
 
@@ -290,13 +291,13 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
              * our current parent because it's already on (we know because we just
              * checked it above).
              */
-            right_child = ptr_for_node(root + 1, bucket_limit);
+            right_child = Ptr_for_node(root + 1, bucket_limit);
             //if (!update_max_ptr((void*)((PointerType)right_child + (PointerType)sizeof(list_t))))
             //{
             //    return false;
             //}
-            list_push(&buckets[bucket_limit], (list_t*)right_child);
-            list_init(&buckets[--bucket_limit]);
+            List_push(&buckets[bucket_limit], (List_t*)right_child);
+            List_init(&buckets[--bucket_limit]);
 
             /*
              * Set the grandparent's SPLIT flag so if we need to lower the bucket limit
@@ -305,23 +306,23 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
             root = (root - 1) / 2;
             if (root != 0)
             {
-                flip_parent_is_split(root);
+                Flip_parent_is_split(root);
             }
         }
 
         return true;
     }
 
-    public void init()
+    public void Init()
     {
         //base_ptr = max_ptr = sbrk(0);
         bucket_limit = BUCKET_COUNT - 1;
         //update_max_ptr((void*)((PointerType)base_ptr + (PointerType)sizeof(list_t)));
-        list_init(&buckets[BUCKET_COUNT - 1]);
-        list_push(&buckets[BUCKET_COUNT - 1], (list_t*)firstPage);
+        List_init(&buckets[BUCKET_COUNT - 1]);
+        List_push(&buckets[BUCKET_COUNT - 1], (List_t*)firstPage);
     }
 
-    public page* malloc(byte bucket)
+    public Page* Malloc(byte bucket)
     {
         byte original_bucket;
 
@@ -364,13 +365,13 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
         while (bucket + 1 != 0)
         {
             uint size, bytes_needed, i;
-            page* ptr;
+            Page* ptr;
 
             /*
              * We may need to grow the tree to be able to fit an allocation of this
              * size. Try to grow the tree and stop here if we can't.
              */
-            if (!lower_bucket_limit(bucket))
+            if (!Lower_bucket_limit(bucket))
             {
                 return null;
             }
@@ -379,7 +380,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
              * Try to pop a block off the free list for this bucket. If the free list
              * is empty, we're going to have to split a larger block instead.
              */
-            ptr = (page*)list_pop(&buckets[bucket]);
+            ptr = (Page*)List_pop(&buckets[bucket]);
             if (ptr == null)
             {
                 /*
@@ -399,11 +400,11 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
                  * the SPLIT state and then add the new right child node to the free list
                  * for this bucket. Popping the free list will give us this right child.
                  */
-                if (!lower_bucket_limit((byte)(bucket - 1)))
+                if (!Lower_bucket_limit((byte)(bucket - 1)))
                 {
                     return null;
                 }
-                ptr = (page*)list_pop(&buckets[bucket]);
+                ptr = (Page*)List_pop(&buckets[bucket]);
             }
 
             /*
@@ -429,10 +430,10 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
              * grandparent to be UNUSED (if our buddy chunk was UNUSED, our parent
              * wouldn't ever have been split in the first place).
              */
-            i = node_for_ptr(ptr, bucket);
+            i = Node_for_ptr(ptr, bucket);
             if (i != 0)
             {
-                flip_parent_is_split(i);
+                Flip_parent_is_split(i);
             }
 
             /*
@@ -446,8 +447,8 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
             {
                 i = (i * 2) + 1;
                 bucket++;
-                flip_parent_is_split(i);
-                list_push(&buckets[bucket], (list_t*)ptr_for_node(i + 1, bucket));
+                Flip_parent_is_split(i);
+                List_push(&buckets[bucket], (List_t*)Ptr_for_node(i + 1, bucket));
             }
 
             /*
@@ -463,7 +464,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
         return null;
     }
 
-    public void free(page* ptr)
+    public void Free(Page* ptr)
     {
         byte bucket;
         uint i;
@@ -482,7 +483,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
          * look up the index of the node corresponding to this address.
          */
         bucket = ptr->bucket;
-        i = node_for_ptr(ptr, bucket);
+        i = Node_for_ptr(ptr, bucket);
 
         /*
          * Traverse up to the root node, flipping USED blocks to UNUSED and merging
@@ -496,7 +497,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
              * UNUSED flags of both children, and our UNUSED flag (which isn't ever
              * stored explicitly) has just changed.
              */
-            flip_parent_is_split(i);
+            Flip_parent_is_split(i);
 
             /*
              * If the parent is now SPLIT, that means our buddy is USED, so don't merge
@@ -506,7 +507,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
              * Also stop here if we're at the current root node, even if that root node
              * is now UNUSED. Root nodes don't have a buddy so we can't merge with one.
              */
-            if (parent_is_split(i) || bucket == bucket_limit)
+            if (Parent_is_split(i) || bucket == bucket_limit)
             {
                 break;
             }
@@ -518,7 +519,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
              * add the merged parent to its free list yet. That will be done once after
              * this loop is finished.
              */
-            list_remove((list_t*)ptr_for_node(((i - 1) ^ 1) + 1, bucket));
+            List_remove((List_t*)Ptr_for_node(((i - 1) ^ 1) + 1, bucket));
             i = (i - 1) / 2;
             bucket--;
         }
@@ -529,16 +530,16 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
          * followed by a "malloc" of the same size to ideally use the same address
          * for better memory locality.
          */
-        list_push(&buckets[bucket], (list_t*)ptr_for_node(i, bucket));
+        List_push(&buckets[bucket], (List_t*)Ptr_for_node(i, bucket));
     }
 
     //TODO: Exteral
-    protected abstract bool brk(void* addr);
+    protected abstract bool Brk(void* addr);
 
     //TODO: Exteral
-    protected abstract void* sbrk(uint size);
+    protected abstract void* Sbrk(uint size);
 
-    public struct page
+    public struct Page
     {
         public byte bucket;
         public bool parent_is_split;

@@ -11,5 +11,5 @@ namespace lonos.Kernel.Core.Scheduling
         Running,
         Waiting,
         Terminated,
-    };
+    }
 }

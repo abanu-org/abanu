@@ -7,6 +7,9 @@
 
     "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
     "settings": {
+        "readabilityRules": {
+            "allowBuiltInTypeAliases": true
+        },
         "documentationRules": {
             "companyName": "Lonos Project",
             "copyrightText": "This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io\nLicensed under the {licenseName} license. See {licenseFile} file in the project root for full license information.",

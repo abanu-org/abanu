@@ -38,20 +38,20 @@ namespace lonos.Kernel.Core.SysCalls
 
         private static void SetCommands()
         {
-            SetCommand(SysCallTarget.RequestMemory, cmd_RequestMemory);
-            SetCommand(SysCallTarget.RequestMessageBuffer, cmd_RequestMessageBuffer);
-            SetCommand(SysCallTarget.WriteDebugMessage, cmd_WriteDebugMessage);
-            SetCommand(SysCallTarget.WriteDebugChar, cmd_WriteDebugChar);
-            SetCommand(SysCallTarget.ServiceFunc1, cmd_CallServiceFunc1);
-            SetCommand(SysCallTarget.GetProcessIDForCommand, cmd_GetProcessIDForCommand);
-            SetCommand(SysCallTarget.ServiceReturn, cmd_ServiceReturn);
-            SetCommand(SysCallTarget.GetPhysicalMemory, cmd_GetPhysicalMemory);
-            SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, cmd_TranslateVirtualToPhysicalAddress);
+            SetCommand(SysCallTarget.RequestMemory, Cmd_RequestMemory);
+            SetCommand(SysCallTarget.RequestMessageBuffer, Cmd_RequestMessageBuffer);
+            SetCommand(SysCallTarget.WriteDebugMessage, Cmd_WriteDebugMessage);
+            SetCommand(SysCallTarget.WriteDebugChar, Cmd_WriteDebugChar);
+            SetCommand(SysCallTarget.ServiceFunc1, Cmd_CallServiceFunc1);
+            SetCommand(SysCallTarget.GetProcessIDForCommand, Cmd_GetProcessIDForCommand);
+            SetCommand(SysCallTarget.ServiceReturn, Cmd_ServiceReturn);
+            SetCommand(SysCallTarget.GetPhysicalMemory, Cmd_GetPhysicalMemory);
+            SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, Cmd_TranslateVirtualToPhysicalAddress);
         }
 
         private static uint nextVirtPage;
 
-        private static uint cmd_RequestMemory(SystemMessage* args)
+        private static uint Cmd_RequestMemory(SystemMessage* args)
         {
             var pages = KMath.DivCeil(args->Arg1, 4096);
             var page = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
@@ -61,7 +61,7 @@ namespace lonos.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        private static uint cmd_GetPhysicalMemory(SystemMessage* args)
+        private static uint Cmd_GetPhysicalMemory(SystemMessage* args)
         {
             var physAddr = args->Arg1;
             var pages = KMath.DivCeil(args->Arg2, 4096);
@@ -71,13 +71,13 @@ namespace lonos.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        private static uint cmd_TranslateVirtualToPhysicalAddress(SystemMessage* args)
+        private static uint Cmd_TranslateVirtualToPhysicalAddress(SystemMessage* args)
         {
             var virtAddr = args->Arg1;
             return Scheduler.GetCurrentThread().Process.PageTable.GetPhysicalAddressFromVirtual(virtAddr);
         }
 
-        private static uint cmd_RequestMessageBuffer(SystemMessage* args)
+        private static uint Cmd_RequestMessageBuffer(SystemMessage* args)
         {
             var size = args->Arg1;
             var targetProcessID = args->Arg2;
@@ -96,7 +96,7 @@ namespace lonos.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        private static uint cmd_WriteDebugMessage(SystemMessage* args)
+        private static uint Cmd_WriteDebugMessage(SystemMessage* args)
         {
             // TODO: Security
             var start = args->Arg1;
@@ -109,14 +109,14 @@ namespace lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint cmd_WriteDebugChar(SystemMessage* args)
+        private static uint Cmd_WriteDebugChar(SystemMessage* args)
         {
             var c = (char)args->Arg1;
             KernelMessage.Write(c);
             return 0;
         }
 
-        private static uint cmd_CallServiceFunc1(SystemMessage* args)
+        private static uint Cmd_CallServiceFunc1(SystemMessage* args)
         {
             var serv = KernelStart.serv;
 
@@ -137,7 +137,7 @@ namespace lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint cmd_GetProcessIDForCommand(SystemMessage* args)
+        private static uint Cmd_GetProcessIDForCommand(SystemMessage* args)
         {
             var proc = Commands[GetCommandNum(args->Target)].Process;
             if (proc == null)
@@ -145,7 +145,7 @@ namespace lonos.Kernel.Core.SysCalls
             return proc.ProcessID;
         }
 
-        private static uint cmd_ServiceReturn(SystemMessage* args)
+        private static uint Cmd_ServiceReturn(SystemMessage* args)
         {
             var servThread = Scheduler.GetCurrentThread();
             var parent = servThread.ParentThread;
