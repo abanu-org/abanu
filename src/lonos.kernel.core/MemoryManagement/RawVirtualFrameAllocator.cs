@@ -2,7 +2,7 @@
 using System;
 namespace lonos.Kernel.Core.MemoryManagement
 {
-    public class RawVirtualFrameAllocator
+    public static class RawVirtualFrameAllocator
     {
 
         private static Addr _startVirtAddr;

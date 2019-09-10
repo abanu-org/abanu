@@ -22,7 +22,7 @@ namespace Mosa.Kernel.x86
 
 
         public static bool Enabled = false;
-        private static void dummy(uint err) { }
+
         /// <summary>
         /// Interrupts the handler.
         /// </summary>
@@ -49,21 +49,10 @@ namespace Mosa.Kernel.x86
                     KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
             }
 
-            if (irq == (uint)KnownInterrupt.PageFault)
-            {
-                var errorCode = stack->ErrorCode;
-                dummy(errorCode);
-            }
-
             if (!Enabled)
             {
                 PIC.SendEndOfInterrupt(irq);
                 return;
-            }
-
-            if (irq != (uint)KnownInterrupt.ClockTimer)
-            {
-                dummy(irq);
             }
 
             var interruptInfo = IDTManager.handlers[irq];

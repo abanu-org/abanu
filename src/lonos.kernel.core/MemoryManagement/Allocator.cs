@@ -1,4 +1,5 @@
 ﻿using System;
+using lonos.Kernel.Core.Diagnostics;
 
 #if BITS_64
 using malloc_meta = System.UInt64;
@@ -109,7 +110,7 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         static void malloc_abort(string msg)
         {
-            //panic
+            Panic.Error(msg);
         }
 
         private static size_t order(size_t l)
@@ -231,7 +232,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return fusion(left_buddy, s);
         }
 
-        void* large_malloc(size_t size)
+        static void* large_malloc(size_t size)
         {
             void* ptr = mmap(0, PROT_READ | PROT_WRITE, 1 + ((size - 1) / PAGE_SIZE));
             if (ptr == MAP_FAILED)
@@ -417,15 +418,15 @@ namespace lonos.Kernel.Core.MemoryManagement
             return ptr;
         }
 
-        private void memcpy(void* addr1, void* addr2, size_t size)
+        private static void memcpy(void* addr1, void* addr2, size_t size)
         {
         }
 
-        private void memset(void* addr1, byte value, size_t size)
+        private static void memset(void* addr1, byte value, size_t size)
         {
         }
 
-        private void* mmap(uint unknown, uint flags, size_t pages)
+        private static void* mmap(uint unknown, uint flags, size_t pages)
         {
             var bytes = pages * 4096;
             var ptr = (byte*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(pages);
@@ -436,7 +437,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return ptr;
         }
 
-        private uint munmap(void* addr)
+        private static uint munmap(void* addr)
         {
             return 0;
         }

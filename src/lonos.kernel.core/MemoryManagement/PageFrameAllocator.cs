@@ -348,7 +348,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Retrieves the size of a single memory page.
         /// </summary>
-        public uint PageSize { get { return 4096; } }
+        public static uint PageSize { get { return 4096; } }
 
         public uint PagesAvailable
         {

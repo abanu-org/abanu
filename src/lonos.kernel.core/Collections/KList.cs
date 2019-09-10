@@ -136,7 +136,7 @@ namespace lonos.Kernel.Core.Collections
             }
         }
 
-        private void Copy(T[] source, int sourceIndex, T[] destination, int destinationIndex, int size)
+        private static void Copy(T[] source, int sourceIndex, T[] destination, int destinationIndex, int size)
         {
             KernelMessage.WriteLine("Copy: {0}, {1}, {2}, {3}, {4}", (uint)source.Length, (uint)sourceIndex, (uint)destination.Length, (uint)destinationIndex, (uint)size);
 
@@ -156,12 +156,12 @@ namespace lonos.Kernel.Core.Collections
             get { return _size; }
         }
 
-        bool ICollection.IsSynchronized
+        public bool IsSynchronized
         {
             get { return false; }
         }
 
-        object ICollection.SyncRoot
+        public object SyncRoot
         {
             get
             {
@@ -169,16 +169,16 @@ namespace lonos.Kernel.Core.Collections
             }
         }
 
-        bool IList.IsReadOnly
+        public bool IsReadOnly
         {
             get { return false; }
         }
 
-        bool IList.IsFixedSize
+        public bool IsFixedSize
         {
             get
             {
-                throw new NotImplementedException();
+                return false;
             }
         }
 

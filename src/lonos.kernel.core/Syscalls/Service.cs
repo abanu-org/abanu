@@ -30,7 +30,7 @@ namespace lonos.Kernel.Core.Scheduling
             return Scheduler.CreateThread(Process, new ThreadStartOptions(methodAddr) { ArgumentBufferSize = argumentBufferSize });
         }
 
-        public unsafe void SwitchToThread(Thread th)
+        public unsafe static void SwitchToThread(Thread th)
         {
             var cThread = Scheduler.GetCurrentThread();
 

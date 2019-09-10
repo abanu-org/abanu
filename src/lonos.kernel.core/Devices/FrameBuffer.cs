@@ -29,7 +29,7 @@ namespace lonos.Kernel.Core.Devices
             RequestPhysicalMemory(addr, memorySize);
         }
 
-        private void RequestPhysicalMemory(uint address, uint size)
+        private static void RequestPhysicalMemory(uint address, uint size)
         {
             // Map physical memory space to virtual memory space
             for (uint at = address; at < address + size; at += 4096)
