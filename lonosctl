@@ -29,6 +29,8 @@ function configure {
 			mono ../Tools/nuget/nuget.exe restore Mosa.Tool.Mosactl.sln
 			mono ../Tools/nuget/nuget.exe restore Mosa.sln
 			cd ../../..
+			mono external/MOSA-Project/Tools/nuget/nuget.exe restore src/lonos.build.sln
+			mono external/MOSA-Project/Tools/nuget/nuget.exe restore src/lonos.kernel.sln
 			;;
 
 		*)
