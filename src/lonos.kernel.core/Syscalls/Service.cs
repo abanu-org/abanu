@@ -48,7 +48,7 @@ namespace Lonos.Kernel.Core.Scheduling
             Scheduler.SwitchToThread(th.ThreadID);
         }
 
-        private static string DispatchSymbol = "lonos.Runtime.MessageManager::Dispatch(lonos.Kernel.SystemMessage)";
+        private static string DispatchSymbol = "Lonos.Runtime.MessageManager::Dispatch(Lonos.Kernel.SystemMessage)";
 
         private static unsafe Addr GetEntryPointFromElf(ElfHelper elf)
         {

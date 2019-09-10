@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lonos.Kernel.Loader.x86
+namespace Lonos.Kernel.Loader.x86
 {
     public static class DummyClass
     {

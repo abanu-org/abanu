@@ -5,7 +5,7 @@ using System.IO;
 using Mosa.Compiler.MosaTypeSystem;
 using System.Text;
 
-namespace lonos.Build
+namespace Lonos.Build
 {
 
     internal static class Program

@@ -4,7 +4,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.IO;
 
-namespace lonos.Build
+namespace Lonos.Build
 {
     public static class BuildUtility {
         public static string GetEnv(string name)
