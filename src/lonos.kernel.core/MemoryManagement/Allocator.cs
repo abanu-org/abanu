@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1300 // Element should begin with upper-case letter
+#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
 
 #if BITS_64
 using malloc_meta = System.UInt64;
@@ -16,7 +17,6 @@ using size_t = System.UInt64;
 using malloc_meta = System.UInt32;
 using size_t = System.UInt32;
 #endif
-
 
 // Do not modify this Allocator very much
 // Future: Assign mmap-metod dynamicly.

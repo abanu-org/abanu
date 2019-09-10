@@ -9,10 +9,6 @@ using Lonos.Kernel.Core.MemoryManagement;
 namespace Lonos.Kernel.Core.Collections
 {
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class KList<T> : IList<T>, IList, IReadOnlyList<T>
     {
         private const int _defaultCapacity = 4;

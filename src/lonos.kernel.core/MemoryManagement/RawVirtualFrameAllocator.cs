@@ -51,8 +51,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Returns pages, where virtAddr equals physAddr.
         /// </summary>
-        /// <param name="pages"></param>
-        /// <returns></returns>
         internal static unsafe Addr RequestIdentityMappedVirtalMemoryPages(uint pages)
         {
             Addr virt = _identityNextVirtAddr;

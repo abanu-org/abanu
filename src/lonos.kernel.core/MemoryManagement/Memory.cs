@@ -87,9 +87,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return addr;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public static Addr AllocateVirtual(USize size)
         {
             return Addr.Zero;
