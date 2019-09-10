@@ -49,12 +49,17 @@ function clean {
 		bin)
 			rm -rf bin
 			rm -rf external/MOSA-Project/bin
+			find src -type d -name "bin" -exec rm -rf {} \;
 			;;
 
 		logs)
 			rm -rf logs
 			;;
 
+		obj)
+			find . -type d -name "obj" -exec rm -rf {} \;
+			;;
+			
 		os)
 			rm -rf os
 			;;
