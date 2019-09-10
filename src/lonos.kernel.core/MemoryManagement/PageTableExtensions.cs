@@ -1,10 +1,10 @@
-﻿using lonos.Kernel.Core.Boot;
-using lonos.Kernel.Core.PageManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using lonos.Kernel.Core.Boot;
+using lonos.Kernel.Core.PageManagement;
 
 namespace lonos.Kernel.Core.MemoryManagement
 {

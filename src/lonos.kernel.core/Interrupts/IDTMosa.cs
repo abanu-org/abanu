@@ -1,14 +1,13 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using System;
+using lonos.Kernel.Core;
+using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Interrupts;
+using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.Scheduling;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
-using System;
-
-using lonos.Kernel.Core;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Scheduling;
-using lonos.Kernel.Core.PageManagement;
 
 //TODO: Name in compiler
 namespace Mosa.Kernel.x86

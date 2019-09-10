@@ -1,15 +1,15 @@
-﻿using lonos.Kernel.Core.Collections;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Processes;
-using lonos.Kernel.Core.Scheduling;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using lonos.Kernel.Core.Collections;
+using lonos.Kernel.Core.Interrupts;
+using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.Processes;
+using lonos.Kernel.Core.Scheduling;
 
 namespace lonos.Kernel.Core.SysCalls
 {

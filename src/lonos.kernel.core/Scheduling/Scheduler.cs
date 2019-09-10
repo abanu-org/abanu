@@ -1,18 +1,17 @@
 ﻿// Adopted Implementation from: MOSA Project
 
-using Mosa.Runtime;
-using Mosa.Runtime.x86;
 using System;
 using System.Runtime.CompilerServices;
-using System.Threading;
-
 using System.Runtime.InteropServices;
+using System.Threading;
+using lonos.Kernel.Core.Diagnostics;
 using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Processes;
 using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.Processes;
 using lonos.Kernel.Core.SysCalls;
+using Mosa.Runtime;
+using Mosa.Runtime.x86;
 
 namespace lonos.Kernel.Core.Scheduling
 {

@@ -1,8 +1,8 @@
 ﻿using System;
-using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
-using Mosa.Kernel.x86;
 using lonos.Kernel.Core.Diagnostics;
+using Mosa.Kernel.x86;
+using Mosa.Runtime.x86;
 
 namespace lonos.Kernel.Core.Elf
 {

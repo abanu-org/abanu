@@ -1,16 +1,16 @@
-﻿using lonos.Kernel.Core.Boot;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using lonos.Kernel.Core.Boot;
 using lonos.Kernel.Core.Collections;
 using lonos.Kernel.Core.Elf;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.Scheduling;
 using Mosa.Runtime.x86;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace lonos.Kernel.Core.Processes
 {

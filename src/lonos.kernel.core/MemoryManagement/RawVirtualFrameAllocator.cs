@@ -1,5 +1,5 @@
-﻿using lonos.Kernel.Core.PageManagement;
-using System;
+﻿using System;
+using lonos.Kernel.Core.PageManagement;
 
 namespace lonos.Kernel.Core.MemoryManagement
 {

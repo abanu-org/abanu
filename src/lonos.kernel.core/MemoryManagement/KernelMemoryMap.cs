@@ -1,6 +1,6 @@
-﻿using lonos.Kernel.Core.Boot;
+﻿using System;
+using lonos.Kernel.Core.Boot;
 using lonos.Kernel.Core.PageManagement;
-using System;
 
 namespace lonos.Kernel.Core.MemoryManagement
 {
