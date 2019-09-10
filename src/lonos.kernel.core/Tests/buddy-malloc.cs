@@ -441,7 +441,7 @@ public unsafe abstract class BinaryBuddyAllocator_TestImplementation
              */
             while (bucket < original_bucket)
             {
-                i = i * 2 + 1;
+                i = (i * 2) + 1;
                 bucket++;
                 flip_parent_is_split(i);
                 list_push(&buckets[bucket], (list_t*)ptr_for_node(i + 1, bucket));
