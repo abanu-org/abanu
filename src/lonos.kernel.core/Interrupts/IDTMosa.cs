@@ -1,13 +1,14 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
-using System;
-using lonos.Kernel.Core;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Scheduling;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
+using System;
+
+using lonos.Kernel.Core;
+using lonos.Kernel.Core.Interrupts;
+using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Scheduling;
+using lonos.Kernel.Core.PageManagement;
 
 //TODO: Name in compiler
 namespace Mosa.Kernel.x86
@@ -16,7 +17,7 @@ namespace Mosa.Kernel.x86
     /// <summary>
     /// IDT
     /// </summary>
-    public static unsafe class IDT
+    public unsafe static class IDT
     {
 
 
@@ -26,7 +27,7 @@ namespace Mosa.Kernel.x86
         /// Interrupts the handler.
         /// </summary>
         /// <param name="stackStatePointer">The stack state pointer.</param>
-        private static unsafe void ProcessInterrupt(uint stackStatePointer)
+        private unsafe static void ProcessInterrupt(uint stackStatePointer)
         {
             ushort DataSelector = 0x10;
             Native.SetSegments(DataSelector, DataSelector, DataSelector, DataSelector, DataSelector);

@@ -257,7 +257,7 @@ namespace lonos.Kernel.Core
         /// <param name="col">The col.</param>
         public static void SetCursor(uint row, uint col)
         {
-            uint location = row * Columns + col;
+            uint location = (row * Columns + col);
 
             Native.Out8(0x3D4, 0x0F);
             Native.Out8(0x3D5, (byte)(location & 0xFF));

@@ -17,7 +17,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         }
 
         [Plug("Mosa.Runtime.GC::AllocateMemory")]
-        private static unsafe IntPtr _AllocateMemory(uint size)
+        static unsafe IntPtr _AllocateMemory(uint size)
         {
             return AllocateMemory(size);
         }
@@ -26,10 +26,9 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         public static uint EarlyBootBytesUsed => currentSize;
 
-        private static uint currentSize;
+        static uint currentSize;
         public static uint AllocationCount;
-
-        public static IntPtr AllocateMemory(uint size)
+        static public IntPtr AllocateMemory(uint size)
         {
             AllocationCount++;
 
@@ -49,7 +48,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return AllocateMemory_EarlyBoot(size);
         }
 
-        private static IntPtr AllocateMemory_EarlyBoot(uint size)
+        static IntPtr AllocateMemory_EarlyBoot(uint size)
         {
             var cSize = currentSize;
             currentSize += size;

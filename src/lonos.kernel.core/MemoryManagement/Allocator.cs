@@ -1,9 +1,6 @@
 ﻿using System;
 using lonos.Kernel.Core.Diagnostics;
 
-#pragma warning disable SA1121 // Use built-in type alias
-#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
-
 #if BITS_64
 using malloc_meta = System.UInt64;
 using size_t = System.UInt64;
@@ -38,7 +35,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             {
                 fixed (malloc_data* ptr = &this)
                 {
-                    var bptr = (byte*)ptr;
+                    var bptr = ((byte*)ptr);
                     return bptr;
                 }
             }
@@ -73,12 +70,12 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         private static malloc_meta* MIN(malloc_meta* A, malloc_meta* B)
         {
-            return A > B ? B : A;
+            return (A) > (B) ? (B) : (A);
         }
 
         private static size_t MIN(size_t A, size_t B)
         {
-            return A > B ? B : A;
+            return (A) > (B) ? (B) : (A);
         }
 
         private static void SET_INUSE(malloc_meta* P)
@@ -111,7 +108,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         //malloc_meta* list_heads[PAGE_SHIFT - 1];
         public malloc_meta** list_heads;
 
-        private static void malloc_abort(string msg)
+        static void malloc_abort(string msg)
         {
             Panic.Error(msg);
         }
@@ -141,7 +138,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             while (n > (cur << res))
                 res++;
 
-            return res;
+            return (res);
         }
 
         private static size_t size_to_page_number(size_t size)
@@ -149,7 +146,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return ((size - 1) / PAGE_SIZE) + 1;
         }
 
-        private void add_to_free_list(malloc_meta* new_)
+        void add_to_free_list(malloc_meta* new_)
         {
             malloc_meta** list_head = &list_heads[order(GET_SIZE(new_)) - MIN_SHIFT]; ;
 
@@ -161,7 +158,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             *list_head = new_;
         }
 
-        private void remove_from_free_list(malloc_meta* to_del)
+        void remove_from_free_list(malloc_meta* to_del)
         {
 
             malloc_meta** list_head = &list_heads[order(GET_SIZE(to_del)) - MIN_SHIFT];
@@ -175,7 +172,7 @@ namespace lonos.Kernel.Core.MemoryManagement
                 to_del->data.free.prev->data.free.next = to_del->data.free.next;
         }
 
-        private static malloc_meta* create_meta(void* p, size_t l)
+        static malloc_meta* create_meta(void* p, size_t l)
         {
             malloc_meta* meta = (malloc_meta*)p;
 
@@ -184,7 +181,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return meta;
         }
 
-        private void create_buddy(malloc_meta* b)
+        void create_buddy(malloc_meta* b)
         {
             size_t buddy = (size_t)b;
             size_t size = GET_SIZE(b);
@@ -197,21 +194,21 @@ namespace lonos.Kernel.Core.MemoryManagement
             add_to_free_list(buddy_meta);
         }
 
-        private static malloc_meta* find_buddy(malloc_meta* s)
+        static malloc_meta* find_buddy(malloc_meta* s)
         {
             size_t addr = (size_t)s;
             addr ^= GET_SIZE(s);
 
-            return (malloc_meta*)addr;
+            return (malloc_meta*)(addr);
         }
 
-        private static malloc_meta* get_meta(void* ptr)
+        static malloc_meta* get_meta(void* ptr)
         {
             byte* cptr = (byte*)ptr;
             return (malloc_meta*)(cptr - META_SIZE);
         }
 
-        private malloc_meta* split(malloc_meta* b, size_t s)
+        malloc_meta* split(malloc_meta* b, size_t s)
         {
             if (GET_SIZE(b) == s || GET_SIZE(b) == MIN_SIZE)
                 return b;
@@ -220,7 +217,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return split(b, s);
         }
 
-        private malloc_meta* fusion(malloc_meta* b, size_t s)
+        malloc_meta* fusion(malloc_meta* b, size_t s)
         {
             if (GET_SIZE(b) >= PAGE_SIZE || GET_SIZE(b) == s)
                 return b;
@@ -235,7 +232,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return fusion(left_buddy, s);
         }
 
-        private static void* large_malloc(size_t size)
+        static void* large_malloc(size_t size)
         {
             void* ptr = mmap(0, PROT_READ | PROT_WRITE, 1 + ((size - 1) / PAGE_SIZE));
             if (ptr == MAP_FAILED)
@@ -248,7 +245,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return meta->data.user;
         }
 
-        private malloc_meta* find_free_block(size_t size)
+        malloc_meta* find_free_block(size_t size)
         {
             size_t current = order(size) - MIN_SHIFT;
             size_t max = PAGE_SHIFT - MIN_SHIFT;
@@ -266,7 +263,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return null;
         }
 
-        private static size_t internal_size(size_t size)
+        static size_t internal_size(size_t size)
         {
             size += META_SIZE;
 
@@ -279,7 +276,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return size;
         }
 
-        private void* buddy_malloc(size_t size)
+        void* buddy_malloc(size_t size)
         {
             lock (this)
             {
@@ -347,7 +344,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return ptr;
         }
 
-        private void* realloc(void* ptr, size_t size)
+        void* realloc(void* ptr, size_t size)
         {
             if (ptr == null)
                 return malloc(size);
@@ -406,7 +403,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return new_ptr;
         }
 
-        private void* calloc(size_t nmenb, size_t size)
+        void* calloc(size_t nmenb, size_t size)
         {
             size_t mem_size = nmenb * size;
             void* ptr = null;

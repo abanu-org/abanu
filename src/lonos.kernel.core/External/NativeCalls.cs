@@ -1,7 +1,7 @@
 ﻿using System;
+using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
 using lonos.Kernel.Core.Elf;
-using Mosa.Runtime.x86;
 
 namespace lonos.Kernel.Core.External
 {

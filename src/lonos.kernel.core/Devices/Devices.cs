@@ -34,7 +34,7 @@ namespace lonos.Kernel.Core.Devices
         /// <summary>
         /// Output and Debug devices
         /// </summary>
-        public static unsafe void InitStage2()
+        public unsafe static void InitStage2()
         {
             Serial.SetupPort(Serial.COM1);
             Serial1 = new SerialDevice(Serial.COM1);
@@ -51,7 +51,7 @@ namespace lonos.Kernel.Core.Devices
         /// <summary>
         /// Video Stage
         /// </summary>
-        public static unsafe void InitFrameBuffer()
+        public unsafe static void InitFrameBuffer()
         {
             if (!BootInfo.Header->FBPresent || BootInfo.Header->VBEMode < 0x100)
             {

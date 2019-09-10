@@ -81,7 +81,7 @@ namespace lonos.Kernel.Core.Elf
 
         private NullTerminatedString* GetStringByOffset(ElfSectionHeader* section, uint offset)
         {
-            return (NullTerminatedString*)(GetSectionPhysAddr(section) + offset);
+            return (NullTerminatedString*)((GetSectionPhysAddr(section)) + offset);
         }
 
         public NullTerminatedString* GeSectionName(ElfSectionHeader* section)

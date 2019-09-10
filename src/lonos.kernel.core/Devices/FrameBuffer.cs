@@ -25,7 +25,7 @@ namespace lonos.Kernel.Core.Devices
 
         public void Init()
         {
-            uint memorySize = (uint)(pitch * height * 4);
+            uint memorySize = (uint)(pitch * height * (4));
             RequestPhysicalMemory(addr, memorySize);
         }
 
@@ -48,7 +48,7 @@ namespace lonos.Kernel.Core.Devices
 
         protected uint GetByteOffset(uint x, uint y)
         {
-            return (y * pitch) + (x * 4); //4 -> 32bpp
+            return (y * (pitch)) + x * 4; //4 -> 32bpp
         }
 
         public unsafe uint GetPixel(uint x, uint y)

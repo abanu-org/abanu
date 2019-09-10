@@ -1,17 +1,18 @@
 ﻿// Adopted Implementation from: MOSA Project
 
-using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Threading;
-using lonos.Kernel.Core.Diagnostics;
-using lonos.Kernel.Core.Interrupts;
-using lonos.Kernel.Core.MemoryManagement;
-using lonos.Kernel.Core.PageManagement;
-using lonos.Kernel.Core.Processes;
-using lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
+using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
+
+using System.Runtime.InteropServices;
+using lonos.Kernel.Core.Interrupts;
+using lonos.Kernel.Core.MemoryManagement;
+using lonos.Kernel.Core.Diagnostics;
+using lonos.Kernel.Core.Processes;
+using lonos.Kernel.Core.PageManagement;
+using lonos.Kernel.Core.SysCalls;
 
 namespace lonos.Kernel.Core.Scheduling
 {
@@ -53,7 +54,7 @@ namespace lonos.Kernel.Core.Scheduling
             //AsmDebugFunction.DebugFunction1();
         }
 
-        public static unsafe void Start()
+        public unsafe static void Start()
         {
             SetThreadID(0);
             Enabled = true;
@@ -166,7 +167,7 @@ namespace lonos.Kernel.Core.Scheduling
 
         private static object SyncRoot = new object();
 
-        public static unsafe Thread CreateThread(Process proc, ThreadStartOptions options)
+        public unsafe static Thread CreateThread(Process proc, ThreadStartOptions options)
         {
             Thread thread;
             uint threadID;
@@ -297,7 +298,7 @@ namespace lonos.Kernel.Core.Scheduling
             return thread;
         }
 
-        public static unsafe void SaveThreadState(uint threadID, IntPtr stackState)
+        public unsafe static void SaveThreadState(uint threadID, IntPtr stackState)
         {
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
 
@@ -311,7 +312,7 @@ namespace lonos.Kernel.Core.Scheduling
             if (thread.User)
             {
                 Assert.IsSet(thread.StackState, "thread.StackState is null");
-                *thread.StackState = *(IDTTaskStack*)stackState;
+                *(thread.StackState) = *((IDTTaskStack*)stackState);
             }
             else
             {
@@ -350,7 +351,7 @@ namespace lonos.Kernel.Core.Scheduling
             //Native.SetFS(threadID);
         }
 
-        public static unsafe void SwitchToThread(uint threadID)
+        public unsafe static void SwitchToThread(uint threadID)
         {
             var thread = Threads[threadID];
             var proc = thread.Process;
@@ -389,7 +390,7 @@ namespace lonos.Kernel.Core.Scheduling
         }
 
         [DllImport("x86/lonos.InterruptReturn.o", EntryPoint = "InterruptReturn")]
-        private static extern void InterruptReturn(uint stackStatePointer, uint dataSegment, uint pageTableAddr);
+        private extern static void InterruptReturn(uint stackStatePointer, uint dataSegment, uint pageTableAddr);
 
         private static uint FindEmptyThreadSlot()
         {
@@ -416,7 +417,7 @@ namespace lonos.Kernel.Core.Scheduling
             }
         }
 
-        private static unsafe void ResetThread(uint threadID)
+        private unsafe static void ResetThread(uint threadID)
         {
             var thread = Threads[threadID];
             lock (thread)

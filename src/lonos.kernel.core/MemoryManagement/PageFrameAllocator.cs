@@ -12,10 +12,10 @@ namespace lonos.Kernel.Core.MemoryManagement
 {
 
 
-    public static unsafe class PageFrameManager
+    public unsafe static class PageFrameManager
     {
 
-        private static PageFrameAllocator Default;
+        static PageFrameAllocator Default;
         public const uint PageSize = 4096;
 
         public static void Setup()
@@ -86,12 +86,12 @@ namespace lonos.Kernel.Core.MemoryManagement
             Free(page->PhysicalAddress);
         }
 
-        private uint FreePages;
+        uint FreePages;
 
-        private Page* PageArray;
-        private uint PageCount;
+        Page* PageArray;
+        uint PageCount;
 
-        private KernelMemoryMap kmap;
+        KernelMemoryMap kmap;
 
         /// <summary>
         /// Setup the physical page manager
@@ -125,7 +125,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Setups the free memory.
         /// </summary>
-        private unsafe void SetupFreeMemory()
+        unsafe void SetupFreeMemory()
         {
             if (!BootInfo.Present)
                 return;
@@ -220,7 +220,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// Allocate a physical page from the free list
         /// </summary>
         /// <returns>The page</returns>
-        private Page* Allocate(uint num)
+        Page* Allocate(uint num)
         {
             lock (this)
             {
@@ -323,7 +323,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Releases a page to the free list
         /// </summary>
-        private void Free(Addr address)
+        void Free(Addr address)
         {
             lock (this)
             {

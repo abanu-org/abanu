@@ -1,10 +1,10 @@
-﻿using System;
-using lonos.Kernel.Core.Interrupts;
+﻿using lonos.Kernel.Core.Interrupts;
 using lonos.Kernel.Core.MemoryManagement;
 using lonos.Kernel.Core.PageManagement;
 using lonos.Kernel.Core.Processes;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
+using System;
 
 namespace lonos.Kernel.Core.Scheduling
 {
@@ -37,7 +37,7 @@ namespace lonos.Kernel.Core.Scheduling
         }
         public Addr GetArgumentAddr(uint offsetBytes)
         {
-            return StackBottom - ArgumentBufferSize + offsetBytes - 4;
+            return (StackBottom - ArgumentBufferSize + offsetBytes - 4);
         }
 
         public void FreeMemory()

@@ -183,7 +183,7 @@ namespace lonos.test.console.alloc2
         static page* list_entry__1(list_head* ptr)
         {
             var p = (page*)(void*)ptr;
-            return (page*)(void*)&p->lru;
+            return (page*)(void*)(&(p->lru));
         }
 
         static void set_page_order(page* page, int order)

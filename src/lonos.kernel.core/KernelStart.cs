@@ -22,7 +22,7 @@ namespace lonos.Kernel.Core
     public static class KernelStart
     {
 
-        public static unsafe void Main()
+        public unsafe static void Main()
         {
             ManagedMemoy.InitializeGCMemory();
             StartUp.InitializeAssembly();
@@ -242,7 +242,7 @@ namespace lonos.Kernel.Core
         //     }
         // }
 
-        private static void ulongtest1()
+        static void ulongtest1()
         {
             uint mask = 0x00004000;
             uint v1 = 0x00000007;
@@ -257,7 +257,7 @@ namespace lonos.Kernel.Core
             KernelMessage.WriteLine("bla2: {0:X8}", r2Int);
         }
 
-        private static unsafe void ulongtest2()
+        static unsafe void ulongtest2()
         {
             ulong addr = 0x0000000019ad000;
             ulong data = 40004005;
@@ -325,13 +325,13 @@ namespace lonos.Kernel.Core
 
         public static void RawWrite(uint row, uint column, char chr, byte color)
         {
-            IntPtr address = new IntPtr(0x0B8000 + (((row * Columns) + column) * 2));
+            IntPtr address = new IntPtr(0x0B8000 + ((row * Columns + column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
         }
 
-        private static void AssertError(string message)
+        static void AssertError(string message)
         {
             Panic.Error(message);
         }

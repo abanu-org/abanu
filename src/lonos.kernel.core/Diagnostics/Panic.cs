@@ -1,8 +1,8 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using Mosa.Runtime.x86;
 using System;
 using Mosa.Kernel.x86;
-using Mosa.Runtime.x86;
 
 namespace lonos.Kernel.Core.Diagnostics
 {

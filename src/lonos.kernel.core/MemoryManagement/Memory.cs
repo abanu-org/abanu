@@ -10,7 +10,7 @@ namespace lonos.Kernel.Core.MemoryManagement
     public static class Memory
     {
 
-        public static unsafe void Setup()
+        public unsafe static void Setup()
         {
             kmallocAllocator = new Allocator();
 
@@ -21,7 +21,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             ManagedMemoy.useAllocator = true;
             KernelMessage.WriteLine("EarlyBootBytesUsed: {0} bytes", ManagedMemoy.EarlyBootBytesUsed);
 
-            KernelMessage.WriteLine("Memory free: {0} MB", PageFrameManager.PagesAvailable * 4096 / 1024 / 1024);
+            KernelMessage.WriteLine("Memory free: {0} MB", (PageFrameManager.PagesAvailable * 4096) / 1024 / 1024);
         }
 
 
@@ -37,7 +37,7 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         private static Allocator kmallocAllocator;
 
-        public static unsafe Addr Allocate(USize n)
+        public unsafe static Addr Allocate(USize n)
         {
             return kmallocAllocator.malloc(n);
         }
@@ -45,7 +45,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// kmalloc is the normal method of allocating memory for objects smaller than page size in the kernel.
         /// </summary>
-        public static unsafe Addr Allocate(USize n, GFP flags)
+        public unsafe static Addr Allocate(USize n, GFP flags)
         {
             // var sb = new StringBuffer();
             // sb.Append("Alloc: Size: {0:X8}", (uint)n);
@@ -96,7 +96,7 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// free previously allocated memory
         /// </summary>
-        public static unsafe void Free(Addr address)
+        public unsafe static void Free(Addr address)
         {
             kmallocAllocator.free(address);
         }
@@ -104,12 +104,12 @@ namespace lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// free previously allocated memory
         /// </summary>
-        public static unsafe void Free(IntPtr address)
+        public unsafe static void Free(IntPtr address)
         {
             kmallocAllocator.free((void*)address);
         }
 
-        public static unsafe void FreeObject(object obj)
+        public unsafe static void FreeObject(object obj)
         {
             var ptr = Mosa.Runtime.Intrinsic.GetObjectAddress(obj);
             kmallocAllocator.free((void*)ptr);
@@ -124,14 +124,14 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         public struct pgprot_t { }
 
-        public static unsafe Addr MapVirtualPages(Page* pages, uint count, ulong flags, pgprot_t protection)
+        public unsafe static Addr MapVirtualPages(Page* pages, uint count, ulong flags, pgprot_t protection)
         {
             return Addr.Zero;
         }
 
         // COMPILER BUG: The presence of the following Methods causes a "Page not mapped" error.
 
-        public static unsafe void InitialKernelProtect()
+        public unsafe static void InitialKernelProtect()
         {
             SetInitialWriteProtection();
             SetInitialExecutionProtection();
@@ -163,7 +163,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             PageTable.KernelTable.EnableKernelWriteProtection();
         }
 
-        private static unsafe void SetInitialExecutionProtection()
+        private unsafe static void SetInitialExecutionProtection()
         {
             if (KConfig.UseExecutionProtection)
             {

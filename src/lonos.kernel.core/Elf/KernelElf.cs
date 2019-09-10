@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using lonos.Kernel.Core.Diagnostics;
-using Mosa.Kernel.x86;
 using Mosa.Runtime.x86;
+using System.Runtime.InteropServices;
+using Mosa.Kernel.x86;
+using lonos.Kernel.Core.Diagnostics;
 
 namespace lonos.Kernel.Core.Elf
 {
 
-    public static unsafe class KernelElf
+    unsafe public static class KernelElf
     {
         public static ElfHelper Main;
         public static ElfHelper Native;
@@ -37,7 +37,7 @@ namespace lonos.Kernel.Core.Elf
             return helper;
         }*/
 
-        private static unsafe ElfHelper FromAddress(Addr elfStart)
+        unsafe static ElfHelper FromAddress(Addr elfStart)
         {
             var elfHeader = (ElfHeader*)elfStart;
 
@@ -57,7 +57,7 @@ namespace lonos.Kernel.Core.Elf
             return helper;
         }
 
-        public static unsafe ElfHelper FromSectionName(string name)
+        public unsafe static ElfHelper FromSectionName(string name)
         {
             var sec = Main.GetSectionHeader(name);
             if (sec == null)

@@ -1,5 +1,5 @@
-﻿using System;
-using lonos.Kernel.Core.Devices;
+﻿using lonos.Kernel.Core.Devices;
+using System;
 
 namespace lonos.Kernel.Core.Diagnostics
 {

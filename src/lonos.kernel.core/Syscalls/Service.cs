@@ -21,7 +21,7 @@ namespace lonos.Kernel.Core.Scheduling
             var methodAddr = GetEntryPointFromElf(elf);
             var th = CreateThread(methodAddr, SystemMessage.Size);
             var argAddr = (SystemMessage*)th.GetArgumentAddr(0);
-            argAddr[0] = *args;
+            argAddr[0] = *(args);
             SwitchToThread(th);
         }
 
@@ -30,7 +30,7 @@ namespace lonos.Kernel.Core.Scheduling
             return Scheduler.CreateThread(Process, new ThreadStartOptions(methodAddr) { ArgumentBufferSize = argumentBufferSize });
         }
 
-        public static unsafe void SwitchToThread(Thread th)
+        public unsafe static void SwitchToThread(Thread th)
         {
             var cThread = Scheduler.GetCurrentThread();
 
@@ -47,7 +47,7 @@ namespace lonos.Kernel.Core.Scheduling
 
         private static string DispatchSymbol = "lonos.Runtime.MessageManager::Dispatch(lonos.Kernel.SystemMessage)";
 
-        private static unsafe Addr GetEntryPointFromElf(ElfHelper elf)
+        private unsafe static Addr GetEntryPointFromElf(ElfHelper elf)
         {
             var sym = elf.GetSymbol(DispatchSymbol);
             if (sym == (ElfSymbol*)0)
