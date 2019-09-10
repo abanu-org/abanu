@@ -116,7 +116,7 @@ namespace lonos.Kernel.Core.MemoryManagement
     public static unsafe class KernelMemoryMapManager
     {
 
-        static KernelMemoryMap InitialMap;
+        private static KernelMemoryMap InitialMap;
         public static KernelMemoryMapHeader* Header;
 
         public static void Setup()
@@ -167,7 +167,7 @@ namespace lonos.Kernel.Core.MemoryManagement
 
         }
 
-        static Addr Initial_FindIFreePage()
+        private static Addr Initial_FindIFreePage()
         {
             for (uint i = 0; i < BootInfo.Header->MemoryMapLength; i++)
             {
@@ -181,7 +181,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return Addr.Zero;
         }
 
-        static bool Initial_CheckPageIsUsableAfterMap(BootInfoMemory map)
+        private static bool Initial_CheckPageIsUsableAfterMap(BootInfoMemory map)
         {
             if (map.Type == BootInfoMemoryType.SystemUsable)
                 return false;
@@ -211,7 +211,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return inUsableSystemMap;
         }
 
-        static bool AddressInMap(Addr addr, BootInfoMemory map)
+        private static bool AddressInMap(Addr addr, BootInfoMemory map)
         {
             return map.Start <= addr && addr < map.Start + map.Size;
         }
@@ -233,7 +233,7 @@ namespace lonos.Kernel.Core.MemoryManagement
             return KernelMemoryMap.Empty;
         }
 
-        static bool CheckPageIsUsableAfterMap(KernelMemoryMap map, USize size)
+        private static bool CheckPageIsUsableAfterMap(KernelMemoryMap map, USize size)
         {
             var tryMap = new KernelMemoryMap(map.Start + map.Size, size, BootInfoMemoryType.Unknown);
             if (Header->Used.Intersects(tryMap))

@@ -35,7 +35,7 @@ namespace lonos.Kernel.Core.Interrupts
 
         internal static InterruptInfo[] handlers;
 
-        static Addr IDTAddr;
+        private static Addr IDTAddr;
         public static InterruptControlBlock* ControlBlock;
 
         public static void Setup()

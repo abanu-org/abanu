@@ -170,7 +170,7 @@ namespace lonos.Kernel.Core.SysCalls
             };
         }
 
-        const uint CommandMask = BitsMask.Bits10;
+        private const uint CommandMask = BitsMask.Bits10;
 
         private static uint GetCommandNum(SysCallTarget target)
         {

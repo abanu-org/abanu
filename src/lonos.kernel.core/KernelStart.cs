@@ -242,7 +242,7 @@ namespace lonos.Kernel.Core
         //     }
         // }
 
-        static void ulongtest1()
+        private static void ulongtest1()
         {
             uint mask = 0x00004000;
             uint v1 = 0x00000007;
@@ -257,7 +257,7 @@ namespace lonos.Kernel.Core
             KernelMessage.WriteLine("bla2: {0:X8}", r2Int);
         }
 
-        static unsafe void ulongtest2()
+        private static unsafe void ulongtest2()
         {
             ulong addr = 0x0000000019ad000;
             ulong data = 40004005;
@@ -331,7 +331,7 @@ namespace lonos.Kernel.Core
             Intrinsic.Store8(address, 1, color);
         }
 
-        static void AssertError(string message)
+        private static void AssertError(string message)
         {
             Panic.Error(message);
         }

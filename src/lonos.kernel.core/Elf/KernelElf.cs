@@ -37,7 +37,7 @@ namespace lonos.Kernel.Core.Elf
             return helper;
         }*/
 
-        static unsafe ElfHelper FromAddress(Addr elfStart)
+        private static unsafe ElfHelper FromAddress(Addr elfStart)
         {
             var elfHeader = (ElfHeader*)elfStart;
 

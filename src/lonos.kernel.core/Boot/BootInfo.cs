@@ -56,7 +56,7 @@ namespace lonos.Kernel.Core.Boot
         //     return Addr.Zero;
         // }
 
-        static void ApplyAddresses()
+        private static void ApplyAddresses()
         {
             GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
             PageTable.ConfigureType(Header->PageTableType);
