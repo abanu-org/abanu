@@ -69,6 +69,7 @@
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
     <Rule Id="CS0162" Action="None" />
     <Rule Id="CS0168" Action="Info" />
+    <Rule Id="CS0219" Action="Info" />
     <Rule Id="CS1062" Action="Info" />
     <Rule Id="CS1710" Action="None" />
     <Rule Id="CS1720" Action="None" />
