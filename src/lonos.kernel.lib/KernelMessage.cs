@@ -12,7 +12,7 @@ namespace Lonos.Kernel.Core
     public static unsafe class KernelMessage
     {
 
-        static IBufferWriter Dev;
+        private static IBufferWriter Dev;
 
         public static void SetHandler(IBufferWriter handler)
         {

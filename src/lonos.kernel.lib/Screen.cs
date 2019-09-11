@@ -1,4 +1,5 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
 using Mosa.Runtime;
@@ -41,8 +42,8 @@ namespace Lonos.Kernel.Core
         public static uint ScreenMemoryAddress = 0x0B8000;
         public static uint ScreenMemorySize = 25 * 80 * 2;
 
-        public static uint column = 0;
-        public static uint row = 0;
+        public static uint _column = 0;
+        public static uint _row = 0;
         private static byte color = 23;
 
         /// <summary>
@@ -63,8 +64,8 @@ namespace Lonos.Kernel.Core
         /// </value>
         public static uint Column
         {
-            get { return column; }
-            set { column = value; }
+            get { return _column; }
+            set { _column = value; }
         }
 
         /// <summary>
@@ -75,8 +76,8 @@ namespace Lonos.Kernel.Core
         /// </value>
         public static uint Row
         {
-            get { return row; }
-            set { row = value; }
+            get { return _row; }
+            set { _row = value; }
         }
 
         public static byte Color
@@ -218,7 +219,7 @@ namespace Lonos.Kernel.Core
         public static void NextLine()
         {
             Column = 0;
-            if (row >= Rows - 1)
+            if (_row >= Rows - 1)
             {
                 // Copy All rows one line up
                 // TODO: Normally, Reading from mapped ROM is much slower
@@ -227,7 +228,7 @@ namespace Lonos.Kernel.Core
 
                 //Blank last line
                 for (uint c = 0; c < Columns; c++)
-                    RawWrite(row, c, ' ', color);
+                    RawWrite(_row, c, ' ', color);
             }
             else
             {
@@ -272,7 +273,7 @@ namespace Lonos.Kernel.Core
         /// <param name="col">The col.</param>
         public static void SetCursor(uint row, uint col)
         {
-            uint location = ((row * Columns) + col);
+            uint location = (row * Columns) + col;
 
             Native.Out8(0x3D4, 0x0F);
             Native.Out8(0x3D5, (byte)(location & 0xFF));
@@ -342,7 +343,8 @@ namespace Lonos.Kernel.Core
             {
                 temp /= digits;
                 count++;
-            } while (temp != 0);
+            }
+            while (temp != 0);
 
             if (size != -1)
                 count = (uint)size;

@@ -1,4 +1,5 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using Mosa.Runtime.x86;
 
@@ -51,7 +52,7 @@ namespace Lonos.Kernel.Core
 
         public static bool IsDataReady(ushort com)
         {
-            return ((Native.In8((ushort)(com + COM_ModemStatus)) & 0x01) == 0x01);
+            return (Native.In8((ushort)(com + COM_ModemStatus)) & 0x01) == 0x01;
         }
 
         public static byte Read(ushort com)

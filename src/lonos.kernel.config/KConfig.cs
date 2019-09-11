@@ -1,6 +1,8 @@
 ﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
+#pragma warning disable SA1300 // Element should begin with upper-case letter
+
 namespace Lonos.Kernel.Core
 {
     /// <summary>

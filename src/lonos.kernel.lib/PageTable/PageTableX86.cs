@@ -27,7 +27,7 @@ namespace Lonos.Kernel.Core.PageManagement
         private const uint InitalPageDirectorySize = PageDirectoryEntry.EntrySize * InitialDirectoryEntries;
         private const uint InitalPageTableSize = PageTableEntry.EntrySize * InitialPageTableEntries;
 
-        public override PageTableType Type => PageTableType.x86;
+        public override PageTableType Type => PageTableType.X86;
 
         public override USize InitalMemoryAllocationSize => InitalPageDirectorySize + InitalPageTableSize;
 
@@ -160,7 +160,6 @@ namespace Lonos.Kernel.Core.PageManagement
         /// Gets the physical memory.
         /// </summary>
         /// <param name="virtualAddress">The virtual address.</param>
-        /// <returns></returns>
         public override Addr GetPhysicalAddressFromVirtual(Addr virtualAddress)
         {
             //KernelMessage.WriteLine("GetPhysFromVirt: v={0:X8} 1={0:x}")

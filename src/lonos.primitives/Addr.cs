@@ -29,10 +29,20 @@ namespace Lonos
             _value = (void*)value;
         }
 
+        public unsafe Addr(int value)
+        {
+            _value = (void*)value;
+        }
+
         [NonVersionable]
         public unsafe Addr(ulong value)
         {
-            _value = (void*)((uint)value);
+            _value = (void*)(uint)value;
+        }
+
+        public unsafe Addr(long value)
+        {
+            _value = (void*)value;
         }
 
         [NonVersionable]
@@ -84,7 +94,9 @@ namespace Lonos
         }
 
         [NonVersionable]
+#pragma warning disable CA2225 // Operator overloads have named alternates
         public static unsafe implicit operator Addr(void* value)
+#pragma warning restore CA2225 // Operator overloads have named alternates
         {
             return new Addr(value);
         }
@@ -114,7 +126,9 @@ namespace Lonos
         }
 
         [NonVersionable]
+#pragma warning disable CA2225 // Operator overloads have named alternates
         public static unsafe implicit operator void*(Addr value)
+#pragma warning restore CA2225 // Operator overloads have named alternates
         {
             return value._value;
         }
@@ -153,14 +167,14 @@ namespace Lonos
         {
             if (obj is Addr)
             {
-                return (_value == ((Addr)obj)._value);
+                return _value == ((Addr)obj)._value;
             }
             return false;
         }
 
         public unsafe override int GetHashCode()
         {
-            return ((int)_value);
+            return (int)_value;
         }
 
         [NonVersionable]
@@ -177,7 +191,7 @@ namespace Lonos
         [NonVersionable]
         public unsafe uint ToUInt32()
         {
-            return ((uint)_value);
+            return (uint)_value;
         }
 
         [NonVersionable]
@@ -185,6 +199,18 @@ namespace Lonos
         {
             return (ulong)_value;
         }
+
+        public static Addr FromUInt32(uint value) => new Addr(value);
+        public static Addr FromInt32(int value) => new Addr(value);
+        public static Addr FromUInt64(ulong value) => new Addr(value);
+        public static Addr FromInt64(long value) => new Addr(value);
+        public static Addr FromIntPtr(IntPtr value) => new Addr(value);
+        public static Addr FromUIntPtr(UIntPtr value) => new Addr(value);
+        public static unsafe Addr FromPointer(void* value) => new Addr(value);
+
+        public unsafe IntPtr ToIntPtr() => (IntPtr)_value;
+        public unsafe UIntPtr ToUIntPtr() => (UIntPtr)_value;
+        public unsafe int ToInt32() => (int)_value;
 
     }
 }

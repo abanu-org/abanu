@@ -3,10 +3,12 @@
 
 using System;
 
-namespace Lonos.test.console.Alloc3
+#pragma warning disable
+
+namespace Lonos.Test.Console.Alloc3
 {
 
-    public struct page
+    public struct Page
     {
     }
 
@@ -76,7 +78,9 @@ namespace Lonos.test.console.Alloc3
                 newNode->Next = null;
             }
             else
+            {
                 InsertBefore(FirstNode, newNode);
+            }
         }
 
         public void InsertEnd(LinkedListNode* newNode)

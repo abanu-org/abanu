@@ -142,7 +142,7 @@ namespace Lonos
 
         public static uint GetBits(this uint self, byte index, byte count, byte sourceIndex)
         {
-            return ((self >> index) << (32 - count)) << sourceIndex;
+            return (self >> index) << (32 - count) << sourceIndex;
         }
 
         public static uint SetBits(this uint self, byte index, byte count, uint value)
@@ -227,7 +227,7 @@ namespace Lonos
 
         public static ulong GetBits(this ulong self, byte index, byte count, byte sourceIndex)
         {
-            return ((self >> index) << (64 - count)) << sourceIndex;
+            return (self >> index) << (64 - count) << sourceIndex;
         }
 
         public static ulong SetBits(this ulong self, byte index, byte count, ulong value)

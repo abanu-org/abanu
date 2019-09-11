@@ -3,20 +3,20 @@
 
 using System;
 
-namespace Lonos.test.console
+namespace Lonos.Test.Console
 {
-    class MainClass
+    internal class Program
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine(Environment.Is64BitProcess);
-            Console.WriteLine(IntPtr.Size);
-            Console.WriteLine("Hello World!");
+            System.Console.WriteLine(Environment.Is64BitProcess);
+            System.Console.WriteLine(IntPtr.Size);
+            System.Console.WriteLine("Hello World!");
             //new AllocTest().run();
 
-            new Lonos.test.malloc4.Tester().run();
+            new Lonos.Test.malloc4.Tester().run();
 
-            Console.ReadLine();
+            System.Console.ReadLine();
         }
     }
 }

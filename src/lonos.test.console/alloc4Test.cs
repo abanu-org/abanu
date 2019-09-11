@@ -11,7 +11,7 @@ using size_t = System.UInt32;
 
 #pragma warning disable
 
-namespace Lonos.test.malloc4
+namespace Lonos.Test.malloc4
 {
 
     public unsafe class Tester
@@ -45,7 +45,7 @@ namespace Lonos.test.malloc4
                     Alloc((uint)rnd.Next(20) + 1);
                 }
             }
-            Console.WriteLine(hash.Count);
+            System.Console.WriteLine(hash.Count);
         }
 
         private class AllocEnry

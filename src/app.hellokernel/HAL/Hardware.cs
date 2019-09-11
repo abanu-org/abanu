@@ -1,4 +1,5 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
 using Lonos;
@@ -6,7 +7,7 @@ using Lonos.Runtime;
 using Mosa.DeviceSystem;
 using Mosa.Runtime.x86;
 
-namespace Mosa.CoolWorld.x86.HAL
+namespace Lonos.Kernel
 {
     /// <summary>
     /// Hardware
@@ -23,7 +24,6 @@ namespace Mosa.CoolWorld.x86.HAL
         /// </summary>
         /// <param name="address">The address.</param>
         /// <param name="size">The size.</param>
-        /// <returns></returns>
         public override ConstrainedPointer GetPhysicalMemory(IntPtr address, uint size)
         {
             var virtAddr = (Addr)SysCalls.GetPhysicalMemory(address, size);
@@ -53,7 +53,7 @@ namespace Mosa.CoolWorld.x86.HAL
         /// <param name="irq">The irq.</param>
         public override void ProcessInterrupt(byte irq)
         {
-            DeviceSystem.HAL.ProcessInterrupt(irq);
+            HAL.ProcessInterrupt(irq);
         }
 
         /// <summary>

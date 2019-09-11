@@ -13,7 +13,7 @@ namespace Lonos.Kernel.Core
 
         public delegate void DAssertErrorHandler(string errorMessage);
 
-        static DAssertErrorHandler ErrorHandler;
+        private static DAssertErrorHandler ErrorHandler;
 
         public static void Setup(DAssertErrorHandler errorHandler)
         {

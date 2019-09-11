@@ -17,7 +17,7 @@ using size_t = System.UInt32;
 //using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
 using System.Runtime.InteropServices;
 
-namespace Lonos.test.malloc4
+namespace Lonos.Test.malloc4
 {
 
     public unsafe struct malloc_list

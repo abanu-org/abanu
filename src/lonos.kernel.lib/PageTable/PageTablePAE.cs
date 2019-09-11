@@ -196,7 +196,6 @@ namespace Lonos.Kernel.Core.PageManagement
         /// Gets the physical memory.
         /// </summary>
         /// <param name="virtualAddress">The virtual address.</param>
-        /// <returns></returns>
         public override Addr GetPhysicalAddressFromVirtual(Addr virtualAddress)
         {
             //var entry = GetTableEntry(virtualAddress);

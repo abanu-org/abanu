@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace Lonos.test.console
+namespace Lonos.Test.Console
 {
 
     public unsafe class AllocTest
@@ -15,10 +15,10 @@ namespace Lonos.test.console
         {
         }
 
-        MyAlloc malloc;
-        Random rnd = new Random();
+        private MyAlloc malloc;
+        private Random rnd = new Random();
 
-        public void run()
+        public void Run()
         {
             malloc = new MyAlloc();
             malloc.Init();
@@ -33,7 +33,7 @@ namespace Lonos.test.console
                     Alloc((uint)rnd.Next(20));
                 }
             }
-            Console.WriteLine(hash.Count);
+            System.Console.WriteLine(hash.Count);
         }
 
         private class AllocEnry

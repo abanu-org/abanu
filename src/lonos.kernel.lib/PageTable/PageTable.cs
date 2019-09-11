@@ -29,7 +29,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         private static IPageTable CreateInstance(PageTableType type)
         {
-            if (type == PageTableType.x86)
+            if (type == PageTableType.X86)
                 return new PageTableX86();
             else
                 return new PageTablePAE();
@@ -61,7 +61,9 @@ namespace Lonos.Kernel.Core.PageManagement
             Native.SetCR0((uint)(Native.GetCR0() & ~0x10000));
         }
 
-        public virtual void EnableExecutionProtection() { }
+        public virtual void EnableExecutionProtection()
+        {
+        }
 
         public abstract void SetKernelWriteProtectionForAllInitialPages();
 
@@ -75,7 +77,9 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public abstract void SetWritable(uint virtAddr, uint size);
 
-        public virtual void SetExecutable(uint virtAddr, uint size) { }
+        public virtual void SetExecutable(uint virtAddr, uint size)
+        {
+        }
 
         public abstract Addr GetPhysicalAddressFromVirtual(Addr virtualAddress);
     }

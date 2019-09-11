@@ -38,8 +38,6 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Acces a char at a specific index
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
         public unsafe char this[int index]
         {
             get
@@ -245,11 +243,11 @@ namespace Lonos.Kernel.Core
         {
             switch (value.Type)
             {
-                case ArgumentType._uint:
-                    Append(value._uint, format);
+                case ArgumentType.UInt:
+                    Append(value.UInt, format);
                     break;
-                case ArgumentType._string:
-                    Append(value._string);
+                case ArgumentType.String:
+                    Append(value.String);
                     break;
                 default:
                     Append("Unkown ArgumentType");
@@ -352,7 +350,7 @@ namespace Lonos.Kernel.Core
             char* first;
             fixed (char* ptr = chars)
             {
-                first = (ptr + this.length);
+                first = ptr + this.length;
             }
 
             len = count;
@@ -387,7 +385,7 @@ namespace Lonos.Kernel.Core
         {
             Append(
                 format,
-                new Argument { _string = arg0, Type = ArgumentType._string },
+                new Argument { String = arg0, Type = ArgumentType.String },
                 new Argument(),
                 new Argument(),
                 new Argument(),
@@ -400,8 +398,8 @@ namespace Lonos.Kernel.Core
         {
             Append(
                 format,
-                new Argument { _string = arg0, Type = ArgumentType._string },
-                new Argument { _uint = arg1, Type = ArgumentType._uint },
+                new Argument { String = arg0, Type = ArgumentType.String },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
                 new Argument(),
                 new Argument(),
                 new Argument(),
@@ -418,9 +416,9 @@ namespace Lonos.Kernel.Core
         {
             Append(
                 format,
-                new Argument { _uint = arg0, Type = ArgumentType._uint },
-                new Argument { _uint = arg1, Type = ArgumentType._uint },
-                new Argument { _uint = arg2, Type = ArgumentType._uint },
+                new Argument { UInt = arg0, Type = ArgumentType.UInt },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
                 new Argument(),
                 new Argument(),
                 new Argument(),
@@ -431,10 +429,10 @@ namespace Lonos.Kernel.Core
         {
             Append(
                 format,
-                new Argument { _uint = arg0, Type = ArgumentType._uint },
-                new Argument { _uint = arg1, Type = ArgumentType._uint },
-                new Argument { _uint = arg2, Type = ArgumentType._uint },
-                new Argument { _uint = arg3, Type = ArgumentType._uint },
+                new Argument { UInt = arg0, Type = ArgumentType.UInt },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
+                new Argument { UInt = arg3, Type = ArgumentType.UInt },
                 new Argument(),
                 new Argument(),
                 new Argument());
@@ -444,11 +442,11 @@ namespace Lonos.Kernel.Core
         {
             Append(
                 format,
-                new Argument { _uint = arg0, Type = ArgumentType._uint },
-                new Argument { _uint = arg1, Type = ArgumentType._uint },
-                new Argument { _uint = arg2, Type = ArgumentType._uint },
-                new Argument { _uint = arg3, Type = ArgumentType._uint },
-                new Argument { _uint = arg4, Type = ArgumentType._uint },
+                new Argument { UInt = arg0, Type = ArgumentType.UInt },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
+                new Argument { UInt = arg3, Type = ArgumentType.UInt },
+                new Argument { UInt = arg4, Type = ArgumentType.UInt },
                 new Argument(),
                 new Argument());
         }
@@ -457,12 +455,12 @@ namespace Lonos.Kernel.Core
         {
             Append(
                 format,
-                new Argument { _uint = arg0, Type = ArgumentType._uint },
-                new Argument { _uint = arg1, Type = ArgumentType._uint },
-                new Argument { _uint = arg2, Type = ArgumentType._uint },
-                new Argument { _uint = arg3, Type = ArgumentType._uint },
-                new Argument { _uint = arg4, Type = ArgumentType._uint },
-                new Argument { _uint = arg5, Type = ArgumentType._uint },
+                new Argument { UInt = arg0, Type = ArgumentType.UInt },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
+                new Argument { UInt = arg3, Type = ArgumentType.UInt },
+                new Argument { UInt = arg4, Type = ArgumentType.UInt },
+                new Argument { UInt = arg5, Type = ArgumentType.UInt },
                 new Argument());
         }
 
@@ -470,27 +468,27 @@ namespace Lonos.Kernel.Core
         {
             Append(
                 format,
-                new Argument { _uint = arg0, Type = ArgumentType._uint },
-                new Argument { _uint = arg1, Type = ArgumentType._uint },
-                new Argument { _uint = arg2, Type = ArgumentType._uint },
-                new Argument { _uint = arg3, Type = ArgumentType._uint },
-                new Argument { _uint = arg4, Type = ArgumentType._uint },
-                new Argument { _uint = arg5, Type = ArgumentType._uint },
-                new Argument { _uint = arg6, Type = ArgumentType._uint });
+                new Argument { UInt = arg0, Type = ArgumentType.UInt },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
+                new Argument { UInt = arg3, Type = ArgumentType.UInt },
+                new Argument { UInt = arg4, Type = ArgumentType.UInt },
+                new Argument { UInt = arg5, Type = ArgumentType.UInt },
+                new Argument { UInt = arg6, Type = ArgumentType.UInt });
         }
 
         private struct Argument
         {
-            public uint _uint;
-            public string _string;
+            public uint UInt;
+            public string String;
             public ArgumentType Type;
         }
 
         private enum ArgumentType
         {
-            _none = 0,
-            _uint = 1,
-            _string = 2,
+            None = 0,
+            UInt = 1,
+            String = 2,
         }
 
         private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4, Argument arg5, Argument arg6)
@@ -588,7 +586,8 @@ namespace Lonos.Kernel.Core
             {
                 temp /= digits;
                 count++;
-            } while (temp != 0);
+            }
+            while (temp != 0);
 
             if (size != -1)
                 count = (uint)size;

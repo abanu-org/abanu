@@ -6,7 +6,7 @@ using Lonos.Kernel.Core;
 
 #pragma warning disable
 
-namespace Lonos.test.console.alloc2
+namespace Lonos.Test.Console.alloc2
 {
 
     unsafe struct list_head

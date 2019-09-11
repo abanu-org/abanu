@@ -1,8 +1,9 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using Mosa.Runtime.x86;
 
-namespace Mosa.Kernel.x86
+namespace Lonos.Kernel
 {
     /// <summary>
     /// IOPort
@@ -13,7 +14,6 @@ namespace Mosa.Kernel.x86
         /// Reads a byte
         /// </summary>
         /// <param name="address">The address.</param>
-        /// <returns></returns>
         public static byte In8(ushort address)
         {
             return Native.In8(address);
@@ -23,7 +23,6 @@ namespace Mosa.Kernel.x86
         /// Reads a short
         /// </summary>
         /// <param name="address">The address.</param>
-        /// <returns></returns>
         public static ushort In16(ushort address)
         {
             return Native.In16(address);
@@ -33,7 +32,6 @@ namespace Mosa.Kernel.x86
         /// Reads an integer
         /// </summary>
         /// <param name="address">The address.</param>
-        /// <returns></returns>
         public static uint In32(ushort address)
         {
             return Native.In32(address);

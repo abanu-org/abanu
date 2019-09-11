@@ -1,8 +1,5 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
-
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
 using System.Runtime.Versioning;
@@ -23,9 +20,21 @@ namespace Lonos.Kernel.Core
         }
 
         [NonVersionable]
+        public unsafe SSize(int value)
+        {
+            _value = (void*)value;
+        }
+
+        [NonVersionable]
         public unsafe SSize(ulong value)
         {
-            _value = (void*)((uint)value);
+            _value = (void*)(uint)value;
+        }
+
+        [NonVersionable]
+        public unsafe SSize(long value)
+        {
+            _value = (void*)value;
         }
 
         [NonVersionable]
@@ -38,20 +47,20 @@ namespace Lonos.Kernel.Core
         {
             if (obj is SSize)
             {
-                return (_value == ((SSize)obj)._value);
+                return _value == ((SSize)obj)._value;
             }
             return false;
         }
 
         public unsafe override int GetHashCode()
         {
-            return ((int)_value);
+            return (int)_value;
         }
 
         [NonVersionable]
         public unsafe uint ToUInt32()
         {
-            return ((uint)_value);
+            return (uint)_value;
         }
 
         [NonVersionable]
@@ -73,13 +82,17 @@ namespace Lonos.Kernel.Core
         }
 
         [NonVersionable]
+#pragma warning disable CA2225 // Operator overloads have named alternates
         public static unsafe implicit operator SSize(void* value)
+#pragma warning restore CA2225 // Operator overloads have named alternates
         {
             return new SSize(value);
         }
 
         [NonVersionable]
+#pragma warning disable CA2225 // Operator overloads have named alternates
         public static unsafe implicit operator void*(SSize value)
+#pragma warning restore CA2225 // Operator overloads have named alternates
         {
             return value._value;
         }
@@ -151,5 +164,13 @@ namespace Lonos.Kernel.Core
         {
             return ((long)_value).ToString();
         }
+
+        public static SSize FromUInt32(uint value) => new SSize(value);
+        public static SSize FromInt32(int value) => new SSize(value);
+        public static SSize FromUInt64(ulong value) => new SSize(value);
+        public static SSize FromInt64(long value) => new SSize(value);
+
+        public unsafe int ToInt32() => (int)_value;
+        public unsafe long ToInt64() => (long)_value;
     }
 }

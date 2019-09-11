@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Lonos.Kernel.Core;
 using Lonos.Runtime;
-using Mosa.CoolWorld.x86.HAL;
 using Mosa.DeviceDriver;
 using Mosa.DeviceDriver.ISA;
 using Mosa.DeviceDriver.ScanCodeMap;
@@ -180,7 +179,7 @@ namespace Lonos.Kernel
 
                         Console.Write("Reading File: ");
 
-                        for (; ; )
+                        while (true)
                         {
                             int i = fatFileStream.ReadByte();
 

@@ -1,4 +1,7 @@
-﻿/*
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+/*
  * (c) 2015 MOSA - The Managed Operating System Alliance
  *
  * Licensed under the terms of the New BSD License.
@@ -100,7 +103,7 @@ namespace Lonos.Kernel.Core
             {
                 //TSS
                 Tss = AddTSS();
-                ///tss->esp0 = kernelStackPointer;
+                //tss->esp0 = kernelStackPointer;
                 Tss->SS0 = 0x10;
                 Tss->Trace_bitmap = 0xdfff;
 
@@ -138,10 +141,10 @@ namespace Lonos.Kernel.Core
 
         public static void LoadTaskRegister()
         {
-            ushort TS = 0x28;
+            ushort ts = 0x28;
             if (KConfig.UseUserMode)
-                TS |= 0x3;
-            LoadTaskRegister(TS);
+                ts |= 0x3;
+            LoadTaskRegister(ts);
         }
 
         private static TaskStateSegment* AddTSS()
@@ -182,7 +185,7 @@ namespace Lonos.Kernel.Core
 
         public const byte StructSize = 0x06;
 
-        private DescriptorTableEntry* entries
+        private DescriptorTableEntry* Entries
         {
             get { return (DescriptorTableEntry*)AdressOfEntries; }
             set { AdressOfEntries = (uint)value; }
@@ -191,7 +194,7 @@ namespace Lonos.Kernel.Core
         internal DescriptorTableEntry* GetEntryRef(ushort index)
         {
             Assert.InRange(index, Length);
-            return entries + index;
+            return Entries + index;
         }
 
         public ushort Length
@@ -228,13 +231,13 @@ namespace Lonos.Kernel.Core
         {
             Assert.InRange(index, Length);
             //DescriptorTableEntry.CopyTo(&source, entries + index);
-            entries[index] = source;
+            Entries[index] = source;
         }
 
         public DescriptorTableEntry GetEntry(ushort index)
         {
             Assert.InRange(index, Length);
-            return *(entries + index);
+            return *(Entries + index);
         }
     }
 
@@ -249,7 +252,7 @@ namespace Lonos.Kernel.Core
 
         public const byte StructSize = 0x06;
 
-        private TaskStateSegment* entries
+        private TaskStateSegment* Entries
         {
             get { return (TaskStateSegment*)AdressOfEntries; }
             set { AdressOfEntries = (uint)value; }
@@ -258,7 +261,7 @@ namespace Lonos.Kernel.Core
         internal TaskStateSegment* GetEntryRef(ushort index)
         {
             Assert.InRange(index, Length);
-            return &entries[index];
+            return &Entries[index];
         }
 
         public ushort Length
@@ -294,14 +297,14 @@ namespace Lonos.Kernel.Core
         public TaskStateSegment* SetEntry(ushort index, TaskStateSegment source)
         {
             Assert.InRange(index, Length);
-            entries[index] = source;
-            return &entries[index];
+            Entries[index] = source;
+            return &Entries[index];
         }
 
         public TaskStateSegment GetEntry(ushort index)
         {
             Assert.InRange(index, Length);
-            return entries[index];
+            return Entries[index];
         }
     }
 

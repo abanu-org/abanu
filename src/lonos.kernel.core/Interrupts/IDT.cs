@@ -68,17 +68,17 @@ namespace Mosa.Kernel.x86
                 if (interruptInfo.Trace)
                     KernelMessage.WriteLine("Interrupt: {0}", irq);
 
-                var col = Screen.column;
-                var row = Screen.row;
-                Screen.column = 0;
+                var col = Screen.Column;
+                var row = Screen.Row;
+                Screen.Column = 0;
                 Screen.Goto(2, 35);
                 Screen.Write("Interrupts: ");
                 Screen.Write(IDTManager.RaisedCount);
                 Screen.Goto(3, 35);
                 Screen.Write("IntNoClock: ");
                 Screen.Write(IDTManager.RaisedCountCustom);
-                Screen.row = row;
-                Screen.column = col;
+                Screen.Row = row;
+                Screen.Column = col;
             }
 
             if (irq < 0 || irq > 255)
