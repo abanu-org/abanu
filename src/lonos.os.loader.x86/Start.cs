@@ -3,7 +3,9 @@
 
 using Lonos.Kernel.Loader;
 
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 namespace Lonos.OS.Loader.x86
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 {
     public static class Start
     {

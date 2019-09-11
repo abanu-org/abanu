@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 namespace Lonos.Kernel.Core.x86
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 {
     public static class DummyClass
     {
