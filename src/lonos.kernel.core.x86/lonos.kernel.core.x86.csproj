@@ -8,6 +8,7 @@
     <AssemblyName>lonos.kernel.core.x86</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <ProjectGuid>{F410CB2C-A859-4226-BCD2-6361BD3F57EB}</ProjectGuid>
+	<CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,5 +53,6 @@
   <ItemGroup>
     <Compile Include="DummyClass.cs" />
   </ItemGroup>
+  <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

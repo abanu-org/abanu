@@ -3,7 +3,7 @@ using Mosa.Runtime.x86;
 
 namespace Lonos.Kernel.Core
 {
-    public class MemoryOperation
+    public static class MemoryOperation
     {
 
         public static void Copy(Addr source, Addr destination, USize length)

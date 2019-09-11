@@ -8,6 +8,7 @@
     <AssemblyName>lonos.kernel.unixapi</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <ProjectGuid>{1DAF7D31-54DC-4B15-A14E-15206073C579}</ProjectGuid>
+	<CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,5 +53,6 @@
     <Compile Include="IUnixKernelApi.cs" />
     <Compile Include="GFP.cs" />
   </ItemGroup>
+  <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

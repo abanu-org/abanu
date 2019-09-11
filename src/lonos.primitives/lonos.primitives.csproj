@@ -8,6 +8,7 @@
     <AssemblyName>lonos.primitives</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <ProjectGuid>{D61BA40B-253D-445B-A6AC-1B080AAC9B80}</ProjectGuid>
+	<CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,5 +60,6 @@
     <Compile Include="SSize.cs" />
     <Compile Include="USize.cs" />
   </ItemGroup>
+  <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
