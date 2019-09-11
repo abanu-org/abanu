@@ -77,6 +77,8 @@ namespace Lonos.Build
             Options.EmitAllSymbols = true;
             //Options.EnableMethodScanner = true;
 
+            Options.InterruptMethodName = "Lonos.Kernel.Loader.IDT::ProcessInterrupt";
+
             Options.CreateExtraSections = () =>
             {
                 return new List<Section>

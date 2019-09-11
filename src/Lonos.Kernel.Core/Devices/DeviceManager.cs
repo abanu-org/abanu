@@ -6,7 +6,6 @@ using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.MemoryManagement;
 using Lonos.Kernel.Core.PageManagement;
-using Mosa.Kernel.x86;
 using Mosa.Runtime;
 
 namespace Lonos.Kernel.Core.Devices

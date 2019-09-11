@@ -4,7 +4,6 @@
 using System;
 using System.Runtime.InteropServices;
 using Lonos.Kernel.Core.Diagnostics;
-using Mosa.Kernel.x86;
 using Mosa.Runtime.x86;
 
 namespace Lonos.Kernel.Core.Elf

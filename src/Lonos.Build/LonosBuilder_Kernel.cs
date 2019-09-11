@@ -100,6 +100,8 @@ namespace Lonos.Build
 
             //Options.VBEVideo = true;
 
+            Options.InterruptMethodName = "Lonos.Kernel.Core.IDT::ProcessInterrupt";
+
             Section sect = null;
             Options.CreateExtraSections = () =>
             {

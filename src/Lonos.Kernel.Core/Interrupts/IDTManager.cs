@@ -98,7 +98,7 @@ namespace Lonos.Kernel.Core.Interrupts
 
             Flush();
 
-            Mosa.Kernel.x86.IDT.Enabled = true
+            IDT.Enabled = true
             ;
             KernelMessage.WriteLine("done");
         }

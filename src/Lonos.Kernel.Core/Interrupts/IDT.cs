@@ -12,7 +12,7 @@ using Mosa.Runtime.x86;
 
 //TODO: Name in compiler
 #pragma warning disable SA1300 // Element should begin with upper-case letter
-namespace Mosa.Kernel.x86
+namespace Lonos.Kernel.Core
 #pragma warning restore SA1300 // Element should begin with upper-case letter
 {
 
