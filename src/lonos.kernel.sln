@@ -4,7 +4,7 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Core", "Lonos.Kernel.Core\Lonos.Kernel.Core.csproj", "{A72ED046-DE1C-4688-981B-6086C091047F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.core.classlib", "lonos.core.classlib\lonos.core.classlib.csproj", "{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Core.ClassLib", "Lonos.Core.ClassLib\Lonos.Core.ClassLib.csproj", "{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mosa-Project", "Mosa-Project", "{2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}"
 EndProject

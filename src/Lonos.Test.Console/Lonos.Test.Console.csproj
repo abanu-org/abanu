@@ -51,9 +51,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\lonos.core.classlib\lonos.core.classlib.csproj">
-      <Project>{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}</Project>
-      <Name>lonos.core.classlib</Name>
+    <ProjectReference Include="..\Lonos.Core.ClassLib\Lonos.Core.ClassLib.csproj">
+      <Project>{fa6e1560-c2d5-41bb-9e7c-d54d0f711918}</Project>
+      <Name>Lonos.Core.ClassLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lonos.Kernel.Api\Lonos.Kernel.Api.csproj">
       <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
