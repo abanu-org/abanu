@@ -29,8 +29,8 @@ function configure {
 			mono ../Tools/nuget/nuget.exe restore Mosa.Tool.Mosactl.sln
 			mono ../Tools/nuget/nuget.exe restore Mosa.sln
 			cd ../../..
-			mono external/MOSA-Project/Tools/nuget/nuget.exe restore src/lonos.build.sln
-			mono external/MOSA-Project/Tools/nuget/nuget.exe restore src/lonos.kernel.sln
+			mono external/MOSA-Project/Tools/nuget/nuget.exe restore src/Lonos.Build.sln
+			mono external/MOSA-Project/Tools/nuget/nuget.exe restore src/Lonos.Kernel.sln
 			;;
 
 		*)
@@ -152,7 +152,7 @@ function build {
 			;;
 
 		builder)
-			(cd src && msbuild lonos.build.sln /p:Configuration=Release)
+			(cd src && msbuild Lonos.Build.sln /p:Configuration=Release)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/dnlib.* bin
@@ -160,34 +160,34 @@ function build {
 			;;
 
 		assembly)
-			(cd src && msbuild lonos.kernel.sln /p:Configuration=Debug)
+			(cd src && msbuild Lonos.Kernel.sln /p:Configuration=Debug)
 			;;
 
 		native)
-			src/lonos.native.x86/build
+			src/Lonos.Native.x86/build
 			;;
 
 		app)
-			(cd bin && mono -O=all ./lonos.build.exe --image=app)
+			(cd bin && mono -O=all ./Lonos.Build.exe --image=app)
 			;;
 		app2)
-			(cd bin && mono -O=all ./lonos.build.exe --image=app2)
+			(cd bin && mono -O=all ./Lonos.Build.exe --image=app2)
 			;;
 
 		app.shell)
-			(cd bin && mono -O=all ./lonos.build.exe --image=app.shell)
+			(cd bin && mono -O=all ./Lonos.Build.exe --image=app.shell)
 			;;
 
 		service.basic)
-			(cd bin && mono -O=all ./lonos.build.exe --image=service.basic)
+			(cd bin && mono -O=all ./Lonos.Build.exe --image=service.basic)
 			;;
 
 		loader)
-			(cd bin && mono -O=all ./lonos.build.exe --image=loader)
+			(cd bin && mono -O=all ./Lonos.Build.exe --image=loader)
 			;;
 
 		kernel)
-			(cd bin && mono -O=all ./lonos.build.exe --image=kernel)
+			(cd bin && mono -O=all ./Lonos.Build.exe --image=kernel)
 			;;
 
 		loader,kernel)
@@ -236,7 +236,7 @@ function debug {
 			DEBUG_INTERRUPTS=,int
 			#qemu_app=qemu-system-x86_64
 			qemu_app=qemu-system-i386
-			$qemu_app -kernel os/lonos.os.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log
+			$qemu_app -kernel os/Lonos.OS.Image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log
 			;;
 
 		qemu-grub-hybrid)
@@ -251,7 +251,7 @@ function debug {
 
 			bios="-L /usr/share/seabios"
 
-			disk=${LONOS_OSDIR}/lonos.kernel.core.x86-grub-hybrid.disk.img
+			disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-grub-hybrid.disk.img
 
 			$qemu_app ${bios} -hda $disk -serial file:${LONOS_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log
 
@@ -264,13 +264,13 @@ function debug {
 }
 
 function _image {
-	(cd bin && mono -O=all ./lonos.build.exe --image=image)
+	(cd bin && mono -O=all ./Lonos.Build.exe --image=image)
 }
 
 function _disk {
 	#image=$LONOS_OSDIR/lonos.kernel.image.bin
-	#loader=$LONOS_PROJDIR/os/lonos.kernel.loader.bin
-	#kernel=$LONOS_PROJDIR/os/lonos.kernel.core.bin
+	#loader=$LONOS_PROJDIR/os/Lonos.Kernel.Loader.bin
+	#kernel=$LONOS_PROJDIR/os/Lonos.Kernel.Core.bin
 	#rm -f $image
 	#cat $loader $kernel > $image
 	#printf '\x31\xc0\xc3' | dd of=$image bs=1 seek=3 count=3 conv=notrunc
@@ -303,7 +303,7 @@ function _bochs {
 }
 
 function _qemu {
-	disk=${LONOS_OSDIR}/lonos.os.core.x86.img
+	disk=${LONOS_OSDIR}/Lonos.OS.Core.x86.img
 
 	case $1 in
 		x86)
@@ -319,7 +319,7 @@ function _qemu {
 			cpu=qemu32,+sse4.1
 			bios="-L /usr/share/seabios"
 
-			disk=${LONOS_OSDIR}/lonos.os.core.x86-grub-hybrid.disk.img
+			disk=${LONOS_OSDIR}/Lonos.OS.Core.x86-grub-hybrid.disk.img
 			;;
 
 		x86-efi)
@@ -328,7 +328,7 @@ function _qemu {
 			cpu=qemu32,+sse4.1
 			bios="-bios ${LONOS_PROJDIR}/tools/ovmf-ia32/OVMF-pure-efi.fd"
 
-			disk=${LONOS_OSDIR}/lonos.os.core.x86-efi.disk.img
+			disk=${LONOS_OSDIR}/Lonos.OS.Core.x86-efi.disk.img
 			;;
 
 		x64)
@@ -365,7 +365,7 @@ function _qemu {
 #}
 
 function create_efi_disk {
-	disk=${LONOS_OSDIR}/lonos.kernel.core.x86-efi.disk.img
+	disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-efi.disk.img
 	size=40880 #kb
 	let "block=((size * 1024) / (512 * 16 * 16)) - 1"
 	echo $block
@@ -376,11 +376,11 @@ function create_efi_disk {
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/boot ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/NvVars ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/.disk ::/
-	mcopy -i $disk -s $LONOS_OSDIR/lonos.os.image.x86.bin ::/lonos.bin
+	mcopy -i $disk -s $LONOS_OSDIR/Lonos.OS.image.x86.bin ::/lonos.bin
 }
 
 function create_grub_hybrid_disk {
-	disk=${LONOS_OSDIR}/lonos.kernel.core.x86-grub-hybrid.disk.img
+	disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-grub-hybrid.disk.img
 	isodir=$LONOS_PROJDIR/tmp/iso-grub-hybrid
 	mkdir -p $isodir;
 	cp $LONOS_OSDIR/lonos.os.image.x86.bin $isodir/lonos.bin
