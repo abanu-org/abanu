@@ -5,9 +5,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <RootNamespace>lonos.Kernel</RootNamespace>
-    <AssemblyName>lonos.core.classlib</AssemblyName>
+    <AssemblyName>Lonos.Kernel.Api</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <ProjectGuid>{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}</ProjectGuid>
+    <ProjectGuid>{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}</ProjectGuid>
     <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -41,22 +41,27 @@
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
-      <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
-      <Name>Mosa.Runtime.x86</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lonos.Kernel.Api\Lonos.Kernel.Api.csproj">
-      <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
-      <Name>Lonos.Kernel.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lonos.Kernel.UnixApi\Lonos.Kernel.UnixApi.csproj">
-      <Project>{1daf7d31-54dc-4b15-a14e-15206073c579}</Project>
-      <Name>Lonos.Kernel.UnixApi</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lonos.Primitives\Lonos.Primitives.csproj">
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
       <Name>Lonos.Primitives</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SysCallTarget.cs" />
+    <Compile Include="Structs\FileHandle.cs" />
+    <Compile Include="Structs\MemoryRegion.cs" />
+    <Compile Include="IKernelApi.cs" />
+    <Compile Include="IFile.cs" />
+    <Compile Include="IBufferWriter.cs" />
+    <Compile Include="IPageFrameAllocator.cs" />
+    <Compile Include="Structs\Page.cs" />
+    <Compile Include="Structs\Atomic.cs" />
+    <Compile Include="NumberExtensions.cs" />
+    <Compile Include="SystemMessage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Elf\" />
+    <Folder Include="Fonts\" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

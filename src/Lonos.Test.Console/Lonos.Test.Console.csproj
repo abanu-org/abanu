@@ -3,55 +3,65 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>lonos.Kernel</RootNamespace>
-    <AssemblyName>lonos.core.classlib</AssemblyName>
+    <ProjectGuid>{67A6A46D-DBF4-4013-89DB-3E6457D139F3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>lonos.test.console</RootNamespace>
+    <AssemblyName>Lonos.Test.Console</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <ProjectGuid>{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}</ProjectGuid>
     <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;BITS_64</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <NoStdLib>true</NoStdLib>
+    <ExternalConsole>true</ExternalConsole>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <NoStdLib>true</NoStdLib>
+    <ExternalConsole>true</ExternalConsole>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
-      <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
-      <Name>Mosa.Korlib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
-      <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
-      <Name>Mosa.Runtime</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
-      <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
-      <Name>Mosa.Runtime.x86</Name>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Lonos.Kernel.Core\Tests\buddy-malloc.cs">
+      <Link>buddy-malloc.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AllocTest.cs" />
+    <Compile Include="..\lonos.kernel.core\Tests\buddy-malloc.cs">
+      <Link>buddy-malloc.cs</Link>
+    </Compile>
+    <Compile Include="alloc2\EmptyClass.cs" />
+    <Compile Include="Alloc3\Alloc3.cs" />
+    <Compile Include="alloc4.cs" />
+    <Compile Include="alloc4Test.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\lonos.core.classlib\lonos.core.classlib.csproj">
+      <Project>{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}</Project>
+      <Name>lonos.core.classlib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lonos.Kernel.Api\Lonos.Kernel.Api.csproj">
       <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
       <Name>Lonos.Kernel.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lonos.Kernel.UnixApi\Lonos.Kernel.UnixApi.csproj">
-      <Project>{1daf7d31-54dc-4b15-a14e-15206073c579}</Project>
-      <Name>Lonos.Kernel.UnixApi</Name>
+    <ProjectReference Include="..\Lonos.Kernel.Lib\Lonos.Kernel.Lib.csproj">
+      <Project>{2d21af60-8366-430a-9579-1b0ccd31910f}</Project>
+      <Name>Lonos.Kernel.Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lonos.Primitives\Lonos.Primitives.csproj">
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>

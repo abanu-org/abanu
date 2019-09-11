@@ -1,8 +1,8 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.core", "lonos.kernel.core\lonos.kernel.core.csproj", "{A72ED046-DE1C-4688-981B-6086C091047F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Core", "Lonos.Kernel.Core\Lonos.Kernel.Core.csproj", "{A72ED046-DE1C-4688-981B-6086C091047F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.core.classlib", "lonos.core.classlib\lonos.core.classlib.csproj", "{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}"
 EndProject
@@ -14,21 +14,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Runtime", "..\external
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Runtime.x86", "..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj", "{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.lib", "lonos.kernel.lib\lonos.kernel.lib.csproj", "{2D21AF60-8366-430A-9579-1B0CCD31910F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Lib", "Lonos.Kernel.Lib\Lonos.Kernel.Lib.csproj", "{2D21AF60-8366-430A-9579-1B0CCD31910F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.unixapi", "lonos.kernel.unixapi\lonos.kernel.unixapi.csproj", "{1DAF7D31-54DC-4B15-A14E-15206073C579}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.UnixApi", "Lonos.Kernel.UnixApi\Lonos.Kernel.UnixApi.csproj", "{1DAF7D31-54DC-4B15-A14E-15206073C579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.api", "lonos.kernel.api\lonos.kernel.api.csproj", "{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Api", "Lonos.Kernel.Api\Lonos.Kernel.Api.csproj", "{ED52E867-98F0-4FBF-AB06-4812AE5FFB43}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{7691F114-85AC-4D01-9B2D-6BD9A091A949}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{4C2366D3-CB74-46BE-9E35-494F017D7F96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.loader", "lonos.kernel.loader\lonos.kernel.loader.csproj", "{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Loader", "Lonos.Kernel.Loader\Lonos.Kernel.Loader.csproj", "{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.config", "lonos.kernel.config\lonos.kernel.config.csproj", "{317E8C4B-089B-469B-8789-D76EB2F87504}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Config", "Lonos.Kernel.Config\Lonos.Kernel.Config.csproj", "{317E8C4B-089B-469B-8789-D76EB2F87504}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.test.console", "lonos.test.console\lonos.test.console.csproj", "{67A6A46D-DBF4-4013-89DB-3E6457D139F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Test.Console", "Lonos.Test.Console\Lonos.Test.Console.csproj", "{67A6A46D-DBF4-4013-89DB-3E6457D139F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Plug.Korlib", "..\external\MOSA-Project\Source\Mosa.Plug.Korlib\Mosa.Plug.Korlib.csproj", "{CBDEEF3C-BBE7-4655-A096-1367DE069E63}"
 EndProject
@@ -44,23 +44,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{171E90
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{7338F830-60F6-4A6B-8854-671681C2A1D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app.hellokernel", "app.hellokernel\app.hellokernel.csproj", "{E97F2133-634F-488C-933A-B78D6A1F0B69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.HelloKernel", "App.HelloKernel\App.HelloKernel.csproj", "{E97F2133-634F-488C-933A-B78D6A1F0B69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.os.core.x86", "lonos.os.core.x86\lonos.os.core.x86.csproj", "{BD177211-DECC-4473-B37B-883A9A58B279}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.OS.Core.x86", "Lonos.OS.Core.x86\Lonos.OS.Core.x86.csproj", "{BD177211-DECC-4473-B37B-883A9A58B279}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.os.loader.x86", "lonos.os.loader.x86\lonos.os.loader.x86.csproj", "{7E387209-732C-489D-A759-39D43FB21AFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.OS.Loader.x86", "Lonos.OS.Loader.x86\Lonos.OS.Loader.x86.csproj", "{7E387209-732C-489D-A759-39D43FB21AFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.primitives", "lonos.primitives\lonos.primitives.csproj", "{D61BA40B-253D-445B-A6AC-1B080AAC9B80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Primitives", "Lonos.Primitives\Lonos.Primitives.csproj", "{D61BA40B-253D-445B-A6AC-1B080AAC9B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app.helloservice", "app.helloservice\app.helloservice.csproj", "{737EFC20-F822-4F84-B5C3-3B9728A189E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.HelloService", "App.HelloService\App.HelloService.csproj", "{737EFC20-F822-4F84-B5C3-3B9728A189E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.runtime", "lonos.runtime\lonos.runtime.csproj", "{4D9C0633-1433-4A92-A148-80E8E91155FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Runtime", "Lonos.Runtime\Lonos.Runtime.csproj", "{4D9C0633-1433-4A92-A148-80E8E91155FD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{23E1ACEA-F353-4B4B-A063-41B0F989B933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.service.basic", "lonos.service.basic\lonos.service.basic.csproj", "{481DD672-7A67-43EB-B18C-88F4EA97CDF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Service.Basic", "Lonos.Service.Basic\Lonos.Service.Basic.csproj", "{481DD672-7A67-43EB-B18C-88F4EA97CDF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app.shell", "app.shell\app.shell.csproj", "{C905EA31-3072-4523-A6FC-C154489FD2F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Shell", "App.Shell\App.Shell.csproj", "{C905EA31-3072-4523-A6FC-C154489FD2F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.DeviceSystem", "..\external\MOSA-Project\Source\Mosa.DeviceSystem\Mosa.DeviceSystem.csproj", "{6509477A-7360-4937-A1B9-26FED0A75CDA}"
 EndProject
@@ -75,9 +75,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeAnalysis", "CodeAnalysi
 		ressources\codeanalysis\default.ruleset = ressources\codeanalysis\default.ruleset
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.core.x86", "lonos.kernel.core.x86\lonos.kernel.core.x86.csproj", "{F410CB2C-A859-4226-BCD2-6361BD3F57EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Core.x86", "Lonos.Kernel.Core.x86\Lonos.Kernel.Core.x86.csproj", "{F410CB2C-A859-4226-BCD2-6361BD3F57EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.loader.x86", "lonos.kernel.loader.x86\lonos.kernel.loader.x86.csproj", "{81D82425-CEC0-442F-BC5F-B07C606C2516}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Loader.x86", "Lonos.Kernel.Loader.x86\Lonos.Kernel.Loader.x86.csproj", "{81D82425-CEC0-442F-BC5F-B07C606C2516}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>lonos.Kernel</RootNamespace>
-    <AssemblyName>lonos.core.classlib</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>app.HelloKernel</RootNamespace>
+    <AssemblyName>App.HelloKernel</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <ProjectGuid>{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}</ProjectGuid>
+    <ProjectGuid>{E97F2133-634F-488C-933A-B78D6A1F0B69}</ProjectGuid>
     <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,31 +32,55 @@
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.DeviceDriver\Mosa.DeviceDriver.csproj">
+      <Project>{4dbd4c50-bec5-48d9-b471-9fb0a7f69999}</Project>
+      <Name>Mosa.DeviceDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.DeviceSystem\Mosa.DeviceSystem.csproj">
+      <Project>{6509477a-7360-4937-a1b9-26fed0a75cda}</Project>
+      <Name>Mosa.DeviceSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.FileSystem\Mosa.FileSystem.csproj">
+      <Project>{d89972fd-a930-4d0c-b393-1895e78fafab}</Project>
+      <Name>Mosa.FileSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
+      <Project>{a47b7998-4ee8-4af8-9373-c664fdeddc65}</Project>
+      <Name>Mosa.Runtime.x86</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
-      <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
-      <Name>Mosa.Runtime.x86</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lonos.Kernel.Api\Lonos.Kernel.Api.csproj">
       <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
       <Name>Lonos.Kernel.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lonos.Kernel.UnixApi\Lonos.Kernel.UnixApi.csproj">
-      <Project>{1daf7d31-54dc-4b15-a14e-15206073c579}</Project>
-      <Name>Lonos.Kernel.UnixApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lonos.Primitives\Lonos.Primitives.csproj">
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
       <Name>Lonos.Primitives</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lonos.Runtime\Lonos.Runtime.csproj">
+      <Project>{4d9c0633-1433-4a92-a148-80e8e91155fd}</Project>
+      <Name>Lonos.Runtime</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="HAL\Hardware.cs" />
+    <Compile Include="HAL\X86IOPortRead.cs" />
+    <Compile Include="HAL\X86IOPortReadWrite.cs" />
+    <Compile Include="IOPort.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="HAL\X86IOPortWrite.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

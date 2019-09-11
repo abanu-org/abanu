@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>lonos.Kernel.Core</RootNamespace>
+    <AssemblyName>Lonos.Kernel.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ProjectGuid>{A72ED046-DE1C-4688-981B-6086C091047F}</ProjectGuid>
+    <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <NoStdLib>true</NoStdLib>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <NoStdLib>true</NoStdLib>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Devices\DeviceManager.cs" />
+    <Compile Include="Devices\TerminalDevice.cs" />
+    <Compile Include="DummyClass.cs" />
+    <Compile Include="Interrupts\IDT.cs" />
+    <Compile Include="Interrupts\IDTTaskStack.cs" />
+    <Compile Include="Interrupts\InterruptControlBlock.cs" />
+    <Compile Include="MemoryManagement\PageFrameManager.cs" />
+    <Compile Include="MemoryManagement\PageTableExtensions.cs" />
+    <Compile Include="Processes\Process.cs" />
+    <Compile Include="Processes\ProcessCreateOptions.cs" />
+    <Compile Include="Processes\ProcessManager.cs" />
+    <Compile Include="Syscalls\Service.cs" />
+    <Compile Include="Syscalls\SysCallManager.cs" />
+    <Compile Include="Tasks\BackgroundWorker.cs" />
+    <Compile Include="Diagnostics\AsmDebugFunction.cs" />
+    <Compile Include="Scheduling\ThreadStartOptions.cs" />
+    <Compile Include="Scheduling\Scheduler.cs" />
+    <Compile Include="Scheduling\Thread.cs" />
+    <Compile Include="Scheduling\ThreadStatus.cs" />
+    <Compile Include="KernelStart.cs" />
+    <Compile Include="MemoryManagement\Memory.cs" />
+    <Compile Include="Elf\KernelElf.cs" />
+    <Compile Include="MemoryManagement\ManagedMemoy.cs" />
+    <Compile Include="Interrupts\IDTStack.cs" />
+    <Compile Include="Diagnostics\Panic.cs" />
+    <Compile Include="Interrupts\PIC.cs" />
+    <Compile Include="External\NativeCalls.cs" />
+    <Compile Include="Interrupts\InterruptHandlers.cs" />
+    <Compile Include="Interrupts\Interrupt.cs" />
+    <Compile Include="Interrupts\IDTManager.cs" />
+    <Compile Include="Interrupts\InterruptInfo.cs" />
+    <Compile Include="Devices\Console\BiosTextScreenDevice.cs" />
+    <Compile Include="Devices\SerialDevice.cs" />
+    <Compile Include="Devices\NullDevice.cs" />
+    <Compile Include="Diagnostics\KernelMessageDevice.cs" />
+    <Compile Include="Api\ApiHost.cs" />
+    <Compile Include="Devices\Console\ConsoleDevice.cs" />
+    <Compile Include="Devices\FrameBuffer.cs" />
+    <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
+    <Compile Include="Boot\BootInfo.cs" />
+    <Compile Include="MemoryManagement\PageFrameAllocator.cs" />
+    <Compile Include="MemoryManagement\Allocator.cs" />
+    <Compile Include="MemoryManagement\KernelMemoryMap.cs" />
+    <Compile Include="Tests\buddy-malloc.cs" />
+    <Compile Include="MemoryManagement\RawVirtualFrameAllocator.cs" />
+    <Compile Include="Collections\KList.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
+      <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
+      <Name>Mosa.Korlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
+      <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
+      <Name>Mosa.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
+      <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
+      <Name>Mosa.Runtime.x86</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lonos.Kernel.Api\Lonos.Kernel.Api.csproj">
+      <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
+      <Name>Lonos.Kernel.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lonos.Kernel.Config\Lonos.Kernel.Config.csproj">
+      <Project>{317e8c4b-089b-469b-8789-d76eb2f87504}</Project>
+      <Name>Lonos.Kernel.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lonos.Kernel.Lib\Lonos.Kernel.Lib.csproj">
+      <Project>{2d21af60-8366-430a-9579-1b0ccd31910f}</Project>
+      <Name>Lonos.Kernel.Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lonos.Kernel.UnixApi\Lonos.Kernel.UnixApi.csproj">
+      <Project>{1daf7d31-54dc-4b15-a14e-15206073c579}</Project>
+      <Name>Lonos.Kernel.UnixApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lonos.Primitives\Lonos.Primitives.csproj">
+      <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
+      <Name>Lonos.Primitives</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\ressources\SharedProjectSettings.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
