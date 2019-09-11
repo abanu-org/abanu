@@ -11,6 +11,7 @@ namespace Lonos.Kernel.Core
 {
     public enum X86_EFlags : uint
     {
+        None = 0,
         CarryFlag = BitMask.Bit0,
         Reserved1 = BitMask.Bit1,
         ParityFlag = BitMask.Bit2,

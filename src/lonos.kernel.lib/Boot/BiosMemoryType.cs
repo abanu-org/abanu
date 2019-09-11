@@ -7,6 +7,7 @@ namespace Lonos.Kernel.Core.Boot
 {
     public enum BIOSMemoryMapType : byte
     {
+        Unset = 0,
         Usable = 1,
         Reserved = 2,
         ACPI_Relaimable = 3,

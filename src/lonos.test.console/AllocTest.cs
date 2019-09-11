@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
+using Lonos.Kernel.Core;
+
 namespace Lonos.Test.Console
 {
 

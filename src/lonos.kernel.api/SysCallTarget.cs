@@ -5,6 +5,7 @@ namespace Lonos.Kernel
 {
     public enum SysCallTarget
     {
+        Unset = 0,
         RequestMemory = 20,
         ServiceReturn = 21,
         ServiceFunc1 = 22,
