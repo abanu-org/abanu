@@ -1,17 +1,20 @@
-﻿using System;
-using Mosa.Runtime;
-using Mosa.Kernel.x86;
-using Mosa.Runtime.Plug;
-using Mosa.Runtime.x86;
-using Lonos.Kernel.Core.PageManagement;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
+using Lonos.Kernel.Core;
 using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.Elf;
-using Lonos.Kernel.Core;
+using Lonos.Kernel.Core.PageManagement;
+using Mosa.Kernel.x86;
+using Mosa.Runtime;
+using Mosa.Runtime.Plug;
+using Mosa.Runtime.x86;
 
 namespace Lonos.Kernel.Loader
 {
 
-    public unsafe static class LoaderStart
+    public static unsafe class LoaderStart
     {
 
         public static void Main()
@@ -90,7 +93,7 @@ namespace Lonos.Kernel.Loader
             Debug.Break();
         }
 
-        static void MapKernelImage()
+        private static void MapKernelImage()
         {
             var phys = Address.KernelElfSection;
             var diff = Address.KernelBaseVirt - Address.KernelBasePhys;
@@ -108,12 +111,12 @@ namespace Lonos.Kernel.Loader
             {
                 Start = phys + diff,
                 Size = OriginalKernelElf.TotalFileSize,
-                Type = BootInfoMemoryType.KernelElfVirt
+                Type = BootInfoMemoryType.KernelElfVirt,
             };
             BootInfo_.AddMap(map);
         }
 
-        static Addr GetKernelStartAddr()
+        private static Addr GetKernelStartAddr()
         {
             var symName = KConfig.KernelEntryName;
             var sym = OriginalKernelElf.GetSymbol(symName);
@@ -122,14 +125,14 @@ namespace Lonos.Kernel.Loader
             return sym->Value;
         }
 
-        static void CallAddress(uint addr)
+        private static void CallAddress(uint addr)
         {
             Native.Call(addr);
         }
 
         public static ElfHelper OriginalKernelElf;
 
-        static void SetupOriginalKernelElf()
+        private static void SetupOriginalKernelElf()
         {
             uint kernelElfHeaderAddr = Address.OriginalKernelElfSection;
             var kernelElfHeader = (ElfHeader*)kernelElfHeaderAddr;
@@ -138,19 +141,19 @@ namespace Lonos.Kernel.Loader
                 PhyOffset = kernelElfHeaderAddr,
                 SectionHeaderArray = (ElfSectionHeader*)(kernelElfHeaderAddr + kernelElfHeader->ShOff),
                 SectionHeaderCount = kernelElfHeader->ShNum,
-                StringTableSectionHeaderIndex = kernelElfHeader->ShStrNdx
+                StringTableSectionHeaderIndex = kernelElfHeader->ShStrNdx,
             };
             OriginalKernelElf.Init();
         }
 
-        unsafe static void SetupKernelSection()
+        private static unsafe void SetupKernelSection()
         {
             // TODO: Respect section progream header adresses.
             // Currently, we can make a raw copy of ELF file
             MemoryOperation.Copy4(Address.OriginalKernelElfSection, Address.KernelElfSection, OriginalKernelElf.TotalFileSize);
         }
 
-        public unsafe static void DumpElfInfo()
+        public static unsafe void DumpElfInfo()
         {
             var secLength = OriginalKernelElf.SectionHeaderCount;
 
@@ -165,7 +168,7 @@ namespace Lonos.Kernel.Loader
             }
         }
 
-        static void Dummy()
+        private static void Dummy()
         {
             //This is a dummy call, that get never executed.
             //Its requied, because we need a real reference to Mosa.Runtime.x86
@@ -175,7 +178,7 @@ namespace Lonos.Kernel.Loader
             Mosa.Runtime.x86.Internal.GetStackFrame(0);
         }
 
-        static void AssertError(string message)
+        private static void AssertError(string message)
         {
             KernelMessage.Write("ASSERT ERROR! ");
             KernelMessage.WriteLine(message);

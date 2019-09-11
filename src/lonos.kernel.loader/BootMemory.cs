@@ -1,10 +1,13 @@
-﻿using System;
-using Mosa.Runtime;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
+using Lonos.Kernel.Core;
+using Lonos.Kernel.Core.Boot;
 using Mosa.Kernel.x86;
+using Mosa.Runtime;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
-using Lonos.Kernel.Core.Boot;
-using Lonos.Kernel.Core;
 
 namespace Lonos.Kernel.Loader
 {
@@ -19,13 +22,14 @@ namespace Lonos.Kernel.Loader
         }
 
         [Plug("Mosa.Runtime.GC::AllocateMemory")]
-        static unsafe private IntPtr AllocateMemoryPlug(uint size)
+        private static unsafe IntPtr AllocateMemoryPlug(uint size)
         {
             return AllocateMemory(size);
         }
 
         private static uint nextAddr;
-        static public IntPtr AllocateMemory(uint size)
+
+        public static IntPtr AllocateMemory(uint size)
         {
             var retAddr = nextAddr;
             nextAddr += size;
@@ -33,14 +37,15 @@ namespace Lonos.Kernel.Loader
             return (IntPtr)(((uint)Address.GCInitialMemory) + retAddr);
         }
 
-        static Addr PageStartAddr;
+        private static Addr PageStartAddr;
+
         public static BootInfoMemory AllocateMemoryMap(USize size, BootInfoMemoryType type)
         {
             var map = new BootInfoMemory
             {
                 Start = PageStartAddr,
                 Size = size,
-                Type = type
+                Type = type,
             };
             PageStartAddr += size;
 

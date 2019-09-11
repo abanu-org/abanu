@@ -1,4 +1,7 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
 using Lonos.Kernel.Core;
 using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.PageManagement;
@@ -6,7 +9,7 @@ using Mosa.Kernel.x86;
 
 namespace Lonos.Kernel.Loader
 {
-    public unsafe class BootInfo_
+    public static unsafe class BootInfo_
     {
         public static BootInfoHeader* BootInfo;
 
@@ -25,7 +28,7 @@ namespace Lonos.Kernel.Loader
             SetupMemoryMap();
         }
 
-        static void SetupVideoInfo()
+        private static void SetupVideoInfo()
         {
             KernelMessage.WriteLine("VBE present: {0}", Multiboot.VBEPresent ? "yes" : "no");
             if (Multiboot.VBEPresent)
@@ -38,19 +41,19 @@ namespace Lonos.Kernel.Loader
 
             BootInfo->FbInfo = new BootInfoFramebufferInfo
             {
-                FbAddr = Multiboot.multiBootInfo->FbAddr,
-                FbPitch = Multiboot.multiBootInfo->FbPitch,
-                FbWidth = Multiboot.multiBootInfo->FbWidth,
-                FbHeight = Multiboot.multiBootInfo->FbHeight,
-                FbBpp = Multiboot.multiBootInfo->FbBpp,
-                FbType = Multiboot.multiBootInfo->FbType,
-                ColorInfo = Multiboot.multiBootInfo->ColorInfo
+                FbAddr = Multiboot.MultiBootInfo->FbAddr,
+                FbPitch = Multiboot.MultiBootInfo->FbPitch,
+                FbWidth = Multiboot.MultiBootInfo->FbWidth,
+                FbHeight = Multiboot.MultiBootInfo->FbHeight,
+                FbBpp = Multiboot.MultiBootInfo->FbBpp,
+                FbType = Multiboot.MultiBootInfo->FbType,
+                ColorInfo = Multiboot.MultiBootInfo->ColorInfo,
             };
         }
 
-        const uint MemoryMapReserve = 30;
+        private const uint MemoryMapReserve = 30;
 
-        static void SetupMemoryMap()
+        private static void SetupMemoryMap()
         {
             uint customMaps = 11;
             var mbMapCount = Multiboot.MemoryMapCount;
@@ -153,7 +156,7 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapLength++;
         }
 
-        static Addr MallocBootInfoData(USize size)
+        private static Addr MallocBootInfoData(USize size)
         {
             var ret = BootInfo->HeapStart + BootInfo->HeapSize;
             BootInfo->HeapSize += size;

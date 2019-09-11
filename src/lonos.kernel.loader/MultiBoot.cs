@@ -1,30 +1,34 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
-using Mosa.Runtime.x86;
 using System.Runtime.InteropServices;
 using Lonos.Kernel.Core;
+using Mosa.Runtime.x86;
 
 namespace Mosa.Kernel.x86
 {
     /// <summary>
     /// Static class of helpful memory functions
     /// </summary>
-    unsafe public static class Multiboot
+    public static unsafe class Multiboot
     {
         /// <summary>
         /// Magic value that indicates that kernel was loaded by a Multiboot-compliant boot loader
         /// </summary>
         public const uint MultibootMagic = 0x2BADB002;
 
-        public static MultiBootInfo* multiBootInfo = null;
+        public static MultiBootInfo* MultiBootInfo = null;
         private static uint memoryMapCount = 0;
 
         public static uint MultibootAddress = 0x0;
 
-        public static uint ElfSectionHeaderCount => multiBootInfo->Syms1;
-        public static uint ElfSectionHeaderSize => multiBootInfo->Syms2;
-        public static uint ElfSectionHeaderAddr => multiBootInfo->Syms3;
-        public static uint ElfSectionHeaderShndx => multiBootInfo->Syms4;
+        public static uint ElfSectionHeaderCount => MultiBootInfo->Syms1;
+
+        public static uint ElfSectionHeaderSize => MultiBootInfo->Syms2;
+
+        public static uint ElfSectionHeaderAddr => MultiBootInfo->Syms3;
+
+        public static uint ElfSectionHeaderShndx => MultiBootInfo->Syms4;
 
         /// <summary>
         /// Gets the memory map count.
@@ -38,127 +42,127 @@ namespace Mosa.Kernel.x86
         /// <value>
         ///     <c>true</c> if this instance is multiboot enabled; otherwise, <c>false</c>.
         /// </value>
-        public static bool IsMultibootEnabled => (multiBootInfo != null);
+        public static bool IsMultibootEnabled => MultiBootInfo != null;
 
         /// <summary>
         /// Gets the flags.
         /// </summary>
         /// <value>The flags.</value>
-        public static uint Flags => multiBootInfo->Flags;
+        public static uint Flags => MultiBootInfo->Flags;
 
         /// <summary>
         /// Gets the memory lower.
         /// </summary>
         /// <value>The lower memory.</value>
-        public static uint MemoryLower => multiBootInfo->MemLower;
+        public static uint MemoryLower => MultiBootInfo->MemLower;
 
         /// <summary>
         /// Gets the memory upper.
         /// </summary>
         /// <value>The memory upper.</value>
-        public static uint MemoryUpper => multiBootInfo->MemUpper;
+        public static uint MemoryUpper => MultiBootInfo->MemUpper;
 
         /// <summary>
         /// Gets the boot device.
         /// </summary>
         /// <value>The boot device.</value>
-        public static uint BootDevice => multiBootInfo->BootDevice;
+        public static uint BootDevice => MultiBootInfo->BootDevice;
 
         /// <summary>
         /// Gets the CMD line address.
         /// </summary>
         /// <value>The CMD line address.</value>
-        public static uint CmdLineAddress => multiBootInfo->CommandLine;
+        public static uint CmdLineAddress => MultiBootInfo->CommandLine;
 
         /// <summary>
         /// Gets the modules start.
         /// </summary>
         /// <value>The modules start.</value>
-        public static uint ModulesStart => multiBootInfo->ModuleAddress;
+        public static uint ModulesStart => MultiBootInfo->ModuleAddress;
 
         /// <summary>
         /// Gets the modules count.
         /// </summary>
         /// <value>The modules count.</value>
-        public static uint ModulesCount => multiBootInfo->ModuleCount;
+        public static uint ModulesCount => MultiBootInfo->ModuleCount;
 
         /// <summary>
         /// Gets the length of the memory map.
         /// </summary>
         /// <value>The length of the memory map.</value>
-        public static uint MemoryMapLength => multiBootInfo->MemMapLength;
+        public static uint MemoryMapLength => MultiBootInfo->MemMapLength;
 
         /// <summary>
         /// Gets the memory map start.
         /// </summary>
         /// <value>The memory map start.</value>
-        public static uint MemoryMapStart => multiBootInfo->MemMapAddress;
+        public static uint MemoryMapStart => MultiBootInfo->MemMapAddress;
 
         /// <summary>
         /// Gets the length of the drive.
         /// </summary>
         /// <value>The length of the drive.</value>
-        public static uint DriveLength => multiBootInfo->DrivesLength;
+        public static uint DriveLength => MultiBootInfo->DrivesLength;
 
         /// <summary>
         /// Gets the drive start.
         /// </summary>
         /// <value>The drive start.</value>
-        public static uint DriveStart => multiBootInfo->DrivesAddress;
+        public static uint DriveStart => MultiBootInfo->DrivesAddress;
 
         /// <summary>
         /// Gets the configuration table.
         /// </summary>
         /// <value>The configuration table.</value>
-        public static uint ConfigurationTable => multiBootInfo->ConfigTable;
+        public static uint ConfigurationTable => MultiBootInfo->ConfigTable;
 
         /// <summary>
         /// Gets the name of the boot loader.
         /// </summary>
         /// <value>The name of the boot loader.</value>
-        public static uint BootLoaderName => multiBootInfo->BootLoaderName;
+        public static uint BootLoaderName => MultiBootInfo->BootLoaderName;
 
         /// <summary>
         /// Gets the APM table.
         /// </summary>
         /// <value>The APM table.</value>
-        public static uint APMTable => multiBootInfo->ApmTable;
+        public static uint APMTable => MultiBootInfo->ApmTable;
 
         /// <summary>
         /// Gets the VBE control information.
         /// </summary>
         /// <value>The VBE control information.</value>
-        public static uint VBEControlInformation => multiBootInfo->VbeControlInfo;
+        public static uint VBEControlInformation => MultiBootInfo->VbeControlInfo;
 
         /// <summary>
         /// Gets the VBE mode info pointer.
         /// </summary>
         /// <value>The VBE mode info pointer.</value>
-        public static uint VBEModeInfo => multiBootInfo->VbeModeInfo;
+        public static uint VBEModeInfo => MultiBootInfo->VbeModeInfo;
 
         /// <summary>
         /// Gets the VBE mode.
         /// </summary>
         /// <value>The VBE mode.</value>
-        public static uint VBEMode => multiBootInfo->VbeMode;
+        public static uint VBEMode => MultiBootInfo->VbeMode;
 
         /// <summary>
         /// Gets the VBE interface seg.
         /// </summary>
         /// <value>The VBE interface seg.</value>
-        public static uint VBEInterfaceSeg => multiBootInfo->VbeInterfaceSeg;
+        public static uint VBEInterfaceSeg => MultiBootInfo->VbeInterfaceSeg;
 
         /// <summary>
         /// Gets the VBE interface off.
         /// </summary>
         /// <value>The VBE interface off.</value>
-        public static uint VBEInterfaceOff => multiBootInfo->VbeInterfaceOff;
+        public static uint VBEInterfaceOff => MultiBootInfo->VbeInterfaceOff;
 
         /// <summary>
         /// Gets the VBE interface len.
         /// </summary>
         /// <value>The VBE interface len.</value>
-        public static uint VBEInterfaceLen => multiBootInfo->VbeInterfaceLength;
+        public static uint VBEInterfaceLen => MultiBootInfo->VbeInterfaceLength;
 
         /// <summary>
         /// Gets the presence of VBE.
@@ -166,12 +170,12 @@ namespace Mosa.Kernel.x86
         /// <value>True if VBE is present.</value>
         public static bool VBEPresent
         {
-            get { return ((Flags & (1 << 11)) == (1 << 11)); }
+            get { return (Flags & (1 << 11)) == (1 << 11); }
         }
 
         public static bool FBPresent
         {
-            get { return ((Flags & (1 << 12)) == (1 << 12)); }
+            get { return (Flags & (1 << 12)) == (1 << 12); }
         }
 
         /// <summary>
@@ -194,7 +198,7 @@ namespace Mosa.Kernel.x86
         /// <summary>
         /// Setups this multiboot.
         /// </summary>
-        public unsafe static void Setup()
+        public static unsafe void Setup()
         {
             uint magic = Native.GetMultibootEAX();
             uint address = Native.GetMultibootEBX();
@@ -222,7 +226,7 @@ namespace Mosa.Kernel.x86
         public static void SetMultibootLocation(uint address)
         {
             MultibootAddress = address;
-            multiBootInfo = (MultiBootInfo*)address;
+            MultiBootInfo = (MultiBootInfo*)address;
 
             CountMemoryMap();
         }
@@ -248,7 +252,6 @@ namespace Mosa.Kernel.x86
         /// Gets the memory map index location.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <returns></returns>
         private static MultiBootMemoryMap* GetMemoryMapIndexLocation(uint index)
         {
             MultiBootMemoryMap* location = (MultiBootMemoryMap*)MemoryMapStart;
@@ -263,8 +266,6 @@ namespace Mosa.Kernel.x86
         /// <summary>
         /// Gets the memory map base.
         /// </summary>
-        /// <param name="index">The index.</param>
-        /// <returns></returns>
         public static uint GetMemoryMapBase(uint index)
         {
             return (uint)GetMemoryMapIndexLocation(index)->BaseAddr;
@@ -274,7 +275,6 @@ namespace Mosa.Kernel.x86
         /// Gets the length of the memory map.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <returns></returns>
         public static uint GetMemoryMapLength(uint index)
         {
             return (uint)GetMemoryMapIndexLocation(index)->Length;
@@ -284,7 +284,6 @@ namespace Mosa.Kernel.x86
         /// Gets the type of the memory map.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <returns></returns>
         public static byte GetMemoryMapType(uint index)
         {
             return (byte)GetMemoryMapIndexLocation(index)->Type;
@@ -332,7 +331,7 @@ namespace Mosa.Kernel.x86
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    unsafe public struct MultiBootInfo
+    public unsafe struct MultiBootInfo
     {
         public uint Flags;         //required
 
@@ -358,11 +357,11 @@ namespace Mosa.Kernel.x86
 
         public uint ConfigTable;    //if bit 8 in flags is set
         public uint BootLoaderName; //if bit 9 in flags is set
-        public uint ApmTable;       //if bit 10 in flags is set        
+        public uint ApmTable;       //if bit 10 in flags is set
 
         public uint VbeControlInfo;     //if bit 11 in flags is set
-        public uint VbeModeInfo;        // "    
-        public ushort VbeMode;            // "      
+        public uint VbeModeInfo;        // "
+        public ushort VbeMode;            // "
         public ushort VbeInterfaceSeg;    // "
         public ushort VbeInterfaceOff;    // "
         public ushort VbeInterfaceLength; // "
@@ -388,7 +387,7 @@ namespace Mosa.Kernel.x86
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    unsafe public struct MultiBootInfoElfSectionHeader
+    public unsafe struct MultiBootInfoElfSectionHeader
     {
         public uint Count;
         public uint Size;
@@ -404,7 +403,7 @@ namespace Mosa.Kernel.x86
         public ulong Length;
         public uint Type;
 
-        unsafe public MultiBootMemoryMap* Next
+        public unsafe MultiBootMemoryMap* Next
         {
             get
             {
@@ -417,7 +416,7 @@ namespace Mosa.Kernel.x86
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 256)]
-    unsafe public struct VBEModeInfo
+    public unsafe struct VBEModeInfo
     {
         [FieldOffset(0)]
         public ushort Attributes;

@@ -8,6 +8,7 @@
     <AssemblyName>lonos.kernel.loader</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <ProjectGuid>{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}</ProjectGuid>
+    <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,9 +36,9 @@
     <Compile Include="LoaderStart.cs" />
     <Compile Include="MultiBoot.cs" />
     <Compile Include="BootMemory.cs" />
-    <Compile Include="KernelMessage.cs" />
+    <Compile Include="KernelMessage_.cs" />
     <Compile Include="KernelMessageWriter.cs" />
-    <Compile Include="BootInfo.cs" />
+    <Compile Include="BootInfo_.cs" />
     <Compile Include="SSE.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,5 +71,6 @@
       <Name>lonos.primitives</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
