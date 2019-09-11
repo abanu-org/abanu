@@ -1,9 +1,6 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
-using Mosa.Compiler.Framework.Linker;
-using Mosa.Compiler.MosaTypeSystem;
-using Mosa.Utility.BootImage;
-using Mosa.Utility.Launcher;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,18 +8,21 @@ using System.IO;
 using System.IO.Pipes;
 using System.Net.Sockets;
 using System.Threading;
-
-using Mosa.Compiler.Framework.Linker.Elf;
-using Mosa.Compiler.Common;
-
 using Lonos.Kernel.Core;
+using Mosa.Compiler.Common;
+using Mosa.Compiler.Framework.Linker;
+using Mosa.Compiler.Framework.Linker.Elf;
+using Mosa.Compiler.MosaTypeSystem;
+using Mosa.Utility.BootImage;
+using Mosa.Utility.Launcher;
 
 namespace Lonos.Build
 {
     public class LonosBuilder_Kernel : LonosBuilder
     {
 
-        public LonosBuilder_Kernel(string inputAssembly) : base(inputAssembly)
+        public LonosBuilder_Kernel(string inputAssembly)
+            : base(inputAssembly)
         {
         }
 
@@ -77,7 +77,7 @@ namespace Lonos.Build
                 GenerateMapFile = false,
                 GenerateDebugFile = false,
                 PlugKorlib = true,
-                HuntForCorLib = true
+                HuntForCorLib = true,
             };
 
             //Options.GenerateNASMFile = true;
@@ -88,7 +88,6 @@ namespace Lonos.Build
             //Options.EmitSymbols = true; // Kernel Loader needs to resolve Adress of Start Method
             //Options.Emitx86IRQMethods = true;
             Options.EmitAllSymbols = true;
-
 
             Options.EnableSSA = false;
             Options.EnableIROptimizations = false;
@@ -116,7 +115,7 @@ namespace Lonos.Build
                             var data = File.ReadAllBytes(BuildUtility.GetEnv("LONOS_NATIVE_FILES"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
-                        }
+                        },
                     },
                     new Section
                     {
@@ -125,10 +124,10 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-Terminus14.psf"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "tools", "consolefonts", "Uni2-Terminus14.psf"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
-                        }
+                        },
                     },
                     new Section
                     {
@@ -137,10 +136,10 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"tools","consolefonts","Uni2-TerminusBold14.psf"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "tools", "consolefonts", "Uni2-TerminusBold14.psf"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
-                        }
+                        },
                     },
                     new Section
                     {
@@ -149,10 +148,10 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","App.HelloKernel.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "os", "App.HelloKernel.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
-                        }
+                        },
                     },
                     new Section
                     {
@@ -161,10 +160,10 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","App.HelloService.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "os", "App.HelloService.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
-                        }
+                        },
                     },
                     new Section
                     {
@@ -173,10 +172,10 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","Lonos.Service.Basic.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "os", "Lonos.Service.Basic.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
-                        }
+                        },
                     },
                     new Section
                     {
@@ -184,14 +183,14 @@ namespace Lonos.Build
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,
                         Address = 0x4FF000,
-                        Size=0x1000,
+                        Size = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
                             sect = section; //TODO: Could set outsite
-                            writer.Write(new byte[]{1,2,3,4,5,6,7,8,9});
-                            section.Size=0x1000;
-                        }
-                    }
+                            writer.Write(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+                            section.Size = 0x1000;
+                        },
+                    },
                 };
             };
 
@@ -208,8 +207,8 @@ namespace Lonos.Build
                         FileSize = 0x1000,
                         MemorySize = 0x1000,
                         Type = ProgramHeaderType.Load,
-                        Flags = ProgramHeaderFlags.Read
-                    }
+                        Flags = ProgramHeaderFlags.Read,
+                    },
                  };
             };
         }

@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -43,6 +44,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Plug.Korlib.x86", "..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x86\Mosa.Plug.Korlib.x86.csproj", "{028BC31C-2EDC-492E-90A3-3714E38CE2CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Plug.Korlib.x64", "..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x64\Mosa.Plug.Korlib.x64.csproj", "{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Compiler.Extension.Dwarf", "..\external\MOSA-Project\Source\Mosa.Compiler.Extension.Dwarf\Mosa.Compiler.Extension.Dwarf.csproj", "{3B09AB54-C94D-4A16-BC2F-3CC0C43CF830}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.ClassLib", "..\external\MOSA-Project\Source\Mosa.ClassLib\Mosa.ClassLib.csproj", "{27A3C89C-1967-45FF-A77E-94F44995C42C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -122,6 +127,14 @@ Global
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B09AB54-C94D-4A16-BC2F-3CC0C43CF830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B09AB54-C94D-4A16-BC2F-3CC0C43CF830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B09AB54-C94D-4A16-BC2F-3CC0C43CF830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B09AB54-C94D-4A16-BC2F-3CC0C43CF830}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27A3C89C-1967-45FF-A77E-94F44995C42C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27A3C89C-1967-45FF-A77E-94F44995C42C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27A3C89C-1967-45FF-A77E-94F44995C42C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27A3C89C-1967-45FF-A77E-94F44995C42C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +158,8 @@ Global
 		{17CE4F09-7CBF-49E9-84A7-178DB2CBD7C9} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{028BC31C-2EDC-492E-90A3-3714E38CE2CF} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+		{3B09AB54-C94D-4A16-BC2F-3CC0C43CF830} = {36A674B9-1871-4391-BFA7-AA9D6B1C189F}
+		{27A3C89C-1967-45FF-A77E-94F44995C42C} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FEAB7AA-DC10-4A7D-AE25-5D7B6BD8D985}

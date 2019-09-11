@@ -1,9 +1,6 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
-using Mosa.Compiler.Framework.Linker;
-using Mosa.Compiler.MosaTypeSystem;
-using Mosa.Utility.BootImage;
-using Mosa.Utility.Launcher;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,18 +8,21 @@ using System.IO;
 using System.IO.Pipes;
 using System.Net.Sockets;
 using System.Threading;
-
-using Mosa.Compiler.Framework.Linker.Elf;
-using Mosa.Compiler.Common;
-
 using Lonos.Kernel.Core;
+using Mosa.Compiler.Common;
+using Mosa.Compiler.Framework.Linker;
+using Mosa.Compiler.Framework.Linker.Elf;
+using Mosa.Compiler.MosaTypeSystem;
+using Mosa.Utility.BootImage;
+using Mosa.Utility.Launcher;
 
 namespace Lonos.Build
 {
     public class LonosBuilder_Loader : LonosBuilder
     {
 
-        public LonosBuilder_Loader(string inputAssembly) : base(inputAssembly)
+        public LonosBuilder_Loader(string inputAssembly)
+            : base(inputAssembly)
         {
         }
 
@@ -70,14 +70,13 @@ namespace Lonos.Build
                 GenerateMapFile = true,
                 GenerateDebugFile = false,
                 PlugKorlib = true,
-                HuntForCorLib = true
+                HuntForCorLib = true,
             };
 
             Options.VBEVideo = true;
             Options.EmitAllSymbols = true;
             //Options.EnableMethodScanner = true;
 
-            Section sect = null;
             Options.CreateExtraSections = () =>
             {
                 return new List<Section>
@@ -92,8 +91,8 @@ namespace Lonos.Build
                             var data = File.ReadAllBytes(BuildUtility.GetEnv("LONOS_NATIVE_FILES"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
-                        }
-                    }
+                        },
+                    },
                 };
             };
 
@@ -106,14 +105,14 @@ namespace Lonos.Build
                     new ProgramHeader
                     {
                         Alignment = 0x1000,
-                        Offset =   0x12345678, // Will be replaced in Link Disk stage
+                        Offset = 0x12345678, // Will be replaced in Link Disk stage
                         FileSize = 0x12345678, // Will be replaced in Link Disk stage
                         MemorySize = 0x12345678,
                         PhysicalAddress = Address.OriginalKernelElfSection, //Multiboot will load section here
                         VirtualAddress = Address.OriginalKernelElfSection,
                         Type = ProgramHeaderType.Load,
-                        Flags = ProgramHeaderFlags.Read
-                    }
+                        Flags = ProgramHeaderFlags.Read,
+                    },
 
                  };
             };

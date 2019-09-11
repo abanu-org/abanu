@@ -1,9 +1,6 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
-using Mosa.Compiler.Framework.Linker;
-using Mosa.Compiler.MosaTypeSystem;
-using Mosa.Utility.BootImage;
-using Mosa.Utility.Launcher;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,18 +8,21 @@ using System.IO;
 using System.IO.Pipes;
 using System.Net.Sockets;
 using System.Threading;
-
-using Mosa.Compiler.Framework.Linker.Elf;
-using Mosa.Compiler.Common;
-
 using Lonos.Kernel.Core;
+using Mosa.Compiler.Common;
+using Mosa.Compiler.Framework.Linker;
+using Mosa.Compiler.Framework.Linker.Elf;
+using Mosa.Compiler.MosaTypeSystem;
+using Mosa.Utility.BootImage;
+using Mosa.Utility.Launcher;
 
 namespace Lonos.Build
 {
     public class LonosBuilder_App : LonosBuilder
     {
 
-        public LonosBuilder_App(string inputAssembly) : base(inputAssembly)
+        public LonosBuilder_App(string inputAssembly)
+            : base(inputAssembly)
         {
         }
 
@@ -75,7 +75,7 @@ namespace Lonos.Build
                 GenerateMapFile = false,
                 GenerateDebugFile = false,
                 PlugKorlib = true,
-                HuntForCorLib = true
+                HuntForCorLib = true,
             };
 
             //Options.GenerateNASMFile = true;

@@ -1,12 +1,14 @@
-﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using System.Text.RegularExpressions;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Lonos.Build
 {
-    public static class BuildUtility {
+    public static class BuildUtility
+    {
         public static string GetEnv(string name)
         {
             var value = Environment.GetEnvironmentVariable(name);
