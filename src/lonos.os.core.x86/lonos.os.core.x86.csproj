@@ -44,7 +44,7 @@
       <Name>lonos.kernel.config</Name>
     </ProjectReference>
     <ProjectReference Include="..\lonos.kernel.core.x86\lonos.kernel.core.x86.csproj">
-      <Project>{6f9436fd-a852-462b-94ac-aaaae566a1ac}</Project>
+      <Project>{f410cb2c-a859-4226-bcd2-6361bd3f57eb}</Project>
       <Name>lonos.kernel.core.x86</Name>
     </ProjectReference>
     <ProjectReference Include="..\lonos.kernel.core\lonos.kernel.core.csproj">

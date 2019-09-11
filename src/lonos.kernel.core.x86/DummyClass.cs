@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lonos.Kernel.Core.x86
 {
-    public class DummyClass
+    public static class DummyClass
     {
         public static void DummyCall()
         {

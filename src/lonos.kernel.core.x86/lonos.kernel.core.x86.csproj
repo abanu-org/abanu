@@ -4,9 +4,10 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>lonos.Kernel.Core.x86</RootNamespace>
+    <RootNamespace>lonos.Kernel</RootNamespace>
     <AssemblyName>lonos.kernel.core.x86</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ProjectGuid>{F410CB2C-A859-4226-BCD2-6361BD3F57EB}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,31 +30,25 @@
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
-      <Project>{a47b7998-4ee8-4af8-9373-c664fdeddc65}</Project>
-      <Name>Mosa.Runtime.x86</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\lonos.kernel.config\lonos.kernel.config.csproj">
-      <Project>{317E8C4B-089B-469B-8789-D76EB2F87504}</Project>
-      <Name>lonos.kernel.config</Name>
     </ProjectReference>
     <ProjectReference Include="..\lonos.kernel.core\lonos.kernel.core.csproj">
       <Project>{a72ed046-de1c-4688-981b-6086c091047f}</Project>
       <Name>lonos.kernel.core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\lonos.primitives\lonos.primitives.csproj">
+      <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
+      <Name>lonos.primitives</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="DummyClass.cs" />
   </ItemGroup>
