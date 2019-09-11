@@ -47,7 +47,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //Screen.column = col;
 
             if (UseAllocator)
-                return Memory.Allocate(size, GFP.GFP_KERNEL);
+                return Memory.Allocate(size, GFP.KERNEL);
 
             return AllocateMemory_EarlyBoot(size);
         }

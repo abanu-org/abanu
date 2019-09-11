@@ -1,8 +1,8 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using System;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
-using System;
 
 namespace Lonos.Kernel.Core
 {
@@ -81,14 +81,30 @@ namespace Lonos.Kernel.Core
 
         public static byte Color
         {
-            get { return (byte)(color & 0x0F); }
-            set { color &= 0xF0; color |= (byte)(value & 0x0F); }
+            get
+            {
+                return (byte)(color & 0x0F);
+            }
+
+            set
+            {
+                color &= 0xF0;
+                color |= (byte)(value & 0x0F);
+            }
         }
 
         public static byte BackgroundColor
         {
-            get { return (byte)(color >> 4); }
-            set { color &= 0x0F; color |= (byte)((value & 0x0F) << 4); }
+            get
+            {
+                return (byte)(color >> 4);
+            }
+
+            set
+            {
+                color &= 0x0F;
+                color |= (byte)((value & 0x0F) << 4);
+            }
         }
 
         /// <summary>
@@ -117,12 +133,11 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Writes the character.
         /// </summary>
-        /// <param name="chr">The character.</param>
         public static void RawWrite(uint row, uint column, char chr, byte color)
         {
             Assert.True(row < Rows);
             Assert.True(column < Columns);
-            IntPtr address = new IntPtr(ScreenMemoryAddress + ((row * Columns + column) * 2));
+            IntPtr address = new IntPtr(ScreenMemoryAddress + (((row * Columns) + column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
@@ -140,7 +155,7 @@ namespace Lonos.Kernel.Core
                 return;
             }
 
-            IntPtr address = new IntPtr(ScreenMemoryAddress + ((Row * Columns + Column) * 2));
+            IntPtr address = new IntPtr(ScreenMemoryAddress + (((Row * Columns) + Column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
@@ -208,7 +223,7 @@ namespace Lonos.Kernel.Core
                 // Copy All rows one line up
                 // TODO: Normally, Reading from mapped ROM is much slower
                 // than reading from normal RAM. Consider using Offscreen Buffer
-                MemoryOperation.Copy(ScreenMemoryAddress + Columns * 2, ScreenMemoryAddress, (Rows - 1) * Columns * 2);
+                MemoryOperation.Copy(ScreenMemoryAddress + (Columns * 2), ScreenMemoryAddress, (Rows - 1) * Columns * 2);
 
                 //Blank last line
                 for (uint c = 0; c < Columns; c++)
@@ -257,7 +272,7 @@ namespace Lonos.Kernel.Core
         /// <param name="col">The col.</param>
         public static void SetCursor(uint row, uint col)
         {
-            uint location = (row * Columns + col);
+            uint location = ((row * Columns) + col);
 
             Native.Out8(0x3D4, 0x0F);
             Native.Out8(0x3D5, (byte)(location & 0xFF));

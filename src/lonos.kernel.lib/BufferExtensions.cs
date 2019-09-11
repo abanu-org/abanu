@@ -1,4 +1,7 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
 
 namespace Lonos.Kernel.Core
 {
@@ -13,14 +16,14 @@ namespace Lonos.Kernel.Core
             }
         }
 
-        public unsafe static void Write(this IBufferWriter file, char value)
+        public static unsafe void Write(this IBufferWriter file, char value)
         {
             var b = (byte)value;
             byte* ptr = &b;
             file.Write(ptr, 1);
         }
 
-        public unsafe static void Write(this IBufferWriter file, byte value)
+        public static unsafe void Write(this IBufferWriter file, byte value)
         {
             byte* ptr = &value;
             file.Write(ptr, 1);

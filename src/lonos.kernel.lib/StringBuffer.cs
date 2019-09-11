@@ -1,5 +1,8 @@
-﻿using System.Runtime.InteropServices;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
 using System;
+using System.Runtime.InteropServices;
 
 namespace Lonos.Kernel.Core
 {
@@ -13,16 +16,16 @@ namespace Lonos.Kernel.Core
         private uint length;
 
         public const int MaxLength = 132;
-        public const int EntrySize = MaxLength * 2 + 4;
+        public const int EntrySize = (MaxLength * 2) + 4;
 
-        unsafe private fixed char chars[MaxLength];
+        private unsafe fixed char chars[MaxLength];
 
-        unsafe public static StringBuffer CreateFromNullTerminatedString(uint start)
+        public static unsafe StringBuffer CreateFromNullTerminatedString(uint start)
         {
             return CreateFromNullTerminatedString((byte*)start);
         }
 
-        unsafe public static StringBuffer CreateFromNullTerminatedString(byte* start)
+        public static unsafe StringBuffer CreateFromNullTerminatedString(byte* start)
         {
             var buf = new StringBuffer();
             while (*start != 0)
@@ -37,7 +40,7 @@ namespace Lonos.Kernel.Core
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        unsafe public char this[int index]
+        public unsafe char this[int index]
         {
             get
             {
@@ -47,6 +50,7 @@ namespace Lonos.Kernel.Core
                 fixed (char* ptr = chars)
                     return ptr[index];
             }
+
             set
             {
                 if (index < 0 || index >= Length) //TODO: Error
@@ -56,7 +60,7 @@ namespace Lonos.Kernel.Core
             }
         }
 
-        unsafe public char this[uint index]
+        public unsafe char this[uint index]
         {
             get
             {
@@ -65,6 +69,7 @@ namespace Lonos.Kernel.Core
                 fixed (char* ptr = chars)
                     return ptr[index];
             }
+
             set
             {
                 if (index >= Length) //TODO: Error
@@ -82,7 +87,6 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Overwrite the current value with a new one
         /// </summary>
-        /// <param name="value"></param>
         public void Set(string value)
         {
             Clear();
@@ -148,7 +152,6 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Appends a string
         /// </summary>
-        /// <param name="value"></param>
         public void Append(string value)
         {
             if (value == null)
@@ -161,7 +164,6 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Appends a string
         /// </summary>
-        /// <param name="value"></param>
         public unsafe void Append(NullTerminatedString* value)
         {
             var len = value->GetLength();
@@ -171,13 +173,15 @@ namespace Lonos.Kernel.Core
 
         public void AppendSubString(string value, int start)
         {
-            if (value == null) return;
+            if (value == null)
+                return;
             AppendSubString(value, start, value.Length - start);
         }
 
         public void AppendSubString(string value, int start, int length)
         {
-            if (value == null) return;
+            if (value == null)
+                return;
             for (var i = 0; i < length; i++)
                 Append(value[i + start]);
         }
@@ -193,18 +197,20 @@ namespace Lonos.Kernel.Core
 
         public void Append(StringBuffer value, uint start)
         {
-            if (value.length == 0) return;
+            if (value.length == 0)
+                return;
             Append(value, start, value.Length - start);
         }
 
         public void Append(StringBuffer value, uint start, uint length)
         {
-            if (value.length == 0) return;
+            if (value.length == 0)
+                return;
             for (uint i = 0; i < length; i++)
                 Append(value[i + start]);
         }
 
-        unsafe public void Append(char value)
+        public unsafe void Append(char value)
         {
             if (length + 1 >= MaxLength)
             {
@@ -229,8 +235,6 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Appends a number to the string. Use format to output as Hex.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="format"></param>
         public void Append(uint value, string format)
         {
             var sb = new StringBuffer(format);
@@ -239,7 +243,7 @@ namespace Lonos.Kernel.Core
 
         private void Append(Argument value, StringBuffer format)
         {
-            switch (value.type)
+            switch (value.Type)
             {
                 case ArgumentType._uint:
                     Append(value._uint, format);
@@ -312,15 +316,13 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Appends a number to the string. Use format to output as Hex.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="format"></param>
         public void Append(int value, string format)
         {
             var u = (uint)value;
             Append(u, true, true);
         }
 
-        unsafe private void Append(uint value, bool signed, bool hex)
+        private unsafe void Append(uint value, bool signed, bool hex)
         {
             int offset = 0;
 
@@ -383,26 +385,28 @@ namespace Lonos.Kernel.Core
 
         public unsafe void Append(string format, string arg0)
         {
-            Append(format,
-                   new Argument { _string = arg0, type = ArgumentType._string },
-                   new Argument(),
-                   new Argument(),
-                   new Argument(),
-                   new Argument(),
-                   new Argument(),
-                   new Argument());
+            Append(
+                format,
+                new Argument { _string = arg0, Type = ArgumentType._string },
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument());
         }
 
         public unsafe void Append(string format, string arg0, uint arg1)
         {
-            Append(format,
-                   new Argument { _string = arg0, type = ArgumentType._string },
-                   new Argument { _uint = arg1, type = ArgumentType._uint },
-                   new Argument(),
-                   new Argument(),
-                   new Argument(),
-                   new Argument(),
-                   new Argument());
+            Append(
+                format,
+                new Argument { _string = arg0, Type = ArgumentType._string },
+                new Argument { _uint = arg1, Type = ArgumentType._uint },
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument());
         }
 
         public unsafe void Append(string format, uint arg0, uint arg1)
@@ -412,92 +416,92 @@ namespace Lonos.Kernel.Core
 
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2)
         {
-            Append(format,
-                   new Argument { _uint = arg0, type = ArgumentType._uint },
-                   new Argument { _uint = arg1, type = ArgumentType._uint },
-                   new Argument { _uint = arg2, type = ArgumentType._uint },
-                   new Argument(),
-                   new Argument(),
-                   new Argument(),
-                   new Argument()
-                  );
+            Append(
+                format,
+                new Argument { _uint = arg0, Type = ArgumentType._uint },
+                new Argument { _uint = arg1, Type = ArgumentType._uint },
+                new Argument { _uint = arg2, Type = ArgumentType._uint },
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument());
         }
 
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2, uint arg3)
         {
-            Append(format,
-                   new Argument { _uint = arg0, type = ArgumentType._uint },
-                   new Argument { _uint = arg1, type = ArgumentType._uint },
-                   new Argument { _uint = arg2, type = ArgumentType._uint },
-                   new Argument { _uint = arg3, type = ArgumentType._uint },
-                   new Argument(),
-                   new Argument(),
-                   new Argument()
-                  );
+            Append(
+                format,
+                new Argument { _uint = arg0, Type = ArgumentType._uint },
+                new Argument { _uint = arg1, Type = ArgumentType._uint },
+                new Argument { _uint = arg2, Type = ArgumentType._uint },
+                new Argument { _uint = arg3, Type = ArgumentType._uint },
+                new Argument(),
+                new Argument(),
+                new Argument());
         }
 
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4)
         {
-            Append(format,
-                   new Argument { _uint = arg0, type = ArgumentType._uint },
-                   new Argument { _uint = arg1, type = ArgumentType._uint },
-                   new Argument { _uint = arg2, type = ArgumentType._uint },
-                   new Argument { _uint = arg3, type = ArgumentType._uint },
-                   new Argument { _uint = arg4, type = ArgumentType._uint },
-                   new Argument(),
-                   new Argument()
-                  );
+            Append(
+                format,
+                new Argument { _uint = arg0, Type = ArgumentType._uint },
+                new Argument { _uint = arg1, Type = ArgumentType._uint },
+                new Argument { _uint = arg2, Type = ArgumentType._uint },
+                new Argument { _uint = arg3, Type = ArgumentType._uint },
+                new Argument { _uint = arg4, Type = ArgumentType._uint },
+                new Argument(),
+                new Argument());
         }
 
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5)
         {
-            Append(format,
-                   new Argument { _uint = arg0, type = ArgumentType._uint },
-                   new Argument { _uint = arg1, type = ArgumentType._uint },
-                   new Argument { _uint = arg2, type = ArgumentType._uint },
-                   new Argument { _uint = arg3, type = ArgumentType._uint },
-                   new Argument { _uint = arg4, type = ArgumentType._uint },
-                   new Argument { _uint = arg5, type = ArgumentType._uint },
-                   new Argument()
-                  );
+            Append(
+                format,
+                new Argument { _uint = arg0, Type = ArgumentType._uint },
+                new Argument { _uint = arg1, Type = ArgumentType._uint },
+                new Argument { _uint = arg2, Type = ArgumentType._uint },
+                new Argument { _uint = arg3, Type = ArgumentType._uint },
+                new Argument { _uint = arg4, Type = ArgumentType._uint },
+                new Argument { _uint = arg5, Type = ArgumentType._uint },
+                new Argument());
         }
 
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6)
         {
-            Append(format,
-                   new Argument { _uint = arg0, type = ArgumentType._uint },
-                   new Argument { _uint = arg1, type = ArgumentType._uint },
-                   new Argument { _uint = arg2, type = ArgumentType._uint },
-                   new Argument { _uint = arg3, type = ArgumentType._uint },
-                   new Argument { _uint = arg4, type = ArgumentType._uint },
-                   new Argument { _uint = arg5, type = ArgumentType._uint },
-                   new Argument { _uint = arg6, type = ArgumentType._uint }
-                  );
+            Append(
+                format,
+                new Argument { _uint = arg0, Type = ArgumentType._uint },
+                new Argument { _uint = arg1, Type = ArgumentType._uint },
+                new Argument { _uint = arg2, Type = ArgumentType._uint },
+                new Argument { _uint = arg3, Type = ArgumentType._uint },
+                new Argument { _uint = arg4, Type = ArgumentType._uint },
+                new Argument { _uint = arg5, Type = ArgumentType._uint },
+                new Argument { _uint = arg6, Type = ArgumentType._uint });
         }
 
         private struct Argument
         {
             public uint _uint;
             public string _string;
-            public ArgumentType type;
+            public ArgumentType Type;
         }
 
         private enum ArgumentType
         {
             _none = 0,
             _uint = 1,
-            _string = 2
+            _string = 2,
         }
 
         private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4, Argument arg5, Argument arg6)
         {
             var indexBuffer = new StringBuffer
             {
-                length = 0
+                length = 0,
             };
             var argsBuffer = new StringBuffer
             {
-                length = 0
+                length = 0,
             };
 
             var inParam = false;
@@ -612,7 +616,11 @@ namespace Lonos.Kernel.Core
         /// </value>
         public uint Length
         {
-            get { return length; }
+            get
+            {
+                return length;
+            }
+
             set
             {
                 if (value > MaxLength)
@@ -621,15 +629,12 @@ namespace Lonos.Kernel.Core
                     value = MaxLength;
                 }
                 length = value;
-                //isSet = 1;
             }
         }
 
         /// <summary>
         /// Gets the index of a specific value
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         public int IndexOf(string value)
         {
             if (this.length == 0)

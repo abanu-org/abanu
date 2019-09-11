@@ -92,7 +92,7 @@ namespace Lonos.Kernel.Core
 
             //KernelMemory.DumpToConsole(fontSecAddr, 20);
 
-            var rows = fontHeader->charsize;
+            var rows = fontHeader->Charsize;
             var bytesPerRow = 1; //14 bits --> 2 bytes + 2fill bits
             uint columns = 8;
 

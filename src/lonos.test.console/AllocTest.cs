@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Linq;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Lonos.test.console
 {
@@ -15,6 +17,7 @@ namespace Lonos.test.console
 
         MyAlloc malloc;
         Random rnd = new Random();
+
         public void run()
         {
             malloc = new MyAlloc();
@@ -35,7 +38,7 @@ namespace Lonos.test.console
 
         private class AllocEnry
         {
-            public byte[] data;
+            public byte[] Data;
         }
 
         private Dictionary<UIntPtr, AllocEnry> hash = new Dictionary<UIntPtr, AllocEnry>();
@@ -50,7 +53,7 @@ namespace Lonos.test.console
             {
                 ((byte*)page->ptr)[i] = data[i];
             }
-            hash.Add((UIntPtr)page, new AllocEnry { data = data });
+            hash.Add((UIntPtr)page, new AllocEnry { Data = data });
             //ptr[10] = 0;
             Check();
         }
@@ -68,9 +71,9 @@ namespace Lonos.test.console
             foreach (var entry in hash)
             {
                 var ptr = (byte*)entry.Key;
-                for (var i = 0; i < entry.Value.data.Length; i++)
+                for (var i = 0; i < entry.Value.Data.Length; i++)
                 {
-                    if (ptr[i] != entry.Value.data[i])
+                    if (ptr[i] != entry.Value.Data[i])
                         throw new Exception("Test failed");
                 }
             }
@@ -82,7 +85,6 @@ namespace Lonos.test.console
     {
 
         private void* addr;
-
 
         protected override bool Parent_is_split(uint index)
         {
@@ -105,11 +107,11 @@ namespace Lonos.test.console
             buckets = (List_t*)Marshal.AllocHGlobal(sizeof(List_t) * BUCKET_COUNT);
             var nodeIsSplitSize = sizeof(Page) * 32768;
             firstPage = (Page*)Marshal.AllocHGlobal(nodeIsSplitSize);
-            var data = (byte*)Marshal.AllocHGlobal(32768*4096);
+            var data = (byte*)Marshal.AllocHGlobal(32768 * 4096);
 
             for (var i = 0; i < 32768; i++)
             {
-                firstPage[i].ptr = data + i * 4096;
+                firstPage[i].ptr = data + (i * 4096);
             }
         }
 

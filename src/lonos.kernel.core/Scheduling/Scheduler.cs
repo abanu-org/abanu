@@ -61,7 +61,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
             KernelMessage.WriteLine("Enable Scheduler");
             IDTManager.SetPrivilegeLevel((uint)KnownInterrupt.TerminateCurrentThread, 0x03);
-            GDT.tss->esp0 = Threads[0].KernelStackBottom;
+            GDT.Tss->ESP0 = Threads[0].KernelStackBottom;
             GDT.LoadTaskRegister();
             Native.Int((int)KnownInterrupt.ClockTimer);
 
@@ -379,7 +379,7 @@ namespace Lonos.Kernel.Core.Scheduling
             if (!thread.User)
                 thread.StackState = null; // just to be sure
 
-            GDT.tss->esp0 = thread.KernelStackBottom;
+            GDT.Tss->ESP0 = thread.KernelStackBottom;
 
             if (thread.Debug)
             {

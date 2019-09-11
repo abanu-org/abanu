@@ -1,4 +1,10 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
+
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable
 
 #if BITS_64
 using malloc_meta = System.UInt64;
@@ -16,13 +22,13 @@ namespace Lonos.test.malloc4
 
     public unsafe struct malloc_list
     {
-        public malloc_meta* next;
-        public malloc_meta* prev;
-    };
+        public malloc_meta* Next;
+        public malloc_meta* Prev;
+    }
 
     public unsafe struct malloc_data
     {
-        public malloc_list free;
+        public malloc_list Free;
 
         //char user[0];
         public byte* user // here begins the user data
@@ -37,13 +43,13 @@ namespace Lonos.test.malloc4
             }
         }
 
-    };
+    }
 
     public unsafe struct malloc_meta
     {
-        public size_t size;
-        public malloc_data data;
-    };
+        public size_t Size;
+        public malloc_data Data;
+    }
 
     public unsafe class alloc4
     {
@@ -74,33 +80,33 @@ namespace Lonos.test.malloc4
 
         private static void SET_INUSE(malloc_meta* P)
         {
-            P->size &= ~MAX_SHIFT_BIT;
+            P->Size &= ~MAX_SHIFT_BIT;
         }
 
         private static size_t SET_FREE(malloc_meta* P)
         {
-            return P->size |= MAX_SHIFT_BIT;
+            return P->Size |= MAX_SHIFT_BIT;
         }
 
         private static size_t IS_FREE(malloc_meta* P)
         {
-            return P->size & MAX_SHIFT_BIT;
+            return P->Size & MAX_SHIFT_BIT;
         }
 
         private static size_t GET_SIZE(malloc_meta* P)
         {
-            return P->size & ~MAX_SHIFT_BIT;
+            return P->Size & ~MAX_SHIFT_BIT;
         }
 
         private static size_t SET_SIZE(malloc_meta* P, size_t NSIZE)
         {
-            return P->size = IS_FREE(P) | (NSIZE);
+            return P->Size = IS_FREE(P) | (NSIZE);
         }
 
         private static size_t MALLOC_MAX_SIZE = ~MAX_SHIFT_BIT;
 
         //malloc_meta* list_heads[PAGE_SHIFT - 1];
-        public malloc_meta** list_heads;
+        public malloc_meta** List_heads;
 
         static void malloc_abort(string msg)
         {
@@ -149,28 +155,28 @@ namespace Lonos.test.malloc4
             var s4 = GET_SIZE(new_);
             var ss = order(GET_SIZE(new_));
 
-            malloc_meta** list_head = &list_heads[order(GET_SIZE(new_)) - MIN_SHIFT]; ;
+            malloc_meta** list_head = &List_heads[order(GET_SIZE(new_)) - MIN_SHIFT];
 
             SET_FREE(new_);
-            new_->data.free.next = *list_head;
-            new_->data.free.prev = null;
+            new_->Data.Free.Next = *list_head;
+            new_->Data.Free.Prev = null;
             if ((*list_head) != null)
-                (*list_head)->data.free.prev = new_;
+                (*list_head)->Data.Free.Prev = new_;
             *list_head = new_;
         }
 
         void remove_from_free_list(malloc_meta* to_del)
         {
 
-            malloc_meta** list_head = &list_heads[order(GET_SIZE(to_del)) - MIN_SHIFT];
+            malloc_meta** list_head = &List_heads[order(GET_SIZE(to_del)) - MIN_SHIFT];
 
             SET_INUSE(to_del);
             if (*list_head == to_del)
-                *list_head = to_del->data.free.next;
-            if (to_del->data.free.next != null)
-                to_del->data.free.next->data.free.prev = to_del->data.free.prev;
-            if (to_del->data.free.prev != null)
-                to_del->data.free.prev->data.free.next = to_del->data.free.next;
+                *list_head = to_del->Data.Free.Next;
+            if (to_del->Data.Free.Next != null)
+                to_del->Data.Free.Next->Data.Free.Prev = to_del->Data.Free.Prev;
+            if (to_del->Data.Free.Prev != null)
+                to_del->Data.Free.Prev->Data.Free.Next = to_del->Data.Free.Next;
         }
 
         static malloc_meta* create_meta(void* p, size_t l)
@@ -243,7 +249,7 @@ namespace Lonos.test.malloc4
             }
             malloc_meta* meta = create_meta(ptr, size);
 
-            return meta->data.user;
+            return meta->Data.user;
         }
 
         malloc_meta* find_free_block(size_t size)
@@ -253,7 +259,7 @@ namespace Lonos.test.malloc4
 
             for (; current < max; current++)
             {
-                malloc_meta* block = list_heads[current];
+                malloc_meta* block = List_heads[current];
                 if (block != null)
                 {
                     remove_from_free_list(block);
@@ -285,7 +291,7 @@ namespace Lonos.test.malloc4
             {
                 block = split(block, size);
                 //MALLOC_UNLOCK;
-                return block->data.user;
+                return block->Data.user;
             }
 
             void* ptr = mmap(0, PROT_READ | PROT_WRITE, 1);
@@ -298,7 +304,7 @@ namespace Lonos.test.malloc4
             malloc_meta* meta = create_meta(ptr, PAGE_SIZE);
             meta = split(meta, size);
             //MALLOC_UNLOCK;
-            return meta->data.user;
+            return meta->Data.user;
         }
 
         public void free(void* ptr)
@@ -376,9 +382,9 @@ namespace Lonos.test.malloc4
                     {
                         SET_INUSE(meta);
                         //MALLOC_UNLOCK;
-                        if (ptr != meta->data.user)
-                            memcpy(meta->data.user, ptr, previous_size);
-                        return meta->data.user;
+                        if (ptr != meta->Data.user)
+                            memcpy(meta->Data.user, ptr, previous_size);
+                        return meta->Data.user;
                     }
                     //MALLOC_UNLOCK;
                 }
@@ -387,7 +393,7 @@ namespace Lonos.test.malloc4
                     //MALLOC_LOCK;
                     meta = split(meta, size);
                     //MALLOC_UNLOCK;
-                    return meta->data.user;
+                    return meta->Data.user;
                 }
             }
 

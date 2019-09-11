@@ -1,34 +1,39 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
 using Lonos.Kernel.Core;
+
+#pragma warning disable
 
 namespace Lonos.test.console.alloc2
 {
 
     unsafe struct list_head
     {
-        public list_head* next;
-        public list_head* prev;
-    };
+        public list_head* Next;
+        public list_head* Prev;
+    }
 
     struct page
     {
-        public uint flags;
-        public byte private_;
+        public uint Flags;
+        public byte Private_;
         public uint _count;
-        public list_head lru;
+        public list_head Lru;
     }
 
     unsafe struct zone
     {
-        public ulong free_pages;
-        public free_area* free_area; //[MAX_ORDER]
+        public ulong Free_pages;
+        public free_area* Free_area; //[MAX_ORDER]
     }
 
     struct free_area
     {
-        public list_head free_list;
-        public ulong nr_free;
-    };
+        public list_head Free_list;
+        public ulong Nr_free;
+    }
 
     public unsafe class EmptyClass
     {
@@ -53,17 +58,17 @@ namespace Lonos.test.console.alloc2
 
         static bool PagePrivate(page* page)
         {
-            return page->flags.IsBitSet(PG_private);
+            return page->Flags.IsBitSet(PG_private);
         }
 
         static uint page_order(page* page)
         {
-            return page->private_;
+            return page->Private_;
         }
 
         static bool PageReserved(page* page)
         {
-            return page->flags.IsBitSet(PG_reserved);
+            return page->Flags.IsBitSet(PG_reserved);
         }
 
         static uint page_count(page* page)
@@ -126,16 +131,16 @@ namespace Lonos.test.console.alloc2
 
             for (current_order = order; current_order < MAX_ORDER; ++current_order)
             {
-                area = zone->free_area + current_order;
-                if (list_empty(&area->free_list))
+                area = zone->Free_area + current_order;
+                if (list_empty(&area->Free_list))
                     continue;
 
                 //page = list_entry(area->free_list.next, page, lru);
-                page = list_entry__1(area->free_list.next);
-                list_del(&page->lru);
+                page = list_entry__1(area->Free_list.Next);
+                list_del(&page->Lru);
                 rmv_page_order(page);
-                area->nr_free--;
-                zone->free_pages -= 1UL << order;
+                area->Nr_free--;
+                zone->Free_pages -= 1UL << order;
                 return expand(zone, page, order, current_order, area);
             }
 
@@ -152,8 +157,8 @@ namespace Lonos.test.console.alloc2
                 high--;
                 size >>= 1;
                 //BUG_ON(bad_range(zone, &page[size]));
-                list_add(&page[size].lru, &area->free_list);
-                area->nr_free++;
+                list_add(&page[size].Lru, &area->Free_list);
+                area->Nr_free++;
                 set_page_order(&page[size], high);
             }
             return page;
@@ -161,35 +166,36 @@ namespace Lonos.test.console.alloc2
 
         static void list_add(list_head* new_, list_head* head)
         {
-            __list_add(new_, head, head->next);
+            __list_add(new_, head, head->Next);
         }
 
-        static void __list_add(list_head* new_,
-                  list_head* prev,
-                   list_head* next)
+        static void __list_add(
+            list_head* new_,
+            list_head* prev,
+            list_head* next)
         {
-            next->prev = new_;
-            new_->next = next;
-            new_->prev = prev;
-            prev->next = new_;
+            next->Prev = new_;
+            new_->Next = next;
+            new_->Prev = prev;
+            prev->Next = new_;
         }
 
         static void rmv_page_order(page* page)
         {
-            page->flags = page->flags.ClearBit(PG_private);
-            page->private_ = 0;
+            page->Flags = page->Flags.ClearBit(PG_private);
+            page->Private_ = 0;
         }
 
         static page* list_entry__1(list_head* ptr)
         {
             var p = (page*)(void*)ptr;
-            return (page*)(void*)(&(p->lru));
+            return (page*)(void*)(&(p->Lru));
         }
 
         static void set_page_order(page* page, int order)
         {
-            page->private_ = (byte)order;
-            page->flags = page->flags.SetBit(PG_private);
+            page->Private_ = (byte)order;
+            page->Flags = page->Flags.SetBit(PG_private);
         }
 
         /*
@@ -202,20 +208,20 @@ namespace Lonos.test.console.alloc2
 
         static bool list_empty(list_head* head)
         {
-            return head->next == head;
+            return head->Next == head;
         }
 
         static void list_del(list_head* entry)
         {
-            __list_del(entry->prev, entry->next);
-            entry->next = (list_head*)LIST_POISON1;
-            entry->prev = (list_head*)LIST_POISON2;
+            __list_del(entry->Prev, entry->Next);
+            entry->Next = (list_head*)LIST_POISON1;
+            entry->Prev = (list_head*)LIST_POISON2;
         }
 
         static void __list_del(list_head* prev, list_head* next)
         {
-            next->prev = prev;
-            prev->next = next;
+            next->Prev = prev;
+            prev->Next = next;
         }
     }
 }

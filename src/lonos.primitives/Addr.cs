@@ -1,5 +1,8 @@
-﻿using System.Runtime.Versioning;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
 using System;
+using System.Runtime.Versioning;
 
 namespace Lonos
 {
@@ -8,6 +11,8 @@ namespace Lonos
     {
         public static readonly Addr Invalid = new Addr(0xFFFFFFFE);
         public static readonly Addr Zero;
+
+        private unsafe void* _value; // Do not rename (binary serialization)
 
         public static unsafe int Size
         {
@@ -144,7 +149,7 @@ namespace Lonos
             return pointer - offset;
         }
 
-        public unsafe override bool Equals(Object obj)
+        public unsafe override bool Equals(object obj)
         {
             if (obj is Addr)
             {
@@ -181,6 +186,5 @@ namespace Lonos
             return (ulong)_value;
         }
 
-        private unsafe void* _value; // Do not rename (binary serialization)
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace Lonos
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+namespace Lonos
 {
     public static class BitHelper
     {
@@ -246,37 +249,37 @@
 
         #region *Byte
 
-        unsafe public static bool IsMaskSet(byte* self, byte mask)
+        public static unsafe bool IsMaskSet(byte* self, byte mask)
         {
             return (*self & mask) == mask;
         }
 
-        unsafe public static bool IsBitSet(byte* self, byte bit)
+        public static unsafe bool IsBitSet(byte* self, byte bit)
         {
             return (*self & (0x1 << bit)) == (0x1 << bit);
         }
 
-        unsafe public static void SetMask(byte* self, byte mask)
+        public static unsafe void SetMask(byte* self, byte mask)
         {
             *self = (byte)(*self | mask);
         }
 
-        unsafe public static void SetBit(byte* self, byte bit)
+        public static unsafe void SetBit(byte* self, byte bit)
         {
             *self = (byte)(*self | (0x1 << bit));
         }
 
-        unsafe public static void ClearMask(byte* self, byte mask)
+        public static unsafe void ClearMask(byte* self, byte mask)
         {
             *self = (byte)(*self & ~mask);
         }
 
-        unsafe public static void ClearBit(byte* self, byte bit)
+        public static unsafe void ClearBit(byte* self, byte bit)
         {
             *self = (byte)(*self & ~(0x1 << bit));
         }
 
-        unsafe public static void SetMask(byte* self, byte mask, bool state)
+        public static unsafe void SetMask(byte* self, byte mask, bool state)
         {
             if (state)
                 *self = (byte)(*self | mask);
@@ -284,7 +287,7 @@
                 *self = (byte)(*self & ~mask);
         }
 
-        unsafe public static void SetBit(byte* self, byte bit, bool state)
+        public static unsafe void SetBit(byte* self, byte bit, bool state)
         {
             if (state)
                 *self = (byte)(*self | (0x1 << bit));
@@ -292,22 +295,22 @@
                 *self = (byte)(*self & ~(0x1 << bit));
         }
 
-        unsafe public static void CircularLeftShift(byte* a, byte n)
+        public static unsafe void CircularLeftShift(byte* a, byte n)
         {
             *a = (byte)(*a << n | *a >> (8 - n));
         }
 
-        unsafe public static void CircularRightShift(byte* a, byte n)
+        public static unsafe void CircularRightShift(byte* a, byte n)
         {
             *a = (byte)(*a >> n | *a << (8 - n));
         }
 
-        unsafe public static void GetBits(byte* self, byte index, byte count)
+        public static unsafe void GetBits(byte* self, byte index, byte count)
         {
             *self = (byte)((*self >> index) << (8 - count));
         }
 
-        unsafe public static void SetBits(byte* self, byte source, byte index, byte count)
+        public static unsafe void SetBits(byte* self, byte source, byte index, byte count)
         {
             byte mask = (byte)(0xFF >> (8 - count));
             byte bits = (byte)((source & mask) << index);

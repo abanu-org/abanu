@@ -1,4 +1,6 @@
-﻿
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
 namespace Lonos.Kernel.Core
 {
     /// <summary>
@@ -10,11 +12,10 @@ namespace Lonos.Kernel.Core
 
         public const uint InitialStack = 0x00A00000; // 10MB (stack grows down)
 
-        private const uint InitialAllocStart = KernelBasePhys + OriginalKernelElfSize + 128 * 4096; // 64 MB
+        private const uint InitialAllocStart = KernelBasePhys + OriginalKernelElfSize + (128 * 4096); // 64 MB
 
         public const uint GCInitialMemory = InitialAllocStart;
         public const uint GCInitialMemorySize = 1024 * 1024 * 3; // 3MB
-
 
         public const uint InitialDynamicPage = InitialAllocStart + GCInitialMemorySize;
         public const uint LoaderBasePhys = 0x00200000;  // 2MB
@@ -24,7 +25,7 @@ namespace Lonos.Kernel.Core
         /// </summary>
         public const uint OriginalKernelElfSize = 25 * 1024 * 1024;
 
-        public const uint KernelBasePhys = OriginalKernelElfSection + OriginalKernelElfSize + 128 * 4096;  // 20MB
+        public const uint KernelBasePhys = OriginalKernelElfSection + OriginalKernelElfSize + (128 * 4096);  // 20MB
         public const uint KernelBaseVirt = 0xC0100000;  // 3GB+1MB
         public const uint KernelElfSection = KernelBasePhys - 0x1000; // 20MB+4KB
         public const uint KernelBootInfo = InitialStack + 0x1000; // 10MB+4KB

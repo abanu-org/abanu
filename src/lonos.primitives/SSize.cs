@@ -4,8 +4,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Runtime.Versioning;
 using System;
+using System.Runtime.Versioning;
 
 namespace Lonos.Kernel.Core
 {
@@ -14,31 +14,31 @@ namespace Lonos.Kernel.Core
     {
         private unsafe void* _value; // Do not rename (binary serialization)
 
-        public static readonly SSize Zero;  
+        public static readonly SSize Zero;
 
         [NonVersionable]
-		public unsafe SSize(uint value)
+        public unsafe SSize(uint value)
         {
             _value = (void*)value;
         }
 
         [NonVersionable]
-		public unsafe SSize(ulong value)
+        public unsafe SSize(ulong value)
         {
             _value = (void*)((uint)value);
         }
 
         [NonVersionable]
-		public unsafe SSize(void* value)
+        public unsafe SSize(void* value)
         {
             _value = value;
         }
 
-        public unsafe override bool Equals(Object obj)
+        public unsafe override bool Equals(object obj)
         {
-			if (obj is SSize)
+            if (obj is SSize)
             {
-				return (_value == ((SSize)obj)._value);
+                return (_value == ((SSize)obj)._value);
             }
             return false;
         }
@@ -61,37 +61,37 @@ namespace Lonos.Kernel.Core
         }
 
         [NonVersionable]
-		public static implicit operator SSize(uint value)
-        {
-			return new SSize(value);
-        }
-
-        [NonVersionable]
-		public static implicit operator SSize(ulong value)
-        {
-			return new SSize(value);
-        }
-
-        [NonVersionable]
-		public static unsafe implicit operator SSize(void* value)
+        public static implicit operator SSize(uint value)
         {
             return new SSize(value);
         }
 
         [NonVersionable]
-		public static unsafe implicit operator void* (SSize value)
+        public static implicit operator SSize(ulong value)
+        {
+            return new SSize(value);
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator SSize(void* value)
+        {
+            return new SSize(value);
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator void*(SSize value)
         {
             return value._value;
         }
 
         [NonVersionable]
-		public static unsafe implicit operator uint(SSize value)
+        public static unsafe implicit operator uint(SSize value)
         {
             return (uint)value._value;
         }
 
         [NonVersionable]
-		public static unsafe implicit operator ulong(SSize value)
+        public static unsafe implicit operator ulong(SSize value)
         {
             return (ulong)value._value;
         }

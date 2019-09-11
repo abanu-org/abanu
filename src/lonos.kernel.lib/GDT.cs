@@ -10,15 +10,15 @@
  */
 
 using System;
-using System.Runtime.InteropServices;
-using Mosa.Runtime.x86;
-using Mosa.Runtime;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Mosa.Runtime;
+using Mosa.Runtime.x86;
 
 namespace Lonos.Kernel.Core
 {
 
-    unsafe public static class GDT
+    public static unsafe class GDT
     {
         private static uint GdtTableAddress;
         private static DescriptorTable* GdtTable;
@@ -65,7 +65,7 @@ namespace Lonos.Kernel.Core
             KernelMessage.WriteLine("Done");
         }
 
-        public static TaskStateSegment* tss;
+        public static TaskStateSegment* Tss;
 
         public static void SetupUserMode(Addr tssAddr)
         {
@@ -99,14 +99,14 @@ namespace Lonos.Kernel.Core
             if (KConfig.UseTaskStateSegment)
             {
                 //TSS
-                tss = AddTSS();
+                Tss = AddTSS();
                 ///tss->esp0 = kernelStackPointer;
-                tss->ss0 = 0x10;
-                tss->trace_bitmap = 0xdfff;
+                Tss->SS0 = 0x10;
+                Tss->Trace_bitmap = 0xdfff;
 
-                KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)tss);
+                KernelMessage.WriteLine("Addr of tss: {0:X8}", (uint)Tss);
 
-                var tssEntry = DescriptorTableEntry.CreateTSS(tss);
+                var tssEntry = DescriptorTableEntry.CreateTSS(Tss);
                 tssEntry.PriviligeRing = 0;
                 tssEntry.TSS_AVL = true;
                 tssEntry.Present = true;
@@ -134,7 +134,7 @@ namespace Lonos.Kernel.Core
         //public extern static void DebugFunction1();
 
         [DllImport("x86/lonos.LoadTaskRegister.o", EntryPoint = "LoadTaskRegister")]
-        private extern static void LoadTaskRegister(ushort taskSegmentSelector);
+        private static extern void LoadTaskRegister(ushort taskSegmentSelector);
 
         public static void LoadTaskRegister()
         {
@@ -172,7 +172,7 @@ namespace Lonos.Kernel.Core
     /// Global Descriptor Table and Local Descriptor Table
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
-    unsafe public struct DescriptorTable
+    public unsafe struct DescriptorTable
     {
         [FieldOffset(0)]
         private ushort size;
@@ -203,12 +203,13 @@ namespace Lonos.Kernel.Core
                 else
                     return (ushort)((size + 1) / DescriptorTableEntry.EntrySize);
             }
+
             private set
             {
                 if (value == 0)
                     size = 0;
                 else
-                    size = (ushort)(value * DescriptorTableEntry.EntrySize - 1);
+                    size = (ushort)((value * DescriptorTableEntry.EntrySize) - 1);
             }
         }
 
@@ -238,7 +239,7 @@ namespace Lonos.Kernel.Core
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    unsafe public struct TaskStateSegmentTable
+    public unsafe struct TaskStateSegmentTable
     {
         [FieldOffset(0)]
         private ushort size;
@@ -269,12 +270,13 @@ namespace Lonos.Kernel.Core
                 else
                     return (ushort)((size + 1) / TaskStateSegment.EntrySize);
             }
+
             private set
             {
                 if (value == 0)
                     size = 0;
                 else
-                    size = (ushort)(value * TaskStateSegment.EntrySize - 1);
+                    size = (ushort)((value * TaskStateSegment.EntrySize) - 1);
             }
         }
 
@@ -304,7 +306,7 @@ namespace Lonos.Kernel.Core
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    unsafe public struct DescriptorTableEntry
+    public unsafe struct DescriptorTableEntry
     {
         [FieldOffset(0)]
         private ushort limitLow;
@@ -388,6 +390,7 @@ namespace Lonos.Kernel.Core
             {
                 return (TaskStateSegment*)BaseAddress;
             }
+
             set
             {
                 BaseAddress = (uint)value;
@@ -404,7 +407,11 @@ namespace Lonos.Kernel.Core
 
         public uint BaseAddress
         {
-            get { return (uint)(baseLow | (baseMiddle << 16) | (baseHigh << 24)); }
+            get
+            {
+                return (uint)(baseLow | (baseMiddle << 16) | (baseHigh << 24));
+            }
+
             set
             {
                 baseLow = (ushort)(value & 0xFFFF);
@@ -415,7 +422,11 @@ namespace Lonos.Kernel.Core
 
         public uint Limit
         {
-            get { return (uint)(limitLow | flags.GetBits(FlagsByteOffset.Limit, 4)); }
+            get
+            {
+                return (uint)(limitLow | flags.GetBits(FlagsByteOffset.Limit, 4));
+            }
+
             set
             {
                 if (Granularity)
@@ -459,6 +470,7 @@ namespace Lonos.Kernel.Core
                 CheckSegment();
                 return access.IsBitSet(AccessByteOffset.Ex);
             }
+
             set
             {
                 CheckSegment();
@@ -485,6 +497,7 @@ namespace Lonos.Kernel.Core
                 CheckSegment();
                 return access.IsBitSet(AccessByteOffset.RW);
             }
+
             set
             {
                 CheckSegment();
@@ -499,6 +512,7 @@ namespace Lonos.Kernel.Core
                 CheckSegment();
                 return access.IsBitSet(AccessByteOffset.Ac);
             }
+
             set
             {
                 CheckSegment();
@@ -518,6 +532,7 @@ namespace Lonos.Kernel.Core
                 CheckSegment();
                 return UserDescriptor_Executable ? ReadWrite : true;
             }
+
             set
             {
                 CheckSegment();
@@ -539,11 +554,14 @@ namespace Lonos.Kernel.Core
 
         public bool DataSegment_Writable
         {
-            get { return UserDescriptor_Executable ? ReadWrite : false; }
+            get
+            {
+                return UserDescriptor_Executable ? ReadWrite : false;
+            }
+
             set
             {
                 Assert.False(UserDescriptor_Executable && value, "Write access is never allowed for code segments");
-
                 ReadWrite = value;
             }
         }
@@ -573,7 +591,10 @@ namespace Lonos.Kernel.Core
 
         public byte PriviligeRing
         {
-            get { return access.GetBits(AccessByteOffset.Privl, 2); }
+            get
+            {
+                return access.GetBits(AccessByteOffset.Privl, 2);
+            }
             set
             {
                 Assert.False(value > 3, "Privilege ring can't be larger than 3");
@@ -596,6 +617,7 @@ namespace Lonos.Kernel.Core
             {
                 return flags.IsBitSet(FlagsByteOffset.TSS_AVL);
             }
+
             set
             {
                 flags = flags.SetBit(FlagsByteOffset.TSS_AVL, value);
@@ -608,6 +630,7 @@ namespace Lonos.Kernel.Core
             {
                 return flags.IsBitSet(FlagsByteOffset.LongMode);
             }
+
             set
             {
                 flags = flags.SetBit(FlagsByteOffset.LongMode, value);
@@ -622,6 +645,7 @@ namespace Lonos.Kernel.Core
             {
                 return flags.IsBitSet(FlagsByteOffset.Sz);
             }
+
             set
             {
                 Assert.False(value && LongMode, "Size type invalid for long mode");
@@ -642,6 +666,7 @@ namespace Lonos.Kernel.Core
                 else
                     return EAddressMode.Bits16;
             }
+
             set
             {
                 if (value == EAddressMode.Bits32)
@@ -669,6 +694,7 @@ namespace Lonos.Kernel.Core
             {
                 return flags.IsBitSet(FlagsByteOffset.Gr);
             }
+
             private set
             {
                 flags = flags.SetBit(FlagsByteOffset.Gr, value);
@@ -679,7 +705,7 @@ namespace Lonos.Kernel.Core
         {
             Bits16 = 16,
             Bits32 = 32,
-            Bits64 = 64
+            Bits64 = 64,
         }
 
         #endregion Flags
@@ -716,19 +742,32 @@ namespace Lonos.Kernel.Core
     {
         public const byte EntrySize = 104;
 
-        public uint back_link;
-        public uint esp0, ss0;
-        public uint esp1, ss1;
-        public uint esp2, ss2;
-        public uint cr3;
-        public uint eip;
-        public uint eflags;
-        public uint eax, ecx, edx, ebx;
-        public uint esp, ebp;
-        public uint esi, edi;
-        public uint es, cs, ss, ds, fs, gs;
-        public uint ldt;
-        public uint trace_bitmap;
-    };
+        public uint Back_link;
+        public uint ESP0;
+        public uint SS0;
+        public uint ESP1;
+        public uint SS1;
+        public uint ESP2;
+        public uint SS2;
+        public uint CR3;
+        public uint EIP;
+        public uint EFLAGS;
+        public uint EAX;
+        public uint ECX;
+        public uint EDX;
+        public uint EBX;
+        public uint ESP;
+        public uint EBP;
+        public uint ESI;
+        public uint EDI;
+        public uint ES;
+        public uint CS;
+        public uint SS;
+        public uint DS;
+        public uint FS;
+        public uint GS;
+        public uint LDT;
+        public uint Trace_bitmap;
+    }
 
 }

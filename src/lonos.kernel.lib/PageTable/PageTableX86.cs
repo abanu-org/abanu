@@ -1,8 +1,10 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
+using System.Runtime.InteropServices;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
-
-using System.Runtime.InteropServices;
 
 namespace Lonos.Kernel.Core.PageManagement
 {
@@ -26,7 +28,9 @@ namespace Lonos.Kernel.Core.PageManagement
         private const uint InitalPageTableSize = PageTableEntry.EntrySize * InitialPageTableEntries;
 
         public override PageTableType Type => PageTableType.x86;
+
         public override USize InitalMemoryAllocationSize => InitalPageDirectorySize + InitalPageTableSize;
+
         public override Addr VirtAddr => AddrPageDirectory;
 
         /// <summary>
@@ -77,7 +81,7 @@ namespace Lonos.Kernel.Core.PageManagement
                     Present = true,
                     Writable = true,
                     User = true,
-                    PhysicalAddress = (uint)(pidx * 4096)
+                    PhysicalAddress = (uint)(pidx * 4096),
                 };
             }
 
@@ -88,7 +92,7 @@ namespace Lonos.Kernel.Core.PageManagement
                     Present = true,
                     Writable = true,
                     User = true,
-                    PageTableEntry = &pte[didx * PagesPerDictionaryEntry]
+                    PageTableEntry = &pte[didx * PagesPerDictionaryEntry],
                 };
             }
 
@@ -203,9 +207,8 @@ namespace Lonos.Kernel.Core.PageManagement
             Flush();
         }
 
-
         [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 4)]
-        unsafe public struct PageDirectoryEntry
+        public unsafe struct PageDirectoryEntry
         {
             [FieldOffset(0)]
             private uint data;
@@ -232,7 +235,11 @@ namespace Lonos.Kernel.Core.PageManagement
 
             private uint PageTableAddress
             {
-                get { return data & AddressMask; }
+                get
+                {
+                    return data & AddressMask;
+                }
+
                 set
                 {
                     Assert.True(value << AddressBitSize == 0, "PageDirectoryEntry.Address needs to be 4k aligned");
@@ -295,8 +302,6 @@ namespace Lonos.Kernel.Core.PageManagement
             }
         }
 
-
-
         [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 4)]
         public struct PageTableEntry
         {
@@ -328,7 +333,11 @@ namespace Lonos.Kernel.Core.PageManagement
             /// </summary>
             public uint PhysicalAddress
             {
-                get { return Value & AddressMask; }
+                get
+                {
+                    return Value & AddressMask;
+                }
+
                 set
                 {
                     Assert.True(value << AddressBitSize == 0, "PageTableEntry.PhysicalAddress needs to be 4k aligned");
@@ -392,6 +401,5 @@ namespace Lonos.Kernel.Core.PageManagement
 
         }
     }
-
 
 }

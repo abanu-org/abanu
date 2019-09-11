@@ -4,8 +4,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Runtime.Versioning;
 using System;
+using System.Runtime.Versioning;
 
 namespace Lonos.Kernel.Core
 {
@@ -15,7 +15,7 @@ namespace Lonos.Kernel.Core
     {
         private unsafe void* _value; // Do not rename (binary serialization)
 
-        public static readonly FileHandle Zero;  
+        public static readonly FileHandle Zero;
 
         [NonVersionable]
         public unsafe FileHandle(uint value)
@@ -24,22 +24,22 @@ namespace Lonos.Kernel.Core
         }
 
         [NonVersionable]
-		public unsafe FileHandle(ulong value)
+        public unsafe FileHandle(ulong value)
         {
             _value = (void*)((uint)value);
         }
 
         [NonVersionable]
-		public unsafe FileHandle(void* value)
+        public unsafe FileHandle(void* value)
         {
             _value = value;
         }
 
-        public unsafe override bool Equals(Object obj)
+        public unsafe override bool Equals(object obj)
         {
-			if (obj is FileHandle)
+            if (obj is FileHandle)
             {
-				return (_value == ((FileHandle)obj)._value);
+                return (_value == ((FileHandle)obj)._value);
             }
             return false;
         }
@@ -62,37 +62,37 @@ namespace Lonos.Kernel.Core
         }
 
         [NonVersionable]
-		public static implicit operator FileHandle(uint value)
-        {
-			return new FileHandle(value);
-        }
-
-        [NonVersionable]
-		public static implicit operator FileHandle(ulong value)
-        {
-			return new FileHandle(value);
-        }
-
-        [NonVersionable]
-		public static unsafe implicit operator FileHandle(void* value)
+        public static implicit operator FileHandle(uint value)
         {
             return new FileHandle(value);
         }
 
         [NonVersionable]
-		public static unsafe implicit operator void* (FileHandle value)
+        public static implicit operator FileHandle(ulong value)
+        {
+            return new FileHandle(value);
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator FileHandle(void* value)
+        {
+            return new FileHandle(value);
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator void*(FileHandle value)
         {
             return value._value;
         }
 
         [NonVersionable]
-		public static unsafe implicit operator uint(FileHandle value)
+        public static unsafe implicit operator uint(FileHandle value)
         {
             return (uint)value._value;
         }
 
         [NonVersionable]
-		public static unsafe implicit operator ulong(FileHandle value)
+        public static unsafe implicit operator ulong(FileHandle value)
         {
             return (ulong)value._value;
         }

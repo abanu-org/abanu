@@ -1,8 +1,10 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
+using System.Runtime.InteropServices;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
-
-using System.Runtime.InteropServices;
 
 namespace Lonos.Kernel.Core.PageManagement
 {
@@ -36,6 +38,7 @@ namespace Lonos.Kernel.Core.PageManagement
         public abstract PageTableType Type { get; }
 
         public abstract USize InitalMemoryAllocationSize { get; }
+
         public abstract Addr VirtAddr { get; }
 
         public abstract void Setup(Addr entriesAddr);

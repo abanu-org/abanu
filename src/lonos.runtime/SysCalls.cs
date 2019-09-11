@@ -1,6 +1,9 @@
-﻿using Lonos.Kernel;
-using Lonos.Kernel.Core;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
 using System;
+using Lonos.Kernel;
+using Lonos.Kernel.Core;
 
 namespace Lonos.Runtime
 {
@@ -8,7 +11,7 @@ namespace Lonos.Runtime
     /// <summary>
     /// Pure calls. This is no Framwork. No helpers!
     /// </summary>
-    public unsafe static class SysCalls
+    public static unsafe class SysCalls
     {
         public static uint RequestMemory(uint size)
         {

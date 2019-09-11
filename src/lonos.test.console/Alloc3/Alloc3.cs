@@ -1,4 +1,8 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
+
 namespace Lonos.test.console.Alloc3
 {
 
@@ -75,7 +79,6 @@ namespace Lonos.test.console.Alloc3
                 InsertBefore(FirstNode, newNode);
         }
 
-
         public void InsertEnd(LinkedListNode* newNode)
         {
             if (LastNode == null)
@@ -85,10 +88,4 @@ namespace Lonos.test.console.Alloc3
         }
     }
 
-    public class Alloc3
-    {
-        public Alloc3()
-        {
-        }
-    }
 }

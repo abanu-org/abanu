@@ -1,10 +1,10 @@
 ﻿// Copyright (c) MOSA Project. Licensed under the New BSD License.
 
+using System;
 using Lonos;
 using Lonos.Runtime;
 using Mosa.DeviceSystem;
 using Mosa.Runtime.x86;
-using System;
 
 namespace Mosa.CoolWorld.x86.HAL
 {
@@ -16,7 +16,7 @@ namespace Mosa.CoolWorld.x86.HAL
         /// <summary>
         /// Gets the size of the page.
         /// </summary>
-        public override uint PageSize { get { return 4096; } }
+        public override uint PageSize => 4096;
 
         /// <summary>
         /// Gets a block of memory from the kernel
@@ -67,9 +67,6 @@ namespace Mosa.CoolWorld.x86.HAL
         /// <summary>
         /// Allocates the virtual memory.
         /// </summary>
-        /// <param name="size">The size.</param>
-        /// <param name="alignment">The alignment.</param>
-        /// <returns></returns>
         public override ConstrainedPointer AllocateVirtualMemory(uint size, uint alignment)
         {
             var address = (IntPtr)SysCalls.RequestMemory(size);
@@ -80,8 +77,6 @@ namespace Mosa.CoolWorld.x86.HAL
         /// <summary>
         /// Gets the physical address.
         /// </summary>
-        /// <param name="memory">The memory.</param>
-        /// <returns></returns>
         public override IntPtr TranslateVirtualToPhysicalAddress(IntPtr virtualAddress)
         {
             return (IntPtr)SysCalls.TranslateVirtualToPhysicalAddress(virtualAddress);
@@ -91,7 +86,6 @@ namespace Mosa.CoolWorld.x86.HAL
         /// Requests an IO read/write port interface from the kernel
         /// </summary>
         /// <param name="port">The port number.</param>
-        /// <returns></returns>
         public override BaseIOPortReadWrite GetReadWriteIOPort(ushort port)
         {
             return new X86IOPortReadWrite(port);
@@ -101,7 +95,6 @@ namespace Mosa.CoolWorld.x86.HAL
         /// Requests an IO read/write port interface from the kernel
         /// </summary>
         /// <param name="port">The port number.</param>
-        /// <returns></returns>
         public override BaseIOPortRead GetReadIOPort(ushort port)
         {
             return new X86IOPortReadWrite(port);
@@ -111,7 +104,6 @@ namespace Mosa.CoolWorld.x86.HAL
         /// Requests an IO write port interface from the kernel
         /// </summary>
         /// <param name="port">The port number.</param>
-        /// <returns></returns>
         public override BaseIOPortWrite GetWriteIOPort(ushort port)
         {
             return new X86IOPortWrite(port);

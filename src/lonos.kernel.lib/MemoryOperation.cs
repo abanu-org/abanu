@@ -1,4 +1,7 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
 using Mosa.Runtime.x86;
 
 namespace Lonos.Kernel.Core
@@ -19,7 +22,7 @@ namespace Lonos.Kernel.Core
                 Native.Set32(destination + i, Native.Get32(source + i));
         }
 
-        public unsafe static void Copy4(uint source, uint destination, uint length)
+        public static unsafe void Copy4(uint source, uint destination, uint length)
         {
             var count = length / 4; //TODO: Check modulo 4 == 0
             //for (uint i = 0; i < count; i += 4)
@@ -51,7 +54,6 @@ namespace Lonos.Kernel.Core
             for (uint at = start; at < (start + bytes); at++)
                 Native.Set8(at, 0);
         }
-
 
         public static void Clear4(Addr start, USize bytes)
         {

@@ -1,10 +1,15 @@
-﻿using System;
-using malloc_meta = System.UInt32;
-using size_t = System.UInt32;
-//using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
-using System.Runtime.InteropServices;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+//using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
+using System.Runtime.InteropServices;
+using malloc_meta = System.UInt32;
+using size_t = System.UInt32;
+
+#pragma warning disable
 
 namespace Lonos.test.malloc4
 {
@@ -16,6 +21,7 @@ namespace Lonos.test.malloc4
 
         alloc4 malloc;
         Random rnd = new Random();
+
         public void run()
         {
             malloc = new alloc4();
@@ -26,7 +32,7 @@ namespace Lonos.test.malloc4
             for (var i = 0; i < headsize; i++)
                 *(addr + i) = 0;
 
-            malloc.list_heads = (malloc_meta**)addr;
+            malloc.List_heads = (malloc_meta**)addr;
 
             for (var i = 0; i < 10000; i++)
             {
@@ -36,7 +42,7 @@ namespace Lonos.test.malloc4
                 }
                 else
                 {
-                    Alloc((uint)rnd.Next(20)+1);
+                    Alloc((uint)rnd.Next(20) + 1);
                 }
             }
             Console.WriteLine(hash.Count);
@@ -44,7 +50,7 @@ namespace Lonos.test.malloc4
 
         private class AllocEnry
         {
-            public byte[] data;
+            public byte[] Data;
         }
 
         private Dictionary<UIntPtr, AllocEnry> hash = new Dictionary<UIntPtr, AllocEnry>();
@@ -62,7 +68,7 @@ namespace Lonos.test.malloc4
             {
                 ptr[i] = data[i];
             }
-            hash.Add((UIntPtr)ptr, new AllocEnry { data = data });
+            hash.Add((UIntPtr)ptr, new AllocEnry { Data = data });
             //ptr[10] = 0;
             Check();
         }
@@ -80,9 +86,9 @@ namespace Lonos.test.malloc4
             foreach (var entry in hash)
             {
                 var ptr = (byte*)entry.Key;
-                for (var i = 0; i < entry.Value.data.Length; i++)
+                for (var i = 0; i < entry.Value.Data.Length; i++)
                 {
-                    if (ptr[i] != entry.Value.data[i])
+                    if (ptr[i] != entry.Value.Data[i])
                         throw new Exception("Test failed");
                 }
             }

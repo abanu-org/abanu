@@ -1,4 +1,7 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
 using System.Runtime.InteropServices;
 
 namespace Lonos.Kernel.Core
@@ -10,7 +13,7 @@ namespace Lonos.Kernel.Core
         Unset = 0,
         Free = 1,
         Used = 2,
-        Reserved = 4
+        Reserved = 4,
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -35,13 +38,16 @@ namespace Lonos.Kernel.Core
 
         public Page* Next;
 
-        public USize Size => 4096;
+        public static USize Size => 4096;
 
         public uint PageNum => PhysicalAddress / 4096;
 
         public bool Free => ((uint)Status).IsMaskSet((uint)PageStatus.Free);
+
         public bool Unset => ((uint)Status).IsMaskSet((uint)PageStatus.Unset);
+
         public bool Used => ((uint)Status).IsMaskSet((uint)PageStatus.Used);
+
         public bool Reserved => ((uint)Status).IsMaskSet((uint)PageStatus.Reserved);
     }
 }

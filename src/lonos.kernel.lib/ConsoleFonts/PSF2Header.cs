@@ -1,6 +1,9 @@
-﻿using System;
-using Mosa.Runtime.x86;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
 using System.Runtime.InteropServices;
+using Mosa.Runtime.x86;
 
 namespace Lonos.Kernel.Core.ConsoleFonts
 {
@@ -9,12 +12,13 @@ namespace Lonos.Kernel.Core.ConsoleFonts
     public struct PSF2Header
     {
         public unsafe fixed byte Ident[4]; //0x72 0xb5 0x4a 0x86
-        public uint version;
-        public uint headersize;
-        public uint flags;
-        public uint length; //number of glyphs
-        public uint charsize;
-        public uint height, width;
+        public uint Version;
+        public uint Headersize;
+        public uint Flags;
+        public uint Length; //number of glyphs
+        public uint Charsize;
+        public uint Height;
+        public uint Width;
     }
 
 }

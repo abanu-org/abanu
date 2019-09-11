@@ -4,8 +4,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Runtime.Versioning;
 using System;
+using System.Runtime.Versioning;
 
 namespace Lonos.Kernel.Core
 {
@@ -113,7 +113,7 @@ namespace Lonos.Kernel.Core
             return pointer - offset;
         }
 
-        public unsafe override bool Equals(Object obj)
+        public unsafe override bool Equals(object obj)
         {
             if (obj is USize)
             {
