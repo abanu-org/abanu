@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Lonos.Kernel.Core;
 using Mosa.Runtime.x86;
 
-namespace Mosa.Kernel.x86
+namespace Lonos.Kernel.Loader
 {
     /// <summary>
     /// Static class of helpful memory functions

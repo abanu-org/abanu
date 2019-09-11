@@ -5,7 +5,6 @@ using System;
 using Lonos.Kernel.Core;
 using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.PageManagement;
-using Mosa.Kernel.x86;
 
 namespace Lonos.Kernel.Loader
 {

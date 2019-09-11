@@ -4,7 +4,6 @@
 using System;
 using Lonos.Kernel.Core;
 using Lonos.Kernel.Core.Boot;
-using Mosa.Kernel.x86;
 using Mosa.Runtime;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;

@@ -6,7 +6,6 @@ using Lonos.Kernel.Core;
 using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.Elf;
 using Lonos.Kernel.Core.PageManagement;
-using Mosa.Kernel.x86;
 using Mosa.Runtime;
 using Mosa.Runtime.Plug;
 using Mosa.Runtime.x86;
