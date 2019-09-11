@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Exe</OutputType>
-    <RootNamespace>app.Shell</RootNamespace>
+    <RootNamespace>App.Shell</RootNamespace>
     <AssemblyName>App.Shell</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <ProjectGuid>{C905EA31-3072-4523-A6FC-C154489FD2F4}</ProjectGuid>

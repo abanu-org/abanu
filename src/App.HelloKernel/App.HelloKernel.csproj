@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Exe</OutputType>
-    <RootNamespace>app.HelloKernel</RootNamespace>
+    <RootNamespace>App.HelloKernel</RootNamespace>
     <AssemblyName>App.HelloKernel</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <ProjectGuid>{E97F2133-634F-488C-933A-B78D6A1F0B69}</ProjectGuid>

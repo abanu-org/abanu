@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>lonos.Kernel.Core</RootNamespace>
+    <RootNamespace>Lonos.Kernel.Core</RootNamespace>
     <AssemblyName>Lonos.Kernel.Core</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <ProjectGuid>{A72ED046-DE1C-4688-981B-6086C091047F}</ProjectGuid>
