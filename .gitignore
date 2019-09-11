@@ -73,3 +73,6 @@ logs/
 
 # libreoffice lock files
 .~lock.*
+
+# JetBrain Rider
+.idea/
