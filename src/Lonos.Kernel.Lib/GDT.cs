@@ -133,10 +133,10 @@ namespace Lonos.Kernel.Core
             KernelMessage.WriteLine("Done");
         }
 
-        //[DllImport("x86/lonos.DebugFunction1.o", EntryPoint = "DebugFunction1")]
+        //[DllImport("x86/Lonos.DebugFunction1.o", EntryPoint = "DebugFunction1")]
         //public extern static void DebugFunction1();
 
-        [DllImport("x86/lonos.LoadTaskRegister.o", EntryPoint = "LoadTaskRegister")]
+        [DllImport("x86/Lonos.LoadTaskRegister.o", EntryPoint = "LoadTaskRegister")]
         private static extern void LoadTaskRegister(ushort taskSegmentSelector);
 
         public static void LoadTaskRegister()

@@ -1,8 +1,8 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.build", "lonos.build\lonos.build.csproj", "{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Build", "Lonos.Build\Lonos.Build.csproj", "{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Compiler.Framework", "..\external\MOSA-Project\Source\Mosa.Compiler.Framework\Mosa.Compiler.Framework.csproj", "{75A12A8A-8C8F-4D1E-801B-689D8F781BF4}"
 EndProject
@@ -38,7 +38,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Runtime.x64", "..\exte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Platform.Intel", "..\external\MOSA-Project\Source\Mosa.Platform.Intel\Mosa.Platform.Intel.csproj", "{17CE4F09-7CBF-49E9-84A7-178DB2CBD7C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lonos.kernel.config", "lonos.kernel.config\lonos.kernel.config.csproj", "{317E8C4B-089B-469B-8789-D76EB2F87504}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Config", "Lonos.Kernel.Config\Lonos.Kernel.Config.csproj", "{317E8C4B-089B-469B-8789-D76EB2F87504}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Plug.Korlib.x86", "..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x86\Mosa.Plug.Korlib.x86.csproj", "{028BC31C-2EDC-492E-90A3-3714E38CE2CF}"
 EndProject

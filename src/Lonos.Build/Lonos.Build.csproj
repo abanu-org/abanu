@@ -8,12 +8,12 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>lonos.Build</RootNamespace>
-    <AssemblyName>lonos.build</AssemblyName>
+    <AssemblyName>Lonos.Build</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <StartupObject>lonos.build.Program</StartupObject>
-	<CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -86,9 +86,9 @@
       <Project>{65F7691A-B355-4D98-BB97-0B19F13E2190}</Project>
       <Name>Mosa.Utility.BootImage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lonos.kernel.config\lonos.kernel.config.csproj">
-      <Project>{317E8C4B-089B-469B-8789-D76EB2F87504}</Project>
-      <Name>lonos.kernel.config</Name>
+    <ProjectReference Include="..\Lonos.Kernel.Config\Lonos.Kernel.Config.csproj">
+      <Project>{317e8c4b-089b-469b-8789-d76eb2f87504}</Project>
+      <Name>Lonos.Kernel.Config</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -149,7 +149,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","app.hellokernel.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","App.HelloKernel.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
@@ -161,7 +161,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","app.helloservice.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","App.HelloService.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }
@@ -173,7 +173,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","lonos.service.basic.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"),"os","Lonos.Service.Basic.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         }

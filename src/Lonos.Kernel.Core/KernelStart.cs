@@ -120,10 +120,10 @@ namespace Lonos.Kernel.Core
                 Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2" });
                 userProc.Start();
 
-                var proc = ProcessManager.StartProcess("app.HelloService");
+                var proc = ProcessManager.StartProcess("App.HelloService");
                 Serv = new Service(proc);
 
-                var p2 = ProcessManager.StartProcess("app.HelloKernel");
+                var p2 = ProcessManager.StartProcess("App.HelloKernel");
                 //p2.Threads[0].SetArgument(0, 0x90);
                 //p2.Threads[0].SetArgument(4, 0x94);
                 //p2.Threads[0].SetArgument(8, 0x98);

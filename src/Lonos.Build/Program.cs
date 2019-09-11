@@ -56,28 +56,28 @@ namespace Lonos.Build
             }
             else if (args[0] == "--image=app")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.hellokernel.exe");
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.HelloKernel.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
             else if (args[0] == "--image=app2")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.helloservice.exe");
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.HelloService.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
             else if (args[0] == "--image=service.basic")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/lonos.service.basic.exe");
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/Lonos.Service.Basic.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
             else if (args[0] == "--image=app.shell")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.shell.exe");
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.Shell.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
@@ -93,10 +93,10 @@ namespace Lonos.Build
 
         public static void LinkImages()
         {
-            var loaderFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "lonos.os.loader.x86.bin");
+            var loaderFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "Lonos.OS.Loader.x86.bin");
             loaderFile = BuildUtility.GetEnv("${LONOS_OSDIR}/lonos.os.loader.x86.bin");
 
-            var kernelFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "lonos.os.core.x86.bin");
+            var kernelFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "Lonos.OS.Core.x86.bin");
             kernelFile = BuildUtility.GetEnv("${LONOS_OSDIR}/lonos.os.core.x86.bin");
 
             var kernelBytes = File.ReadAllBytes(kernelFile);
@@ -142,7 +142,7 @@ namespace Lonos.Build
             writer.Write(memSize);
 
             var bytes = ms.ToArray();
-            var outFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "lonos.os.image.x86.bin");
+            var outFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "Lonos.OS.image.x86.bin");
             File.WriteAllBytes(outFile, bytes);
 
         }

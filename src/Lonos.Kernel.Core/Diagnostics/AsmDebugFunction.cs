@@ -12,7 +12,7 @@ namespace Lonos.Kernel.Core.Diagnostics
 {
     public static class AsmDebugFunction
     {
-        [DllImport("x86/lonos.DebugFunction1.o", EntryPoint = "DebugFunction1")]
+        [DllImport("x86/Lonos.DebugFunction1.o", EntryPoint = "DebugFunction1")]
         public static extern void DebugFunction1();
 
     }

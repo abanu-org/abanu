@@ -21,13 +21,13 @@ namespace Lonos.Build
                         value = "${LONOS_PROJDIR}/os";
                         break;
                     case "LONOS_NATIVE_FILES":
-                        value = "${LONOS_PROJDIR}/bin/x86/lonos.native.o";
+                        value = "${LONOS_PROJDIR}/bin/x86/Lonos.Native.o";
                         break;
                     case "LONOS_BOOTLOADER_EXE":
-                        value = "${LONOS_PROJDIR}/bin/lonos.os.loader.x86.exe";
+                        value = "${LONOS_PROJDIR}/bin/Lonos.OS.Loader.x86.exe";
                         break;
                     case "LONOS_EXE":
-                        value = "${LONOS_PROJDIR}/bin/lonos.os.core.x86.exe";
+                        value = "${LONOS_PROJDIR}/bin/Lonos.OS.Core.x86.exe";
                         break;
                     case "LONOS_LOGDIR":
                         value = "${LONOS_PROJDIR}/logs";
