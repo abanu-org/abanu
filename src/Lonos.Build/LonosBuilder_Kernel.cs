@@ -144,7 +144,7 @@ namespace Lonos.Build
                     },
                     new Section
                     {
-                        Name = "app.HelloKernel",
+                        Name = "App.HelloKernel",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
@@ -156,7 +156,7 @@ namespace Lonos.Build
                     },
                     new Section
                     {
-                        Name = "app.HelloService",
+                        Name = "App.HelloService",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
@@ -168,7 +168,7 @@ namespace Lonos.Build
                     },
                     new Section
                     {
-                        Name = "service.Basic",
+                        Name = "Service.Basic",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
