@@ -63,7 +63,7 @@ namespace Lonos.Build
             }
             else if (args[0] == "--image=app2")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/app.HelloService.exe");
+                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.HelloService.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
