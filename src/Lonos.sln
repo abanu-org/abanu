@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Build", "Lonos.Build\Lonos.Build.csproj", "{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Core", "Lonos.Kernel.Core\Lonos.Kernel.Core.csproj", "{A72ED046-DE1C-4688-981B-6086C091047F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Core.ClassLib", "Lonos.Core.ClassLib\Lonos.Core.ClassLib.csproj", "{FA6E1560-C2D5-41BB-9E7C-D54D0F711918}"
@@ -79,8 +81,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Core.x86", "Lonos.Kernel.Core.x86\Lonos.Kernel.Core.x86.csproj", "{F410CB2C-A859-4226-BCD2-6361BD3F57EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Loader.x86", "Lonos.Kernel.Loader.x86\Lonos.Kernel.Loader.x86.csproj", "{81D82425-CEC0-442F-BC5F-B07C606C2516}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Build", "Lonos.Build\Lonos.Build.csproj", "{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mosa.Compiler.Common", "..\external\MOSA-Project\Source\Mosa.Compiler.Common\Mosa.Compiler.Common.csproj", "{0E13F871-FCC7-4C09-9BE7-469D5FEB1F78}"
 EndProject
