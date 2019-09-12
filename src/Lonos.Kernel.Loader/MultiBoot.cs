@@ -90,13 +90,13 @@ namespace Lonos.Kernel.Loader
         /// Gets the length of the memory map.
         /// </summary>
         /// <value>The length of the memory map.</value>
-        public static uint MemoryMapLength => MultiBootInfo->MemMapLength;
+        private static uint MemoryMapIndexLength => MultiBootInfo->MemMapLength;
 
         /// <summary>
         /// Gets the memory map start.
         /// </summary>
         /// <value>The memory map start.</value>
-        public static uint MemoryMapStart => MultiBootInfo->MemMapAddress;
+        private static uint MemoryMapIndexStart => MultiBootInfo->MemMapAddress;
 
         /// <summary>
         /// Gets the length of the drive.
@@ -237,9 +237,9 @@ namespace Lonos.Kernel.Loader
         private static void CountMemoryMap()
         {
             memoryMapCount = 0;
-            MultiBootMemoryMap* location = (MultiBootMemoryMap*)MemoryMapStart;
+            MultiBootMemoryMap* location = (MultiBootMemoryMap*)MemoryMapIndexStart;
 
-            while ((uint)location < (MemoryMapStart + MemoryMapLength))
+            while ((uint)location < (MemoryMapIndexStart + MemoryMapIndexLength))
             {
                 memoryMapCount++;
 
@@ -254,7 +254,7 @@ namespace Lonos.Kernel.Loader
         /// <param name="index">The index.</param>
         private static MultiBootMemoryMap* GetMemoryMapIndexLocation(uint index)
         {
-            MultiBootMemoryMap* location = (MultiBootMemoryMap*)MemoryMapStart;
+            MultiBootMemoryMap* location = (MultiBootMemoryMap*)MemoryMapIndexStart;
 
             for (uint i = 0; i < index; i++)
             {
