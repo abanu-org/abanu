@@ -40,6 +40,15 @@ namespace Lonos.Build
                     case "LONOS_TOOLSDIR":
                         value = "${LONOS_PROJDIR}/tools";
                         break;
+                    case "MOSA_PROJDIR":
+                        value = "${LONOS_PROJDIR}/external/MOSA-Project";
+                        break;
+                    case "MOSA_TOOLSDIR":
+                        value = "${MOSA_PROJDIR}/tools";
+                        break;
+                    case "qemu":
+                        value = "${MOSA_TOOLSDIR}/qemu/qemu-system-x86_64.exe";
+                        break;
                 }
             }
 

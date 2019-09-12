@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Mosa.Compiler.MosaTypeSystem;
@@ -14,58 +15,126 @@ namespace Lonos.Build
 
         private static void Main(string[] args)
         {
+            Verb(CommandArgs.FromCommandlineArguments(args));
+        }
 
+        private static CommandResult Verb(CommandArgs args)
+        {
+            switch (args[0])
+            {
+                case "build":
+                    return Build(args.Pop());
+                case "debug":
+                    return Debug(args.Pop());
+            }
+            return null;
+        }
+
+        private static CommandResult Build(CommandArgs args)
+        {
+            switch (args[0])
+            {
+                case "image":
+                    return BuildImage(args.Pop());
+            }
+            return null;
+        }
+
+        private static CommandResult Debug(CommandArgs args)
+        {
+            if (args.ContainsFlag("emulator", "qemu"))
+                return DebugQemu(args);
+            return null;
+        }
+
+        private static CommandResult DebugQemu(CommandArgs args)
+        {
+            var direct = args.ContainsFlag("boot", "direct");
+            if (direct)
+                Exec("${qemu} -kernel os/Lonos.OS.image.x86.bin");
+            return null;
+        }
+
+        private static Process Exec(CommandArgs args)
+        {
+            if (!args.IsSet())
+                return null;
+
+            var fileName = args[0].GetEnv();
+            var arguments = args.Pop(1).ToString().GetEnv();
+
+            var start = new ProcessStartInfo(fileName);
+
+            if (arguments.Length > 0)
+                start.Arguments = arguments;
+
+            start.RedirectStandardOutput = true;
+            start.RedirectStandardError = true;
+            start.UseShellExecute = false;
+
+            var proc = Process.Start(start);
+            var data = proc.StandardOutput.ReadToEnd();
+            var error = proc.StandardError.ReadToEnd();
+            Console.WriteLine(data);
+            Console.WriteLine(error);
+            return proc;
+        }
+
+        private static CommandResult BuildImage(CommandArgs args)
+        {
             Console.WriteLine("Starting Build...");
 
             string file;
-            if (args[0] == "--image=loader")
+            if (args[0] == "loader")
             {
                 file = BuildUtility.GetEnv("LONOS_BOOTLOADER_EXE");
 
                 var builderBoot = new LonosBuilder_Loader(file);
                 builderBoot.Build();
             }
-            else if (args[0] == "--image=kernel")
+            else if (args[0] == "kernel")
             {
                 file = BuildUtility.GetEnv("LONOS_EXE");
 
                 var builder = new LonosBuilder_Kernel(file);
                 builder.Build();
             }
-            else if (args[0] == "--image=app")
+            else if (args[0] == "app")
             {
                 file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.HelloKernel.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
-            else if (args[0] == "--image=app2")
+            else if (args[0] == "app2")
             {
                 file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.HelloService.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
-            else if (args[0] == "--image=service.basic")
+            else if (args[0] == "service.basic")
             {
                 file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/Lonos.Service.Basic.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
-            else if (args[0] == "--image=app.shell")
+            else if (args[0] == "app.shell")
             {
                 file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.Shell.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
-            else if (args[0] == "--image=image")
+            else if (args[0] == "image")
             {
                 LinkImages();
             }
-            System.Console.WriteLine("ready");
+            Console.WriteLine("ready");
             //System.Console.ReadLine();
+
+            return null;
         }
 
         public static void LinkImages()

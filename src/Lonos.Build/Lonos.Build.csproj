@@ -19,7 +19,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -59,6 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildUtility.cs" />
+    <Compile Include="CommandArgument.cs" />
+    <Compile Include="CommandArgs.cs" />
+    <Compile Include="CommandExtensions.cs" />
+    <Compile Include="CommandResult.cs" />
     <Compile Include="LonosBuilder.cs" />
     <Compile Include="LonosBuilder_App.cs" />
     <Compile Include="LonosBuilder_Kernel.cs" />
