@@ -7,7 +7,7 @@
     <ProjectGuid>{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>lonos.Build</RootNamespace>
+    <RootNamespace>Lonos.Build</RootNamespace>
     <AssemblyName>Lonos.Build</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

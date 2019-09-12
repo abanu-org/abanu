@@ -72,10 +72,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.FileSystem", "..\external\MOSA-Project\Source\Mosa.FileSystem\Mosa.FileSystem.csproj", "{D89972FD-A930-4D0C-B393-1895E78FAFAB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ressources", "Ressources", "{647B8ECC-00EC-4009-9474-C9EF11A28C84}"
+	ProjectSection(SolutionItems) = preProject
+		ressources\SharedProjectSettings.targets = ressources\SharedProjectSettings.targets
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeAnalysis", "CodeAnalysis", "{5F860C8B-0B23-4EB9-9B82-17EFCE7A57B7}"
 	ProjectSection(SolutionItems) = preProject
 		ressources\codeanalysis\default.ruleset = ressources\codeanalysis\default.ruleset
+		ressources\codeanalysis\stylecop.json = ressources\codeanalysis\stylecop.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Core.x86", "Lonos.Kernel.Core.x86\Lonos.Kernel.Core.x86.csproj", "{F410CB2C-A859-4226-BCD2-6361BD3F57EB}"
@@ -108,6 +112,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A72ED046-DE1C-4688-981B-6086C091047F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A72ED046-DE1C-4688-981B-6086C091047F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A72ED046-DE1C-4688-981B-6086C091047F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -212,10 +220,6 @@ Global
 		{81D82425-CEC0-442F-BC5F-B07C606C2516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81D82425-CEC0-442F-BC5F-B07C606C2516}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81D82425-CEC0-442F-BC5F-B07C606C2516}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E13F871-FCC7-4C09-9BE7-469D5FEB1F78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E13F871-FCC7-4C09-9BE7-469D5FEB1F78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E13F871-FCC7-4C09-9BE7-469D5FEB1F78}.Release|Any CPU.ActiveCfg = Release|Any CPU
