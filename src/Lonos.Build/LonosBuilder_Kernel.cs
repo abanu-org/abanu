@@ -32,15 +32,6 @@ namespace Lonos.Build
 
             Options = new LauncherOptions()
             {
-                EnableSSA = true,
-                EnableIROptimizations = true,
-                EnableSparseConditionalConstantPropagation = true,
-                EnableInlinedMethods = true,
-                EnableLongExpansion = false, // see LonosBuilder_Loader
-                EnableValueNumbering = true,
-                TwoPassOptimizations = true,
-                //EnableBitTracker = true,
-
                 Emulator = EmulatorType.Bochs,
                 ImageFormat = ImageFormat.IMG,
                 //BootFormat = BootFormat.Multiboot_0_7,

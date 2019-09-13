@@ -32,15 +32,6 @@ namespace Lonos.Build
 
             Options = new LauncherOptions()
             {
-                EnableSSA = true,
-                EnableIROptimizations = true,
-                EnableSparseConditionalConstantPropagation = true,
-                EnableInlinedMethods = true,
-                EnableLongExpansion = false, // Compiler commit 2e23a85: If true, the loader is not able to display the section names
-                EnableValueNumbering = true,
-                TwoPassOptimizations = true,
-                //EnableBitTracker = true,
-
                 Emulator = EmulatorType.Bochs,
                 ImageFormat = ImageFormat.IMG,
                 //BootFormat = BootFormat.Multiboot_0_7,
@@ -72,6 +63,15 @@ namespace Lonos.Build
                 PlugKorlib = true,
                 HuntForCorLib = true,
             };
+
+				Options.EnableSSA = true;
+				Options.EnableIROptimizations = true;
+				Options.EnableSparseConditionalConstantPropagation = true;
+				Options.EnableInlinedMethods = true;
+				Options.EnableLongExpansion = false; // Compiler commit 2e23a85: If true, the loader is not able to display the section names
+				Options.EnableValueNumbering = true;
+				Options.TwoPassOptimizations = true;
+				//EnableBitTracker = true,
 
             Options.VBEVideo = true;
             Options.EmitAllSymbols = true;
