@@ -81,7 +81,7 @@ namespace Lonos.Build
             Options.EnableSSA = false;
             Options.EnableIROptimizations = false;
             Options.EnableSparseConditionalConstantPropagation = false;
-            Options.EnableInlinedMethods = true;
+            Options.EnableInlinedMethods = false;
             Options.EnableLongExpansion = false; // Compiler commit 2e23a85: If true, the loader is not able to display the section names
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
