@@ -110,7 +110,7 @@ namespace Lonos.Build
 
         private static CommandResult DebugQemu(CommandArgs args)
         {
-            Env.Set("DEBUG_INTERRUPTS", "");
+            Env.Set("DEBUG_INTERRUPTS", ",int");
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
