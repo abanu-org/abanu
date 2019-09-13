@@ -58,7 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildUtility.cs" />
+    <Compile Include="Env.cs" />
     <Compile Include="CommandArgument.cs" />
     <Compile Include="CommandArgs.cs" />
     <Compile Include="CommandExtensions.cs" />

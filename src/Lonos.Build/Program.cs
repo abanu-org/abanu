@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Mosa.Compiler.MosaTypeSystem;
 
@@ -15,7 +16,23 @@ namespace Lonos.Build
 
         private static void Main(string[] args)
         {
-            Verb(CommandArgs.FromCommandlineArguments(args));
+            if (args.Length == 0 && Debugger.IsAttached)
+            {
+                //Verb("build assembly");
+                Verb("build --native --bin=all");
+                Verb("build --image");
+                Verb("debug --emulator=qemu --boot=direct");
+            }
+            else
+            {
+                Verb(CommandArgs.FromCommandlineArguments(args));
+            }
+
+            if (Debugger.IsAttached)
+            {
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+            }
         }
 
         private static CommandResult Verb(CommandArgs args)
@@ -32,30 +49,75 @@ namespace Lonos.Build
 
         private static CommandResult Build(CommandArgs args)
         {
-            switch (args[0])
+            TryBuildNative(args);
+            TryBuildBin(args);
+            TryBuildImage(args);
+            return null;
+        }
+
+        private static CommandResult TryBuildNative(CommandArgs args)
+        {
+            if (args.ContainsFlag("native"))
             {
-                case "image":
-                    return BuildImage(args.Pop());
+                Directory.CreateDirectory(Env.Get("${LONOS_BINDIR}/x86"));
+                Exec("${nasm} -f elf32 ${LONOS_PROJDIR}/src/Lonos.Native.x86/DebugFunction1.s -o ${LONOS_BINDIR}/x86/Lonos.Native.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/EnableExecutionProtection.s -o ${LONOS_BINDIR}/x86/Lonos.EnableExecutionProtection.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/InterruptReturn.s -o ${LONOS_BINDIR}/x86/Lonos.InterruptReturn.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/LoadTaskRegister.s -o ${LONOS_BINDIR}/x86/Lonos.LoadTaskRegister.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/DebugFunction1.s -o ${LONOS_BINDIR}/x86/Lonos.DebugFunction1.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/App.HelloKernel.s -o ${LONOS_BINDIR}/x86/App.HelloKernel.o");
             }
+            return null;
+        }
+
+        private static CommandResult TryBuildBin(CommandArgs args)
+        {
+            var possibleImages = new string[] { "all", "app", "app2", "service.basic", "app.shell", "loader", "kernel" };
+            var image = args.GetFlag("bin", possibleImages);
+            var images = image.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            if (image == "all")
+                images = possibleImages;
+            foreach (var img in images.Where(s => s != "all"))
+                BuildImage(img);
+            return null;
+        }
+
+        private static CommandResult TryBuildImage(CommandArgs args)
+        {
+            if (args.ContainsFlag("image"))
+                BuildImage("image");
             return null;
         }
 
         private static CommandResult Debug(CommandArgs args)
         {
-            if (args.ContainsFlag("emulator", "qemu"))
-                return DebugQemu(args);
+            switch (args.GetFlag("emulator", "qemu"))
+            {
+                case "qemu":
+                    return DebugQemu(args);
+
+            }
+            return null;
+        }
+
+        public static CommandResult Error(string message)
+        {
+            Console.WriteLine(message);
             return null;
         }
 
         private static CommandResult DebugQemu(CommandArgs args)
         {
-            var direct = args.ContainsFlag("boot", "direct");
-            if (direct)
-                Exec("${qemu} -kernel os/Lonos.OS.image.x86.bin");
+            switch (args.RequireFlag("boot", "direct"))
+            {
+                case "direct":
+                    return Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin");
+
+            }
             return null;
         }
 
-        private static Process Exec(CommandArgs args)
+        private static CommandResult Exec(CommandArgs args)
         {
             if (!args.IsSet())
                 return null;
@@ -72,12 +134,18 @@ namespace Lonos.Build
             start.RedirectStandardError = true;
             start.UseShellExecute = false;
 
-            var proc = Process.Start(start);
-            var data = proc.StandardOutput.ReadToEnd();
-            var error = proc.StandardError.ReadToEnd();
-            Console.WriteLine(data);
-            Console.WriteLine(error);
-            return proc;
+            Console.WriteLine(fileName + " " + arguments);
+
+            using (var proc = Process.Start(start))
+            {
+                var data = proc.StandardOutput.ReadToEnd();
+                var error = proc.StandardError.ReadToEnd();
+                Console.WriteLine(data);
+                Console.WriteLine(error);
+                proc.WaitForExit();
+            }
+
+            return null;
         }
 
         private static CommandResult BuildImage(CommandArgs args)
@@ -87,42 +155,42 @@ namespace Lonos.Build
             string file;
             if (args[0] == "loader")
             {
-                file = BuildUtility.GetEnv("LONOS_BOOTLOADER_EXE");
+                file = Env.Get("LONOS_BOOTLOADER_EXE");
 
                 var builderBoot = new LonosBuilder_Loader(file);
                 builderBoot.Build();
             }
             else if (args[0] == "kernel")
             {
-                file = BuildUtility.GetEnv("LONOS_EXE");
+                file = Env.Get("LONOS_EXE");
 
                 var builder = new LonosBuilder_Kernel(file);
                 builder.Build();
             }
             else if (args[0] == "app")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.HelloKernel.exe");
+                file = Env.Get("${LONOS_PROJDIR}/bin/App.HelloKernel.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
             else if (args[0] == "app2")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.HelloService.exe");
+                file = Env.Get("${LONOS_PROJDIR}/bin/App.HelloService.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
             else if (args[0] == "service.basic")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/Lonos.Service.Basic.exe");
+                file = Env.Get("${LONOS_PROJDIR}/bin/Lonos.Service.Basic.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
             }
             else if (args[0] == "app.shell")
             {
-                file = BuildUtility.GetEnv("${LONOS_PROJDIR}/bin/App.Shell.exe");
+                file = Env.Get("${LONOS_PROJDIR}/bin/App.Shell.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();
@@ -139,8 +207,8 @@ namespace Lonos.Build
 
         public static void LinkImages()
         {
-            var loaderFile = BuildUtility.GetEnv("${LONOS_OSDIR}/Lonos.OS.Loader.x86.bin");
-            var kernelFile = BuildUtility.GetEnv("${LONOS_OSDIR}/Lonos.OS.Core.x86.bin");
+            var loaderFile = Env.Get("${LONOS_OSDIR}/Lonos.OS.Loader.x86.bin");
+            var kernelFile = Env.Get("${LONOS_OSDIR}/Lonos.OS.Core.x86.bin");
 
             var kernelBytes = File.ReadAllBytes(kernelFile);
 
@@ -186,7 +254,7 @@ namespace Lonos.Build
                     writer.Write(memSize);
 
                     var bytes = ms.ToArray();
-                    var outFile = Path.Combine(BuildUtility.GetEnv("LONOS_OSDIR"), "Lonos.OS.image.x86.bin");
+                    var outFile = Path.Combine(Env.Get("LONOS_OSDIR"), "Lonos.OS.image.x86.bin");
                     File.WriteAllBytes(outFile, bytes);
                 }
             }

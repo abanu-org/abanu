@@ -103,7 +103,27 @@ namespace Lonos.Build
 
         public bool ContainsAny(params string[] value) => Values.Any(v => value.Contains(v.ToString()));
 
+        public bool ContainsFlag(string name) => Contains($"--{name}");
+
         public bool ContainsFlag(string name, string value) => ContainsAny($"--{name}={value}", $"--{value}");
+
+        public string GetFlag(string name, params string[] values)
+        {
+            foreach (var value in values)
+                if (ContainsFlag(name, value))
+                    return value;
+            if (Contains($"--{name}"))
+                Console.WriteLine($"Warning: Unknown value for attribute '{name}'");
+            return "";
+        }
+
+        public string RequireFlag(string name, params string[] values)
+        {
+            var flag = GetFlag(name, values);
+            if (string.IsNullOrEmpty(flag))
+                Console.WriteLine($"Warning: Missing attribute {name} with one of the following values: {string.Join(", ", values)}");
+            return flag;
+        }
 
     }
 

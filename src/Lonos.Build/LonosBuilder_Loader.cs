@@ -28,19 +28,10 @@ namespace Lonos.Build
 
         public override void Configure()
         {
-            InputAssembly = BuildUtility.GetEnv("LONOS_BOOTLOADER_EXE");
+            InputAssembly = Env.Get("LONOS_BOOTLOADER_EXE");
 
             Options = new LauncherOptions()
             {
-                EnableSSA = true,
-                EnableIROptimizations = true,
-                EnableSparseConditionalConstantPropagation = true,
-                EnableInlinedMethods = true,
-                EnableLongExpansion = false, // Compiler commit 2e23a85: If true, the loader is not able to display the section names
-                EnableValueNumbering = true,
-                TwoPassOptimizations = true,
-                //EnableBitTracker = true,
-
                 Emulator = EmulatorType.Bochs,
                 ImageFormat = ImageFormat.IMG,
                 //BootFormat = BootFormat.Multiboot_0_7,
@@ -48,7 +39,7 @@ namespace Lonos.Build
                 PlatformType = PlatformType.x86,
                 LinkerFormatType = LinkerFormatType.Elf32,
                 EmulatorMemoryInMB = 128,
-                DestinationDirectory = BuildUtility.GetEnv("LONOS_OSDIR"),
+                DestinationDirectory = Env.Get("LONOS_OSDIR"),
                 FileSystem = FileSystem.FAT16,
 
                 //UseMultiThreadingCompiler = false,
@@ -73,6 +64,16 @@ namespace Lonos.Build
                 HuntForCorLib = true,
             };
 
+            Options.EnableSSA = true;
+            Options.EnableIROptimizations = true;
+            Options.EnableSparseConditionalConstantPropagation = true;
+            Options.EnableInlinedMethods = true;
+            Options.EnableLongExpansion = false; // Compiler commit 2e23a85: If true, the loader is not able to display the section names
+            Options.EnableValueNumbering = true;
+            Options.TwoPassOptimizations = true;
+            Options.EnableBitTracker = false;
+            Options.EnableMethodScanner = false;
+
             Options.VBEVideo = true;
             Options.EmitAllSymbols = true;
             //Options.EnableMethodScanner = true;
@@ -90,7 +91,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(BuildUtility.GetEnv("LONOS_NATIVE_FILES"));
+                            var data = File.ReadAllBytes(Env.Get("LONOS_NATIVE_FILES"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         },

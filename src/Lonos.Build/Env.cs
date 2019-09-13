@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace Lonos.Build
 {
-    public static class BuildUtility
+    public static class Env
     {
-        public static string GetEnv(string name)
+        public static string Get(string name)
         {
             var value = Environment.GetEnvironmentVariable(name);
             if (string.IsNullOrEmpty(value))
@@ -18,6 +18,9 @@ namespace Lonos.Build
                 {
                     case "LONOS_PROJDIR":
                         value = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(typeof(Program).Assembly.Location).AbsolutePath));
+                        break;
+                    case "LONOS_BINDIR":
+                        value = "${LONOS_PROJDIR}/bin";
                         break;
                     case "LONOS_OSDIR":
                         value = "${LONOS_PROJDIR}/os";
@@ -49,6 +52,9 @@ namespace Lonos.Build
                     case "qemu":
                         value = "${MOSA_TOOLSDIR}/qemu/qemu-system-x86_64.exe";
                         break;
+                    case "nasm":
+                        value = "${MOSA_TOOLSDIR}/nasm/nasm.exe";
+                        break;
                 }
             }
 
@@ -59,7 +65,7 @@ namespace Lonos.Build
 
             if (!string.IsNullOrEmpty(value))
                 foreach (Match m in regex.Matches(value))
-                    value = value.Replace(m.Value, GetEnv(m.Groups[1].Value));
+                    value = value.Replace(m.Value, Get(m.Groups[1].Value));
             return value;
         }
     }

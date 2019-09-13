@@ -22,14 +22,14 @@ namespace Lonos.Build
         {
             if (string.IsNullOrEmpty(str))
                 return "";
-            return BuildUtility.GetEnv(str);
+            return Env.Get(str);
         }
 
         public static string GetEnv(this CommandArgument arg)
         {
             if (!arg.IsSet())
                 return "";
-            return BuildUtility.GetEnv(arg);
+            return Env.Get(arg);
         }
 
         public static CommandArgs GetEnv(this CommandArgs args)

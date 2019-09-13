@@ -28,19 +28,10 @@ namespace Lonos.Build
 
         public override void Configure()
         {
-            InputAssembly = BuildUtility.GetEnv("LONOS_EXE");
+            InputAssembly = Env.Get("LONOS_EXE");
 
             Options = new LauncherOptions()
             {
-                EnableSSA = true,
-                EnableIROptimizations = true,
-                EnableSparseConditionalConstantPropagation = true,
-                EnableInlinedMethods = true,
-                EnableLongExpansion = false, // see LonosBuilder_Loader
-                EnableValueNumbering = true,
-                TwoPassOptimizations = true,
-                //EnableBitTracker = true,
-
                 Emulator = EmulatorType.Bochs,
                 ImageFormat = ImageFormat.IMG,
                 //BootFormat = BootFormat.Multiboot_0_7,
@@ -48,7 +39,7 @@ namespace Lonos.Build
                 PlatformType = PlatformType.x86,
                 LinkerFormatType = LinkerFormatType.Elf32,
                 EmulatorMemoryInMB = 128,
-                DestinationDirectory = BuildUtility.GetEnv("LONOS_OSDIR"),
+                DestinationDirectory = Env.Get("LONOS_OSDIR"),
                 FileSystem = FileSystem.FAT16,
 
                 //UseMultiThreadingCompiler = false,
@@ -92,11 +83,12 @@ namespace Lonos.Build
             Options.EnableSSA = false;
             Options.EnableIROptimizations = false;
             Options.EnableSparseConditionalConstantPropagation = false;
-            Options.EnableInlinedMethods = false;
+            Options.EnableInlinedMethods = true;
             Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
-            //Options.EnableMethodScanner = true;
+            Options.EnableBitTracker = false;
+            Options.EnableMethodScanner = false;
 
             //Options.VBEVideo = true;
 
@@ -114,7 +106,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(BuildUtility.GetEnv("LONOS_NATIVE_FILES"));
+                            var data = File.ReadAllBytes(Env.Get("LONOS_NATIVE_FILES"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         },
@@ -126,7 +118,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "tools", "consolefonts", "Uni2-Terminus14.psf"));
+                            var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "tools", "consolefonts", "Uni2-Terminus14.psf"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         },
@@ -138,7 +130,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "tools", "consolefonts", "Uni2-TerminusBold14.psf"));
+                            var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "tools", "consolefonts", "Uni2-TerminusBold14.psf"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         },
@@ -150,7 +142,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "os", "App.HelloKernel.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "os", "App.HelloKernel.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         },
@@ -162,7 +154,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "os", "App.HelloService.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "os", "App.HelloService.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         },
@@ -174,7 +166,7 @@ namespace Lonos.Build
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(BuildUtility.GetEnv("LONOS_PROJDIR"), "os", "Lonos.Service.Basic.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "os", "Lonos.Service.Basic.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         },
