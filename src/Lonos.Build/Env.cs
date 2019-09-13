@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -9,10 +10,19 @@ namespace Lonos.Build
 {
     public static class Env
     {
+
+        public static void Set(string name, string value)
+        {
+            Vars.Remove(name);
+            Vars.Add(name, value);
+        }
+
+        private static Dictionary<string, string> Vars = new Dictionary<string, string>();
+
         public static string Get(string name)
         {
             var value = Environment.GetEnvironmentVariable(name);
-            if (string.IsNullOrEmpty(value))
+            if (value == null)
             {
                 switch (name)
                 {
@@ -56,14 +66,17 @@ namespace Lonos.Build
                         value = "${MOSA_TOOLSDIR}/nasm/nasm.exe";
                         break;
                 }
+
+                if (Vars.ContainsKey(name))
+                    value = Vars[name];
             }
 
             var regex = new Regex(@"\$\{(\w+)\}", RegexOptions.RightToLeft);
 
-            if (string.IsNullOrEmpty(value))
+            if (value == null)
                 value = name;
 
-            if (!string.IsNullOrEmpty(value))
+            if (value != null)
                 foreach (Match m in regex.Matches(value))
                     value = value.Replace(m.Value, Get(m.Groups[1].Value));
             return value;

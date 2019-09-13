@@ -16,6 +16,8 @@ namespace Lonos.Build
 
         private static void Main(string[] args)
         {
+            Directory.CreateDirectory(Env.Get("${LONOS_LOGDIR}"));
+
             if (args.Length == 0 && Debugger.IsAttached)
             {
                 //Verb("build assembly");
@@ -108,10 +110,11 @@ namespace Lonos.Build
 
         private static CommandResult DebugQemu(CommandArgs args)
         {
+            Env.Set("DEBUG_INTERRUPTS", "");
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    return Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin");
+                    return Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log");
 
             }
             return null;
