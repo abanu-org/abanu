@@ -21,8 +21,8 @@ namespace Lonos.Build
             if (args.Length == 0 && Debugger.IsAttached)
             {
                 //Verb("build assembly");
-                Verb("build --native --bin=all");
-                Verb("build --image");
+                //Verb("build --native --bin=all");
+                //Verb("build --image");
                 Verb("debug --emulator=qemu --boot=direct");
             }
             else
@@ -114,13 +114,31 @@ namespace Lonos.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    return Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log");
-
+                    var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log");
+                    qemu.WaitForIdle();
+                    var gdb = ExecAsync("${gdb}");
+                    gdb.WaitForExit();
+                    break;
             }
             return null;
         }
 
-        private static CommandResult Exec(CommandArgs args)
+        private static ProcessResult Exec(CommandArgs args)
+        {
+            using (var result = ExecAsync(args, true))
+            {
+                result.WaitForExit();
+                result?.Dispose();
+                return result;
+            }
+        }
+
+        private static ProcessResult ExecAsync(CommandArgs args)
+        {
+            return ExecAsync(args, false);
+        }
+
+        private static ProcessResult ExecAsync(CommandArgs args, bool redirect)
         {
             if (!args.IsSet())
                 return null;
@@ -133,22 +151,25 @@ namespace Lonos.Build
             if (arguments.Length > 0)
                 start.Arguments = arguments;
 
-            start.RedirectStandardOutput = true;
-            start.RedirectStandardError = true;
-            start.UseShellExecute = false;
+            if (redirect)
+            {
+                start.RedirectStandardOutput = true;
+                start.RedirectStandardError = true;
+                start.UseShellExecute = false;
+            }
 
             Console.WriteLine(fileName + " " + arguments);
 
-            using (var proc = Process.Start(start))
+            var proc = Process.Start(start);
+            if (redirect)
             {
                 var data = proc.StandardOutput.ReadToEnd();
                 var error = proc.StandardError.ReadToEnd();
                 Console.WriteLine(data);
                 Console.WriteLine(error);
-                proc.WaitForExit();
             }
 
-            return null;
+            return new ProcessResult(proc);
         }
 
         private static CommandResult BuildImage(CommandArgs args)

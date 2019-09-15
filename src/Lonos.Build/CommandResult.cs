@@ -3,6 +3,7 @@
 
 namespace Lonos.Build
 {
+
     public class CommandResult
     {
     }

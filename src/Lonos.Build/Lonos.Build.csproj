@@ -66,6 +66,7 @@
     <Compile Include="LonosBuilder.cs" />
     <Compile Include="LonosBuilder_App.cs" />
     <Compile Include="LonosBuilder_Kernel.cs" />
+    <Compile Include="ProcessResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="LonosBuilder_Loader.cs" />
   </ItemGroup>

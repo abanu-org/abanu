@@ -37,6 +37,9 @@ namespace Lonos.Build
             return new CommandArgs(args.Select(arg => new CommandArgument(arg.GetEnv())).ToArray());
         }
 
+        public static void WaitForIdle(this ProcessResult result) => result?.Process?.WaitForInputIdle();
+        public static void WaitForExit(this ProcessResult result) => result?.Process?.WaitForExit();
+
     }
 
 }
