@@ -80,8 +80,8 @@ namespace Lonos.Build
             //Options.Emitx86IRQMethods = true;
             Options.EmitAllSymbols = true;
 
-            Options.EnableSSA = true;
-            Options.EnableIROptimizations = true;
+            Options.EnableSSA = false;
+            Options.EnableIROptimizations = false;
             Options.EnableSparseConditionalConstantPropagation = false;
             Options.EnableInlinedMethods = false;
             Options.EnableLongExpansion = false;
