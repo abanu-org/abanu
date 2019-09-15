@@ -62,6 +62,9 @@ namespace Lonos.Build
                     case "qemu":
                         value = "${MOSA_TOOLSDIR}/qemu/qemu-system-x86_64.exe";
                         break;
+                    case "gdb":
+                        value = @"gdb.exe";
+                        break;
                     case "nasm":
                         value = "${MOSA_TOOLSDIR}/nasm/nasm.exe";
                         break;
