@@ -11,6 +11,13 @@ namespace Lonos.Runtime
     public static class ApplicationRuntime
     {
 
+        internal static void DummyReference()
+        {
+            var t = typeof(Mosa.Runtime.GC);
+            var t2 = typeof(Mosa.Plug.Korlib.System.Threading.x86.InterlockedPlug);
+            var t3 = typeof(Mosa.Runtime.x86.Internal);
+        }
+
         public static void Init()
         {
             initialMemoryNextAddr = SysCalls.RequestMemory(3 * 1024 * 1024);

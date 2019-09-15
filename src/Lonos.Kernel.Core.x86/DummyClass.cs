@@ -16,6 +16,9 @@ namespace Lonos.Kernel.Core.x86
         public static void DummyCall()
         {
             Core.DummyClass.DummyCall();
+            var t = typeof(Mosa.Runtime.GC);
+            var t2 = typeof(Mosa.Plug.Korlib.System.Threading.x86.InterlockedPlug);
+            var t3 = typeof(Mosa.Runtime.x86.Internal);
         }
     }
 }

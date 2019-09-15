@@ -41,6 +41,10 @@
       <Project>{028bc31c-2edc-492e-90a3-3714e38ce2cf}</Project>
       <Name>Mosa.Plug.Korlib.x86</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
+      <Project>{a47b7998-4ee8-4af8-9373-c664fdeddc65}</Project>
+      <Name>Mosa.Runtime.x86</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>

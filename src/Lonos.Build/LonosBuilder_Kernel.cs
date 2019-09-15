@@ -76,12 +76,12 @@ namespace Lonos.Build
             Options.GenerateMapFile = true;
             Options.GenerateDebugFile = true;
             //Options.EmitRelocations = true;
-            //Options.EmitSymbols = true; // Kernel Loader needs to resolve Adress of Start Method
+            //Options.EmitSymbols = true; // Kernel Loader needs to resolve address of Start Method
             //Options.Emitx86IRQMethods = true;
             Options.EmitAllSymbols = true;
 
-            Options.EnableSSA = false;
-            Options.EnableIROptimizations = false;
+            Options.EnableSSA = true;
+            Options.EnableIROptimizations = true;
             Options.EnableSparseConditionalConstantPropagation = false;
             Options.EnableInlinedMethods = false;
             Options.EnableLongExpansion = false;
@@ -179,7 +179,7 @@ namespace Lonos.Build
                         Size = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            sect = section; //TODO: Could set outsite
+                            sect = section; //TODO: Could set outside
                             writer.Write(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
                             section.Size = 0x1000;
                         },
