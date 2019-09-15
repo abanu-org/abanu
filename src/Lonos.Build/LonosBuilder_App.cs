@@ -78,14 +78,18 @@ namespace Lonos.Build
             //Options.Emitx86IRQMethods = true;
             Options.EmitAllSymbols = true;
 
-            Options.EnableSSA = true;
-            Options.EnableIROptimizations = true;
+            Options.EnableBitTracker = true;
+            Options.EnableSSA = false;
+            Options.EnableIROptimizations = false;
+            //Options.EnableBitTracker = false;
+            //Options.EnableSSA = true;
+            //Options.EnableIROptimizations = true;
+
             Options.EnableSparseConditionalConstantPropagation = false;
             Options.EnableInlinedMethods = false;
             Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
-            Options.EnableBitTracker = false;
             //Options.EnableMethodScanner = true;
 
             //Options.VBEVideo = true;
