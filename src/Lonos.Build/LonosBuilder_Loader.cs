@@ -64,14 +64,14 @@ namespace Lonos.Build
                 HuntForCorLib = true,
             };
 
-				Options.EnableSSA = true;
-				Options.EnableIROptimizations = true;
-				Options.EnableSparseConditionalConstantPropagation = true;
-				Options.EnableInlinedMethods = true;
-				Options.EnableLongExpansion = false; // Compiler commit 2e23a85: If true, the loader is not able to display the section names
-				Options.EnableValueNumbering = true;
-				Options.TwoPassOptimizations = true;
-				//EnableBitTracker = true,
+            Options.EnableSSA = true;
+            Options.EnableIROptimizations = true;
+            Options.EnableSparseConditionalConstantPropagation = true;
+            Options.EnableInlinedMethods = true;
+            Options.EnableLongExpansion = false; // Compiler commit 2e23a85: If true, the loader is not able to display the section names
+            Options.EnableValueNumbering = true;
+            Options.TwoPassOptimizations = true;
+            //EnableBitTracker = true,
 
             Options.VBEVideo = true;
             Options.EmitAllSymbols = true;
