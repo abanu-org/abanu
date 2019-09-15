@@ -71,6 +71,7 @@ namespace Lonos.Build
             Options.EnableLongExpansion = false; // Compiler commit 2e23a85: If true, the loader is not able to display the section names
             Options.EnableValueNumbering = true;
             Options.TwoPassOptimizations = true;
+            Options.EnableBitTracker = false;
             //EnableBitTracker = true,
 
             Options.VBEVideo = true;
