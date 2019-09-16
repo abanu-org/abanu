@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Mosa.Compiler.MosaTypeSystem;
 
 namespace Lonos.Build
@@ -23,7 +24,7 @@ namespace Lonos.Build
                 //Verb("build assembly");
                 //Verb("build --native --bin=all");
                 //Verb("build --image");
-                Verb("debug --emulator=qemu --boot=direct");
+                Verb("run --emulator=qemu --boot=direct");
             }
             else
             {
@@ -43,6 +44,8 @@ namespace Lonos.Build
             {
                 case "build":
                     return Build(args.Pop());
+                case "run":
+                    return Run(args.Pop());
                 case "debug":
                     return Debug(args.Pop());
             }
@@ -102,6 +105,17 @@ namespace Lonos.Build
             return null;
         }
 
+        private static CommandResult Run(CommandArgs args)
+        {
+            switch (args.GetFlag("emulator", "qemu"))
+            {
+                case "qemu":
+                    return RunQemu(args);
+
+            }
+            return null;
+        }
+
         public static CommandResult Error(string message)
         {
             Console.WriteLine(message);
@@ -114,10 +128,22 @@ namespace Lonos.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log");
-                    qemu.WaitForIdle();
-                    var gdb = ExecAsync("${gdb}");
+                    var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -s -S");
+                    Thread.Sleep(500);
+                    var gdb = ExecAsync("${gdb}", false);
                     gdb.WaitForExit();
+                    break;
+            }
+            return null;
+        }
+
+        private static CommandResult RunQemu(CommandArgs args)
+        {
+            Env.Set("DEBUG_INTERRUPTS", ",int");
+            switch (args.RequireFlag("boot", "direct"))
+            {
+                case "direct":
+                    Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log");
                     break;
             }
             return null;
