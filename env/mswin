@@ -1,0 +1,15 @@
+#!/bin/bash
+
+export LONOS_PROJDIR=$(
+cd $(dirname "$BASH_SOURCE")
+cd .. 
+echo $(cmd.exe /C echo %CD%)
+)
+
+nuget="cmd.exe /C external\\MOSA-Project\\Tools\\nuget\\nuget.exe"
+
+PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin:$PATH
+msbuild=MSBuild.exe
+LONOS_BUILD="cmd.exe /C lonos.build.exe"
+
+source $(dirname "$BASH_SOURCE")/shared 

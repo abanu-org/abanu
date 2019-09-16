@@ -1,19 +1,15 @@
 #!/bin/bash
 
 cd $(dirname $0)
-source env/default
 
-set -x
+function loadenv {
+	source env/$1
+}
+loadenv auto
+
+#set -x
 
 rm -f os/*.lock
-
-nuget="mono ${LONOS_PROJDIR}/external/MOSA-Project/Tools/nuget/nuget.exe"
-nuget="cmd.exe /C external\\MOSA-Project\\Tools\\nuget\\nuget.exe"
-msbuild=msbuild
-#msbuild="/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe"
-#msbuild='cmd.exe /C "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"'
-PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin:$PATH
-msbuild=MSBuild.exe
 
 function configure {
 	case $1 in
@@ -162,7 +158,7 @@ function build {
 			;;
 
 		builder)
-			(cd src && "${msbuild}" Lonos.Build.sln /p:Configuration=Release)
+			(cd src && ${msbuild} Lonos.Build.sln /p:Configuration=Release)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/dnlib.* bin
@@ -178,26 +174,26 @@ function build {
 			;;
 
 		app)
-			(cd bin && mono -O=all ./Lonos.Build.exe --image=app)
+			(cd bin && $LONOS_BUILD build --bin=app)
 			;;
 		app2)
-			(cd bin && mono -O=all ./Lonos.Build.exe --image=app2)
+			(cd bin && $LONOS_BUILD build --bin=app2)
 			;;
 
 		app.shell)
-			(cd bin && mono -O=all ./Lonos.Build.exe --image=app.shell)
+			(cd bin && $LONOS_BUILD build --bin=app.shell)
 			;;
 
 		service.basic)
-			(cd bin && mono -O=all ./Lonos.Build.exe --image=service.basic)
+			(cd bin && $LONOS_BUILD build --bin=service.basic)
 			;;
 
 		loader)
-			(cd bin && mono -O=all ./Lonos.Build.exe --image=loader)
+			(cd bin && $LONOS_BUILD build --bin=loader)
 			;;
 
 		kernel)
-			(cd bin && mono -O=all ./Lonos.Build.exe --image=kernel)
+			(cd bin && $LONOS_BUILD build --bin=kernel)
 			;;
 
 		loader,kernel)
@@ -236,6 +232,7 @@ function run {
 }
 
 function debug {
+	loadenv unix
 	case $1 in
 		qemu-kernel)
 			gdb -x conf/gdb-qemu-kernel
@@ -271,10 +268,11 @@ function debug {
 			echo $"Usage: lonosctl run {qemu-kernel|qemu-grub-hybrid}"
 			exit 1
 	esac
+	loadenv auto
 }
 
 function _image {
-	(cd bin && mono -O=all ./Lonos.Build.exe --image=image)
+	(cd bin && ${LONOS_BUILD} build --image)
 }
 
 function _disk {
@@ -313,6 +311,7 @@ function _bochs {
 }
 
 function _qemu {
+	loadenv unix
 	disk=${LONOS_OSDIR}/Lonos.OS.Core.x86.img
 
 	case $1 in
@@ -363,6 +362,8 @@ function _qemu {
 
 	echo ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
 	     ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+
+	loadenv auto
 }
 
 #function create_chroot {
@@ -375,6 +376,7 @@ function _qemu {
 #}
 
 function create_efi_disk {
+	loadenv unix
 	disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-efi.disk.img
 	size=40880 #kb
 	let "block=((size * 1024) / (512 * 16 * 16)) - 1"
@@ -387,9 +389,11 @@ function create_efi_disk {
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/NvVars ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/.disk ::/
 	mcopy -i $disk -s $LONOS_OSDIR/Lonos.OS.image.x86.bin ::/lonos.bin
+	loadenv auto
 }
 
 function create_grub_hybrid_disk {
+	loadenv unix
 	disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-grub-hybrid.disk.img
 	isodir=$LONOS_PROJDIR/tmp/iso-grub-hybrid
 	mkdir -p $isodir;
@@ -397,6 +401,7 @@ function create_grub_hybrid_disk {
 	mkdir -p $isodir/boot/grub
 	cp $LONOS_TOOLSDIR/grub-efi-x86/boot/grub/grub.cfg $isodir/boot/grub
 	grub-mkrescue -o $disk $isodir
+	loadenv auto
 }
 
 function logs {

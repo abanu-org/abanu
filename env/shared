@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo detected $LONOS_PROJDIR
+
+export LONOS_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Core.x86.exe
+export LONOS_BOOTLOADER_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Loader.x86.exe
+export LONOS_OSDIR=${LONOS_PROJDIR}/os
+export LONOS_NATIVE_FILES=${LONOS_PROJDIR}/bin/x86/Lonos.Native.o
+export LONOS_LOGDIR=${LONOS_PROJDIR}/logs
+export LONOS_TMPDIR=${LONOS_PROJDIR}/tmp
+export LONOS_ISODIR=${LONOS_TMPDIR}/iso
+export LONOS_TOOLSDIR=${LONOS_PROJDIR}/tools
+
+#export chroot_dir=${LONOS_PROJDIR}/chroot
+#export alpine_mirror=http://mirror.clarkson.edu/alpine/
+#export alpine_version=3.8
+
+mkdir -p $LONOS_OSDIR
+mkdir -p $LONOS_LOGDIR
+mkdir -p $LONOS_TMPDIR
+mkdir -p $LONOS_ISODIR

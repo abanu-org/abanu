@@ -1,0 +1,13 @@
+#!/bin/bash
+
+export LONOS_PROJDIR=$(
+cd $(dirname "$BASH_SOURCE")
+cd .. 
+pwd
+)
+
+nuget="mono ${LONOS_PROJDIR}/external/MOSA-Project/Tools/nuget/nuget.exe"
+msbuild=msbuild
+LONOS_BUILD="mono -O=all lonos.build.exe"
+
+source $(dirname "$BASH_SOURCE")/shared 

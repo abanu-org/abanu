@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if grep -q Microsoft /proc/version; then
+	echo "Detected Windows"
+	source $(dirname "$BASH_SOURCE")/mswin
+else
+  echo "Detected Native Linux"
+  source $(dirname "$BASH_SOURCE")/unix
+fi
