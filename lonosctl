@@ -3,7 +3,14 @@
 cd $(dirname $0)
 source env/default
 
+set -x
+
 rm -f os/*.lock
+
+nuget="mono ${LONOS_PROJDIR}/external/MOSA-Project/Tools/nuget/nuget.exe"
+nuget="cmd.exe /C external\\MOSA-Project\\Tools\\nuget\\nuget.exe"
+msbuild=msbuild
+msbuild="/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe"
 
 function configure {
 	case $1 in
@@ -26,11 +33,11 @@ function configure {
 		packages)
 			cd external/MOSA-Project/Source;
 			rm -rf packages
-			mono ../Tools/nuget/nuget.exe restore Mosa.Tool.Mosactl.sln
-			mono ../Tools/nuget/nuget.exe restore Mosa.sln
+			${nuget} restore Mosa.Tool.Mosactl.sln
+			${nuget} restore Mosa.sln
 			cd ../../..
-			mono external/MOSA-Project/Tools/nuget/nuget.exe restore src/Lonos.Build.sln
-			mono external/MOSA-Project/Tools/nuget/nuget.exe restore src/Lonos.Kernel.sln
+			${nuget} restore src/Lonos.Build.sln
+			${nuget} restore src/Lonos.Kernel.sln
 			;;
 
 		*)
