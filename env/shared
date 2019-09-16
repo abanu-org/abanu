@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo detected $LONOS_PROJDIR
+#echo detected $LONOS_PROJDIR
 
 export LONOS_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Core.x86.exe
 export LONOS_BOOTLOADER_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Loader.x86.exe

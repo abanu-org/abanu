@@ -3,13 +3,18 @@
 export LONOS_PROJDIR=$(
 cd $(dirname "$BASH_SOURCE")
 cd .. 
-echo $(cmd.exe /C echo %CD%)
+echo $(cmd.exe /C "echo|set /p=%CD%")
 )
 
 nuget="cmd.exe /C external\\MOSA-Project\\Tools\\nuget\\nuget.exe"
 
 PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin:$PATH
+#PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Professional/MSBuild/Current/Bin:$PATH
+#PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Community/MSBuild/Current/Bin:$PATH
 msbuild=MSBuild.exe
 LONOS_BUILD="cmd.exe /C lonos.build.exe"
+
+QEMU_X86="cmd.exe /C ${LONOS_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-x86_64.exe"
+QEMU_X64="cmd.exe /C ${LONOS_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-x86_64.exe"
 
 source $(dirname "$BASH_SOURCE")/shared 
