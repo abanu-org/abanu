@@ -11,7 +11,9 @@ nuget="mono ${LONOS_PROJDIR}/external/MOSA-Project/Tools/nuget/nuget.exe"
 nuget="cmd.exe /C external\\MOSA-Project\\Tools\\nuget\\nuget.exe"
 msbuild=msbuild
 #msbuild="/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe"
-msbuild='cmd.exe /C "c:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"'
+#msbuild='cmd.exe /C "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"'
+PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin:$PATH
+msbuild=MSBuild.exe
 
 function configure {
 	case $1 in
@@ -160,7 +162,7 @@ function build {
 			;;
 
 		builder)
-			(cd src && ${msbuild} Lonos.Build.sln /p:Configuration=Release)
+			(cd src && "${msbuild}" Lonos.Build.sln /p:Configuration=Release)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/dnlib.* bin
