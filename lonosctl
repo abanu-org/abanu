@@ -160,7 +160,7 @@ function build {
 			;;
 
 		builder)
-			(cd src && msbuild Lonos.Build.sln /p:Configuration=Release)
+			(cd src && ${msbuild} Lonos.Build.sln /p:Configuration=Release)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/dnlib.* bin
@@ -168,7 +168,7 @@ function build {
 			;;
 
 		assembly)
-			(cd src && msbuild Lonos.Kernel.sln /p:Configuration=Debug)
+			(cd src && ${msbuild} Lonos.Kernel.sln /p:Configuration=Debug)
 			;;
 
 		native)
