@@ -10,7 +10,8 @@ rm -f os/*.lock
 nuget="mono ${LONOS_PROJDIR}/external/MOSA-Project/Tools/nuget/nuget.exe"
 nuget="cmd.exe /C external\\MOSA-Project\\Tools\\nuget\\nuget.exe"
 msbuild=msbuild
-msbuild="/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe"
+#msbuild="/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin/MSBuild.exe"
+msbuild='cmd.exe /C "c:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"'
 
 function configure {
 	case $1 in
