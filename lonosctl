@@ -5,6 +5,11 @@ cd $(dirname $0)
 function loadenv {
 	source env/$1
 }
+loadenv unix
+mkdir -p $LONOS_OSDIR
+mkdir -p $LONOS_LOGDIR
+mkdir -p $LONOS_TMPDIR
+mkdir -p $LONOS_ISODIR
 loadenv auto
 
 #set -x
@@ -232,10 +237,11 @@ function run {
 }
 
 function debug {
-	loadenv unix
+	loadenv auto
 	case $1 in
 		qemu-kernel)
-			gdb -x conf/gdb-qemu-kernel
+			gdb -x conf/gdb-load-symbols -nx -x conf/gdbinit -x conf/gdb-attach-unix -x conf/gdb-workspace
+			#gdb -x conf/gdb-load-symbols -x conf/gdb-attach-mswin -x conf/gdb-workspace
 			;;
 
 		qemu-kernel-run)
@@ -244,6 +250,7 @@ function debug {
 			#qemu_app=QEMU_X64
 			qemu_app=$QEMU_X86
 			#echo $qemu_app
+			#-gdb stdio
 			$qemu_app -kernel os/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log
 			;;
 

@@ -1,0 +1,18 @@
+# TODO: dashboard for windows needs pip install windows-curses!
+
+source external/gdb-dashboard/.gdbinit
+
+#######################
+# general configuration
+
+set history remove-duplicates unlimited
+set disassembly-flavor intel
+
+define hook-quit
+	kill
+    set confirm off
+end
+
+define hook-kill
+    set confirm off
+end

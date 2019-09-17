@@ -1,0 +1,34 @@
+b *0x0
+
+#hbreak Lonos.Kernel.Core.Start::Main()
+#hbreak Lonos.Kernel.Core.IDTManager::SetTableEntries()
+#hbreak src/Lonos.Kernel.Core/Start.cs:63
+#hbreak src/Lonos.Kernel.Core/KList.cs:45
+#b PageTableX64.cs:75
+#b PageTableX64.cs:109
+#b LoaderStart.cs:61
+
+#b LoaderStart.cs:82
+
+#b Lonos.Kernel.Core.IDTManager::IRQ32()
+b SysCallManager.cs:121
+b Thread.cs:68
+
+# Invalid TSS
+b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ10()
+
+# General Protection Exception
+b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ13()
+
+# Page Fault
+b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ14()
+
+#b *0xc010f128
+#watch *0x4506010
+#watch *0x4506014
+
+####################
+# continue debugging
+
+continue
+

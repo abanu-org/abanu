@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#echo detected $LONOS_PROJDIR
+echo detected $LONOS_PROJDIR
 
 export LONOS_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Core.x86.exe
 export LONOS_BOOTLOADER_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Loader.x86.exe
@@ -15,7 +15,3 @@ export LONOS_TOOLSDIR=${LONOS_PROJDIR}/tools
 #export alpine_mirror=http://mirror.clarkson.edu/alpine/
 #export alpine_version=3.8
 
-mkdir -p $LONOS_OSDIR
-mkdir -p $LONOS_LOGDIR
-mkdir -p $LONOS_TMPDIR
-mkdir -p $LONOS_ISODIR

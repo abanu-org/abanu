@@ -1,0 +1,1 @@
+target remote | ./lonosctl debug qemu-kernel-run
