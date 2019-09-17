@@ -5,6 +5,7 @@ cd $(dirname $0)
 function loadenv {
 	source env/$1
 }
+
 loadenv unix
 mkdir -p $LONOS_OSDIR
 mkdir -p $LONOS_LOGDIR
