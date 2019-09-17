@@ -16,5 +16,6 @@ LONOS_BUILD="cmd.exe /C lonos.build.exe"
 
 QEMU_X86="cmd.exe /C ${LONOS_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-i386.exe"
 QEMU_X64="cmd.exe /C ${LONOS_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-x86_64.exe"
+#QEMU_X86=$QEMU_X64
 
 source $(dirname "$BASH_SOURCE")/shared 

@@ -51,6 +51,7 @@ function configure {
 }
 
 function clean {
+	loadenv unix
 	case $1 in
 		all)
 			clean packages
@@ -85,6 +86,7 @@ function clean {
 			echo $"Usage: lonosctl clean {all|bin|os||logs|packages}"
 			exit 1
 	esac
+	loadenv auto
 }
 
 function reset {
