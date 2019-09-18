@@ -6,13 +6,20 @@ Lonos can be build plattform indepentent. However, we support
 primary an unix build environment. For Windows Users, we offer a 
 Step by Step guide.
 
+The Quick way
+-------------
+
+If you want only start run Lonos, just get the sources, open Lonos.sln in Visual Studio launch the default project. However, this is
+only a shortcut. If you want debug Lonos, you may need the following steps.
+
+
 Install the Windows Subsystem for Linux
 ---------------------------------------
 
 Before installing any Linux distros for WSL, you must ensure that the "Windows Subsystem for Linux" optional feature is enabled:
 
 1. Open PowerShell as Administrator and run:
-	
+
 .. code-block:: powershell
 
 	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
@@ -27,7 +34,12 @@ Populate the Debian System with Packages:
 
   wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
 
-This will take a while. After that, you have a fully featured build environment. To launch graphical applications like Geany or Qalculate, you need XLaunch. We can do this all via command line:
+This will take a while. After that, you have a fully featured build environment.
+
+Enabling Graphical Unix Applications
+------------------------------------
+
+To launch graphical applications like Geany or Qalculate, you need XLaunch. We can do this all via command line:
 
 In Windows, install the packetmanager `chocolatey <https://chocolatey.org>`__. Open a PowerShell with Administrator rights and run:
 
@@ -58,7 +70,7 @@ Download and build Lonos
 
   git clone --recursive https://github.com/lonos-project/lonos.git
   cd lonos 
-  ./lonosctl configure mosa
+  ./lonosctl configure packages
   ./lonosctl build all
 
 Now you can run lonos in qemu:
@@ -66,6 +78,3 @@ Now you can run lonos in qemu:
 .. code-block:: sh
 
    ./lonosctl debug qemu-kernel
-
-
-
