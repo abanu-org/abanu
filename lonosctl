@@ -248,6 +248,7 @@ function debug {
 			;;
 
 		qemu-kernel-run)
+			loadenv $QEMU_RUNTIME
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
 			#qemu_app=QEMU_X64

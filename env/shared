@@ -11,6 +11,11 @@ export LONOS_TMPDIR=${LONOS_PROJDIR}/tmp
 export LONOS_ISODIR=${LONOS_TMPDIR}/iso
 export LONOS_TOOLSDIR=${LONOS_PROJDIR}/tools
 
+source $(dirname "$BASH_SOURCE")/local
+if [ -f ~/.config/lonos/env ] ; then
+	source ~/.config/lonos/env
+fi
+
 #export chroot_dir=${LONOS_PROJDIR}/chroot
 #export alpine_mirror=http://mirror.clarkson.edu/alpine/
 #export alpine_version=3.8

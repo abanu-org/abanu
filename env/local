@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Local settings file. This file will not be commited in Git
+# Copy this file to ~/.config/lonos/env to keep the changes even after git clean.
+
+# Defines which version of qemu is used.
+# unix: launches the unix version of qemu. If using Winodws WSL, XLaunch needs to be started.
+# mswin: launches the Windows version of qemu.
+# auto: Automatic detection.
+#
+# The unix version is faster and has better integration.
+QEMU_RUNTIME=auto
