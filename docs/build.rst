@@ -1,6 +1,6 @@
-##############
-Building Lonos
-##############
+#########################
+Building Lonos on Windows
+#########################
 
 Lonos can be build plattform indepentent. However, we support
 primary an unix build environment. For Windows Users, we offer a 
@@ -62,6 +62,27 @@ Open the Debian app and finish the install instructions. Whem command prompt is 
   export DISPLAY=:0 && xfce4-terminal &
 
 Now you can run unix applications even with graphical user interface.
+
+Share project directory
+-----------------------
+
+Because Visual Studio cannot open projects via ``\\$wsl``, you have to place the files on the windows drive and link that folder to the WSL home folder.
+Run this commands in a WSL/Debian bash shell:
+
+.. code-block:: sh
+
+	# specify root folder for projects.
+	WINPROJDIR=$(cmd.exe /C "echo|set /p=%USERPROFILE%")/Documents/lonos-project
+	# normalize windows path
+	WINPROJDIR=$(wslpath -w $(wslpath -u $WINPROJDIR))
+	# create the windows project root
+	cmd.exe /C mkdir $WINPROJDIR
+	# create symbolic link
+	ln -s $(wslpath -u $WINPROJDIR) ~/
+	# Switch to new directory
+	cd ~/lonos-project
+
+Now ``/home/<user>/lonos-project`` and ``C:\Users\<user>\Documents\lonos-projects`` points to the same directory.
 
 Download and build Lonos
 ------------------------
