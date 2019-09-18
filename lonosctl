@@ -243,6 +243,7 @@ function debug {
 	loadenv auto
 	case $1 in
 		qemu-kernel)
+			#debug qemu-kernel-run
 			gdb -x conf/gdb-load-symbols -nx -x conf/gdbinit -x conf/gdb-attach-unix -x conf/gdb-workspace
 			#gdb -x conf/gdb-load-symbols -x conf/gdb-attach-mswin -x conf/gdb-workspace
 			;;
