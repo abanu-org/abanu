@@ -76,3 +76,6 @@ logs/
 
 # JetBrain Rider
 .idea/
+
+# nohup output files
+*.out

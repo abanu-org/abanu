@@ -243,20 +243,26 @@ function debug {
 	loadenv auto
 	case $1 in
 		qemu-kernel)
+			# TODO: Maybe this will never the case, but we should check if this is really our instance
+			pkill gdb
+			#trap '' SIGINT
+			#./lonosctl debug qemu-kernel-run &
 			#debug qemu-kernel-run
 			gdb -x conf/gdb-load-symbols -nx -x conf/gdbinit -x conf/gdb-attach-unix -x conf/gdb-workspace
 			#gdb -x conf/gdb-load-symbols -x conf/gdb-attach-mswin -x conf/gdb-workspace
 			;;
 
 		qemu-kernel-run)
-			loadenv $QEMU_RUNTIME
+			#loadenv $QEMU_RUNTIME
+			loadenv unix
+			#trap '' SIGINT
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
 			#qemu_app=QEMU_X64
 			qemu_app=$QEMU_X86
 			#echo $qemu_app
 			#-gdb stdio
-			$qemu_app -kernel os/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log
+			$qemu_app -kernel os/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -serial tcp::2244,server,nowait -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log
 			;;
 
 		qemu-grub-hybrid)
