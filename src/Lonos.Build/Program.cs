@@ -22,8 +22,8 @@ namespace Lonos.Build
             if (args.Length == 0 && Debugger.IsAttached)
             {
                 //Verb("build assembly");
-                //Verb("build --native --bin=all");
-                //Verb("build --image");
+                Verb("build --native --bin=all");
+                Verb("build --image");
                 Verb("run --emulator=qemu --boot=direct");
             }
             else
