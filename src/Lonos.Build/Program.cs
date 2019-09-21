@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using Mosa.Compiler.MosaTypeSystem;
 
-namespace Lonos.Build
+namespace Lonos.Tools.Build
 {
 
     internal static class Program

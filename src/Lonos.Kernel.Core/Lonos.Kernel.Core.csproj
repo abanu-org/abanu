@@ -41,6 +41,7 @@
     <Compile Include="Interrupts\IDT.cs" />
     <Compile Include="Interrupts\IDTTaskStack.cs" />
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
+    <Compile Include="MemoryManagement\KernelAllocator.cs" />
     <Compile Include="MemoryManagement\PageFrameManager.cs" />
     <Compile Include="MemoryManagement\PageTableExtensions.cs" />
     <Compile Include="Processes\Process.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
     <Compile Include="Boot\BootInfo.cs" />
     <Compile Include="MemoryManagement\PageFrameAllocator.cs" />
-    <Compile Include="MemoryManagement\Allocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMap.cs" />
     <Compile Include="Tests\buddy-malloc.cs" />
     <Compile Include="MemoryManagement\RawVirtualFrameAllocator.cs" />
@@ -110,6 +110,10 @@
     <ProjectReference Include="..\Lonos.Kernel.UnixApi\Lonos.Kernel.UnixApi.csproj">
       <Project>{1daf7d31-54dc-4b15-a14e-15206073c579}</Project>
       <Name>Lonos.Kernel.UnixApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lonos.Lib\Lonos.Lib.csproj">
+      <Project>{966282d0-fc83-45b1-a523-17343f7e63b6}</Project>
+      <Name>Lonos.Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lonos.Primitives\Lonos.Primitives.csproj">
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>

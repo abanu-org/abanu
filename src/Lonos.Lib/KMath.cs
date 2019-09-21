@@ -4,8 +4,9 @@
 using System;
 using Lonos.Kernel.Core;
 
-namespace Lonos.Kernel
+namespace Lonos
 {
+
     public static class KMath
     {
 

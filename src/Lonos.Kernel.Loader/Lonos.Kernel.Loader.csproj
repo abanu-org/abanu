@@ -67,6 +67,10 @@
       <Project>{2d21af60-8366-430a-9579-1b0ccd31910f}</Project>
       <Name>Lonos.Kernel.Lib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lonos.Lib\Lonos.Lib.csproj">
+      <Project>{966282d0-fc83-45b1-a523-17343f7e63b6}</Project>
+      <Name>Lonos.Lib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lonos.Primitives\Lonos.Primitives.csproj">
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
       <Name>Lonos.Primitives</Name>

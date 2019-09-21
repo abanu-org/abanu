@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1FD40B51-3A6F-41DC-83D3-3309CA059797}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Lonos.HostServer</RootNamespace>
-    <AssemblyName>Lonos.HostServer</AssemblyName>
+    <RootNamespace>Lonos.Tools.HostServer</RootNamespace>
+    <AssemblyName>Lonos.Tools.HostServer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -48,6 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lonos.Tools.Lib\Lonos.Tools.Lib.csproj">
+      <Project>{a085008f-a81a-4da4-859d-e2959ac82365}</Project>
+      <Name>Lonos.Tools.Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

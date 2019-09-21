@@ -3,7 +3,7 @@
 
 using Mosa.Runtime.x86;
 
-namespace Lonos.Kernel.Core
+namespace Lonos
 {
     /// <summary>
     /// Serial Controller

@@ -4,7 +4,6 @@
 using System;
 //using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
 using System.Runtime.InteropServices;
-using Lonos.Kernel.Core.Diagnostics;
 
 #pragma warning disable SA1649 // File name should match first type name
 #pragma warning disable SA1300 // Element should begin with upper-case letter
@@ -22,7 +21,7 @@ using size_t = System.UInt32;
 // Do not modify this Allocator very much
 // Future: Assign mmap-metod dynamicly.
 
-namespace Lonos.Kernel.Core.MemoryManagement
+namespace Lonos
 {
 
     public unsafe struct malloc_list
@@ -56,7 +55,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public malloc_data Data;
     }
 
-    public unsafe class Allocator
+    public unsafe abstract class Allocator
     {
 
 #if BITS_64
@@ -65,7 +64,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         private const byte sizofSize_t = 4;
 #endif
 
-        internal const size_t headSize = (PAGE_SHIFT - 1) * sizofSize_t;
+        public const size_t headSize = (PAGE_SHIFT - 1) * sizofSize_t;
 
         public const byte PAGE_SHIFT = 12;
         private const size_t PAGE_SIZE = 1 << PAGE_SHIFT;
@@ -115,10 +114,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //malloc_meta* list_heads[PAGE_SHIFT - 1];
         public malloc_meta** List_heads;
 
-        private static void malloc_abort(string msg)
-        {
-            Panic.Error(msg);
-        }
+        protected abstract void malloc_abort(string msg);
 
         private static size_t order(size_t l)
         {
@@ -239,7 +235,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return fusion(left_buddy, s);
         }
 
-        private static void* large_malloc(size_t size)
+        private void* large_malloc(size_t size)
         {
             void* ptr = mmap(0, PROT_READ | PROT_WRITE, 1 + ((size - 1) / PAGE_SIZE));
             if (ptr == MAP_FAILED)
@@ -435,21 +431,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
         }
 
-        private static void* mmap(uint unknown, uint flags, size_t pages)
-        {
-            var bytes = pages * 4096;
-            var ptr = (byte*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(pages);
-            //KernelMessage.WriteLine("mmap: Pages: {0}, Addr: {1:X8}", pages, (uint)ptr);
-            for (var i = 0; i < bytes; i++)
-                *(ptr + i) = 0;
+        protected abstract void* mmap(uint unknown, uint flags, size_t pages);
 
-            return ptr;
-        }
-
-        private static uint munmap(void* addr)
-        {
-            return 0;
-        }
+        protected abstract uint munmap(void* addr);
 
         private const uint PROT_READ = 0; //unknown
         private const uint PROT_WRITE = 0; //unknown

@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Lonos.Build
+namespace Lonos.Tools.Build
 {
 
     public class CommandArgs : IEnumerable<CommandArgument>

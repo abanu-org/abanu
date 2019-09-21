@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Lonos.Kernel.Core
+namespace Lonos
 {
     public delegate void ExceptionHandler(string message);
 

@@ -3,7 +3,7 @@
 
 using System.Linq;
 
-namespace Lonos.Build
+namespace Lonos.Tools.Build
 {
     public static class CommandExtensions
     {

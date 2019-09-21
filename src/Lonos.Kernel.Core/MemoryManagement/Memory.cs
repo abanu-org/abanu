@@ -14,7 +14,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static unsafe void Setup()
         {
-            kmallocAllocator = new Allocator();
+            kmallocAllocator = new KernelAllocator();
 
             var ptr = (byte*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(KMath.AlignValueCeil(Allocator.headSize, 4096));
             for (var i = 0; i < Allocator.headSize; i++)

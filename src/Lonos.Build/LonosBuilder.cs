@@ -18,7 +18,7 @@ using Mosa.Utility.Launcher;
 
 #pragma warning disable CA1033 // Interface methods should be callable by child types
 
-namespace Lonos.Build
+namespace Lonos.Tools.Build
 {
     public abstract class LonosBuilder : IBuilderEvent, IStarterEvent
     {

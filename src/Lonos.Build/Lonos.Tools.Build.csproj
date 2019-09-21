@@ -7,8 +7,8 @@
     <ProjectGuid>{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lonos.Build</RootNamespace>
-    <AssemblyName>Lonos.Build</AssemblyName>
+    <RootNamespace>Lonos.Tools.Build</RootNamespace>
+    <AssemblyName>Lonos.Tools.Build</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -58,7 +58,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Env.cs" />
     <Compile Include="CommandArgument.cs" />
     <Compile Include="CommandArgs.cs" />
     <Compile Include="CommandExtensions.cs" />
@@ -94,6 +93,10 @@
     <ProjectReference Include="..\Lonos.Kernel.Config\Lonos.Kernel.Config.csproj">
       <Project>{317e8c4b-089b-469b-8789-d76eb2f87504}</Project>
       <Name>Lonos.Kernel.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lonos.Tools.Lib\Lonos.Tools.Lib.csproj">
+      <Project>{a085008f-a81a-4da4-859d-e2959ac82365}</Project>
+      <Name>Lonos.Tools.Lib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />

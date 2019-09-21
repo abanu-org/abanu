@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Lonos.Build
+namespace Lonos.Tools.Build
 {
 
     public struct CommandArgument

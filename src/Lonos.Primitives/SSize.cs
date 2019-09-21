@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Versioning;
 
-namespace Lonos.Kernel.Core
+namespace Lonos
 {
     [Serializable]
     public struct SSize

@@ -16,7 +16,7 @@ using Mosa.Compiler.MosaTypeSystem;
 using Mosa.Utility.BootImage;
 using Mosa.Utility.Launcher;
 
-namespace Lonos.Build
+namespace Lonos.Tools.Build
 {
     public class LonosBuilder_Loader : LonosBuilder
     {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Build", "Lonos.Build\Lonos.Build.csproj", "{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Tools.Build", "Lonos.Tools.Build\Lonos.Tools.Build.csproj", "{1717C7EB-06ED-434B-BA3C-E46C9644EEDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Kernel.Core", "Lonos.Kernel.Core\Lonos.Kernel.Core.csproj", "{A72ED046-DE1C-4688-981B-6086C091047F}"
 EndProject
@@ -106,7 +106,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Platform.Intel", "..\e
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.ClassLib", "..\external\MOSA-Project\Source\Mosa.ClassLib\Mosa.ClassLib.csproj", "{27A3C89C-1967-45FF-A77E-94F44995C42C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.HostServer", "Lonos.HostServer\Lonos.HostServer.csproj", "{1FD40B51-3A6F-41DC-83D3-3309CA059797}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Tools.HostServer", "Lonos.Tools.HostServer\Lonos.Tools.HostServer.csproj", "{1FD40B51-3A6F-41DC-83D3-3309CA059797}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Lib", "Lonos.Lib\Lonos.Lib.csproj", "{966282D0-FC83-45B1-A523-17343F7E63B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lonos.Tools.Lib", "Lonos.Tools.Lib\Lonos.Tools.Lib.csproj", "{A085008F-A81A-4DA4-859D-E2959AC82365}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -266,6 +270,14 @@ Global
 		{1FD40B51-3A6F-41DC-83D3-3309CA059797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FD40B51-3A6F-41DC-83D3-3309CA059797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FD40B51-3A6F-41DC-83D3-3309CA059797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{966282D0-FC83-45B1-A523-17343F7E63B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{966282D0-FC83-45B1-A523-17343F7E63B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{966282D0-FC83-45B1-A523-17343F7E63B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{966282D0-FC83-45B1-A523-17343F7E63B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A085008F-A81A-4DA4-859D-E2959AC82365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A085008F-A81A-4DA4-859D-E2959AC82365}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A085008F-A81A-4DA4-859D-E2959AC82365}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A085008F-A81A-4DA4-859D-E2959AC82365}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -310,6 +322,7 @@ Global
 		{DE30CBE9-50F3-4A3E-BCC9-A8A36348530E} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{17CE4F09-7CBF-49E9-84A7-178DB2CBD7C9} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{27A3C89C-1967-45FF-A77E-94F44995C42C} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+		{966282D0-FC83-45B1-A523-17343F7E63B6} = {6E65583B-2752-4CD3-BA18-58BB97F822DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {466F2218-2333-4818-8AF5-BE480C2139BC}

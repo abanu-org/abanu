@@ -15,6 +15,10 @@ namespace Lonos.Kernel
         GetPhysicalMemory = 26,
         TranslateVirtualToPhysicalAddress = 27,
         WriteDebugChar = 28,
+
+        OpenFile = 30,
+        ReadFile = 31,
+        WriteFile = 32,
     }
 
 }

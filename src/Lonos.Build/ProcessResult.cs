@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Lonos.Build
+namespace Lonos.Tools.Build
 {
     public class ProcessResult : CommandResult, IDisposable
     {

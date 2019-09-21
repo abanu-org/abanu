@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Lonos.Build
+namespace Lonos.Tools
 {
     public static class Env
     {
@@ -27,7 +27,7 @@ namespace Lonos.Build
                 switch (name)
                 {
                     case "LONOS_PROJDIR":
-                        value = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(typeof(Program).Assembly.Location).AbsolutePath));
+                        value = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(typeof(Env).Assembly.Location).AbsolutePath));
                         break;
                     case "LONOS_BINDIR":
                         value = "${LONOS_PROJDIR}/bin";
