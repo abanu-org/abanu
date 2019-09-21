@@ -13,6 +13,7 @@ b *0x0
 #b Lonos.Kernel.Core.IDTManager::IRQ32()
 b SysCallManager.cs:121
 b Thread.cs:68
+b Program.cs:67
 
 # Invalid TSS
 b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ10()
