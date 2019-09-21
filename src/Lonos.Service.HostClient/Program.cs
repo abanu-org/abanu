@@ -18,20 +18,20 @@ namespace Lonos.Kernel
     public static class Program
     {
 
-        public static void Main()
+        public static unsafe void Main()
         {
             ApplicationRuntime.Init();
 
-            //var result = MessageManager.Send(SysCallTarget.ServiceFunc1, 55);
-
-            SysCalls.WriteDebugChar('#');
-            SysCalls.WriteDebugChar('#');
-            SysCalls.WriteDebugChar('#');
+            MessageManager.OnMessageReceived = MessageReceived;
 
             while (true)
             {
-
             }
+        }
+
+        public static unsafe void MessageReceived(SystemMessage* msg)
+        {
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, msg->Arg1 + 10));
         }
 
     }

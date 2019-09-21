@@ -22,6 +22,10 @@ namespace Lonos.Kernel
 
         CreateMemoryProcess = 40,
 
+        HostCommunication_OpenFile = 41,
+        HostCommunication_ReadFile = 42,
+        HostCommunication_WriteFile = 43,
+        HostCommunication_CreateProcess = 44,
     }
 
 }

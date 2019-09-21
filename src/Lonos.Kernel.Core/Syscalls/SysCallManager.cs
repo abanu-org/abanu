@@ -47,6 +47,7 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.ServiceReturn, Cmd_ServiceReturn);
             SetCommand(SysCallTarget.GetPhysicalMemory, Cmd_GetPhysicalMemory);
             SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, Cmd_TranslateVirtualToPhysicalAddress);
+            SetCommand(SysCallTarget.HostCommunication_CreateProcess, Cmd_HostCommunication_CreateProcess);
         }
 
         private static uint nextVirtPage;
@@ -137,6 +138,16 @@ namespace Lonos.Kernel.Core.SysCalls
             return 0;
         }
 
+        private static uint Cmd_HostCommunication_CreateProcess(SystemMessage* args)
+        {
+            var serv = KernelStart.Serv;
+
+            serv.SwitchToThreadMethod(args);
+
+            // will never get here, because service will call cmd_ExitServiceFunc, thats switching this this thread directly
+            return 0;
+        }
+
         private static uint Cmd_GetProcessIDForCommand(SystemMessage* args)
         {
             var proc = Commands[GetCommandNum(args->Target)].Process;
@@ -171,6 +182,11 @@ namespace Lonos.Kernel.Core.SysCalls
                 Handler = handler,
                 Process = proc,
             };
+        }
+
+        public static void SetCommandProcess(SysCallTarget command, Process proc)
+        {
+            Commands[(uint)command].Process = proc;
         }
 
         private const uint CommandMask = BitsMask.Bits10;

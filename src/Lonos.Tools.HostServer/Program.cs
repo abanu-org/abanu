@@ -8,7 +8,7 @@ using System.IO;
 using System.Threading;
 using System.Runtime.CompilerServices;
 
-namespace Lonos.Tools.HostServer
+namespace Lonos.Tools.HostCommunication
 {
     class Program
     {
@@ -16,6 +16,7 @@ namespace Lonos.Tools.HostServer
         private static Thread conThread;
         private static Thread thRead;
         private static Thread thWrite;
+
         static void Main(string[] args)
         {
             var th = new Thread(ConnThread);
@@ -237,6 +238,9 @@ namespace Lonos.Tools.HostServer
                 case 241:
                     CmdReadFile(msgId, args, data);
                     break;
+                case 243:
+                    CmdGetFileLength(msgId, args, data);
+                    break;
             }
         }
 
@@ -262,6 +266,16 @@ namespace Lonos.Tools.HostServer
             var buf = new byte[3000];
             var gotBytes = s.Read(buf, 0, buf.Length);
             WriteResult(msgId, buf, 0, gotBytes);
+        }
+
+        public static void CmdGetFileLength(int msgId, byte[][] args, byte[] data)
+        {
+            var fileName = Encoding.ASCII.GetString(args[0]);
+            Console.WriteLine(fileName);
+            var rootDir = Env.Get("LONOS_PROJDIR");
+            var absFileName = Path.Combine(rootDir, fileName);
+            var len = (int)new FileInfo(absFileName).Length;
+            WriteResult(msgId, len);
         }
 
         public static void WriteResult(int msgId, int result)

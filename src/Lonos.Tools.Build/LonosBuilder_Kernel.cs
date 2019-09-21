@@ -149,6 +149,18 @@ namespace Lonos.Tools.Build
                     },
                     new Section
                     {
+                        Name = "Service.HostCommunication.Client",
+                        Type = SectionType.ProgBits,
+                        AddressAlignment = 0x1000,
+                        EmitMethod = (section, writer) =>
+                        {
+                            var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "os", "Service.HostCommunication.Client.bin"));
+                            writer.Write(data);
+                            section.Size = (uint)data.Length;
+                        },
+                    },
+                    new Section
+                    {
                         Name = "App.HelloService",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,

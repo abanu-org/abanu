@@ -28,6 +28,14 @@ namespace Lonos.Tools
                 {
                     case "LONOS_PROJDIR":
                         value = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(typeof(Env).Assembly.Location).AbsolutePath));
+                        if (!File.Exists(Path.Combine(value, "lonosctl")))
+                            value = Path.GetDirectoryName(value);
+                        if (!File.Exists(Path.Combine(value, "lonosctl")))
+                            value = Path.GetDirectoryName(value);
+                        if (!File.Exists(Path.Combine(value, "lonosctl")))
+                            value = Path.GetDirectoryName(value);
+                        if (!File.Exists(Path.Combine(value, "lonosctl")))
+                            value = null;
                         break;
                     case "LONOS_BINDIR":
                         value = "${LONOS_PROJDIR}/bin";

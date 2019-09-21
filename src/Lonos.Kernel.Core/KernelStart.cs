@@ -106,6 +106,7 @@ namespace Lonos.Kernel.Core
         }
 
         public static Service Serv;
+        public static Service ServHostCommunication;
 
         public static void StartupStage2()
         {
@@ -122,6 +123,11 @@ namespace Lonos.Kernel.Core
 
                 var proc = ProcessManager.StartProcess("App.HelloService");
                 Serv = new Service(proc);
+
+                var procHostCommunication = ProcessManager.StartProcess("Service.HostCommunication.Client");
+                ServHostCommunication = new Service(proc);
+                // TODO: Optimize Registration
+                SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
 
                 var p2 = ProcessManager.StartProcess("App.HelloKernel");
                 //p2.Threads[0].SetArgument(0, 0x90);
