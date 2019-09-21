@@ -34,6 +34,11 @@ namespace Lonos.Runtime
         private static Allocator Allocator;
         private static bool AllocatorInitialized = false;
 
+        public static unsafe uint Allocate(int size)
+        {
+            return Allocate((uint)size);
+        }
+
         public static unsafe uint Allocate(uint size)
         {
             if (AllocatorInitialized)

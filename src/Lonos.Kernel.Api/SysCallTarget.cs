@@ -19,6 +19,9 @@ namespace Lonos.Kernel
         OpenFile = 30,
         ReadFile = 31,
         WriteFile = 32,
+
+        CreateMemoryProcess = 40,
+
     }
 
 }

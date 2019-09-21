@@ -25,17 +25,38 @@ namespace Lonos.Kernel
     public static class Program
     {
 
-        public static void Main()
+        public static unsafe void Main()
         {
             ApplicationRuntime.Init();
 
             SetupDrivers();
             var port = Serial.COM2;
             Serial.SetupPort(port);
+
+            var path = "test";
+            var fileSize = (uint)GetFileLenth(path);
+            var target = SysCalls.GetProcessIDForCommand(SysCallTarget.CreateMemoryProcess);
+            var fileBuf = SysCalls.RequestMessageBuffer((uint)fileSize, target);
+            var handle = OpenFile(path);
+            var bufSize = 3000u;
+            var buf = (byte*)RuntimeMemory.Allocate(bufSize);
+            var gotBytes = (uint)ReadFile(handle, buf, bufSize);
+            var fileBufPos = 0u;
+            while (gotBytes > 0)
+            {
+                Console.WriteLine("got data");
+                for (var i = 0; i < gotBytes; i++)
+                    ((byte*)fileBuf.Start)[fileBufPos + i] = buf[i];
+                fileBufPos += gotBytes;
+                gotBytes = (uint)ReadFile(handle, buf, bufSize);
+            }
+            RuntimeMemory.Free(buf);
+            SysCalls.CreateMemoryProcess(fileBuf, fileSize);
+            //RuntimeMemory.Free(fileBuf);
+
             while (true)
             {
                 //Serial.Write(port, (byte)'M');
-                OpenFile("test");
             }
         }
 
@@ -50,6 +71,7 @@ namespace Lonos.Kernel
             OpenFile = 240,
             WriteFile = 241,
             ReadFile = 242,
+            GetFileLength = 243,
         }
 
         private static int lastMessageId = 0;
@@ -57,6 +79,15 @@ namespace Lonos.Kernel
         {
             var msgId = ++lastMessageId;
             WriteHeader(new MessageHeader { Command = MessageCommand.OpenFile, MsgId = msgId });
+            WriteArg(path);
+            WriteEnd();
+            return ReadResultInt32(msgId);
+        }
+
+        public static unsafe int GetFileLenth(string path)
+        {
+            var msgId = ++lastMessageId;
+            WriteHeader(new MessageHeader { Command = MessageCommand.GetFileLength, MsgId = msgId });
             WriteArg(path);
             WriteEnd();
             return ReadResultInt32(msgId);

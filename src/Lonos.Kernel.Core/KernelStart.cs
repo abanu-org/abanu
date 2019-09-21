@@ -169,9 +169,9 @@ namespace Lonos.Kernel.Core
             {
                 i++;
                 //if (Scheduler.ClockTicks % 100 == 0)
-                Screen.Goto(3, 0);
-                Screen.Write("TH_KERNEL:");
-                Screen.Write(i, 10);
+                //Screen.Goto(3, 0);
+                //Screen.Write("TH_KERNEL:");
+                //Screen.Write(i, 10);
             }
             KernelMessage.WriteLine("Thread0: Finished");
         }
@@ -184,9 +184,9 @@ namespace Lonos.Kernel.Core
             {
                 i++;
                 //if (Scheduler.ClockTicks % 100 == 0)
-                Screen.Goto(0, 0);
-                Screen.Write("TH1:");
-                Screen.Write(i, 10);
+                //Screen.Goto(0, 0);
+                //Screen.Write("TH1:");
+                //Screen.Write(i, 10);
             }
             KernelMessage.WriteLine("Thread1: Finished");
         }
@@ -199,9 +199,9 @@ namespace Lonos.Kernel.Core
             {
                 i++;
                 //if (Scheduler.ClockTicks % 100 == 0)
-                Screen.Goto(1, 0);
-                Screen.Write("TH2:");
-                Screen.Write(i, 10);
+                //Screen.Goto(1, 0);
+                //Screen.Write("TH2:");
+                //Screen.Write(i, 10);
             }
             KernelMessage.WriteLine("Thread2: Finished");
             //while (true)

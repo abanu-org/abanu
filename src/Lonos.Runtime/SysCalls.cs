@@ -52,6 +52,11 @@ namespace Lonos.Runtime
             MessageManager.Send(SysCallTarget.WriteDebugMessage, buf.Start, (uint)message.Length);
         }
 
+        public static void CreateMemoryProcess(MemoryRegion buf, uint size)
+        {
+            MessageManager.Send(SysCallTarget.CreateMemoryProcess, buf.Start, size);
+        }
+
         public static void WriteDebugChar(char c)
         {
             MessageManager.Send(SysCallTarget.WriteDebugChar, (byte)c);

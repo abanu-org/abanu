@@ -8,7 +8,7 @@ using System.IO;
 using System.Threading;
 using System.Runtime.CompilerServices;
 
-namespace Lonos.HostServer
+namespace Lonos.Tools.HostServer
 {
     class Program
     {
@@ -234,14 +234,34 @@ namespace Lonos.HostServer
                 case 240:
                     CmdOpenFile(msgId, args, data);
                     break;
+                case 241:
+                    CmdReadFile(msgId, args, data);
+                    break;
             }
         }
 
+        private static Dictionary<int, Stream> OpenFiles = new Dictionary<int, Stream>();
+        private static int LastHandle = 0x08000000;
+
         public static void CmdOpenFile(int msgId, byte[][] args, byte[] data)
         {
-            var txt = Encoding.ASCII.GetString(args[0]);
-            Console.WriteLine(txt);
-            WriteResult(msgId, 0x0A0B0C0D);
+            var fileName = Encoding.ASCII.GetString(args[0]);
+            Console.WriteLine(fileName);
+            var rootDir = Env.Get("LONOS_PROJDIR");
+            var absFileName = Path.Combine(rootDir, fileName);
+            var s = File.Open(absFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            var handle = ++LastHandle;
+            OpenFiles.Add(handle, s);
+            WriteResult(msgId, handle);
+        }
+
+        public static void CmdReadFile(int msgId, byte[][] args, byte[] data)
+        {
+            var handle = BitConverter.ToInt32(args[0], 0);
+            var s = OpenFiles[handle];
+            var buf = new byte[3000];
+            var gotBytes = s.Read(buf, 0, buf.Length);
+            WriteResult(msgId, buf, 0, gotBytes);
         }
 
         public static void WriteResult(int msgId, int result)
@@ -251,9 +271,16 @@ namespace Lonos.HostServer
 
         public static void WriteResult(int msgId, byte[] result)
         {
+            WriteResult(msgId, result, 0, result.Length);
+        }
+
+        public static void WriteResult(int msgId, byte[] result, int start, int count)
+        {
             PostMessge(new byte[] { 204 });
             PostMessge(BitConverter.GetBytes(msgId));
-            PostMessge(result);
+            var newBuf = new byte[count];
+            Array.Copy(result, start, newBuf, 0, count);
+            PostMessge(newBuf);
         }
 
     }
