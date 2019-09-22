@@ -44,6 +44,7 @@
     <Compile Include="MemoryManagement\KernelAllocator.cs" />
     <Compile Include="MemoryManagement\PageFrameManager.cs" />
     <Compile Include="MemoryManagement\PageTableExtensions.cs" />
+    <Compile Include="Collections\FifoQueue.cs" />
     <Compile Include="Processes\Process.cs" />
     <Compile Include="Processes\ProcessCreateOptions.cs" />
     <Compile Include="Processes\ProcessManager.cs" />

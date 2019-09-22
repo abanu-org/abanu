@@ -47,11 +47,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IBufferReader.cs" />
     <Compile Include="SysCallTarget.cs" />
     <Compile Include="Structs\FileHandle.cs" />
     <Compile Include="Structs\MemoryRegion.cs" />
     <Compile Include="IKernelApi.cs" />
-    <Compile Include="IFile.cs" />
+    <Compile Include="IBuffer.cs" />
     <Compile Include="IBufferWriter.cs" />
     <Compile Include="IPageFrameAllocator.cs" />
     <Compile Include="Structs\Page.cs" />

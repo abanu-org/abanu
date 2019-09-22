@@ -34,14 +34,21 @@ namespace Lonos.Kernel
             Serial.SetupPort(port);
 
             var path = "os/App.Shell.bin";
+            StartProcess(path);
+        }
+
+        public static unsafe void StartProcess(string path)
+        {
             var fileSize = (uint)GetFileLenth(path);
             var target = SysCalls.GetProcessIDForCommand(SysCallTarget.CreateMemoryProcess);
             var fileBuf = SysCalls.RequestMessageBuffer((uint)fileSize, target);
             var handle = OpenFile(path);
             var bufSize = 128 * 1024u;
+            //var bufSize = KMath.AlignValueCeil(fileSize, 512);
             var buf = (byte*)RuntimeMemory.Allocate(bufSize);
             var gotBytes = (uint)ReadFile(handle, buf, bufSize);
             var fileBufPos = 0u;
+            SysCalls.SetThreadPriority(100);
             while (gotBytes > 0)
             {
                 //Console.WriteLine("got data");
@@ -50,6 +57,7 @@ namespace Lonos.Kernel
                 fileBufPos += gotBytes;
                 gotBytes = (uint)ReadFile(handle, buf, bufSize);
             }
+            SysCalls.SetThreadPriority(0);
             RuntimeMemory.Free(buf);
             SysCalls.CreateMemoryProcess(fileBuf, fileSize);
         }
