@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="HostCommunicator.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />

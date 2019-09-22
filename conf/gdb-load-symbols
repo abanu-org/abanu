@@ -2,7 +2,9 @@
 # specific configuration
 
 #set arch i386:x86-64:intel
-file os/Lonos.OS.Core.x86.bin
+#file os/Lonos.OS.Core.x86.bin
 #file os/Lonos.OS.Loader.x86.bin
 #file os/App.HelloKernel.bin
+file os/App.Shell.bin
 #file os/App.HelloService.bin
+#file os/Lonos.Service.HostCommunication.bin

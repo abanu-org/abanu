@@ -267,7 +267,10 @@ function debug {
 			qemu_app=$QEMU_X86
 			#echo $qemu_app
 			#-gdb stdio
-			$qemu_app -kernel os/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log
+			$qemu_app \
+				-drive file=${LONOS_OSDIR}/Lonos.OS.Core.x86.img,index=0,media=disk,format=raw \
+				-drive file=${LONOS_TMPDIR}/network-disk.img,index=1,media=disk,format=raw,copy-on-read=off,cache=none \
+				-kernel os/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256
 			;;
 
 		qemu-grub-hybrid)
@@ -284,7 +287,7 @@ function debug {
 
 			disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-grub-hybrid.disk.img
 
-			$qemu_app ${bios} -hda $disk -serial file:${LONOS_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log
+			$qemu_app ${bios} -hda $disk -serial file:${LONOS_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256
 
 			;;
 

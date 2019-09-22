@@ -86,6 +86,7 @@
     <Compile Include="HAL\Hardware.cs" />
     <Compile Include="HAL\X86IOPortRead.cs" />
     <Compile Include="HAL\X86IOPortReadWrite.cs" />
+    <Compile Include="HostCommunicator.cs" />
     <Compile Include="IOPort.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="HAL\X86IOPortWrite.cs" />
