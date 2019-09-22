@@ -11,5 +11,6 @@ namespace Lonos.Kernel.Core.Interrupts
         public bool CountStatistcs;
         public bool Trace;
         public int Interrupt;
+        public bool NotifyUnhandled;
     }
 }

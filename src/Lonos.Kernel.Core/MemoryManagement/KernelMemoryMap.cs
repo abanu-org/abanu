@@ -160,7 +160,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static void Debug_FillAvailableMemory()
         {
-            uint max = 128 * 1024 * 1024;
+            uint max = 256 * 1024 * 1024;
             for (uint addr = 0; addr < max; addr += 4)
             {
                 if (!Header->Used.Contains(addr) && Header->SystemUsable.Contains(addr))

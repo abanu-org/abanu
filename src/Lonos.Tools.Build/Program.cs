@@ -77,7 +77,7 @@ namespace Lonos.Tools.Build
 
         private static CommandResult TryBuildBin(CommandArgs args)
         {
-            var possibleImages = new string[] { "all", "app", "app2", "service.basic", "app.shell", "loader", "kernel" };
+            var possibleImages = new string[] { "all", "app", "app2", "service.hostcommunication", "service.basic", "app.shell", "loader", "kernel" };
             var image = args.GetFlag("bin", possibleImages);
             var images = image.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             if (image == "all")
@@ -128,7 +128,7 @@ namespace Lonos.Tools.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -s -S");
+                    var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -s -S -m 256");
                     Thread.Sleep(500);
                     var gdb = ExecAsync("${gdb}", false);
                     gdb.WaitForExit();
@@ -143,7 +143,7 @@ namespace Lonos.Tools.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log");
+                    Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256");
                     break;
             }
             return null;
@@ -234,6 +234,13 @@ namespace Lonos.Tools.Build
             else if (args[0] == "service.basic")
             {
                 file = Env.Get("${LONOS_PROJDIR}/bin/Lonos.Service.Basic.exe");
+
+                var builder = new LonosBuilder_App(file);
+                builder.Build();
+            }
+            else if (args[0] == "service.hostcommunication")
+            {
+                file = Env.Get("${LONOS_PROJDIR}/bin/Lonos.Service.HostCommunication.exe");
 
                 var builder = new LonosBuilder_App(file);
                 builder.Build();

@@ -42,12 +42,19 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.RequestMessageBuffer, Cmd_RequestMessageBuffer);
             SetCommand(SysCallTarget.WriteDebugMessage, Cmd_WriteDebugMessage);
             SetCommand(SysCallTarget.WriteDebugChar, Cmd_WriteDebugChar);
+            SetCommand(SysCallTarget.SetThreadPriority, Cmd_SetThreadPriority);
             SetCommand(SysCallTarget.ServiceFunc1, Cmd_CallServiceFunc1);
             SetCommand(SysCallTarget.GetProcessIDForCommand, Cmd_GetProcessIDForCommand);
             SetCommand(SysCallTarget.ServiceReturn, Cmd_ServiceReturn);
             SetCommand(SysCallTarget.GetPhysicalMemory, Cmd_GetPhysicalMemory);
             SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, Cmd_TranslateVirtualToPhysicalAddress);
             SetCommand(SysCallTarget.HostCommunication_CreateProcess, Cmd_HostCommunication_CreateProcess);
+            SetCommand(SysCallTarget.CreateMemoryProcess, Cmd_CreateMemoryProcess);
+
+            SetCommand(SysCallTarget.OpenFile, Cmd_OpenFile);
+            SetCommand(SysCallTarget.ReadFile, Cmd_ReadFile);
+            SetCommand(SysCallTarget.WriteFile, Cmd_WriteFile);
+            SetCommand(SysCallTarget.CreateFifo, Cmd_CreateFifo);
         }
 
         private static uint nextVirtPage;
@@ -134,17 +141,52 @@ namespace Lonos.Kernel.Core.SysCalls
 
             serv.SwitchToThreadMethod(args);
 
-            // will never get here, because service will call cmd_ExitServiceFunc, thats switching this this thread directly
+            // will never get here, because service will call cmd_ExitServiceFunc, thats switching this thread directly
             return 0;
         }
 
         private static uint Cmd_HostCommunication_CreateProcess(SystemMessage* args)
         {
-            var serv = KernelStart.Serv;
+            KernelStart.Serv.SwitchToThreadMethod(args);
+            return 0;
+        }
 
-            serv.SwitchToThreadMethod(args);
+        private static uint Cmd_OpenFile(SystemMessage* args)
+        {
+            KernelStart.FileServ.SwitchToThreadMethod(args);
+            return 0;
+        }
 
-            // will never get here, because service will call cmd_ExitServiceFunc, thats switching this this thread directly
+        private static uint Cmd_ReadFile(SystemMessage* args)
+        {
+            KernelStart.FileServ.SwitchToThreadMethod(args);
+            return 0;
+        }
+
+        private static uint Cmd_WriteFile(SystemMessage* args)
+        {
+            KernelStart.FileServ.SwitchToThreadMethod(args);
+            return 0;
+        }
+
+        private static uint Cmd_CreateFifo(SystemMessage* args)
+        {
+            KernelStart.FileServ.SwitchToThreadMethod(args);
+            return 0;
+        }
+
+        private static uint Cmd_CreateMemoryProcess(SystemMessage* args)
+        {
+            ProcessManager.StartProcessFromBuffer(args->Arg1);
+            //ProcessManager.StartProcess("App.Shell");
+
+            return 0;
+        }
+
+        private static uint Cmd_SetThreadPriority(SystemMessage* args)
+        {
+            Scheduler.SetThreadPriority((int)args->Arg1);
+
             return 0;
         }
 

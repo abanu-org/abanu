@@ -38,6 +38,11 @@ namespace Lonos.Runtime
             return new MemoryRegion(MessageManager.Send(SysCallTarget.RequestMessageBuffer, size, targetProcessID), size);
         }
 
+        public static void SetThreadPriority(int priority)
+        {
+            MessageManager.Send(SysCallTarget.SetThreadPriority, (uint)priority);
+        }
+
         // TODO: Datetime
         public static long GetSystemTime()
         {
@@ -50,6 +55,32 @@ namespace Lonos.Runtime
             for (var i = 0; i < message.Length; i++)
                 data[i] = message[i];
             MessageManager.Send(SysCallTarget.WriteDebugMessage, buf.Start, (uint)message.Length);
+        }
+
+        public static FileHandle OpenFile(MemoryRegion buf, string path)
+        {
+            var data = (char*)buf.Start;
+            for (var i = 0; i < path.Length; i++)
+                data[i] = path[i];
+            return (int)MessageManager.Send(SysCallTarget.OpenFile, buf.Start, (uint)path.Length);
+        }
+
+        public static SSize ReadFile(FileHandle handle, MemoryRegion buf)
+        {
+            return MessageManager.Send(SysCallTarget.ReadFile, buf.Start, buf.Size);
+        }
+
+        public static SSize WriteFile(FileHandle handle, MemoryRegion buf)
+        {
+            return MessageManager.Send(SysCallTarget.WriteFile, buf.Start, buf.Size);
+        }
+
+        public static SSize CreateFifo(MemoryRegion buf, string path)
+        {
+            var data = (char*)buf.Start;
+            for (var i = 0; i < path.Length; i++)
+                data[i] = path[i];
+            return (int)MessageManager.Send(SysCallTarget.CreateFifo, buf.Start, (uint)path.Length);
         }
 
         public static void CreateMemoryProcess(MemoryRegion buf, uint size)

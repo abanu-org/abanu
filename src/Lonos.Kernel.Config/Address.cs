@@ -23,7 +23,7 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Lonos.OS.Core.x86.bin
         /// </summary>
-        public const uint OriginalKernelElfSize = 25 * 1024 * 1024;
+        public const uint OriginalKernelElfSize = 30 * 1024 * 1024;
 
         public const uint KernelBasePhys = OriginalKernelElfSection + OriginalKernelElfSize + (128 * 4096);  // 20MB
         public const uint KernelBaseVirt = 0xC0100000;  // 3GB+1MB
@@ -31,7 +31,7 @@ namespace Lonos.Kernel.Core
         public const uint KernelBootInfo = InitialStack + 0x1000; // 10MB+4KB
         public const uint OriginalKernelElfSection = KernelBootInfo + 0x1000;  //10MB+8KB
 
-        public const uint IdentityMapStart = 0x6400000; //100mb
+        public const uint IdentityMapStart = 0x0C000000; //192mb
         public const uint VirtMapStart = 0x40000000; //1gb
 
         public const uint InterruptControlBlock = 0xC0000000;

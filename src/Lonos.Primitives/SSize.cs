@@ -82,6 +82,18 @@ namespace Lonos
         }
 
         [NonVersionable]
+        public static implicit operator SSize(int value)
+        {
+            return new SSize(value);
+        }
+
+        [NonVersionable]
+        public static implicit operator SSize(long value)
+        {
+            return new SSize(value);
+        }
+
+        [NonVersionable]
 #pragma warning disable CA2225 // Operator overloads have named alternates
         public static unsafe implicit operator SSize(void* value)
 #pragma warning restore CA2225 // Operator overloads have named alternates

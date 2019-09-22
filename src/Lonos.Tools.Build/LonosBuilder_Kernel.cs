@@ -147,14 +147,26 @@ namespace Lonos.Tools.Build
                             section.Size = (uint)data.Length;
                         },
                     },
+                    //new Section
+                    //{
+                    //    Name = "Service.HostCommunication",
+                    //    Type = SectionType.ProgBits,
+                    //    AddressAlignment = 0x1000,
+                    //    EmitMethod = (section, writer) =>
+                    //    {
+                    //        var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "os", "Lonos.Service.HostCommunication.bin"));
+                    //        writer.Write(data);
+                    //        section.Size = (uint)data.Length;
+                    //    },
+                    //},
                     new Section
                     {
-                        Name = "Service.HostCommunication.Client",
+                        Name = "App.Shell",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,
                         EmitMethod = (section, writer) =>
                         {
-                            var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "os", "Service.HostCommunication.Client.bin"));
+                            var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "os", "App.Shell.bin"));
                             writer.Write(data);
                             section.Size = (uint)data.Length;
                         },

@@ -41,6 +41,12 @@ namespace Lonos.Kernel.Core
         }
 
         [NonVersionable]
+        public unsafe int ToInt32()
+        {
+            return _value;
+        }
+
+        [NonVersionable]
         public static implicit operator FileHandle(int value)
         {
             return new FileHandle(value);
@@ -50,6 +56,12 @@ namespace Lonos.Kernel.Core
         public static unsafe implicit operator uint(FileHandle value)
         {
             return (uint)value._value;
+        }
+
+        [NonVersionable]
+        public static unsafe implicit operator int(FileHandle value)
+        {
+            return value._value;
         }
 
         [NonVersionable]

@@ -20,7 +20,7 @@ namespace Lonos.Kernel.Loader
             BootInfo->HeapStart = KMath.AlignValueCeil(Address.OriginalKernelElfSection + LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->HeapSize = 0;
 
-            BootInfo->InstalledPhysicalMemory = 128 * 1024 * 1024;
+            BootInfo->InstalledPhysicalMemory = 256 * 1024 * 1024;
             BootInfo->PageTableType = KConfig.UsePAE ? PageTableType.PAE : PageTableType.X86;
 
             SetupVideoInfo();

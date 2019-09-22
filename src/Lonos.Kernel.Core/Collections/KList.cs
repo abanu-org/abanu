@@ -9,7 +9,7 @@ using Lonos.Kernel.Core.MemoryManagement;
 namespace Lonos.Kernel.Core.Collections
 {
 
-    public class KList<T> : IList<T>, IList, IReadOnlyList<T>
+    public class KList<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable
     {
         private const int _defaultCapacity = 4;
 
@@ -373,6 +373,12 @@ namespace Lonos.Kernel.Core.Collections
             }
 
             _items[_size] = default(T);
+        }
+
+        public void Dispose()
+        {
+            if (_items != _emptyArray)
+                Memory.FreeObject(_items);
         }
 
         public struct Enumerator : IEnumerator<T>, IEnumerator

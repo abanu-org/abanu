@@ -14,12 +14,12 @@ namespace Lonos.Kernel.Core.Devices
     public static class DeviceManager
     {
 
-        public static IFile Serial1;
-        private static IFile BiosTextScreen;
-        private static IFile FrameBufferTextScreen;
+        public static IBuffer Serial1;
+        private static IBuffer BiosTextScreen;
+        private static IBuffer FrameBufferTextScreen;
         public static ConsoleDevice Console;
-        public static IFile Null;
-        public static IFile KMsg;
+        public static IBuffer Null;
+        public static IBuffer KMsg;
 
         internal static FrameBuffer Fb;
 
@@ -70,7 +70,7 @@ namespace Lonos.Kernel.Core.Devices
             Console.SetOutputDevice(FrameBufferTextScreen);
         }
 
-        public static IFile GetDevice(string devName)
+        public static IBuffer GetDevice(string devName)
         {
             switch (devName)
             {

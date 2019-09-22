@@ -7,11 +7,16 @@ using Lonos.Kernel.Core.Devices;
 namespace Lonos.Kernel.Core.Diagnostics
 {
 
-    public class KernelMessageDevice : IFile
+    public class KernelMessageDevice : IBuffer
     {
 
         public KernelMessageDevice()
         {
+        }
+
+        public unsafe SSize Read(byte* buf, USize count)
+        {
+            return 0;
         }
 
         public unsafe SSize Write(byte* buf, USize count)

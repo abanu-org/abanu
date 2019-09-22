@@ -9,7 +9,7 @@ using Lonos.Kernel.Core.Elf;
 namespace Lonos.Kernel.Core
 {
 
-    public class FrameBufferTextScreenDevice : IFile
+    public class FrameBufferTextScreenDevice : IBuffer
     {
 
         private FrameBuffer dev;
@@ -115,6 +115,10 @@ namespace Lonos.Kernel.Core
 
         }
 
+        public unsafe SSize Read(byte* buf, USize count)
+        {
+            return 0;
+        }
     }
 
 }

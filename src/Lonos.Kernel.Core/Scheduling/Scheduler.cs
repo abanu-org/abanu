@@ -14,6 +14,8 @@ using Lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
+#pragma warning disable SA1312 // Variable names should begin with lower-case letter
+
 namespace Lonos.Kernel.Core.Scheduling
 {
     public static class Scheduler
@@ -89,6 +91,25 @@ namespace Lonos.Kernel.Core.Scheduling
 
             // Save current stack state
             var threadID = GetCurrentThreadID();
+            var th = GetCurrentThread();
+            if (th != null)
+            {
+                if (th.Priority != 0)
+                {
+                    if (th.Priority > 0)
+                    {
+                        if (++th.PriorityInterrupts <= th.Priority)
+                            return;
+                    }
+                    else
+                    {
+                        if (--th.PriorityInterrupts >= th.Priority)
+                            return;
+                    }
+                    th.PriorityInterrupts = 0;
+                }
+            }
+
             SaveThreadState(threadID, stackSate);
 
             ScheduleNextThread(threadID);
@@ -108,7 +129,7 @@ namespace Lonos.Kernel.Core.Scheduling
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SignalKernelThreadTerminationMethod()
         {
-            // No local variables are allowd, because the stack could be totally empty.
+            // No local variables are allowed, because the stack could be totally empty.
             // Just make a call
             Native.Int((int)KnownInterrupt.TerminateCurrentThread);
         }
@@ -260,7 +281,7 @@ namespace Lonos.Kernel.Core.Scheduling
             }
             else
             {
-                stackState = (IDTTaskStack*)(stackBottom - 8 - IDTStack.Size); // IDTStackSize ist correct - we don't need the Task-Members.
+                stackState = (IDTTaskStack*)(stackBottom - 8 - IDTStack.Size); // IDTStackSize is correct - we don't need the Task-Members.
             }
             thread.StackState = stackState;
 
@@ -270,7 +291,7 @@ namespace Lonos.Kernel.Core.Scheduling
             stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
             if (thread.User)
             {
-                // Never set this values for Non-User, otherwiese you will override stack informations.
+                // Never set this values for Non-User, otherwise you will override stack informations.
                 stackState->TASK_SS = 0x23;
                 stackState->TASK_ESP = (uint)stackBottom - (uint)stackStateOffset;
 
@@ -279,8 +300,8 @@ namespace Lonos.Kernel.Core.Scheduling
             }
             if (thread.User && options.AllowUserModeIOPort)
             {
-                byte iOPL = 3;
-                stackState->Stack.EFLAGS = (X86_EFlags)((uint)stackState->Stack.EFLAGS).SetBits(12, 2, iOPL);
+                byte IOPL = 3;
+                stackState->Stack.EFLAGS = (X86_EFlags)((uint)stackState->Stack.EFLAGS).SetBits(12, 2, IOPL);
             }
 
             stackState->Stack.CS = cS;
@@ -444,6 +465,12 @@ namespace Lonos.Kernel.Core.Scheduling
 
                 thread.Status = ThreadStatus.Empty;
             }
+        }
+
+        public static void SetThreadPriority(int priority)
+        {
+            var th = GetCurrentThread();
+            th.Priority = priority;
         }
 
     }

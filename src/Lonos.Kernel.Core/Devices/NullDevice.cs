@@ -6,11 +6,16 @@ using System;
 namespace Lonos.Kernel.Core.Devices
 {
 
-    public class NullDevice : IFile
+    public class NullDevice : IBuffer
     {
 
         public NullDevice()
         {
+        }
+
+        public unsafe SSize Read(byte* buf, USize count)
+        {
+            return 0;
         }
 
         public unsafe SSize Write(byte* buf, USize count)

@@ -19,6 +19,13 @@ namespace Lonos.Tools.HostCommunication
 
         static void Main(string[] args)
         {
+
+            var networkDiskName = Env.Get("${LONOS_PROJDIR}/tmp/network-disk.img");
+            if (!File.Exists(networkDiskName))
+                File.WriteAllBytes(networkDiskName, new byte[1024 * 1024 * 10]);
+
+            NetworkDisk = File.Open(networkDiskName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+
             var th = new Thread(ConnThread);
             th.Start();
 
@@ -235,7 +242,7 @@ namespace Lonos.Tools.HostCommunication
                 case 240:
                     CmdOpenFile(msgId, args, data);
                     break;
-                case 241:
+                case 242:
                     CmdReadFile(msgId, args, data);
                     break;
                 case 243:
@@ -263,9 +270,10 @@ namespace Lonos.Tools.HostCommunication
         {
             var handle = BitConverter.ToInt32(args[0], 0);
             var s = OpenFiles[handle];
-            var buf = new byte[3000];
+            var buf = new byte[128 * 1024];
             var gotBytes = s.Read(buf, 0, buf.Length);
-            WriteResult(msgId, buf, 0, gotBytes);
+            Console.WriteLine(s.Position);
+            WriteResultFile(msgId, buf, 0, gotBytes, true);
         }
 
         public static void CmdGetFileLength(int msgId, byte[][] args, byte[] data)
@@ -288,13 +296,32 @@ namespace Lonos.Tools.HostCommunication
             WriteResult(msgId, result, 0, result.Length);
         }
 
-        public static void WriteResult(int msgId, byte[] result, int start, int count)
+        public static void WriteResult(int msgId, byte[] result, int start, int count, bool writeSize = false)
         {
             PostMessge(new byte[] { 204 });
             PostMessge(BitConverter.GetBytes(msgId));
+
+            if (writeSize)
+                PostMessge(BitConverter.GetBytes(count));
+
             var newBuf = new byte[count];
             Array.Copy(result, start, newBuf, 0, count);
             PostMessge(newBuf);
+        }
+
+        private static FileStream NetworkDisk;
+
+        public static void WriteResultFile(int msgId, byte[] result, int start, int count, bool writeSize = false)
+        {
+            NetworkDisk.Position = 0;
+            NetworkDisk.Write(result, 0, count);
+            NetworkDisk.Flush();
+
+            PostMessge(new byte[] { 205 });
+            PostMessge(BitConverter.GetBytes(msgId));
+
+            if (writeSize)
+                PostMessge(BitConverter.GetBytes(count));
         }
 
     }

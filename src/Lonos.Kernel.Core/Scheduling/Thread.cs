@@ -30,6 +30,14 @@ namespace Lonos.Kernel.Core.Scheduling
         public string DebugName;
         public uint ArgumentBufferSize;
 
+        /// <summary>
+        /// 0: Default
+        /// >0: Get Priority more interrupts
+        /// <0: Skipping Priority interrupts
+        /// </summary>
+        public int Priority;
+        internal int PriorityInterrupts;
+
         public Thread ChildThread;
         public Thread ParentThread;
 

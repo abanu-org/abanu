@@ -64,7 +64,21 @@ namespace Lonos.Kernel.Core.Processes
             return null;
         }
 
+        public static unsafe Process StartProcessFromBuffer(uint addr, uint argumentBufferSize = 0)
+        {
+            // TODO: Copy Buffer!!
+            var phys = PageTable.KernelTable.GetPhysicalAddressFromVirtual(addr);
+            var elf = KernelElf.FromAddress(phys);
+            return StartProcessFromElf(elf, "memory", argumentBufferSize);
+        }
+
         public static unsafe Process StartProcess(string path, uint argumentBufferSize = 0)
+        {
+            var elf = KernelElf.FromSectionName(path);
+            return StartProcessFromElf(elf, path, argumentBufferSize);
+        }
+
+        private static unsafe Process StartProcessFromElf(ElfHelper elf, string path, uint argumentBufferSize = 0)
         {
             KernelMessage.WriteLine("Create proc: {0}", path);
 
@@ -82,7 +96,6 @@ namespace Lonos.Kernel.Core.Processes
             proc.PageTable.MapCopy(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
 
             // Setup ELF Sections
-            var elf = KernelElf.FromSectionName(path);
             for (uint i = 0; i < elf.SectionHeaderCount; i++)
             {
                 var section = elf.GetSectionHeader(i);

@@ -121,8 +121,12 @@ namespace Lonos.Kernel.Core.Interrupts
 
         private static void UndefinedHandler(IDTStack* stack)
         {
-            //NativeCalls.BochsDebug();
-            KernelMessage.WriteLine("Unhandled Interrupt {0}", stack->Interrupt);
+            var handler = Handlers[stack->Interrupt];
+            if (handler.NotifyUnhandled)
+            {
+                handler.NotifyUnhandled = false;
+                KernelMessage.WriteLine("Unhandled Interrupt {0}", stack->Interrupt);
+            }
         }
 
         internal static void SetInterruptHandler(KnownInterrupt interrupt, InterruptHandler interruptHandler)

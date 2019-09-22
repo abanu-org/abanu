@@ -6,17 +6,22 @@ using System;
 namespace Lonos.Kernel.Core.Devices
 {
 
-    public class ConsoleDevice : IFile
+    public class ConsoleDevice : IBuffer
     {
 
-        private IFile Device;
+        private IBuffer Device;
 
-        public ConsoleDevice(IFile device)
+        public ConsoleDevice(IBuffer device)
         {
             Device = device;
         }
 
-        public void SetOutputDevice(IFile device)
+        public unsafe SSize Read(byte* buf, USize count)
+        {
+            return Device.Read(buf, count);
+        }
+
+        public void SetOutputDevice(IBuffer device)
         {
             Device = device;
         }

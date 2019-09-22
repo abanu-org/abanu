@@ -15,10 +15,12 @@ namespace Lonos.Kernel
         GetPhysicalMemory = 26,
         TranslateVirtualToPhysicalAddress = 27,
         WriteDebugChar = 28,
+        SetThreadPriority = 29,
 
         OpenFile = 30,
         ReadFile = 31,
         WriteFile = 32,
+        CreateFifo = 33,
 
         CreateMemoryProcess = 40,
 
@@ -26,6 +28,7 @@ namespace Lonos.Kernel
         HostCommunication_ReadFile = 42,
         HostCommunication_WriteFile = 43,
         HostCommunication_CreateProcess = 44,
+
     }
 
 }

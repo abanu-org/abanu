@@ -24,7 +24,7 @@ namespace Lonos.Kernel.Core.Elf
             Native = FromSectionName("native");
         }
 
-        private static unsafe ElfHelper FromAddress(Addr elfStart)
+        public static unsafe ElfHelper FromAddress(Addr elfStart)
         {
             var elfHeader = (ElfHeader*)elfStart;
 
@@ -33,6 +33,9 @@ namespace Lonos.Kernel.Core.Elf
                 KernelMessage.WriteLine("No valid ELF found at {0:X8}", elfStart);
                 // TODO: Throw Excetion
             }
+
+            KernelMessage.WriteLine("Found ELF at {0:X8}", elfStart);
+
             var helper = new ElfHelper
             {
                 PhyOffset = elfStart,
@@ -50,7 +53,6 @@ namespace Lonos.Kernel.Core.Elf
             if (sec == null)
                 Panic.Error("Could not find section " + name);
             var addr = Main.GetSectionPhysAddr(sec);
-            KernelMessage.WriteLine("Found embedded ELF at {0:X8}", addr);
             return FromAddress(addr);
         }
 

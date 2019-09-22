@@ -106,9 +106,10 @@ namespace Lonos.Kernel.Core
         }
 
         public static Service Serv;
+        public static Service FileServ;
         public static Service ServHostCommunication;
 
-        public static void StartupStage2()
+        public static unsafe void StartupStage2()
         {
             if (!KConfig.SingleThread)
             {
@@ -124,16 +125,31 @@ namespace Lonos.Kernel.Core
                 var proc = ProcessManager.StartProcess("App.HelloService");
                 Serv = new Service(proc);
 
-                var procHostCommunication = ProcessManager.StartProcess("Service.HostCommunication.Client");
-                ServHostCommunication = new Service(proc);
-                // TODO: Optimize Registration
-                SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
+                var fileProc = ProcessManager.StartProcess("Service.Basic");
+                FileServ = new Service(fileProc);
+
+                while (true)
+                {
+                    var buf = Lonos.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
+                    Lonos.Runtime.SysCalls.CreateFifo(buf, "/dev/keyboard");
+                    var kb = Lonos.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
+                    buf.Size = 4;
+                    Lonos.Runtime.SysCalls.WriteFile(kb, buf);
+                    Lonos.Runtime.SysCalls.ReadFile(kb, buf);
+                }
+
+                //var procHostCommunication = ProcessManager.StartProcess("Service.HostCommunication");
+                //ServHostCommunication = new Service(procHostCommunication);
+                //// TODO: Optimize Registration
+                //SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
 
                 var p2 = ProcessManager.StartProcess("App.HelloKernel");
                 //p2.Threads[0].SetArgument(0, 0x90);
                 //p2.Threads[0].SetArgument(4, 0x94);
                 //p2.Threads[0].SetArgument(8, 0x98);
                 p2.Threads[0].Debug = true;
+
+                //var p3 = ProcessManager.StartProcess("App.Shell");
 
                 //ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
             }

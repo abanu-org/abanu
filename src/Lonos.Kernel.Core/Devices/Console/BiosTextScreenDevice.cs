@@ -6,11 +6,16 @@ using System;
 namespace Lonos.Kernel.Core.Devices
 {
 
-    public class BiosTextScreenDevice : IFile
+    public class BiosTextScreenDevice : IBuffer
     {
 
         public BiosTextScreenDevice()
         {
+        }
+
+        public unsafe SSize Read(byte* buf, USize count)
+        {
+            return 0;
         }
 
         public unsafe SSize Write(byte* buf, USize count)
