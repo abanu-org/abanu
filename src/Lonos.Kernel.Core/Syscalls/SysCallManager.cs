@@ -45,6 +45,7 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.SetThreadPriority, Cmd_SetThreadPriority);
             SetCommand(SysCallTarget.RegisterService, Cmd_RegisterService);
             SetCommand(SysCallTarget.SetServiceStatus, Cmd_SetServiceStatus);
+            SetCommand(SysCallTarget.RegisterInterrupt, Cmd_RegisterInterrupt);
             //SetCommand(SysCallTarget.ServiceFunc1, Cmd_CallServiceFunc1);
             SetCommand(SysCallTarget.GetProcessIDForCommand, Cmd_GetProcessIDForCommand);
             SetCommand(SysCallTarget.ServiceReturn, Cmd_ServiceReturn);
@@ -151,6 +152,17 @@ namespace Lonos.Kernel.Core.SysCalls
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
                 SetCommand((SysCallTarget)args->Arg1, Cmd_RegisteredService, proc);
+
+            return 0;
+        }
+
+        private static uint Cmd_RegisterInterrupt(SystemMessage* args)
+        {
+            var proc = Scheduler.GetCurrentThread().Process;
+            if (proc.Service != null)
+            {
+                IDTManager.SetInterruptHandler(args->Arg1, InterruptHandlers.Service, proc.Service);
+            }
 
             return 0;
         }

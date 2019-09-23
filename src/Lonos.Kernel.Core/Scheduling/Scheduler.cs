@@ -393,6 +393,11 @@ namespace Lonos.Kernel.Core.Scheduling
 
             thread.Status = ThreadStatus.Running;
 
+            if (thread.StackState == null)
+            {
+                Debug.Break();
+            }
+
             thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;
 
             uint pageDirAddr = proc.PageTable.GetPageTablePhysAddr();

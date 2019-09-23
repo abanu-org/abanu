@@ -149,7 +149,7 @@ namespace Lonos.Tools.HostCommunication
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (!IsConnecting)
                     Restart();
@@ -196,7 +196,7 @@ namespace Lonos.Tools.HostCommunication
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (!IsConnecting)
                     Restart();

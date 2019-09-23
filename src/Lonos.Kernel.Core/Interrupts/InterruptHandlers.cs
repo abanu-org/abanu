@@ -34,6 +34,34 @@ namespace Lonos.Kernel.Core.Interrupts
             Panic.Error(message);
         }
 
+        public static void Undefined(IDTStack* stack)
+        {
+            var handler = IDTManager.Handlers[stack->Interrupt];
+            if (handler.NotifyUnhandled)
+            {
+                handler.NotifyUnhandled = false;
+                KernelMessage.WriteLine("Unhandled Interrupt {0}", stack->Interrupt);
+            }
+        }
+
+        public static void Service(IDTStack* stack)
+        {
+            var handler = IDTManager.Handlers[stack->Interrupt];
+            if (handler.Service == null)
+            {
+                KernelMessage.WriteLine("handler.Service == null");
+                return;
+            }
+
+            var msg = new SystemMessage(SysCallTarget.Interrupt)
+            {
+                Arg1 = stack->Interrupt,
+            };
+
+            Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
+            handler.Service.SwitchToThreadMethod(&msg);
+        }
+
         /// <summary>
         /// Interrupt 0
         /// </summary>

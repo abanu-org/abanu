@@ -7,6 +7,9 @@ namespace Lonos.Kernel
     public enum SysCallTarget
     {
         Unset = 0,
+
+        Interrupt = 1,
+
         RequestMemory = 20,
         ServiceReturn = 21,
         ServiceFunc1 = 22,
@@ -30,8 +33,9 @@ namespace Lonos.Kernel
         HostCommunication_WriteFile = 43,
         HostCommunication_CreateProcess = 44,
 
-        RegisterService = 45,
-        SetServiceStatus = 46,
+        SetServiceStatus = 45,
+        RegisterService = 46,
+        RegisterInterrupt = 47,
     }
 
 }

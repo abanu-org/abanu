@@ -14,17 +14,25 @@ namespace Lonos.Runtime
 {
 
     public unsafe delegate void OnMessageReceivedDelegate(SystemMessage* msg);
+    //public unsafe delegate void OnInterruptReceivedDelegate(InterruptMessage* msg);
 
     public static class MessageManager
     {
 
         public static OnMessageReceivedDelegate OnMessageReceived;
+        //public static OnInterruptReceivedDelegate OnInterruptReceived;
 
         public static unsafe void Dispatch(SystemMessage msg)
         {
             if (OnMessageReceived != null)
                 OnMessageReceived(&msg);
         }
+
+        //public static unsafe void DispatchInterrupt(InterruptMessage msg)
+        //{
+        //    if (OnInterruptReceived != null)
+        //        OnInterruptReceived(&msg);
+        //}
 
         [DllImport("x86/App.HelloKernel.o", EntryPoint = "SysCallInt")]
         private static extern uint SysCallInt(SystemMessage msg);

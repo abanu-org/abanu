@@ -59,6 +59,7 @@
     <Compile Include="Structs\Page.cs" />
     <Compile Include="Structs\Atomic.cs" />
     <Compile Include="NumberExtensions.cs" />
+    <Compile Include="InterruptMessage.cs" />
     <Compile Include="SystemMessage.cs" />
   </ItemGroup>
   <ItemGroup>

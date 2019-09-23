@@ -2,6 +2,8 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using Lonos.Kernel.Core.Processes;
+using Lonos.Kernel.Core.Scheduling;
 
 namespace Lonos.Kernel.Core.Interrupts
 {
@@ -12,5 +14,6 @@ namespace Lonos.Kernel.Core.Interrupts
         public bool Trace;
         public int Interrupt;
         public bool NotifyUnhandled;
+        public Service Service;
     }
 }

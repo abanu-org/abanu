@@ -35,6 +35,8 @@ namespace Lonos.Kernel
             SysCalls.RegisterService(SysCallTarget.ReadFile);
             SysCalls.RegisterService(SysCallTarget.WriteFile);
 
+            SysCalls.RegisterInterrupt(33);
+
             SysCalls.SetServiceStatus(ServiceStatus.Ready);
 
             while (true)
@@ -57,6 +59,9 @@ namespace Lonos.Kernel
                     break;
                 case SysCallTarget.CreateFifo:
                     Cmd_CreateFiFo(msg);
+                    break;
+                case SysCallTarget.Interrupt:
+                    Cmd_Interrupt(msg);
                     break;
                 default:
                     MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
@@ -175,6 +180,15 @@ namespace Lonos.Kernel
                     return Files[i];
 
             return null;
+        }
+
+        public static unsafe void Cmd_Interrupt(SystemMessage* msg)
+        {
+            var code = Native.In8(0x60);
+
+            SysCalls.WriteDebugChar('*');
+            SysCalls.WriteDebugChar((char)(byte)code);
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
         public static unsafe void Cmd_CreateFiFo(SystemMessage* msg)

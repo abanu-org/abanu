@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Lonos.Kernel.Core.MemoryManagement;
 using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Scheduling;
 using Lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
@@ -66,7 +67,7 @@ namespace Lonos.Kernel.Core.Interrupts
                     Interrupt = i,
                     CountStatistcs = true,
                     Trace = true,
-                    Handler = UndefinedHandler,
+                    Handler = InterruptHandlers.Undefined,
                 };
                 if (i == (int)KnownInterrupt.ClockTimer)
                 {
@@ -119,26 +120,17 @@ namespace Lonos.Kernel.Core.Interrupts
             Native.Sti();
         }
 
-        private static void UndefinedHandler(IDTStack* stack)
-        {
-            var handler = Handlers[stack->Interrupt];
-            if (handler.NotifyUnhandled)
-            {
-                handler.NotifyUnhandled = false;
-                KernelMessage.WriteLine("Unhandled Interrupt {0}", stack->Interrupt);
-            }
-        }
-
         internal static void SetInterruptHandler(KnownInterrupt interrupt, InterruptHandler interruptHandler)
         {
             SetInterruptHandler((uint)interrupt, interruptHandler);
         }
 
-        internal static void SetInterruptHandler(uint interrupt, InterruptHandler interruptHandler)
+        internal static void SetInterruptHandler(uint interrupt, InterruptHandler interruptHandler, Service service = null)
         {
             if (interruptHandler == null)
-                interruptHandler = UndefinedHandler;
+                interruptHandler = InterruptHandlers.Undefined;
             Handlers[interrupt].Handler = interruptHandler;
+            Handlers[interrupt].Service = service;
         }
 
         #region SetTable Entries

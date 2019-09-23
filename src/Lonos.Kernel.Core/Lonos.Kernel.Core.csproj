@@ -39,6 +39,7 @@
     <Compile Include="Devices\TerminalDevice.cs" />
     <Compile Include="DummyClass.cs" />
     <Compile Include="Interrupts\IDT.cs" />
+    <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Interrupts\IDTTaskStack.cs" />
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
     <Compile Include="MemoryManagement\KernelAllocator.cs" />
@@ -60,7 +61,6 @@
     <Compile Include="MemoryManagement\Memory.cs" />
     <Compile Include="Elf\KernelElf.cs" />
     <Compile Include="MemoryManagement\ManagedMemoy.cs" />
-    <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Diagnostics\Panic.cs" />
     <Compile Include="Interrupts\PIC.cs" />
     <Compile Include="External\NativeCalls.cs" />

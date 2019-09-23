@@ -59,6 +59,11 @@ namespace Lonos.Runtime
             MessageManager.Send(SysCallTarget.RegisterService, (uint)target);
         }
 
+        public static void RegisterInterrupt(byte irq)
+        {
+            MessageManager.Send(SysCallTarget.RegisterInterrupt, irq);
+        }
+
         public static void WriteDebugMessage(MemoryRegion buf, string message)
         {
             var data = (char*)buf.Start;
