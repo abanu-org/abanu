@@ -147,7 +147,7 @@ namespace Lonos.Kernel
                 Console.WriteLine();
             }
 
-            HostCommunicator.Init(disks[1].DeviceDriver as IDiskDevice);
+            //HostCommunicator.Init(disks[1].DeviceDriver as IDiskDevice);
 
             partitionService.CreatePartitionDevices();
 

@@ -64,24 +64,34 @@ namespace Lonos.Kernel
             }
         }
 
-        internal class FifoFile : IBuffer
+        /// <summary>
+        /// General purpose Fifo
+        /// </summary>
+        internal class FifoStream : IBuffer, IDisposable
         {
+            private byte[] Data;
+            private int WritePosition;
+            private int ReadPosition;
+            public int Length;
 
-            private LinkedList<byte> List;
-
-            public FifoFile()
+            public FifoStream(int capacity)
             {
-                List = new LinkedList<byte>();
+                Data = new byte[capacity];
             }
 
             public unsafe SSize Read(byte* buf, USize count)
             {
-                if (List.Count == 0)
+                if (Length == 0)
                     return 0;
 
-                var cnt = Math.Min(count, List.Count);
+                var cnt = Math.Min(count, Length);
                 for (var i = 0; i < cnt; i++)
-                    List.RemoveFirst();
+                {
+                    buf[i] = Data[ReadPosition++];
+                    if (WritePosition >= Data.Length)
+                        WritePosition = 0;
+                    Length--;
+                }
 
                 return cnt;
             }
@@ -89,9 +99,43 @@ namespace Lonos.Kernel
             public unsafe SSize Write(byte* buf, USize count)
             {
                 for (var i = 0; i < count; i++)
-                    List.AddLast(buf[i]);
-
+                {
+                    Data[WritePosition++] = buf[i];
+                    if (WritePosition >= Data.Length)
+                        WritePosition = 0;
+                    Length++;
+                }
                 return (uint)count;
+            }
+
+            public void Dispose()
+            {
+                RuntimeMemory.FreeObject(Data);
+            }
+        }
+
+        internal class FifoFile : IBuffer, IDisposable
+        {
+            private IBuffer Data;
+
+            public FifoFile()
+            {
+                Data = new FifoStream(256);
+            }
+
+            public void Dispose()
+            {
+                RuntimeMemory.FreeObject(Data);
+            }
+
+            public unsafe SSize Read(byte* buf, USize count)
+            {
+                return Data.Read(buf, count);
+            }
+
+            public unsafe SSize Write(byte* buf, USize count)
+            {
+                return Data.Write(buf, count);
             }
         }
 
