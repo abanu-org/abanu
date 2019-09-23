@@ -63,7 +63,7 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Trace every SysCall
         /// </summary>
-        public const bool TraceSysCall = false;
+        public const bool TraceSysCall = true;
 
         /// <summary>
         /// Trace every Interrupt except Clock

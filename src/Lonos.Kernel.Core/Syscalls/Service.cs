@@ -11,10 +11,12 @@ namespace Lonos.Kernel.Core.Scheduling
     {
 
         public Process Process;
+        public ServiceStatus Status;
 
         public Service(Process proc)
         {
-            this.Process = proc;
+            Process = proc;
+            Status = ServiceStatus.NotInizialized;
         }
 
         // Methods is always called within Interrupt with Interrupt disabled

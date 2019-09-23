@@ -49,6 +49,16 @@ namespace Lonos.Runtime
             throw new NotImplementedException();
         }
 
+        public static void SetServiceStatus(ServiceStatus status)
+        {
+            MessageManager.Send(SysCallTarget.SetServiceStatus, (uint)status);
+        }
+
+        public static void RegisterService(SysCallTarget target)
+        {
+            MessageManager.Send(SysCallTarget.RegisterService, (uint)target);
+        }
+
         public static void WriteDebugMessage(MemoryRegion buf, string message)
         {
             var data = (char*)buf.Start;
@@ -67,12 +77,12 @@ namespace Lonos.Runtime
 
         public static SSize ReadFile(FileHandle handle, MemoryRegion buf)
         {
-            return MessageManager.Send(SysCallTarget.ReadFile, buf.Start, buf.Size);
+            return MessageManager.Send(SysCallTarget.ReadFile, handle, buf.Start, buf.Size);
         }
 
         public static SSize WriteFile(FileHandle handle, MemoryRegion buf)
         {
-            return MessageManager.Send(SysCallTarget.WriteFile, buf.Start, buf.Size);
+            return MessageManager.Send(SysCallTarget.WriteFile, handle, buf.Start, buf.Size);
         }
 
         public static SSize CreateFifo(MemoryRegion buf, string path)

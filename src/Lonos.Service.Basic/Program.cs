@@ -22,10 +22,20 @@ namespace Lonos.Kernel
         {
             ApplicationRuntime.Init();
 
-            MessageManager.OnMessageReceived = MessageReceived;
+            Files = new List<VfsFile>();
+            OpenFiles = new List<OpenFile>();
 
             Files.Add(new VfsFile { Path = "/dev/keyboard", Buffer = new FifoFile() });
             Files.Add(new VfsFile { Path = "/dev/screen", Buffer = new FifoFile() });
+
+            MessageManager.OnMessageReceived = MessageReceived;
+
+            SysCalls.RegisterService(SysCallTarget.OpenFile);
+            SysCalls.RegisterService(SysCallTarget.CreateFifo);
+            SysCalls.RegisterService(SysCallTarget.ReadFile);
+            SysCalls.RegisterService(SysCallTarget.WriteFile);
+
+            SysCalls.SetServiceStatus(ServiceStatus.Ready);
 
             while (true)
             {
@@ -57,7 +67,12 @@ namespace Lonos.Kernel
         internal class FifoFile : IBuffer
         {
 
-            private LinkedList<byte> List = new LinkedList<byte>();
+            private LinkedList<byte> List;
+
+            public FifoFile()
+            {
+                List = new LinkedList<byte>();
+            }
 
             public unsafe SSize Read(byte* buf, USize count)
             {
@@ -88,7 +103,7 @@ namespace Lonos.Kernel
             public IBuffer Buffer;
         }
 
-        private static List<OpenFile> OpenFiles = new List<OpenFile>();
+        private static List<OpenFile> OpenFiles;
 
         private static OpenFile FindOpenFile(FileHandle handle)
         {
@@ -107,7 +122,7 @@ namespace Lonos.Kernel
             public string Path;
         }
 
-        private static List<VfsFile> Files = new List<VfsFile>();
+        private static List<VfsFile> Files;
 
         internal static VfsFile FindFile(string path)
         {
@@ -121,10 +136,10 @@ namespace Lonos.Kernel
         public static unsafe void Cmd_CreateFiFo(SystemMessage* msg)
         {
             var start = msg->Arg1;
-            var length = msg->Arg2;
+            var length = (int)msg->Arg2;
             var data = (char*)start;
 
-            var path = new string(data);
+            var path = new string(data, 0, length);
 
             var fifo = new FifoFile()
             {
@@ -165,10 +180,10 @@ namespace Lonos.Kernel
         public static unsafe void Cmd_OpenFile(SystemMessage* msg)
         {
             var start = msg->Arg1;
-            var length = msg->Arg2;
+            var length = (int)msg->Arg2;
             var data = (char*)start;
 
-            var path = new string(data);
+            var path = new string(data, 0, length);
 
             var file = FindFile(path);
             if (file == null)

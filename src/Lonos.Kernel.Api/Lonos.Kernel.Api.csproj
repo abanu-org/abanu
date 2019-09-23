@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IBufferReader.cs" />
+    <Compile Include="ServiceStatus.cs" />
     <Compile Include="SysCallTarget.cs" />
     <Compile Include="Structs\FileHandle.cs" />
     <Compile Include="Structs\MemoryRegion.cs" />

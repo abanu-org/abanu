@@ -3,6 +3,7 @@
 
 namespace Lonos.Kernel
 {
+
     public enum SysCallTarget
     {
         Unset = 0,
@@ -29,6 +30,8 @@ namespace Lonos.Kernel
         HostCommunication_WriteFile = 43,
         HostCommunication_CreateProcess = 44,
 
+        RegisterService = 45,
+        SetServiceStatus = 46,
     }
 
 }

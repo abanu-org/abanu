@@ -20,6 +20,7 @@ namespace Lonos.Runtime
         {
             RuntimeMemory.SetupEarlyStartup();
             InitializAssembly();
+            Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
             RuntimeMemory.SetupAllocator();
         }
 

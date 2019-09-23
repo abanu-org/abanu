@@ -43,21 +43,28 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.WriteDebugMessage, Cmd_WriteDebugMessage);
             SetCommand(SysCallTarget.WriteDebugChar, Cmd_WriteDebugChar);
             SetCommand(SysCallTarget.SetThreadPriority, Cmd_SetThreadPriority);
-            SetCommand(SysCallTarget.ServiceFunc1, Cmd_CallServiceFunc1);
+            SetCommand(SysCallTarget.RegisterService, Cmd_RegisterService);
+            SetCommand(SysCallTarget.SetServiceStatus, Cmd_SetServiceStatus);
+            //SetCommand(SysCallTarget.ServiceFunc1, Cmd_CallServiceFunc1);
             SetCommand(SysCallTarget.GetProcessIDForCommand, Cmd_GetProcessIDForCommand);
             SetCommand(SysCallTarget.ServiceReturn, Cmd_ServiceReturn);
             SetCommand(SysCallTarget.GetPhysicalMemory, Cmd_GetPhysicalMemory);
             SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, Cmd_TranslateVirtualToPhysicalAddress);
-            SetCommand(SysCallTarget.HostCommunication_CreateProcess, Cmd_HostCommunication_CreateProcess);
             SetCommand(SysCallTarget.CreateMemoryProcess, Cmd_CreateMemoryProcess);
-
-            SetCommand(SysCallTarget.OpenFile, Cmd_OpenFile);
-            SetCommand(SysCallTarget.ReadFile, Cmd_ReadFile);
-            SetCommand(SysCallTarget.WriteFile, Cmd_WriteFile);
-            SetCommand(SysCallTarget.CreateFifo, Cmd_CreateFifo);
         }
 
         private static uint nextVirtPage;
+
+        private static uint Cmd_RegisteredService(SystemMessage* args)
+        {
+            var commandNum = GetCommandNum(args->Target);
+            var targetProcess = Commands[commandNum].Process;
+            if (targetProcess.Service != null)
+                targetProcess.Service.SwitchToThreadMethod(args);
+
+            // Normally, code should never reached
+            return 0;
+        }
 
         private static uint Cmd_RequestMemory(SystemMessage* args)
         {
@@ -124,57 +131,6 @@ namespace Lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint Cmd_CallServiceFunc1(SystemMessage* args)
-        {
-            var serv = KernelStart.Serv;
-
-            //0xAABBCCDD
-
-            //var servArgs = new ServiceArgs
-            //{
-            //    Arg1 = args.Arg2,
-            //    Arg2 = args.Arg3,
-            //    Arg3 = args.Arg4,
-            //    Arg4 = args.Arg5,
-            //    Arg5 = args.Arg6,
-            //};
-
-            serv.SwitchToThreadMethod(args);
-
-            // will never get here, because service will call cmd_ExitServiceFunc, thats switching this thread directly
-            return 0;
-        }
-
-        private static uint Cmd_HostCommunication_CreateProcess(SystemMessage* args)
-        {
-            KernelStart.Serv.SwitchToThreadMethod(args);
-            return 0;
-        }
-
-        private static uint Cmd_OpenFile(SystemMessage* args)
-        {
-            KernelStart.FileServ.SwitchToThreadMethod(args);
-            return 0;
-        }
-
-        private static uint Cmd_ReadFile(SystemMessage* args)
-        {
-            KernelStart.FileServ.SwitchToThreadMethod(args);
-            return 0;
-        }
-
-        private static uint Cmd_WriteFile(SystemMessage* args)
-        {
-            KernelStart.FileServ.SwitchToThreadMethod(args);
-            return 0;
-        }
-
-        private static uint Cmd_CreateFifo(SystemMessage* args)
-        {
-            KernelStart.FileServ.SwitchToThreadMethod(args);
-            return 0;
-        }
-
         private static uint Cmd_CreateMemoryProcess(SystemMessage* args)
         {
             ProcessManager.StartProcessFromBuffer(args->Arg1);
@@ -186,6 +142,24 @@ namespace Lonos.Kernel.Core.SysCalls
         private static uint Cmd_SetThreadPriority(SystemMessage* args)
         {
             Scheduler.SetThreadPriority((int)args->Arg1);
+
+            return 0;
+        }
+
+        private static uint Cmd_RegisterService(SystemMessage* args)
+        {
+            var proc = Scheduler.GetCurrentThread().Process;
+            if (proc.Service != null)
+                SetCommand((SysCallTarget)args->Arg1, Cmd_RegisteredService, proc);
+
+            return 0;
+        }
+
+        private static uint Cmd_SetServiceStatus(SystemMessage* args)
+        {
+            var proc = Scheduler.GetCurrentThread().Process;
+            if (proc.Service != null)
+                proc.Service.Status = (ServiceStatus)args->Arg1;
 
             return 0;
         }
@@ -209,7 +183,7 @@ namespace Lonos.Kernel.Core.SysCalls
             servThread.Status = ThreadStatus.Terminated;
 
             if (parent.StackState != null)
-                parent.StackState->Stack.EAX = args->Arg2;
+                parent.StackState->Stack.EAX = args->Arg1;
 
             Scheduler.SwitchToThread(parent.ThreadID);
 

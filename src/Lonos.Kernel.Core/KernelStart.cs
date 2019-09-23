@@ -123,20 +123,23 @@ namespace Lonos.Kernel.Core
                 userProc.Start();
 
                 var proc = ProcessManager.StartProcess("App.HelloService");
-                Serv = new Service(proc);
+                Serv = proc.Service;
 
                 var fileProc = ProcessManager.StartProcess("Service.Basic");
-                FileServ = new Service(fileProc);
+                FileServ = fileProc.Service;
 
-                while (true)
+                KernelMessage.WriteLine("Waiting for Service");
+                while (FileServ.Status != ServiceStatus.Ready)
                 {
-                    var buf = Lonos.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
-                    Lonos.Runtime.SysCalls.CreateFifo(buf, "/dev/keyboard");
-                    var kb = Lonos.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
-                    buf.Size = 4;
-                    Lonos.Runtime.SysCalls.WriteFile(kb, buf);
-                    Lonos.Runtime.SysCalls.ReadFile(kb, buf);
                 }
+                KernelMessage.WriteLine("Service Ready");
+
+                var buf = Lonos.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
+                var kb = Lonos.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
+                KernelMessage.Write("kb Handle: {0:X8}", kb);
+                buf.Size = 4;
+                Lonos.Runtime.SysCalls.WriteFile(kb, buf);
+                Lonos.Runtime.SysCalls.ReadFile(kb, buf);
 
                 //var procHostCommunication = ProcessManager.StartProcess("Service.HostCommunication");
                 //ServHostCommunication = new Service(procHostCommunication);

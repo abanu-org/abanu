@@ -173,6 +173,9 @@ namespace Lonos.Kernel.Core.Scheduling
 
                 var thread = Threads[threadID];
 
+                if (thread.ChildThread != null)
+                    continue;
+
                 if (thread.Status == ThreadStatus.Running || thread.Status == ThreadStatus.ScheduleForStart)
                     return threadID;
 

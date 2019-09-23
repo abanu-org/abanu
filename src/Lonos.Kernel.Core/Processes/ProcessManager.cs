@@ -50,6 +50,7 @@ namespace Lonos.Kernel.Core.Processes
                 ProcessList.Add(proc);
             proc.User = options.User;
             proc.PageTable = PageTable.KernelTable;
+            proc.Service = new Service(proc);
             return proc;
         }
 

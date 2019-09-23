@@ -29,12 +29,22 @@ namespace Lonos.Kernel
         {
             ApplicationRuntime.Init();
 
+            MessageManager.OnMessageReceived = MessageReceived;
+
+            SysCalls.RegisterService(SysCallTarget.HostCommunication_CreateProcess);
+
+            SysCalls.SetServiceStatus(ServiceStatus.Ready);
+
             SetupDrivers();
 
             while (true)
             {
                 //Serial.Write(port, (byte)'M');
             }
+        }
+
+        public static unsafe void MessageReceived(SystemMessage* msg)
+        {
         }
 
         private static void SetupDrivers()

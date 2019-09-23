@@ -18,6 +18,7 @@ namespace Lonos.Kernel.Core.Processes
         public bool User;
         public string Path;
         public IPageTable PageTable;
+        public Service Service;
         //public FifoQueue<byte> StdIn;
 
         public Process()
