@@ -40,7 +40,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var p = head;
             for (var i = 0; i < pages; i++)
             {
-                PageTable.KernelTable.MapVirtualAddressToPhysical(_nextVirtAddr, p->PhysicalAddress);
+                PageTable.KernelTable.MapVirtualAddressToPhysical(_nextVirtAddr, p->Address);
                 _nextVirtAddr += 4096;
                 p = p->Next;
             }
@@ -62,7 +62,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             for (var i = 0; i < pages; i++)
             {
                 p->Status = PageStatus.Used;
-                PageTable.KernelTable.MapVirtualAddressToPhysical(_identityNextVirtAddr, p->PhysicalAddress);
+                PageTable.KernelTable.MapVirtualAddressToPhysical(_identityNextVirtAddr, p->Address);
                 _identityNextVirtAddr += 4096;
                 p = p->Next;
             }

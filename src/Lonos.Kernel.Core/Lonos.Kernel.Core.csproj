@@ -42,10 +42,12 @@
     <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Interrupts\IDTTaskStack.cs" />
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
+    <Compile Include="MemoryManagement\BasePageFrameAllocator.cs" />
     <Compile Include="MemoryManagement\KernelAllocator.cs" />
     <Compile Include="MemoryManagement\PageFrameManager.cs" />
     <Compile Include="MemoryManagement\PageTableExtensions.cs" />
     <Compile Include="Collections\FifoQueue.cs" />
+    <Compile Include="MemoryManagement\PhysicalPageAllocator.cs" />
     <Compile Include="Processes\Process.cs" />
     <Compile Include="Processes\ProcessCreateOptions.cs" />
     <Compile Include="Processes\ProcessManager.cs" />
@@ -77,7 +79,6 @@
     <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
     <Compile Include="Boot\BootInfo.cs" />
-    <Compile Include="MemoryManagement\PageFrameAllocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMap.cs" />
     <Compile Include="Tests\buddy-malloc.cs" />
     <Compile Include="MemoryManagement\RawVirtualFrameAllocator.cs" />

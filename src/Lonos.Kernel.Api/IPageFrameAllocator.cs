@@ -19,7 +19,13 @@ namespace Lonos.Kernel.Core
 
         void Free(Page* page);
 
-        Page* GetPhysPage(Addr addr);
+        Page* GetPageByAddress(Addr addr);
+
+        Page* GetPageByNum(uint pageNum);
+        uint TotalPages { get; }
+
+        uint FreePages { get; set; }
+
     }
 
 }

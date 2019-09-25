@@ -23,7 +23,7 @@ namespace Lonos.Kernel.Core
         public ulong Flags;
         public Atomic UsageCount;
 
-        public Addr PhysicalAddress;
+        public Addr Address;
 
         // If this is the head of an allocated block
         public Page* Head;
@@ -40,7 +40,7 @@ namespace Lonos.Kernel.Core
 
         public static USize Size => 4096;
 
-        public uint PageNum => PhysicalAddress / 4096;
+        public uint PageNum => Address / 4096;
 
         public bool Free => ((uint)Status).IsMaskSet((uint)PageStatus.Free);
 
