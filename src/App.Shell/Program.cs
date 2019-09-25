@@ -28,9 +28,19 @@ namespace Lonos.Kernel
             SysCalls.WriteDebugChar('#');
             SysCalls.WriteDebugChar('#');
 
+            var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
+            var buf = SysCalls.RequestMessageBuffer(4096, targetProcessId);
+            var kb = SysCalls.OpenFile(buf, "/dev/keyboard");
+
             while (true)
             {
-
+                //SysCalls.WriteDebugChar('~');
+                var gotBytes = SysCalls.ReadFile(kb, buf);
+                if (gotBytes > 0)
+                {
+                    SysCalls.WriteDebugChar('&');
+                }
+                //SysCalls.WriteDebugChar('?');
             }
         }
 

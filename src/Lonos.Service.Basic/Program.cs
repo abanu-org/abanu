@@ -18,6 +18,10 @@ namespace Lonos.Kernel
     public static class Program
     {
 
+        private static VfsFile KeyBoardFifo;
+
+        private const bool TraceFileIO = false;
+
         public static unsafe void Main()
         {
             ApplicationRuntime.Init();
@@ -25,7 +29,8 @@ namespace Lonos.Kernel
             Files = new List<VfsFile>();
             OpenFiles = new List<OpenFile>();
 
-            Files.Add(new VfsFile { Path = "/dev/keyboard", Buffer = new FifoFile() });
+            KeyBoardFifo = new VfsFile { Path = "/dev/keyboard", Buffer = new FifoFile() };
+            Files.Add(KeyBoardFifo);
             Files.Add(new VfsFile { Path = "/dev/screen", Buffer = new FifoFile() });
 
             MessageManager.OnMessageReceived = MessageReceived;
@@ -187,17 +192,15 @@ namespace Lonos.Kernel
             var code = Native.In8(0x60);
 
             SysCalls.WriteDebugChar('*');
-            SysCalls.WriteDebugChar((char)(byte)code);
+            //SysCalls.WriteDebugChar((char)(byte)code);
+            //SysCalls.WriteDebugChar('*');
+            KeyBoardFifo.Buffer.Write(&code, 1);
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
         public static unsafe void Cmd_CreateFiFo(SystemMessage* msg)
         {
-            var start = msg->Arg1;
-            var length = (int)msg->Arg2;
-            var data = (char*)start;
-
-            var path = new string(data, 0, length);
+            var path = NullTerminatedString.ToString((byte*)msg->Arg1);
 
             var fifo = new FifoFile()
             {
@@ -237,15 +240,28 @@ namespace Lonos.Kernel
 
         public static unsafe void Cmd_OpenFile(SystemMessage* msg)
         {
-            var start = msg->Arg1;
-            var length = (int)msg->Arg2;
-            var data = (char*)start;
 
-            var path = new string(data, 0, length);
+            //var addr = msg->Arg1;
+            //var str = (NullTerminatedString*)addr;
+            //var path = str->ToString();
+
+            //var path = ((NullTerminatedString*)msg->Arg1)->ToString();
+            var path = NullTerminatedString.ToString((byte*)msg->Arg1);
+
+            if (TraceFileIO)
+            {
+                Console.Write("Open File: ");
+                Console.WriteLine(path);
+            }
 
             var file = FindFile(path);
             if (file == null)
             {
+                Console.Write("File not found: ");
+                //Console.WriteLine(length.ToString("X"));
+                Console.WriteLine(path.Length.ToString("X"));
+                Console.WriteLine(path);
+                Console.WriteLine(">>");
                 MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, FileHandle.Zero));
                 return;
             }
@@ -259,12 +275,25 @@ namespace Lonos.Kernel
             };
             OpenFiles.Add(openFile);
 
+            if (TraceFileIO)
+                Console.WriteLine("Created Handle: " + ((uint)openFile.Handle).ToString("X"));
+
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, openFile.Handle));
         }
 
         public static unsafe void Cmd_ReadFile(SystemMessage* msg)
         {
+            if (TraceFileIO)
+                Console.WriteLine("Read Handle: " + msg->Arg1.ToString("X"));
+
             var openFile = FindOpenFile((int)msg->Arg1);
+            if (openFile == null)
+            {
+                Console.WriteLine("Handle not found");
+                MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
+                return;
+            }
+
             var data = (byte*)msg->Arg2;
             var length = msg->Arg3;
             var gotBytes = openFile.Buffer.Read(data, length);

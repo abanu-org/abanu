@@ -180,7 +180,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                     KernelMessage.WriteLine("Requesting zero pages");
                     return null;
                 }
-                else if (num > 1)
+                else if (num > 1 && KConfig.TracePageAllocation)
                 {
                     KernelMessage.WriteLine("Requesting {0} pages", num);
                 }

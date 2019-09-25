@@ -10,7 +10,9 @@ namespace Lonos.Kernel.Core.PageManagement
     {
         public static void Map(this IPageTable table, Addr virtAddr, Addr physAddr, USize length, bool present = true, bool flush = false)
         {
-            KernelMessage.WriteLine("Map: virt={0:X8}, phys={1:X8}, length={2:X8}", virtAddr, physAddr, length);
+            if (KConfig.TraceMemoryMapping)
+                KernelMessage.WriteLine("Map: virt={0:X8}, phys={1:X8}, length={2:X8}", virtAddr, physAddr, length);
+
             var pages = KMath.DivCeil(length, 4096);
             for (var i = 0; i < pages; i++)
             {
@@ -28,7 +30,9 @@ namespace Lonos.Kernel.Core.PageManagement
         /// </summary>
         public static void MapDual(this IPageTable table, IPageTable sharedTable, Addr virtAddr, Addr physAddr, USize length, bool present = true, bool flush = false)
         {
-            KernelMessage.WriteLine("MapDual: virt={0:X8}, phys={1:X8}, length={2:X8}", virtAddr, physAddr, length);
+            if (KConfig.TraceMemoryMapping)
+                KernelMessage.WriteLine("MapDual: virt={0:X8}, phys={1:X8}, length={2:X8}", virtAddr, physAddr, length);
+
             var pages = KMath.DivCeil(length, 4096);
             for (var i = 0; i < pages; i++)
             {
@@ -47,7 +51,9 @@ namespace Lonos.Kernel.Core.PageManagement
         /// </summary>
         public static void MapCopy(this IPageTable table, IPageTable fromTable, Addr virtAddr, USize length, bool present = true, bool flush = false)
         {
-            KernelMessage.WriteLine("MapCopy: virt={0:X8}, length={1:X8}", virtAddr, length);
+            if (KConfig.TraceMemoryMapping)
+                KernelMessage.WriteLine("MapCopy: virt={0:X8}, length={1:X8}", virtAddr, length);
+
             var pages = KMath.DivCeil(length, 4096);
             for (var i = 0; i < pages; i++)
             {

@@ -56,19 +56,39 @@ namespace Lonos.Kernel.Core
         public const bool UseTaskStateSegment = true;
 
         /// <summary>
-        /// Trace every Thread switch
+        /// Trace every Task switch
         /// </summary>
-        public const bool TraceThreadSwitch = false;
+        public const bool TraceTaskSwitch = false;
 
         /// <summary>
-        /// Trace every SysCall
+        /// Trace every Thread switch
         /// </summary>
-        public const bool TraceSysCall = true;
+        public const bool TraceThreads = false;
+
+        /// <summary>
+        /// Trace every Page Allocation
+        /// </summary>
+        public const bool TracePageAllocation = false;
+
+        /// <summary>
+        /// Trace every Thread switch
+        /// </summary>
+        public const bool TraceMemoryMapping = false;
+
+        /// <summary>
+        /// Trace every Page Mapping
+        /// </summary>
+        public const bool TraceSysCall = false;
 
         /// <summary>
         /// Trace every Interrupt except Clock
         /// </summary>
         public const bool TraceInterrupts = false;
+
+        /// <summary>
+        /// Trace ELF format related calls
+        /// </summary>
+        public const bool TraceELF = false;
 
         /// <summary>
         /// If false, no User Segments will be created.

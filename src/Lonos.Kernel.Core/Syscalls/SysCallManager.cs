@@ -114,13 +114,8 @@ namespace Lonos.Kernel.Core.SysCalls
 
         private static uint Cmd_WriteDebugMessage(SystemMessage* args)
         {
-            // TODO: Security
-            var start = args->Arg1;
-            var length = args->Arg2;
-            var data = (char*)start;
-
-            for (var i = 0; i < length; i++)
-                KernelMessage.Write(data[i]);
+            var msg = (NullTerminatedString*)args->Arg1;
+            KernelMessage.WriteLine(msg);
 
             return 0;
         }
@@ -178,9 +173,11 @@ namespace Lonos.Kernel.Core.SysCalls
 
         private static uint Cmd_GetProcessIDForCommand(SystemMessage* args)
         {
-            var proc = Commands[GetCommandNum(args->Target)].Process;
+            var cmdNum = GetCommandNum((SysCallTarget)args->Arg1);
+            var proc = Commands[cmdNum].Process;
             if (proc == null)
                 proc = ProcessManager.System;
+            KernelMessage.WriteLine("Return ProcessID {0} for Command {1}", proc.ProcessID, cmdNum);
             return proc.ProcessID;
         }
 

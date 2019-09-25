@@ -20,7 +20,7 @@ namespace Lonos.Runtime
 
         public static uint GetProcessIDForCommand(SysCallTarget target)
         {
-            return MessageManager.Send(SysCallTarget.GetProcessIDForCommand);
+            return MessageManager.Send(SysCallTarget.GetProcessIDForCommand, (uint)target);
         }
 
         public static uint GetPhysicalMemory(Addr physAddr, USize size)
@@ -66,18 +66,14 @@ namespace Lonos.Runtime
 
         public static void WriteDebugMessage(MemoryRegion buf, string message)
         {
-            var data = (char*)buf.Start;
-            for (var i = 0; i < message.Length; i++)
-                data[i] = message[i];
+            NullTerminatedString.Set((byte*)buf.Start, message);
             MessageManager.Send(SysCallTarget.WriteDebugMessage, buf.Start, (uint)message.Length);
         }
 
         public static FileHandle OpenFile(MemoryRegion buf, string path)
         {
-            var data = (char*)buf.Start;
-            for (var i = 0; i < path.Length; i++)
-                data[i] = path[i];
-            return (int)MessageManager.Send(SysCallTarget.OpenFile, buf.Start, (uint)path.Length);
+            NullTerminatedString.Set((byte*)buf.Start, path);
+            return (int)MessageManager.Send(SysCallTarget.OpenFile, buf.Start);
         }
 
         public static SSize ReadFile(FileHandle handle, MemoryRegion buf)
@@ -92,10 +88,8 @@ namespace Lonos.Runtime
 
         public static SSize CreateFifo(MemoryRegion buf, string path)
         {
-            var data = (char*)buf.Start;
-            for (var i = 0; i < path.Length; i++)
-                data[i] = path[i];
-            return (int)MessageManager.Send(SysCallTarget.CreateFifo, buf.Start, (uint)path.Length);
+            NullTerminatedString.Set((byte*)buf.Start, path);
+            return (int)MessageManager.Send(SysCallTarget.CreateFifo, buf.Start);
         }
 
         public static void CreateMemoryProcess(MemoryRegion buf, uint size)

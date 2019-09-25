@@ -116,6 +116,43 @@ namespace Lonos
             return FNVHash.ComputeInt32(Bytes, GetLength());
         }
 
+        public void Set(string value)
+        {
+            for (var i = 0; i < value.Length; i++)
+                Bytes[i] = (byte)value[i];
+            Bytes[value.Length] = 0;
+        }
+
+        public static void Set(byte* destination, string value)
+        {
+            for (var i = 0; i < value.Length; i++)
+                destination[i] = (byte)value[i];
+            destination[value.Length] = 0;
+        }
+
+        public override string ToString()
+        {
+            // BUG: This does not work:
+            //  var path = ((NullTerminatedString*)msg->Arg1)->ToString();
+            // but this works:
+            // var addr = msg->Arg1;
+            // var str = (NullTerminatedString*)addr;
+            // var path = str->ToString();
+
+            // To be sure, use the static version of ToString!
+
+            return new string((sbyte*)Bytes);
+        }
+        public static string ToString(NullTerminatedString* str)
+        {
+            return new string((sbyte*)str->Bytes);
+        }
+
+        public static string ToString(byte* str)
+        {
+            return new string((sbyte*)str);
+        }
+
     }
 
 }

@@ -221,7 +221,10 @@ namespace Lonos.Kernel.Core.Scheduling
             thread.ArgumentBufferSize = options.ArgumentBufferSize;
 
             var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
-            KernelMessage.WriteLine("Requesting {0} stack pages", stackPages);
+
+            if (KConfig.TraceThreads)
+                KernelMessage.WriteLine("Requesting {0} stack pages", stackPages);
+
             var debugPadding = 8u;
             stackSize = stackPages * PageFrameManager.PageSize;
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
@@ -233,11 +236,17 @@ namespace Lonos.Kernel.Core.Scheduling
             stackSize -= debugPadding;
             var stackBottom = stack + (int)stackSize;
 
-            KernelMessage.Write("Create Thread {0}. EntryPoint: {1:X8} Stack: {2:X8}-{3:X8} Type: ", threadID, options.MethodAddr, (uint)stack, (uint)stackBottom - 1);
-            if (thread.User)
-                KernelMessage.Write("User");
-            else
-                KernelMessage.Write("Kernel");
+            if (KConfig.TraceThreads)
+                KernelMessage.Write("Create Thread {0}. EntryPoint: {1:X8} Stack: {2:X8}-{3:X8} Type: ", threadID, options.MethodAddr, (uint)stack, (uint)stackBottom - 1);
+
+            if (KConfig.TraceThreads)
+            {
+                if (thread.User)
+                    KernelMessage.Write("User");
+                else
+                    KernelMessage.Write("Kernel");
+            }
+
             if (thread.DebugName != null)
                 KernelMessage.WriteLine(" Thread DebugName: {0}", thread.DebugName);
             else
@@ -250,7 +259,8 @@ namespace Lonos.Kernel.Core.Scheduling
             thread.KernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
             thread.KernelStackBottom = thread.KernelStack + thread.KernelStackSize;
 
-            KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", KernelStart.TssAddr, thread.KernelStack, thread.KernelStackBottom - 1);
+            if (KConfig.TraceThreads)
+                KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", KernelStart.TssAddr, thread.KernelStack, thread.KernelStackBottom - 1);
 
             MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, thread.KernelStack, 256 * 4096);
 
@@ -288,7 +298,7 @@ namespace Lonos.Kernel.Core.Scheduling
             }
             thread.StackState = stackState;
 
-            if (thread.User)
+            if (thread.User && KConfig.TraceThreads)
                 KernelMessage.WriteLine("StackState at {0:X8}", (uint)stackState);
 
             stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
@@ -343,7 +353,7 @@ namespace Lonos.Kernel.Core.Scheduling
                 thread.StackState = (IDTTaskStack*)stackState;
             }
 
-            if (KConfig.TraceThreadSwitch)
+            if (KConfig.TraceTaskSwitch)
             {
                 KernelMessage.Write("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, EIP={3:X8}", threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->Stack.EIP);
                 if (thread.User)
@@ -380,7 +390,7 @@ namespace Lonos.Kernel.Core.Scheduling
             var thread = Threads[threadID];
             var proc = thread.Process;
 
-            if (KConfig.TraceThreadSwitch)
+            if (KConfig.TraceTaskSwitch)
                 KernelMessage.WriteLine("Switching to Thread {0}. StackState: {1:X8}", threadID, (uint)thread.StackState);
 
             //Assert.True(thread != null, "invalid thread id");
@@ -469,7 +479,8 @@ namespace Lonos.Kernel.Core.Scheduling
                 }
 
                 thread.FreeMemory();
-                KernelMessage.WriteLine("Thread disposed");
+                if (KConfig.TraceThreads)
+                    KernelMessage.WriteLine("Thread disposed");
 
                 thread.Status = ThreadStatus.Empty;
             }

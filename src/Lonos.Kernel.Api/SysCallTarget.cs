@@ -8,18 +8,15 @@ namespace Lonos.Kernel
     {
         Unset = 0,
 
-        Interrupt = 1,
+        ServiceReturn = 1,
+        Interrupt = 2,
 
-        RequestMemory = 20,
-        ServiceReturn = 21,
-        ServiceFunc1 = 22,
-        RequestMessageBuffer = 23,
-        WriteDebugMessage = 24,
-        GetProcessIDForCommand = 25,
-        GetPhysicalMemory = 26,
-        TranslateVirtualToPhysicalAddress = 27,
-        WriteDebugChar = 28,
-        SetThreadPriority = 29,
+        GetProcessIDForCommand = 10,
+
+        RequestMessageBuffer = 20,
+        RequestMemory = 21,
+        GetPhysicalMemory = 22,
+        TranslateVirtualToPhysicalAddress = 23,
 
         OpenFile = 30,
         ReadFile = 31,
@@ -27,15 +24,22 @@ namespace Lonos.Kernel
         CreateFifo = 33,
 
         CreateMemoryProcess = 40,
+        SetThreadPriority = 41,
 
-        HostCommunication_OpenFile = 41,
-        HostCommunication_ReadFile = 42,
-        HostCommunication_WriteFile = 43,
-        HostCommunication_CreateProcess = 44,
+        SetServiceStatus = 50,
+        RegisterService = 51,
+        RegisterInterrupt = 52,
 
-        SetServiceStatus = 45,
-        RegisterService = 46,
-        RegisterInterrupt = 47,
+        WriteDebugMessage = 60,
+        WriteDebugChar = 61,
+
+        //ServiceFunc1 = 100,
+
+        HostCommunication_OpenFile = 110,
+        HostCommunication_ReadFile = 111,
+        HostCommunication_WriteFile = 112,
+        HostCommunication_CreateProcess = 113,
+
     }
 
 }

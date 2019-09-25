@@ -229,37 +229,4 @@ namespace Lonos.Kernel
 
     }
 
-    public static class Console
-    {
-
-        private static MemoryRegion buf;
-
-        static Console()
-        {
-            var writeDebugMessageProcID = SysCalls.GetProcessIDForCommand(SysCallTarget.WriteDebugMessage);
-            buf = SysCalls.RequestMessageBuffer(4096, writeDebugMessageProcID);
-        }
-
-        public static void Write(string msg)
-        {
-            SysCalls.WriteDebugMessage(buf, msg);
-        }
-
-        public static void WriteLine(string msg)
-        {
-            SysCalls.WriteDebugMessage(buf, msg);
-            SysCalls.WriteDebugChar('\n');
-        }
-
-        public static void WriteLine()
-        {
-            SysCalls.WriteDebugChar('\n');
-        }
-
-        public static void Write(char c)
-        {
-            SysCalls.WriteDebugChar(c);
-        }
-    }
-
 }

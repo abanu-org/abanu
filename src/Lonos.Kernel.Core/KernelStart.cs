@@ -122,9 +122,6 @@ namespace Lonos.Kernel.Core
                 Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2" });
                 userProc.Start();
 
-                var proc = ProcessManager.StartProcess("App.HelloService");
-                Serv = proc.Service;
-
                 var fileProc = ProcessManager.StartProcess("Service.Basic");
                 FileServ = fileProc.Service;
 
@@ -134,27 +131,30 @@ namespace Lonos.Kernel.Core
                 }
                 KernelMessage.WriteLine("Service Ready");
 
-                var buf = Lonos.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
-                var kb = Lonos.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
-                KernelMessage.Write("kb Handle: {0:X8}", kb);
-                buf.Size = 4;
-                Lonos.Runtime.SysCalls.WriteFile(kb, buf);
-                Lonos.Runtime.SysCalls.ReadFile(kb, buf);
+                //var buf = Lonos.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
+                //var kb = Lonos.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
+                //KernelMessage.Write("kb Handle: {0:X8}", kb);
+                //buf.Size = 4;
+                //Lonos.Runtime.SysCalls.WriteFile(kb, buf);
+                //Lonos.Runtime.SysCalls.ReadFile(kb, buf);
 
                 //var procHostCommunication = ProcessManager.StartProcess("Service.HostCommunication");
                 //ServHostCommunication = new Service(procHostCommunication);
                 //// TODO: Optimize Registration
                 //SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
 
-                var p2 = ProcessManager.StartProcess("App.HelloKernel");
-                //p2.Threads[0].SetArgument(0, 0x90);
-                //p2.Threads[0].SetArgument(4, 0x94);
-                //p2.Threads[0].SetArgument(8, 0x98);
-                p2.Threads[0].Debug = true;
+                //var proc = ProcessManager.StartProcess("App.HelloService");
+                //Serv = proc.Service;
 
-                //var p3 = ProcessManager.StartProcess("App.Shell");
+                //var p2 = ProcessManager.StartProcess("App.HelloKernel");
+                ////p2.Threads[0].SetArgument(0, 0x90);
+                ////p2.Threads[0].SetArgument(4, 0x94);
+                ////p2.Threads[0].SetArgument(8, 0x98);
+                //p2.Threads[0].Debug = true;
 
-                //ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
+                var p3 = ProcessManager.StartProcess("App.Shell");
+
+                ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
             }
 
             KernelMessage.WriteLine("Enter Main Loop");

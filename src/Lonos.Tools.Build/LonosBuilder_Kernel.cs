@@ -188,6 +188,7 @@ namespace Lonos.Tools.Build
                         Name = "Service.Basic",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,
+
                         EmitMethod = (section, writer) =>
                         {
                             var data = File.ReadAllBytes(Path.Combine(Env.Get("LONOS_PROJDIR"), "os", "Lonos.Service.Basic.bin"));

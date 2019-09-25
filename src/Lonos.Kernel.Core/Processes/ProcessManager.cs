@@ -81,9 +81,8 @@ namespace Lonos.Kernel.Core.Processes
 
         private static unsafe Process StartProcessFromElf(ElfHelper elf, string path, uint argumentBufferSize = 0)
         {
-            KernelMessage.WriteLine("Create proc: {0}", path);
-
             var proc = CreateEmptyProcess(new ProcessCreateOptions() { User = true });
+            KernelMessage.WriteLine("Create proc: {0}, PID: {1}", path, proc.ProcessID);
             proc.Path = path;
             proc.PageTable = PageTable.CreateInstance();
 

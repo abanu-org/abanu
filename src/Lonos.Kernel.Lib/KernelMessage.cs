@@ -230,6 +230,13 @@ namespace Lonos.Kernel.Core
             sb.WriteTo(Dev);
         }
 
+        public static void Write(NullTerminatedString* value)
+        {
+            var sb = new StringBuffer();
+            sb.Append(value);
+            sb.WriteTo(Dev);
+        }
+
         public static void WriteLineHex(uint value)
         {
             var buf = new StringBuffer(value, "X");

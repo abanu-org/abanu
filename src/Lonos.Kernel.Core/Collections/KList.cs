@@ -117,7 +117,7 @@ namespace Lonos.Kernel.Core.Collections
                 {
                     if (value > 0)
                     {
-                        KernelMessage.WriteLine("capacity-value: {0}, _size: {1}", (uint)value, (uint)_size);
+                        //KernelMessage.WriteLine("capacity-value: {0}, _size: {1}", (uint)value, (uint)_size);
                         T[] newItems = CreateArray(value);
                         if (_size > 0)
                             Copy(_items, 0, newItems, 0, _size);
@@ -137,7 +137,7 @@ namespace Lonos.Kernel.Core.Collections
 
         private static void Copy(T[] source, int sourceIndex, T[] destination, int destinationIndex, int size)
         {
-            KernelMessage.WriteLine("Copy: {0}, {1}, {2}, {3}, {4}", (uint)source.Length, (uint)sourceIndex, (uint)destination.Length, (uint)destinationIndex, (uint)size);
+            //KernelMessage.WriteLine("Copy: {0}, {1}, {2}, {3}, {4}", (uint)source.Length, (uint)sourceIndex, (uint)destination.Length, (uint)destinationIndex, (uint)size);
 
             for (int i = 0; i < size; i++)
             {
