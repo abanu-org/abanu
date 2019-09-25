@@ -13,9 +13,9 @@ namespace Lonos.Kernel.Core
 
     public unsafe interface IPageFrameAllocator
     {
-        Page* AllocatePages(PageFrameRequestFlags flags, uint pages);
+        Page* AllocatePages(uint pages);
 
-        Page* AllocatePage(PageFrameRequestFlags flags);
+        Page* AllocatePage();
 
         void Free(Page* page);
 

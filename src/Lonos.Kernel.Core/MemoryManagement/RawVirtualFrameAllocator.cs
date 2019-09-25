@@ -33,7 +33,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         internal static unsafe Addr RequestRawVirtalMemoryPages(uint pages)
         {
             Addr virt = _nextVirtAddr;
-            var head = PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, pages);
+            var head = PageFrameManager.AllocatePages(pages);
             if (head == null)
                 return Addr.Zero;
 

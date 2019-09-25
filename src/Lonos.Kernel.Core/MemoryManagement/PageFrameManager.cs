@@ -15,14 +15,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
             Default.Setup();
         }
 
-        public static Page* AllocatePages(PageFrameRequestFlags flags, uint pages)
+        public static Page* AllocatePages(uint pages)
         {
-            return Default.AllocatePages(flags, pages);
+            return Default.AllocatePages(pages);
         }
 
-        public static Page* AllocatePage(PageFrameRequestFlags flags)
+        public static Page* AllocatePage()
         {
-            var p = Default.AllocatePage(flags);
+            var p = Default.AllocatePage();
             //if (p->PhysicalAddress == 0x01CA4000)
             //    Panic.Error("DEBUG-MARKER");
             return p;

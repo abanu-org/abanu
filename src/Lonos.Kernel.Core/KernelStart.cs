@@ -72,7 +72,7 @@ namespace Lonos.Kernel.Core
             PageFrameManager.Setup();
 
             KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
-            PageFrameManager.AllocatePages(PageFrameRequestFlags.Default, 10);
+            PageFrameManager.AllocatePages(10);
             KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
             RawVirtualFrameAllocator.Setup();
 
