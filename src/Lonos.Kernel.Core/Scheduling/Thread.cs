@@ -57,6 +57,7 @@ namespace Lonos.Kernel.Core.Scheduling
             RawVirtualFrameAllocator.FreeRawVirtalMemoryPages(StackTop);
             if (User)
                 RawVirtualFrameAllocator.FreeRawVirtalMemoryPages(StackState);
+            RawVirtualFrameAllocator.FreeRawVirtalMemoryPages(KernelStack);
         }
 
         public void Start()

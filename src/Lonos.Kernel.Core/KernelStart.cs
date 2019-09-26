@@ -143,14 +143,14 @@ namespace Lonos.Kernel.Core
                 //// TODO: Optimize Registration
                 //SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
 
-                //var proc = ProcessManager.StartProcess("App.HelloService");
-                //Serv = proc.Service;
+                var proc = ProcessManager.StartProcess("App.HelloService");
+                Serv = proc.Service;
 
-                //var p2 = ProcessManager.StartProcess("App.HelloKernel");
-                ////p2.Threads[0].SetArgument(0, 0x90);
-                ////p2.Threads[0].SetArgument(4, 0x94);
-                ////p2.Threads[0].SetArgument(8, 0x98);
-                //p2.Threads[0].Debug = true;
+                var p2 = ProcessManager.StartProcess("App.HelloKernel");
+                //p2.Threads[0].SetArgument(0, 0x90);
+                //p2.Threads[0].SetArgument(4, 0x94);
+                //p2.Threads[0].SetArgument(8, 0x98);
+                p2.Threads[0].Debug = true;
 
                 var p3 = ProcessManager.StartProcess("App.Shell");
 

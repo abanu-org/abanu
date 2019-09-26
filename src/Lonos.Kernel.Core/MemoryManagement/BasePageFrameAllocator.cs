@@ -156,9 +156,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
                             }
 
                             p = p->Next;
+                            if (p == null)
+                                break;
                         }
 
                     }
+
+                    if (p == null)
+                        continue;
 
                     if (p->Tail != null)
                         p = p->Tail;

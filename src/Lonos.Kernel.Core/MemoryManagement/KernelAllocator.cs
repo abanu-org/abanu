@@ -38,6 +38,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         protected override uint munmap(void* addr)
         {
+            RawVirtualFrameAllocator.FreeRawVirtalMemoryPages(addr);
             return 0;
         }
 

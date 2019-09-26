@@ -21,7 +21,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //_nextVirtAddr = _startVirtAddr;
 
             var allocator = new VirtualPageAllocator();
-            allocator.Initialize(new MemoryRegion(Address.VirtMapStart, 20 * 1024 * 1024));
+            allocator.Initialize(new MemoryRegion(Address.VirtMapStart, 100 * 1024 * 1024));
             Allocator = allocator;
 
             var identityAllocator = new VirtualPageAllocator();
@@ -57,7 +57,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             }
             PageTable.KernelTable.Flush();
 
-            KernelMessage.WriteLine("VirtAllocator: Allocated {0} Pages at {1:X8}, PageNum {2}", pages, virtHead->Address, virtHead->PageNum);
+            KernelMessage.WriteLine("VirtAllocator: Allocated {0} Pages at {1:X8}, PageNum {2}, Remaining {3} Pages", pages, virtHead->Address, virtHead->PageNum, Allocator.FreePages);
 
             return virtHead->Address;
         }
@@ -90,11 +90,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var p = Allocator.GetPageByAddress(virtAddr);
             if (p == null)
             {
-                KernelMessage.WriteLine("Free: Invalid Page Addr {0:X8}", virtAddr);
+                KernelMessage.WriteLine("Virtual Allocator: Free(): Invalid Page Addr {0:X8}", virtAddr);
                 return;
             }
 
             Allocator.Free(p);
+
+            KernelMessage.WriteLine("Virtual Allocator: Free PageNum {0} at {1:X8}, Remaining Pages: {2}", p->PageNum, virtAddr, Allocator.FreePages);
         }
 
     }

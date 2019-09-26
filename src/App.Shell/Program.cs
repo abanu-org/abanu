@@ -34,6 +34,7 @@ namespace Lonos.Kernel
 
             while (true)
             {
+                continue;
                 //SysCalls.WriteDebugChar('~');
                 var gotBytes = SysCalls.ReadFile(kb, buf);
                 if (gotBytes > 0)
