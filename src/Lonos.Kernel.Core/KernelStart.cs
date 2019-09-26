@@ -69,11 +69,11 @@ namespace Lonos.Kernel.Core
 
             //InitialKernelProtect();
 
-            PageFrameManager.Setup();
+            PhysicalPageManager.Setup();
 
-            KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
-            PageFrameManager.AllocatePages(10);
-            KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
+            KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
+            PhysicalPageManager.AllocatePages(10);
+            KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
             RawVirtualFrameAllocator.Setup();
 
             Memory.Setup();
@@ -312,7 +312,7 @@ namespace Lonos.Kernel.Core
             KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
             ar.Destroy();
 
-            KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
+            KernelMessage.WriteLine("Pages free: {0}", PhysicalPageManager.PagesAvailable);
 
             for (var i = 0; i < 10000; i++)
             {
@@ -320,7 +320,7 @@ namespace Lonos.Kernel.Core
                 s[1] = 5;
                 Memory.FreeObject(s);
             }
-            KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
+            KernelMessage.WriteLine("Pages free: {0}", PhysicalPageManager.PagesAvailable);
             //Memory.FreeObject(s);
 
         }

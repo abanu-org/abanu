@@ -48,7 +48,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
             for (uint i = 0; i < TotalPages; i++)
             {
-                var p = GetPageByNum(i);
+                var p = GetPageByIndex(i);
                 if (i % 64 == 0)
                 {
                     sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, p->PageNum, p->Address, (uint)p);
@@ -67,6 +67,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         }
 
         public abstract Page* GetPageByNum(uint pageNum);
+        public abstract Page* GetPageByIndex(uint pageIndex);
 
         private static Page* lastAllocatedPage;
 
@@ -98,7 +99,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 uint cnt = 0;
 
                 if (lastAllocatedPage == null)
-                    lastAllocatedPage = GetPageByNum(0);
+                    lastAllocatedPage = GetPageByIndex(0);
 
                 Page* p = lastAllocatedPage->Next;
                 while (true)
@@ -106,7 +107,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                     statBlocks++;
 
                     if (p == null)
-                        p = GetPageByNum(0);
+                        p = GetPageByIndex(0);
 
                     if (p->Status == PageStatus.Free)
                     {
@@ -204,5 +205,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// </summary>
         public static uint PageSize => 4096;
 
+        public abstract MemoryRegion Region { get; }
     }
 }

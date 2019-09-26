@@ -22,9 +22,11 @@ namespace Lonos.Kernel.Core
         Page* GetPageByAddress(Addr addr);
 
         Page* GetPageByNum(uint pageNum);
+        Page* GetPageByIndex(uint pageIndex);
         uint TotalPages { get; }
 
         uint FreePages { get; set; }
+        MemoryRegion Region { get; }
 
     }
 

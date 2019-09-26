@@ -3,7 +3,7 @@
 
 namespace Lonos.Kernel.Core.MemoryManagement
 {
-    public static unsafe class PageFrameManager
+    public static unsafe class PhysicalPageManager
     {
 
         private static IPageFrameAllocator Default;
@@ -12,7 +12,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static void Setup()
         {
             var allocator = new PhysicalPageAllocator();
-            allocator.Setup();
+            allocator.Initialize();
             Default = allocator;
         }
 
@@ -29,6 +29,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return p;
         }
 
+        public static MemoryRegion AllocateRegion(USize size)
+        {
+            var pages = KMath.DivCeil(size, 4096);
+            var p = AllocatePages(pages);
+            return new MemoryRegion(p->Address, pages * 4096);
+        }
+
         public static void Free(Page* page)
         {
             Default.Free(page);
@@ -42,6 +49,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static Page* GetPageByNum(uint pageNum)
         {
             return Default.GetPageByNum(pageNum);
+        }
+
+        public static Page* GetPageByIndex(uint pageIndex)
+        {
+            return Default.GetPageByIndex(pageIndex);
         }
 
         public static uint PagesAvailable

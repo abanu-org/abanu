@@ -220,13 +220,13 @@ namespace Lonos.Kernel.Core.Scheduling
             var argBufSize = options.ArgumentBufferSize;
             thread.ArgumentBufferSize = options.ArgumentBufferSize;
 
-            var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
+            var stackPages = KMath.DivCeil(stackSize, PhysicalPageManager.PageSize);
 
             if (KConfig.TraceThreads)
                 KernelMessage.WriteLine("Requesting {0} stack pages", stackPages);
 
             var debugPadding = 8u;
-            stackSize = stackPages * PageFrameManager.PageSize;
+            stackSize = stackPages * PhysicalPageManager.PageSize;
             var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
             MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, (uint)stack, stackSize);
 

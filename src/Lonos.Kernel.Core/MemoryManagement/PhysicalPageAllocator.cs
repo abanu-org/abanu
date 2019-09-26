@@ -11,18 +11,22 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private KernelMemoryMap kmap;
 
-        private uint _PageCount;
-        public override uint TotalPages => _PageCount;
+        private MemoryRegion _Region;
+        public override MemoryRegion Region => _Region;
+
+        private uint _TotalPages;
+        public override uint TotalPages => _TotalPages;
 
         private Page* PageArray;
 
         /// <summary>
         /// Setup the physical page manager
         /// </summary>
-        public void Setup()
+        public void Initialize()
         {
             uint physMem = BootInfo.Header->InstalledPhysicalMemory;
-            _PageCount = physMem / PageSize;
+            _Region = new MemoryRegion(0, physMem);
+            _TotalPages = physMem / PageSize;
             kmap = KernelMemoryMapManager.Allocate(TotalPages * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
             PageArray = (Page*)kmap.Start;
 
@@ -101,10 +105,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public override Page* GetPageByNum(uint pageNum)
         {
-            if (pageNum > TotalPages)
-                return null;
-            return &PageArray[pageNum];
+            return GetPageByIndex(pageNum);
         }
 
+        public override unsafe Page* GetPageByIndex(uint pageIndex)
+        {
+            if (pageIndex > TotalPages)
+                return null;
+            return &PageArray[pageIndex];
+        }
     }
 }

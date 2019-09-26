@@ -9,16 +9,22 @@ namespace Lonos.Kernel.Core.MemoryManagement
     public static class RawVirtualFrameAllocator
     {
 
-        private static Addr _startVirtAddr;
-        private static Addr _nextVirtAddr;
+        //private static Addr _startVirtAddr;
+        //private static Addr _nextVirtAddr;
+
+        private static VirtualPageAllocator Allocator;
 
         private static Addr _identityStartVirtAddr;
         private static Addr _identityNextVirtAddr;
 
         public static void Setup()
         {
-            _startVirtAddr = Address.VirtMapStart;
-            _nextVirtAddr = _startVirtAddr;
+            //_startVirtAddr = Address.VirtMapStart;
+            //_nextVirtAddr = _startVirtAddr;
+
+            var allocator = new VirtualPageAllocator();
+            allocator.Initialize(new MemoryRegion(Address.VirtMapStart, 20 * 1024 * 1024));
+            Allocator = allocator;
 
             _identityStartVirtAddr = Address.IdentityMapStart;
             _identityNextVirtAddr = _identityStartVirtAddr;
@@ -32,20 +38,27 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// </summary>
         internal static unsafe Addr RequestRawVirtalMemoryPages(uint pages)
         {
-            Addr virt = _nextVirtAddr;
-            var head = PageFrameManager.AllocatePages(pages);
-            if (head == null)
+            var physHead = PhysicalPageManager.AllocatePages(pages);
+            if (physHead == null)
                 return Addr.Zero;
 
-            var p = head;
+            var virtHead = Allocator.AllocatePages(pages);
+            if (virtHead == null)
+            {
+                PhysicalPageManager.Free(physHead);
+                return Addr.Zero;
+            }
+
+            var p = physHead;
+            var v = virtHead;
             for (var i = 0; i < pages; i++)
             {
-                PageTable.KernelTable.MapVirtualAddressToPhysical(_nextVirtAddr, p->Address);
-                _nextVirtAddr += 4096;
+                PageTable.KernelTable.MapVirtualAddressToPhysical(v->Address, p->Address);
                 p = p->Next;
+                v = v->Next;
             }
             PageTable.KernelTable.Flush();
-            return virt;
+            return virtHead->Address;
         }
 
         /// <summary>
@@ -54,7 +67,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         internal static unsafe Addr RequestIdentityMappedVirtalMemoryPages(uint pages)
         {
             Addr virt = _identityNextVirtAddr;
-            var head = PageFrameManager.GetPhysPage(virt);
+            var head = PhysicalPageManager.GetPhysPage(virt);
             if (head == null)
                 return Addr.Zero;
 

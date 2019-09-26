@@ -44,9 +44,10 @@
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
     <Compile Include="MemoryManagement\BasePageFrameAllocator.cs" />
     <Compile Include="MemoryManagement\KernelAllocator.cs" />
-    <Compile Include="MemoryManagement\PageFrameManager.cs" />
     <Compile Include="MemoryManagement\PageTableExtensions.cs" />
     <Compile Include="Collections\FifoQueue.cs" />
+    <Compile Include="MemoryManagement\PhysicalPageManager.cs" />
+    <Compile Include="MemoryManagement\VirtualPageAllocator.cs" />
     <Compile Include="MemoryManagement\PhysicalPageAllocator.cs" />
     <Compile Include="Processes\Process.cs" />
     <Compile Include="Processes\ProcessCreateOptions.cs" />

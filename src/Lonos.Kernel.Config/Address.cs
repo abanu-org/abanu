@@ -31,8 +31,8 @@ namespace Lonos.Kernel.Core
         public const uint KernelBootInfo = InitialStack + 0x1000; // 10MB+4KB
         public const uint OriginalKernelElfSection = KernelBootInfo + 0x1000;  //10MB+8KB
 
-        public const uint IdentityMapStart = 0x0C000000; //192mb
-        public const uint VirtMapStart = 0x40000000; //1gb
+        public const uint IdentityMapStart = 0x0C000000; // 192mb
+        public const uint VirtMapStart = 0x40000000; // 1gb
 
         public const uint InterruptControlBlock = 0xC0000000;
 

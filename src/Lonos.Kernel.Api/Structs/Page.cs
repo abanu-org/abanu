@@ -20,8 +20,8 @@ namespace Lonos.Kernel.Core
     public unsafe struct Page
     {
         public PageStatus Status;
-        public ulong Flags;
-        public Atomic UsageCount;
+        //public ulong Flags;
+        //public Atomic UsageCount;
 
         public Addr Address;
 
