@@ -27,7 +27,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// </summary>
         public void Initialize(MemoryRegion virtRegion)
         {
-            Panic.Error("tet");
             _Region = virtRegion;
             firstPageNum = KMath.DivFloor(virtRegion.Start, 4096);
             _totalPages = KMath.DivCeil(virtRegion.Size, 4096);
@@ -37,7 +36,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var firstSelfPageNum = KMath.DivFloor(kmap.Start, 4096);
             var selfPages = KMath.DivFloor(kmap.Size, 4096);
 
-            KernelMessage.WriteLine("Virtual Page Frame Array allocated {0} pages, beginning with page {1}", selfPages, firstSelfPageNum);
+            KernelMessage.WriteLine("Virtual Page Frame Array allocated {0} pages for its own, beginning with page {1}", selfPages, firstSelfPageNum);
+            KernelMessage.WriteLine("Controlling {0} Pages, PageNum {1}-{2}, Addr {3:X8}-{4:X8}", TotalPages, firstPageNum, firstPageNum + TotalPages, virtRegion.Start, virtRegion.Start + virtRegion.Size);
 
             PageTableExtensions.SetWritable(PageTable.KernelTable, kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
@@ -45,13 +45,25 @@ namespace Lonos.Kernel.Core.MemoryManagement
             FreePages = TotalPages;
             for (uint i = 0; i < TotalPages; i++)
             {
-                PageArray[i].Address = virtRegion.Start + (i * PageSize);
+                PageArray[i].Address = (i + firstPageNum) * PageSize;
                 PageArray[i].Status = PageStatus.Free;
                 if (i != 0)
                     PageArray[i - 1].Next = &PageArray[i];
             }
 
+            SelfTest();
+
             KernelMessage.WriteLine("Virtual Kernel Pages Free: {0}", FreePages);
+        }
+
+        protected void SelfTest()
+        {
+            KernelMessage.WriteLine("Self-Testing Virtual Allocator...");
+            Assert.True(PageArray[0].Address == Region.Start);
+            Assert.True(PageArray[0].PageNum == firstPageNum);
+            Assert.True(GetPageByNum(firstPageNum)->PageNum == firstPageNum);
+            Assert.True(GetPageByAddress(Region.Start)->Address == Region.Start);
+            KernelMessage.WriteLine("Self-Testing Virtual Allocator done");
         }
 
         public override Page* GetPageByNum(uint pageNum)
@@ -61,7 +73,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public override unsafe Page* GetPageByIndex(uint pageIndex)
         {
-            if (pageIndex > TotalPages)
+            if (pageIndex >= TotalPages)
                 return null;
             return &PageArray[pageIndex];
         }

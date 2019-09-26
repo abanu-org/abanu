@@ -33,7 +33,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var firstSelfPageNum = KMath.DivFloor(kmap.Start, 4096);
             var selfPages = KMath.DivFloor(kmap.Size, 4096);
 
-            KernelMessage.WriteLine("Page Frame Array allocated {0} pages, beginning with page {1}", selfPages, firstSelfPageNum);
+            KernelMessage.WriteLine("Page Frame Array allocated {0} pages for its own, beginning with page {1}", selfPages, firstSelfPageNum);
 
             PageTableExtensions.SetWritable(PageTable.KernelTable, kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
@@ -110,7 +110,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public override unsafe Page* GetPageByIndex(uint pageIndex)
         {
-            if (pageIndex > TotalPages)
+            if (pageIndex >= TotalPages)
                 return null;
             return &PageArray[pageIndex];
         }

@@ -17,6 +17,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
     public abstract unsafe class BasePageFrameAllocator : IPageFrameAllocator
     {
 
+        public BasePageFrameAllocator()
+        {
+            lastAllocatedPage = null;
+        }
+
         public Page* AllocatePages(uint pages)
         {
             return Allocate(pages);
@@ -26,11 +31,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             var p = Allocate(1);
             return p;
-        }
-
-        public void Free(Page* page)
-        {
-            Free(page->Address);
         }
 
         public uint FreePages { get; set; }
@@ -61,15 +61,15 @@ namespace Lonos.Kernel.Core.MemoryManagement
             }
         }
 
-        public Page* GetPageByAddress(Addr physAddr)
+        public Page* GetPageByAddress(Addr addr)
         {
-            return GetPageByNum((uint)physAddr / PageSize);
+            return GetPageByNum((uint)addr / PageSize);
         }
 
         public abstract Page* GetPageByNum(uint pageNum);
         public abstract Page* GetPageByIndex(uint pageIndex);
 
-        private static Page* lastAllocatedPage;
+        private Page* lastAllocatedPage;
 
         /// <summary>
         /// Allocate a physical page from the free list
@@ -178,11 +178,10 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Releases a page to the free list
         /// </summary>
-        private void Free(Addr address)
+        public void Free(Page* p)
         {
             lock (this)
             {
-                var p = GetPageByAddress(address);
                 if (p->Free)
                     return;
 
@@ -206,5 +205,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static uint PageSize => 4096;
 
         public abstract MemoryRegion Region { get; }
+
     }
 }

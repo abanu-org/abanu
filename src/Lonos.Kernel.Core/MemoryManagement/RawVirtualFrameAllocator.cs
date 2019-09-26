@@ -13,9 +13,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //private static Addr _nextVirtAddr;
 
         private static VirtualPageAllocator Allocator;
-
-        private static Addr _identityStartVirtAddr;
-        private static Addr _identityNextVirtAddr;
+        private static VirtualPageAllocator IdentityAllocator;
 
         public static void Setup()
         {
@@ -26,9 +24,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
             allocator.Initialize(new MemoryRegion(Address.VirtMapStart, 20 * 1024 * 1024));
             Allocator = allocator;
 
-            _identityStartVirtAddr = Address.IdentityMapStart;
-            _identityNextVirtAddr = _identityStartVirtAddr;
-
+            var identityAllocator = new VirtualPageAllocator();
+            identityAllocator.Initialize(new MemoryRegion(Address.IdentityMapStart, 20 * 1024 * 1024));
+            IdentityAllocator = identityAllocator;
         }
 
         /// <summary>
@@ -58,6 +56,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 v = v->Next;
             }
             PageTable.KernelTable.Flush();
+
+            KernelMessage.WriteLine("VirtAllocator: Allocated {0} Pages at {1:X8}, PageNum {2}", pages, virtHead->Address, virtHead->PageNum);
+
             return virtHead->Address;
         }
 
@@ -66,26 +67,34 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// </summary>
         internal static unsafe Addr RequestIdentityMappedVirtalMemoryPages(uint pages)
         {
-            Addr virt = _identityNextVirtAddr;
-            var head = PhysicalPageManager.GetPhysPage(virt);
-            if (head == null)
+            var virtHead = IdentityAllocator.AllocatePages(pages);
+            if (virtHead == null)
+            {
                 return Addr.Zero;
+            }
 
-            var p = head;
+            var p = PhysicalPageManager.GetPageByNum(virtHead->PageNum);
+            var v = virtHead;
             for (var i = 0; i < pages; i++)
             {
-                p->Status = PageStatus.Used;
-                PageTable.KernelTable.MapVirtualAddressToPhysical(_identityNextVirtAddr, p->Address);
-                _identityNextVirtAddr += 4096;
+                PageTable.KernelTable.MapVirtualAddressToPhysical(v->Address, p->Address);
                 p = p->Next;
+                v = v->Next;
             }
             PageTable.KernelTable.Flush();
-            return virt;
+            return virtHead->Address;
         }
 
         internal static unsafe void FreeRawVirtalMemoryPages(Addr virtAddr)
         {
+            var p = Allocator.GetPageByAddress(virtAddr);
+            if (p == null)
+            {
+                KernelMessage.WriteLine("Free: Invalid Page Addr {0:X8}", virtAddr);
+                return;
+            }
 
+            Allocator.Free(p);
         }
 
     }
