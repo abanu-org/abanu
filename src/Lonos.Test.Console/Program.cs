@@ -13,8 +13,8 @@ namespace Lonos.Test.Console
             System.Console.WriteLine(IntPtr.Size);
             System.Console.WriteLine("Hello World!");
             //new AllocTest().run();
-
-            new Lonos.Test.malloc4.Tester().run();
+            new Alloc6.Tester().run();
+            //new Lonos.Test.malloc4.Tester().run();
 
             System.Console.ReadLine();
         }
