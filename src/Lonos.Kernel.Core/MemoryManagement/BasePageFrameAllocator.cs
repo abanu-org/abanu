@@ -142,7 +142,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                                     p = p->Next;
                                     FreePages--;
                                 }
-                                lastAllocatedPage = p;
+                                lastAllocatedPage = head->Tail;
 
                                 //KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress + 4096 - 1);
 
@@ -183,24 +183,30 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Releases a page to the free list
         /// </summary>
-        public void Free(Page* p)
+        public void Free(Page* page)
         {
             lock (this)
             {
-                if (p->Free)
+                if (page->Free)
+                {
+                    Panic.Error("double free");
                     return;
+                }
 
-                var num = p->PagesUsed;
+                var num = page->PagesUsed;
 
+                var p = page;
                 for (var n = 0; n < num; n++)
                 {
-                    p->Status = PageStatus.Used;
+                    p->Status = PageStatus.Debug;
                     p->PagesUsed = 0;
                     p->Head = null;
                     p->Tail = null;
                     p = p->Next;
                     FreePages++;
                 }
+
+                lastAllocatedPage = page;
             }
         }
 

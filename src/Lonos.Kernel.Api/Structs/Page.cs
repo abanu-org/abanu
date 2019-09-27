@@ -14,6 +14,7 @@ namespace Lonos.Kernel.Core
         Free = 1,
         Used = 2,
         Reserved = 4,
+        Debug = 5,
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
