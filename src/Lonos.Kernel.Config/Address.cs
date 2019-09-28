@@ -1,6 +1,8 @@
 ﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
+using System;
+
 namespace Lonos.Kernel.Core
 {
     /// <summary>
@@ -33,6 +35,11 @@ namespace Lonos.Kernel.Core
 
         public const uint IdentityMapStart = 0x0C000000; // 192mb
         public const uint VirtMapStart = 0x40000000; // 1gb
+
+        [Obsolete("Only temporary!")]
+        public const uint PhysMapStart = 128 * 1024 * 1024;
+        [Obsolete("Only temporary!")]
+        public const uint PhysMapSize = 64 * 1024 * 1024;
 
         public const uint InterruptControlBlock = 0xC0000000;
 

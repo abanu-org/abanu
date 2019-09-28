@@ -30,14 +30,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
             region.Size = KMath.FloorToPowerOfTwo(region.Size);
             _Region = region;
             var totalPages = region.Size >> BuddyAllocatorImplementation.BUDDY_PAGE_SHIFT;
-            KernelMessage.WriteLine("Init Allocator: {0} Pages", totalPages);
+            KernelMessage.WriteLine("Init Allocator: StartAddr: {0}, {1} Pages", region.Start, totalPages);
             // init global memory block
             // all pages area
             var pages_size = totalPages * (uint)sizeof(Page);
             KernelMessage.WriteLine("Page Array Size in bytes: {0}", pages_size);
             Pages = (Page*)AllocRawMemory(pages_size);
             KernelMessage.WriteLine("Page Array Addr: {0:X8}", (uint)Pages);
-            var start_addr = 0U;
+            var start_addr = region.Start;
             Zone.free_area = (BuddyAllocatorImplementation.free_area*)AllocRawMemory(BuddyAllocatorImplementation.BUDDY_MAX_ORDER * (uint)sizeof(BuddyAllocatorImplementation.free_area));
 
             fixed (BuddyAllocatorImplementation.mem_zone* zone = &Zone)

@@ -150,11 +150,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
             page->order = order;
         }
 
-        static void BUDDY_BUG(string msg)
+        static void BUDDY_BUG(string msg, uint value = 0)
         {
             //printf("BUDDY_BUG in %s, %d.\n", f, line);
             //System.Console.WriteLine(msg);
-            KernelMessage.Path("Allocator", msg);
+            KernelMessage.Path("Allocator", msg, value);
             //assert(0);
         }
 
@@ -298,7 +298,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
             if (order >= BUDDY_MAX_ORDER)
             {
-                BUDDY_BUG("buddy_get_pages: error");
+                BUDDY_BUG("buddy_get_pages: order >= BUDDY_MAX_ORDER, {0}", order);
                 return null;
             }
             //TODO: lock zone->lock

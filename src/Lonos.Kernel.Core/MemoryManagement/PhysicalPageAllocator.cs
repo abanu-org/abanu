@@ -14,7 +14,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public void Initialize()
         {
             uint physMem = BootInfo.Header->InstalledPhysicalMemory;
-            var region = new MemoryRegion(0, physMem);
+            var region = new MemoryRegion(Address.PhysMapStart, Address.PhysMapSize);
 
             Initialize(region);
         }
