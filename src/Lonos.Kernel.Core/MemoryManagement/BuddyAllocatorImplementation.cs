@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Lonos.CTypes;
 
 #pragma warning disable SA1300 // Element should begin with upper-case letter
 #pragma warning disable IDE1006 // Naming Styles
@@ -21,94 +22,11 @@ using System.Threading.Tasks;
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
 #pragma warning disable SA1117 // Parameters should be on same line or separate lines
 #pragma warning disable SA1116 // Split parameters should start on line after declaration
-#pragma warning disable SA1649 // File name should match first type name
 
-namespace Lonos.Test.Alloc6
+namespace Lonos.Kernel.Core.MemoryManagement
 {
-    public static unsafe class BuddyAllocatorImplementation
+    internal static unsafe class BuddyAllocatorImplementation
     {
-
-        #region list
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct list_head
-        {
-            public list_head* next;
-            public list_head* prev;
-        }
-
-        public const uint LIST_POISON1 = 0x00100100;
-        public const uint LIST_POISON2 = 0x00200200;
-
-        static void INIT_LIST_HEAD(list_head* list)
-        {
-            list->next = list;
-            list->prev = list;
-        }
-
-        static void __list_add(list_head* New, list_head* prev, list_head* next)
-        {
-            next->prev = New;
-            New->next = next;
-            New->prev = prev;
-            prev->next = New;
-        }
-
-        static void list_add(list_head* New, list_head* head)
-        {
-            __list_add(New, head, head->next);
-        }
-
-        static void list_add_tail(list_head* New, list_head* head)
-        {
-            __list_add(New, head->prev, head);
-        }
-
-        static void __list_del(list_head* prev, list_head* next)
-        {
-            next->prev = prev;
-            prev->next = next;
-        }
-
-        static void __list_del_entry(list_head* entry)
-        {
-            __list_del(entry->prev, entry->next);
-        }
-
-        static void list_del(list_head* entry)
-        {
-            __list_del(entry->prev, entry->next);
-            entry->next = (list_head*)LIST_POISON1;
-            entry->prev = (list_head*)LIST_POISON2;
-        }
-
-        static void list_replace(list_head* old, list_head* New)
-        {
-            New->next = old->next;
-            New->next->prev = New;
-            New->prev = old->prev;
-            New->prev->next = New;
-        }
-
-        static bool list_empty(list_head* head)
-        {
-            return head->next == head;
-        }
-
-        #region Macros
-
-        // #define container_of(ptr, type, member) \
-        //   ((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
-        //
-        // #define list_entry(ptr, type, member) \
-        //   container_of(ptr, type, member)
-        //
-        // #define list_for_each(pos, head) \
-        //   for (pos = (head)->next; pos != (head); pos = pos->next)
-
-        #endregion
-
-        #endregion
 
         public const byte BUDDY_PAGE_SHIFT = 12;
         public const uint BUDDY_PAGE_SIZE = 1 << (byte)BUDDY_PAGE_SHIFT;
@@ -121,17 +39,6 @@ namespace Lonos.Test.Alloc6
             PG_buddy, // in the buddy system
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public unsafe struct page
-        {
-            public list_head lru;
-            public uint flags;
-            //union {
-            public byte order;
-            public page* first_page;
-            //};
-        }
-
         public struct free_area
         {
             public list_head free_list;
@@ -142,7 +49,7 @@ namespace Lonos.Test.Alloc6
         {
             public uint page_num;
             public uint page_size;
-            public page* first_page;
+            public Page* first_page;
             public uint start_addr;
             public uint end_addr;
 
@@ -154,60 +61,60 @@ namespace Lonos.Test.Alloc6
         // One type is a compound page.
         // The first of the combined pages is head and the rest is tail.
 
-        static void __SetPageHead(page* page)
+        static void __SetPageHead(Page* page)
         {
             page->flags |= (1U << (byte)pageflags.PG_head);
         }
 
-        static void __SetPageTail(page* page)
+        static void __SetPageTail(Page* page)
         {
             page->flags |= (1U << (byte)pageflags.PG_tail);
         }
 
-        static void __SetPageBuddy(page* page)
+        static void __SetPageBuddy(Page* page)
         {
             page->flags |= (1U << (byte)pageflags.PG_buddy);
         }
         /**/
-        static void __ClearPageHead(page* page)
+        static void __ClearPageHead(Page* page)
         {
             page->flags &= ~(1U << (byte)pageflags.PG_head);
         }
 
-        static void __ClearPageTail(page* page)
+        static void __ClearPageTail(Page* page)
         {
             page->flags &= ~(1U << (byte)pageflags.PG_tail);
         }
 
-        static void __ClearPageBuddy(page* page)
+        static void __ClearPageBuddy(Page* page)
         {
             page->flags &= ~(1U << (byte)pageflags.PG_buddy);
         }
         /**/
-        static bool PageHead(page* page)
+        static bool PageHead(Page* page)
         {
             return (page->flags & (1U << (byte)pageflags.PG_head)) != 0;
         }
 
-        static bool PageTail(page* page)
+        static bool PageTail(Page* page)
         {
             return (page->flags & (1U << (byte)pageflags.PG_tail)) != 0;
         }
 
-        static bool PageBuddy(page* page)
+        static bool PageBuddy(Page* page)
         {
             return (page->flags & (1U << (byte)pageflags.PG_buddy)) != 0;
         }
 
         // Set the page's order and PG_buddy flags
 
-        static void set_page_order_buddy(page* page, byte order)
+        static void set_page_order_buddy(Page* page, byte order)
         {
             page->order = order;
             __SetPageBuddy(page);
         }
 
-        static void rmv_page_order_buddy(page* page)
+        static void rmv_page_order_buddy(Page* page)
         {
             page->order = 0;
             __ClearPageBuddy(page);
@@ -230,14 +137,14 @@ namespace Lonos.Test.Alloc6
         // The Linux kernel records the order of the combined page in the prev pointer of the second page.
         // This system records the order of the combined page in the page->order field of the first page.
 
-        static byte compound_order(page* page)
+        static byte compound_order(Page* page)
         {
             if (!PageHead(page))
                 return 0; // single page
             return page->order;
         }
 
-        static void set_compound_order(page* page, byte order)
+        static void set_compound_order(Page* page, byte order)
         {
             //page[1].lru.prev = (void *)order;
             page->order = order;
@@ -246,7 +153,16 @@ namespace Lonos.Test.Alloc6
         static void BUDDY_BUG(string msg)
         {
             //printf("BUDDY_BUG in %s, %d.\n", f, line);
-            System.Console.WriteLine(msg);
+            //System.Console.WriteLine(msg);
+            KernelMessage.Path("Allocator", msg);
+            //assert(0);
+        }
+
+        static void BUDDY_TRACE(string msg, uint value = 0)
+        {
+            //printf("BUDDY_BUG in %s, %d.\n", f, line);
+            //System.Console.WriteLine(msg);
+            KernelMessage.Path("Allocator", msg, value);
             //assert(0);
         }
 
@@ -257,12 +173,12 @@ namespace Lonos.Test.Alloc6
         //---###---
 
         public static void buddy_system_init(mem_zone* zone,
-                       page* start_page,
+                       Page* start_page,
                        uint start_addr,
                        uint page_num)
         {
             uint i;
-            page* page = null;
+            Page* page = null;
             free_area* area = null;
             // init memory zone
             zone->page_num = page_num;
@@ -275,15 +191,15 @@ namespace Lonos.Test.Alloc6
             for (i = 0; i < BUDDY_MAX_ORDER; i++)
             {
                 area = zone->free_area + i;
-                INIT_LIST_HEAD(&area->free_list);
+                list_head.INIT_LIST_HEAD(&area->free_list);
                 area->nr_free = 0;
             }
-            memset((byte*)start_page, 0, page_num * (uint)sizeof(page));
+            memset((byte*)start_page, 0, page_num * (uint)sizeof(Page));
             // init and free each page
             for (i = 0; i < page_num; i++)
             {
                 page = zone->first_page + i;
-                INIT_LIST_HEAD(&page->lru);
+                list_head.INIT_LIST_HEAD(&page->lru);
                 // TODO: init page->lock
                 buddy_free_pages(zone, page);
             }
@@ -298,7 +214,7 @@ namespace Lonos.Test.Alloc6
         /// <summary>
         ///  Set the properties of the combined page
         /// </summary>
-        static void prepare_compound_pages(page* page, byte order)
+        static void prepare_compound_pages(Page* page, byte order)
         {
             uint i;
             uint nr_pages = (1U << order);
@@ -308,7 +224,7 @@ namespace Lonos.Test.Alloc6
             __SetPageHead(page); // home page set head flag
             for (i = 1; i < nr_pages; i++)
             {
-                page* p = page + i;
+                Page* p = page + i;
                 __SetPageTail(p); // The rest of the pages set the tail flag
                 p->first_page = page;
             }
@@ -317,7 +233,7 @@ namespace Lonos.Test.Alloc6
         /// <summary>
         /// Split the combined page to get the page of the desired size
         /// </summary>
-        static void expand(mem_zone* zone, page* page,
+        static void expand(mem_zone* zone, Page* page,
                    byte low_order, byte high_order,
                    free_area* area)
         {
@@ -327,17 +243,17 @@ namespace Lonos.Test.Alloc6
                 area--;
                 high_order--;
                 size >>= 1;
-                list_add(&page[size].lru, &area->free_list);
+                list_head.list_add(&page[size].lru, &area->free_list);
                 area->nr_free++;
                 // set page order
                 set_page_order_buddy(&page[size], high_order);
             }
         }
 
-        static page* __alloc_page(byte order,
+        static Page* __alloc_page(byte order,
                                   mem_zone* zone)
         {
-            page* page = null;
+            Page* page = null;
             free_area* area = null;
             byte current_order = 0;
 
@@ -345,15 +261,15 @@ namespace Lonos.Test.Alloc6
                  current_order < BUDDY_MAX_ORDER; current_order++)
             {
                 area = zone->free_area + current_order;
-                if (list_empty(&area->free_list))
+                if (list_head.list_empty(&area->free_list))
                 {
                     continue;
                 }
                 // remove closest size page
                 //page = list_entry(area->free_list.next, struct page, lru);
-                page = (page*)&((page*)area->free_list.next)->lru;
+                page = (Page*)&((Page*)area->free_list.next)->lru;
 
-                list_del(&page->lru);
+                list_head.list_del(&page->lru);
                 rmv_page_order_buddy(page);
                 area->nr_free--;
                 // expand to lower order
@@ -368,24 +284,30 @@ namespace Lonos.Test.Alloc6
             return null;
         }
 
-        private static page* container_of(list_head* ptr)
+        private static Page* container_of(list_head* ptr)
         {
-            return (page*)((byte*)ptr - (uint)&((page*)0)->lru);
+            return (Page*)((byte*)ptr - (uint)&((Page*)0)->lru);
         }
 
-        public static page* buddy_get_pages(mem_zone* zone,
+        public static Page* buddy_get_pages(mem_zone* zone,
                              byte order)
         {
-            page* page = null;
+            BUDDY_TRACE("buddy_get_pages, Order: {0:X8}", order);
+
+            Page* page = null;
 
             if (order >= BUDDY_MAX_ORDER)
             {
-                BUDDY_BUG("error");
+                BUDDY_BUG("buddy_get_pages: error");
                 return null;
             }
             //TODO: lock zone->lock
             page = __alloc_page(order, zone);
             //TODO: unlock zone->lock
+
+            if (page == null)
+                BUDDY_TRACE("Out of Memory?");
+
             return page;
         }
 
@@ -394,7 +316,7 @@ namespace Lonos.Test.Alloc6
         /// <summary>
         /// Destroy the combined page
         /// </summary>
-        static bool destroy_compound_pages(page* page, byte order)
+        static bool destroy_compound_pages(Page* page, byte order)
         {
             int bad = 0;
             uint i;
@@ -403,29 +325,29 @@ namespace Lonos.Test.Alloc6
             __ClearPageHead(page);
             for (i = 1; i < nr_pages; i++)
             {
-                page* p = page + i;
+                Page* p = page + i;
                 if (!PageTail(p) || p->first_page != page)
                 {
                     bad++;
-                    BUDDY_BUG("error");
+                    BUDDY_BUG("destroy_compound_pages: error");
                 }
                 __ClearPageTail(p);
             }
             return bad != 0;
         }
 
-        private static bool PageCompound(page* page)
+        private static bool PageCompound(Page* page)
         {
             return (page->flags & ((1U << (byte)pageflags.PG_head) | (1U << (byte)pageflags.PG_tail))) != 0;
         }
 
-        private static bool page_is_buddy(page* page, byte order)
+        private static bool page_is_buddy(Page* page, byte order)
         {
             return (PageBuddy(page) && (page->order == order));
         }
 
         public static void buddy_free_pages(mem_zone* zone,
-                       page* page)
+                       Page* page)
         {
             byte order = compound_order(page);
             uint buddy_idx = 0, combinded_idx = 0;
@@ -434,17 +356,17 @@ namespace Lonos.Test.Alloc6
             //TODO: lock zone->lock
             if (PageCompound(page))
                 if (destroy_compound_pages(page, order))
-                    BUDDY_BUG("error");
+                    BUDDY_BUG("buddy_free_pages: error");
 
             while (order < BUDDY_MAX_ORDER - 1)
             {
-                page* buddy;
+                Page* buddy;
                 // find and delete buddy to combine
                 buddy_idx = __find_buddy_index(page_idx, order);
                 buddy = page + (buddy_idx - page_idx);
                 if (!page_is_buddy(buddy, order))
                     break;
-                list_del(&buddy->lru);
+                list_head.list_del(&buddy->lru);
                 zone->free_area[order].nr_free--;
                 // remove buddy's flag and order
                 rmv_page_order_buddy(buddy);
@@ -455,7 +377,7 @@ namespace Lonos.Test.Alloc6
                 order++;
             }
             set_page_order_buddy(page, order);
-            list_add(&page->lru, &zone->free_area[order].free_list);
+            list_head.list_add(&page->lru, &zone->free_area[order].free_list);
             zone->free_area[order].nr_free++;
             //TODO: unlock zone->lock
         }
@@ -463,7 +385,7 @@ namespace Lonos.Test.Alloc6
         ////////////////////////////////////////////////
 
         public static void* page_to_virt(mem_zone* zone,
-                   page* page)
+                   Page* page)
         {
             uint page_idx = 0;
             uint address = 0;
@@ -474,17 +396,17 @@ namespace Lonos.Test.Alloc6
             return (void*)address;
         }
 
-        public static page* virt_to_page(mem_zone* zone, void* ptr)
+        public static Page* virt_to_page(mem_zone* zone, void* ptr)
         {
             uint page_idx = 0;
-            page* page = null;
+            Page* page = null;
             uint address = (uint)ptr;
 
             if ((address < zone->start_addr) || (address > zone->end_addr))
             {
                 //printf("start_addr=0x%lx, end_addr=0x%lx, address=0x%lx\n",
                 //        zone->start_addr, zone->end_addr, address);
-                BUDDY_BUG("error");
+                BUDDY_BUG("virt_to_page: error");
                 return null;
             }
             page_idx = (address - zone->start_addr) >> BUDDY_PAGE_SHIFT;
@@ -493,7 +415,7 @@ namespace Lonos.Test.Alloc6
             return page;
         }
 
-        static uint buddy_num_free_page(mem_zone* zone)
+        public static uint buddy_num_free_page(mem_zone* zone)
         {
             byte i;
             uint ret;

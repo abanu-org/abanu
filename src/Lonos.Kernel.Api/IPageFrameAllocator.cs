@@ -20,14 +20,17 @@ namespace Lonos.Kernel.Core
         void Free(Page* page);
 
         Page* GetPageByAddress(Addr addr);
+        uint GetAddress(Page* page);
 
         Page* GetPageByNum(uint pageNum);
+        uint GetPageNum(Page* page);
         Page* GetPageByIndex(uint pageIndex);
         uint TotalPages { get; }
 
-        uint FreePages { get; set; }
+        uint FreePages { get; }
         MemoryRegion Region { get; }
 
+        Page* NextPage(Page* page);
     }
 
 }

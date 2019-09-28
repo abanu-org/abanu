@@ -7,8 +7,8 @@ using System.Linq;
 //using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
 using System.Runtime.InteropServices;
 using malloc_meta = System.UInt32;
-using mem_zone = Lonos.Test.Alloc6.Allo.mem_zone;
-using page = Lonos.Test.Alloc6.Allo.page;
+using mem_zone = Lonos.Test.Alloc6.BuddyAllocatorImplementation.mem_zone;
+using page = Lonos.Test.Alloc6.BuddyAllocatorImplementation.page;
 using size_t = System.UInt32;
 
 #pragma warning disable
@@ -38,13 +38,13 @@ namespace Lonos.Test.Alloc6
             // all pages area
             pages_size = _NPAGES * (uint)sizeof(page);
             global_mem_block.pages = (page*)Marshal.AllocHGlobal((int)pages_size);
-            start_addr = (uint)Marshal.AllocHGlobal((int)(_NPAGES * Allo.BUDDY_PAGE_SIZE));
-            global_mem_block.zone.free_area = (Allo.free_area*)Marshal.AllocHGlobal(Allo.BUDDY_MAX_ORDER * (int)sizeof(Allo.free_area));
+            start_addr = (uint)Marshal.AllocHGlobal((int)(_NPAGES * BuddyAllocatorImplementation.BUDDY_PAGE_SIZE));
+            global_mem_block.zone.free_area = (BuddyAllocatorImplementation.free_area*)Marshal.AllocHGlobal(BuddyAllocatorImplementation.BUDDY_MAX_ORDER * (int)sizeof(BuddyAllocatorImplementation.free_area));
 
             fixed (mem_zone* zone = &global_mem_block.zone)
             {
 
-                Allo.buddy_system_init(zone,
+                BuddyAllocatorImplementation.buddy_system_init(zone,
                                    global_mem_block.pages,
                                    start_addr,
                                    _NPAGES);
@@ -79,7 +79,7 @@ namespace Lonos.Test.Alloc6
             {
                 var data = new byte[size];
                 rnd.NextBytes(data);
-                var ptr = (byte*)Allo.page_to_virt(zone, Allo.buddy_get_pages(zone, order));
+                var ptr = (byte*)BuddyAllocatorImplementation.page_to_virt(zone, BuddyAllocatorImplementation.buddy_get_pages(zone, order));
                 if (ptr == null)
                 {
                     var s = "";
@@ -101,8 +101,8 @@ namespace Lonos.Test.Alloc6
                 var keys = hash.Keys.ToList();
                 var ptr = keys[rnd.Next(keys.Count - 1)];
                 hash.Remove(ptr);
-                var page = Allo.virt_to_page(zone, (void*)ptr);
-                Allo.buddy_free_pages(zone, page);
+                var page = BuddyAllocatorImplementation.virt_to_page(zone, (void*)ptr);
+                BuddyAllocatorImplementation.buddy_free_pages(zone, page);
             }
         }
 

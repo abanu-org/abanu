@@ -229,7 +229,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 var map = Header->Used.Items[i];
                 if (CheckPageIsUsableAfterMap(map, size))
                 {
-                    var newMap = new KernelMemoryMap(map.Start + map.Size, size, type);
+                    var newMap = new KernelMemoryMap(KMath.AlignValueCeil(map.Start + map.Size, 4096), size, type);
                     Header->Used.Add(newMap);
                     KernelMessage.Path("KernelMemoryMapManager", "Allocated: at {0:X8}, size {1:X8}, type {2}", newMap.Start, size, (uint)type);
                     return newMap;
@@ -240,7 +240,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private static bool CheckPageIsUsableAfterMap(KernelMemoryMap map, USize size)
         {
-            var tryMap = new KernelMemoryMap(map.Start + map.Size, size, BootInfoMemoryType.Unknown);
+            var tryMap = new KernelMemoryMap(KMath.AlignValueCeil(map.Start, 4096) + map.Size, size, BootInfoMemoryType.Unknown);
             if (Header->Used.Intersects(tryMap))
                 return false;
 

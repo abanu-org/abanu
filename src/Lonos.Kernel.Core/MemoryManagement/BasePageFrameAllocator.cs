@@ -17,10 +17,40 @@ namespace Lonos.Kernel.Core.MemoryManagement
     public abstract unsafe class BasePageFrameAllocator : IPageFrameAllocator
     {
 
+        private BuddyAllocatorImplementation.mem_zone Zone;
+        private BuddyAllocatorImplementation.mem_zone* ZonePtr;
+        protected Page* Pages;
+
         public BasePageFrameAllocator()
         {
-            lastAllocatedPage = null;
         }
+
+        internal virtual void Initialize(MemoryRegion region)
+        {
+            region.Size = KMath.FloorToPowerOfTwo(region.Size);
+            _Region = region;
+            var totalPages = region.Size >> BuddyAllocatorImplementation.BUDDY_PAGE_SHIFT;
+            KernelMessage.WriteLine("Init Allocator: {0} Pages", totalPages);
+            // init global memory block
+            // all pages area
+            var pages_size = totalPages * (uint)sizeof(Page);
+            KernelMessage.WriteLine("Page Array Size in bytes: {0}", pages_size);
+            Pages = (Page*)AllocRawMemory(pages_size);
+            KernelMessage.WriteLine("Page Array Addr: {0:X8}", (uint)Pages);
+            var start_addr = 0U;
+            Zone.free_area = (BuddyAllocatorImplementation.free_area*)AllocRawMemory(BuddyAllocatorImplementation.BUDDY_MAX_ORDER * (uint)sizeof(BuddyAllocatorImplementation.free_area));
+
+            fixed (BuddyAllocatorImplementation.mem_zone* zone = &Zone)
+                ZonePtr = zone;
+
+            BuddyAllocatorImplementation.buddy_system_init(
+                ZonePtr,
+                Pages,
+                start_addr,
+                totalPages);
+        }
+
+        protected abstract uint AllocRawMemory(uint size);
 
         public Page* AllocatePages(uint pages)
         {
@@ -33,13 +63,23 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return p;
         }
 
-        public uint FreePages { get; set; }
+        private Page* Allocate(uint num)
+        {
+            return BuddyAllocatorImplementation.buddy_get_pages(ZonePtr, GetOrderForPageCount(num));
+        }
 
-        public abstract uint TotalPages { get; }
+        private static byte GetOrderForPageCount(uint pages)
+        {
+            return (byte)KMath.Log2OfPowerOf2(KMath.CeilToPowerOfTwo(pages));
+        }
+
+        public uint FreePages => BuddyAllocatorImplementation.buddy_num_free_page(ZonePtr);
+
+        public uint TotalPages => Zone.page_num;
 
         private void DumpPage(Page* p)
         {
-            KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", p->PageNum, p->Address, (uint)p->Status, (uint)p, (uint)p / 4096);
+            KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", GetPageNum(p), GetAddress(p), p->flags, (uint)p, (uint)p / 4096);
         }
 
         public void Dump()
@@ -51,11 +91,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 var p = GetPageByIndex(i);
                 if (i % 64 == 0)
                 {
-                    sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, p->PageNum, p->Address, (uint)p);
+                    sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, GetPageNum(p), GetAddress(p), (uint)p);
                     sb.WriteTo(DeviceManager.Serial1);
                     sb.Clear();
                 }
-                sb.Append((int)p->Status);
+                sb.Append((int)p->flags);
                 sb.WriteTo(DeviceManager.Serial1);
                 sb.Clear();
             }
@@ -63,151 +103,37 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public Page* GetPageByAddress(Addr addr)
         {
-            return GetPageByNum((uint)addr / PageSize);
+            return BuddyAllocatorImplementation.virt_to_page(ZonePtr, addr);
         }
 
-        public abstract Page* GetPageByNum(uint pageNum);
-        public abstract Page* GetPageByIndex(uint pageIndex);
-
-        private Page* lastAllocatedPage;
-
-        /// <summary>
-        /// Allocate a physical page from the free list
-        /// </summary>
-        /// <returns>The page</returns>
-        private Page* Allocate(uint num)
+        public Page* GetPageByNum(uint pageNum)
         {
-            lock (this)
-            {
-                if (num == 0)
-                {
-                    KernelMessage.WriteLine("Requesting zero pages");
-                    return null;
-                }
-                else if (num > 1 && KConfig.TracePageAllocation)
-                {
-                    KernelMessage.WriteLine("Requesting {0} pages", num);
-                }
-
-                //KernelMessage.WriteLine("Request {0} pages...", num);
-
-                uint statBlocks = 0;
-                uint statFreeBlocks = 0;
-                int statMaxBlockPages = 0;
-                uint statRangeChecks = 0;
-
-                uint cnt = 0;
-
-                if (lastAllocatedPage == null)
-                    lastAllocatedPage = GetPageByIndex(0);
-
-                Page* p = lastAllocatedPage->Next;
-                while (true)
-                {
-                    statBlocks++;
-
-                    if (p == null)
-                        p = GetPageByIndex(0);
-
-                    if (p->Status == PageStatus.Free)
-                    {
-                        statFreeBlocks++;
-                        var head = p;
-
-                        // Found free Page. Check now free range.
-                        for (var i = 0; i < num; i++)
-                        {
-                            statRangeChecks++;
-                            statMaxBlockPages = Math.Max(statMaxBlockPages, i);
-
-                            if (p == null)
-                                break; // Reached end. SorRange is incomplete
-                            if (p->Status != PageStatus.Free) // Used -> so we can abort the searach
-                                break;
-
-                            if (i == num - 1)
-                            { // all loops successful. So we found our range.
-
-                                head->Tail = p;
-                                head->PagesUsed = num;
-                                p = head;
-                                for (var n = 0; n < num; n++)
-                                {
-                                    if (p->Status != PageStatus.Free)
-                                        Panic.Error("Page is not Free. PageFrame Array corrupted?");
-
-                                    p->Status = PageStatus.Used;
-                                    p->Head = head;
-                                    p->Tail = head->Tail;
-                                    p = p->Next;
-                                    FreePages--;
-                                }
-                                lastAllocatedPage = head->Tail;
-
-                                //KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress + 4096 - 1);
-
-                                //if (head->PhysicalAddress == 0x01CA4000)
-                                //{
-                                //    KernelMessage.WriteLine("DEBUG-MARKER 2");
-                                //    DumpPage(head);
-                                //}
-
-                                return head;
-                            }
-
-                            p = p->Next;
-                            if (p == null)
-                                break;
-                        }
-
-                    }
-
-                    if (p == null)
-                        continue;
-
-                    if (p->Tail != null)
-                        p = p->Tail;
-
-                    p = p->Next;
-                    if (++cnt > TotalPages)
-                        break;
-                }
-
-                KernelMessage.WriteLine("Blocks={0} FreeBlocks={1} MaxBlockPages={2} RangeChecks={3} cnt={4}", statBlocks, statFreeBlocks, (uint)statMaxBlockPages, statRangeChecks, cnt);
-                Dump();
-                Panic.Error("PageFrameAllocator: Could not allocate " + num + " Pages.");
-                return null;
-            }
+            return BuddyAllocatorImplementation.virt_to_page(ZonePtr, (void*)(pageNum << BuddyAllocatorImplementation.BUDDY_PAGE_SHIFT));
         }
 
-        /// <summary>
-        /// Releases a page to the free list
-        /// </summary>
+        public Page* GetPageByIndex(uint pageIndex)
+        {
+            return &Pages[pageIndex];
+        }
+
         public void Free(Page* page)
         {
-            lock (this)
-            {
-                if (page->Free)
-                {
-                    Panic.Error("double free");
-                    return;
-                }
+            BuddyAllocatorImplementation.buddy_free_pages(ZonePtr, page);
+        }
 
-                var num = page->PagesUsed;
+        public uint GetPageNum(Page* page)
+        {
+            return (uint)BuddyAllocatorImplementation.page_to_virt(ZonePtr, page) >> BuddyAllocatorImplementation.BUDDY_PAGE_SHIFT;
+        }
 
-                var p = page;
-                for (var n = 0; n < num; n++)
-                {
-                    p->Status = PageStatus.Debug;
-                    p->PagesUsed = 0;
-                    p->Head = null;
-                    p->Tail = null;
-                    p = p->Next;
-                    FreePages++;
-                }
+        public uint GetAddress(Page* page)
+        {
+            return (uint)BuddyAllocatorImplementation.page_to_virt(ZonePtr, page);
+        }
 
-                lastAllocatedPage = page;
-            }
+        public Page* NextPage(Page* page)
+        {
+            return page + 1;
         }
 
         /// <summary>
@@ -215,7 +141,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// </summary>
         public static uint PageSize => 4096;
 
-        public abstract MemoryRegion Region { get; }
+        private MemoryRegion _Region;
+        public MemoryRegion Region
+        {
+            get
+            {
+                return _Region;
+            }
+        }
 
     }
 }

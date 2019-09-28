@@ -3,6 +3,21 @@
 
 using System;
 using System.Runtime.InteropServices;
+using Lonos.CTypes;
+
+#pragma warning disable SA1300 // Element should begin with upper-case letter
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable SA1400 // Access modifier should be declared
+#pragma warning disable SA1307 // Accessible fields should begin with upper-case letter
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
+#pragma warning disable SA1502 // Element should not be on a single line
+#pragma warning disable SA1119 // Statement should not use unnecessary parenthesis
+#pragma warning disable SA1120 // Comments should contain text
+#pragma warning disable SA1507 // Code should not contain multiple blank lines in a row
+#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
+#pragma warning disable SA1117 // Parameters should be on same line or separate lines
+#pragma warning disable SA1116 // Split parameters should start on line after declaration
 
 namespace Lonos.Kernel.Core
 {
@@ -22,37 +37,23 @@ namespace Lonos.Kernel.Core
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct Page
     {
-        public PageStatus Status;
-        //public ulong Flags;
-        //public Atomic UsageCount;
-
-        public Addr Address;
-
-        // If this is the head of an allocated block
-        public Page* Head;
-
-        // If this is the tail of an allocated block
-        public Page* Tail;
-
-        /// <summary>
-        /// Number of reserved Page for this allocation. Only set if this is the Head page.
-        /// </summary>
-        public uint PagesUsed;
-
-        // TODO: Remove the Next-field, because it could be accessed via (Page*)+1
-
-        public Page* Next;
+        public list_head lru;
+        public uint flags;
+        //union {
+        public byte order;
+        public Page* first_page;
+        //};
 
         public static USize Size => 4096;
 
-        public uint PageNum => Address / 4096;
+        //public uint PageNum => Address / 4096;
 
-        public bool Free => ((uint)Status).IsMaskSet((uint)PageStatus.Free);
+        //public bool Free => ((uint)Status).IsMaskSet((uint)PageStatus.Free);
 
-        public bool Unset => ((uint)Status).IsMaskSet((uint)PageStatus.Unset);
+        //public bool Unset => ((uint)Status).IsMaskSet((uint)PageStatus.Unset);
 
-        public bool Used => ((uint)Status).IsMaskSet((uint)PageStatus.Used);
+        //public bool Used => ((uint)Status).IsMaskSet((uint)PageStatus.Used);
 
-        public bool Reserved => ((uint)Status).IsMaskSet((uint)PageStatus.Reserved);
+        //public bool Reserved => ((uint)Status).IsMaskSet((uint)PageStatus.Reserved);
     }
 }

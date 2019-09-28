@@ -43,6 +43,7 @@
     <Compile Include="Interrupts\IDTTaskStack.cs" />
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
     <Compile Include="MemoryManagement\BasePageFrameAllocator.cs" />
+    <Compile Include="MemoryManagement\BuddyAllocatorImplementation.cs" />
     <Compile Include="MemoryManagement\KernelAllocator.cs" />
     <Compile Include="MemoryManagement\PageTableExtensions.cs" />
     <Compile Include="Collections\FifoQueue.cs" />

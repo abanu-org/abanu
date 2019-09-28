@@ -29,11 +29,21 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return p;
         }
 
+        public static Addr AllocatePagesAddr(uint pages)
+        {
+            return GetAddress(AllocatePages(pages));
+        }
+
+        public static Addr AllocatePageAddr()
+        {
+            return GetAddress(AllocatePage());
+        }
+
         public static MemoryRegion AllocateRegion(USize size)
         {
             var pages = KMath.DivCeil(size, 4096);
             var p = AllocatePages(pages);
-            return new MemoryRegion(p->Address, pages * 4096);
+            return new MemoryRegion(Default.GetAddress(p), pages * 4096);
         }
 
         public static void Free(Page* page)
@@ -62,6 +72,16 @@ namespace Lonos.Kernel.Core.MemoryManagement
             {
                 return Default.FreePages;
             }
+        }
+
+        public static uint GetAddress(Page* page)
+        {
+            return Default.GetAddress(page);
+        }
+
+        public static Page* NextPage(Page* page)
+        {
+            return page + 1;
         }
 
     }

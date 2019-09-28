@@ -29,6 +29,7 @@ namespace Lonos.Kernel.Core
         {
             ManagedMemoy.InitializeGCMemory();
             StartUp.InitializeAssembly();
+            KMath.Init();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
             BootInfo.SetupStage1();
@@ -70,11 +71,14 @@ namespace Lonos.Kernel.Core
             //InitialKernelProtect();
 
             PhysicalPageManager.Setup();
-
             KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
             PhysicalPageManager.AllocatePages(10);
             KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
+
             RawVirtualFrameAllocator.Setup();
+            KernelMessage.WriteLine("free: {0}", RawVirtualFrameAllocator.PagesAvailable);
+            RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(10);
+            KernelMessage.WriteLine("free: {0}", RawVirtualFrameAllocator.PagesAvailable);
 
             Memory.Setup();
 
