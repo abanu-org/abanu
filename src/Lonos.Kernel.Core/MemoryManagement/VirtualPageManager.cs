@@ -68,7 +68,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// Consumer: Kernel, Memory allocators
         /// Shoud be used for larger Chunks.
         /// </summary>
-        internal static unsafe Addr RequestRawVirtalMemoryPages(uint pages)
+        internal static unsafe Addr AllocatePages(uint pages)
         {
             var physHead = PhysicalPageManager.AllocatePages(pages);
             if (physHead == null)
@@ -101,7 +101,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Returns pages, where virtAddr equals physAddr.
         /// </summary>
-        internal static unsafe Addr RequestIdentityMappedVirtalMemoryPages(uint pages)
+        internal static unsafe Addr AllocateIdentityMappedPages(uint pages)
         {
             // TODO: Ensure region is reserved in virtual address space
 
@@ -122,6 +122,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         internal static unsafe void FreeRawVirtalMemoryPages(Addr virtAddr)
         {
+            return;
+
             var p = Allocator.GetPageByAddress(virtAddr);
             if (p == null)
             {

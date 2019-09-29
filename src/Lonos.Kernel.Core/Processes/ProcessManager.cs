@@ -87,13 +87,17 @@ namespace Lonos.Kernel.Core.Processes
             proc.PageTable = PageTable.CreateInstance();
 
             // Setup User PageTable
-            var pageTableAddr = VirtualPageManager.RequestIdentityMappedVirtalMemoryPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
+            var pageTableAddr = VirtualPageManager.AllocateIdentityMappedPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
             MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
             proc.PageTable.UserProcSetup(pageTableAddr);
 
             proc.PageTable.MapCopy(PageTable.KernelTable, BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.SetExecutable(BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.MapCopy(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
+            var map = KernelMemoryMapManager.GetMap(BootInfoMemoryType.IDT);
+            proc.PageTable.MapCopy(PageTable.KernelTable, map->Start, map->Size);
+            map = KernelMemoryMapManager.GetMap(BootInfoMemoryType.TSS);
+            proc.PageTable.MapCopy(PageTable.KernelTable, map->Start, map->Size);
 
             // Setup ELF Sections
             for (uint i = 0; i < elf.SectionHeaderCount; i++)

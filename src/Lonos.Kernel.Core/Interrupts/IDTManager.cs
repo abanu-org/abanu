@@ -47,6 +47,8 @@ namespace Lonos.Kernel.Core.Interrupts
             InitControlBlock();
 
             IDTAddr = PhysicalPageManager.AllocatePageAddr();
+            KernelMemoryMapManager.RegisterUsed(IDTAddr, 4096, Boot.BootInfoMemoryType.IDT);
+            PageTable.KernelTable.Map(IDTAddr, IDTAddr, 4096, flush: true); // TODO: Use Virt Allocator
             PageTable.KernelTable.SetWritable(IDTAddr, 4096);
             KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
 

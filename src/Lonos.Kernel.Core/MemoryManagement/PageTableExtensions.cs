@@ -19,6 +19,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static void MapCopy(this IPageTable table, IPageTable fromTable, BootInfoMemoryType type, bool present = true, bool flush = false)
         {
             var mm = BootInfo.GetMap(type);
+            Assert.True(mm != null, "Unknown Memory map type {0}", (uint)type);
+
             table.MapCopy(fromTable, mm->Start, mm->Size, present, flush);
         }
 

@@ -35,5 +35,8 @@ namespace Lonos.Kernel.Core.Boot
         KernelBssSegment = 32,
         KernelDataSegment = 33,
 
+        IDT = 40,
+        TSS = 41,
+
     }
 }

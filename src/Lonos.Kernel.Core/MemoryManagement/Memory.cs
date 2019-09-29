@@ -16,7 +16,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             kmallocAllocator = new KernelAllocator();
 
-            var ptr = (byte*)VirtualPageManager.RequestRawVirtalMemoryPages(KMath.DivCeil(Allocator.headSize, 4096));
+            var ptr = (byte*)VirtualPageManager.AllocatePages(KMath.DivCeil(Allocator.headSize, 4096));
             for (var i = 0; i < Allocator.headSize; i++)
                 *(ptr + i) = 0;
             kmallocAllocator.List_heads = (malloc_meta**)ptr;

@@ -77,7 +77,7 @@ namespace Lonos.Kernel.Core
 
             VirtualPageManager.Setup();
             KernelMessage.WriteLine("free: {0}", VirtualPageManager.PagesAvailable);
-            VirtualPageManager.RequestRawVirtalMemoryPages(10);
+            VirtualPageManager.AllocatePages(10);
             KernelMessage.WriteLine("free: {0}", VirtualPageManager.PagesAvailable);
 
             Memory.Setup();
@@ -126,14 +126,14 @@ namespace Lonos.Kernel.Core
                 Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2" });
                 userProc.Start();
 
-                //var fileProc = ProcessManager.StartProcess("Service.Basic");
-                //FileServ = fileProc.Service;
+                var fileProc = ProcessManager.StartProcess("Service.Basic");
+                FileServ = fileProc.Service;
 
-                //KernelMessage.WriteLine("Waiting for Service");
-                //while (FileServ.Status != ServiceStatus.Ready)
-                //{
-                //}
-                //KernelMessage.WriteLine("Service Ready");
+                KernelMessage.WriteLine("Waiting for Service");
+                while (FileServ.Status != ServiceStatus.Ready)
+                {
+                }
+                KernelMessage.WriteLine("Service Ready");
 
                 //var buf = Lonos.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
                 //var kb = Lonos.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
@@ -178,7 +178,8 @@ namespace Lonos.Kernel.Core
             if (KConfig.UseTaskStateSegment)
             {
                 //kernelStackSize = 256 * 4096;
-                TssAddr = VirtualPageManager.RequestRawVirtalMemoryPages(1);
+                TssAddr = VirtualPageManager.AllocatePages(1);
+                KernelMemoryMapManager.RegisterUsed(TssAddr, 4096, BootInfoMemoryType.TSS);
                 MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, TssAddr, 4096);
                 //kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 //kernelStackBottom = kernelStack + kernelStackSize;
@@ -362,9 +363,11 @@ namespace Lonos.Kernel.Core
             Intrinsic.Store8(address, 1, color);
         }
 
-        private static void AssertError(string message)
+        private static void AssertError(string message, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)
         {
-            Panic.Error(message);
+            var sb = new StringBuffer();
+            sb.Append(message, arg1, arg2, arg3);
+            Panic.Error(sb.CreateString());
         }
 
     }

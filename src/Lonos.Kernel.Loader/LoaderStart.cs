@@ -177,10 +177,12 @@ namespace Lonos.Kernel.Loader
             Mosa.Runtime.x86.Internal.GetStackFrame(0);
         }
 
-        private static void AssertError(string message)
+        private static void AssertError(string message, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)
         {
-            KernelMessage.Write("ASSERT ERROR! ");
-            KernelMessage.WriteLine(message);
+            KernelMessage.WriteLine("ASSERT ERROR! ");
+            var sb = new StringBuffer();
+            sb.Append(message, arg1, arg2, arg3);
+            KernelMessage.WriteLine(sb);
         }
 
     }

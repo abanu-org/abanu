@@ -73,12 +73,12 @@ namespace Lonos.Kernel.Core
         /// <summary>
         /// Trace every Thread switch
         /// </summary>
-        public const bool TraceMemoryMapping = false;
+        public const bool TraceMemoryMapping = true;
 
         /// <summary>
         /// Trace every Page Mapping
         /// </summary>
-        public const bool TraceSysCall = false;
+        public const bool TraceSysCall = true;
 
         /// <summary>
         /// Trace every Interrupt except Clock

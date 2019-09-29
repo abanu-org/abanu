@@ -124,7 +124,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static void Setup()
         {
-            var addr = Initial_FindIFreePage();
+            var addr = Initial_FindFreePage();
 
             KernelMessage.Path("KernelMemoryMapManager", "Initial Page: {0:X}", addr);
 
@@ -158,6 +158,17 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //Debug_FillAvailableMemory();
         }
 
+        public static KernelMemoryMap* GetMap(BootInfoMemoryType type)
+        {
+            var mapLen = Header->Used.Count;
+            for (uint i = 0; i < mapLen; i++)
+            {
+                if (Header->Used.Items[i].Type == type)
+                    return &Header->Used.Items[i];
+            }
+            return null;
+        }
+
         public static void Debug_FillAvailableMemory()
         {
             uint max = 256 * 1024 * 1024;
@@ -172,7 +183,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         }
 
-        private static Addr Initial_FindIFreePage()
+        private static Addr Initial_FindFreePage()
         {
             for (uint i = 0; i < BootInfo.Header->MemoryMapLength; i++)
             {
@@ -236,6 +247,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 }
             }
             return KernelMemoryMap.Empty;
+        }
+
+        public static void RegisterUsed(Addr start, USize size, BootInfoMemoryType type)
+        {
+            Header->Used.Add(new KernelMemoryMap(start, size, type));
+            KernelMessage.Path("KernelMemoryMapManager", "Registered: at {0:X8}, size {1:X8}, type {2}", start, size, (uint)type);
         }
 
         private static bool CheckPageIsUsableAfterMap(KernelMemoryMap map, USize size)

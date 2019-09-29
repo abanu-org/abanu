@@ -58,8 +58,6 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 return null;
             }
 
-            KernelMessage.Path(DebugName, "SimpleAlloc: Request {0} Pages", pages);
-
             Page* page;
             if (AddressSpaceKind == AddressSpaceKind.Virtual || (options & AllocatePageOptions.Continuous) == AllocatePageOptions.Continuous)
                 page = AllocatePagesContinuous(pages, options);
@@ -72,6 +70,8 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 KernelMessage.WriteLine("Free pages: {0:X8}, Requested: {1:X8}, Options {2}", FreePages, pages, (uint)options);
                 Panic.Error("Out of Memory");
             }
+
+            KernelMessage.Path(DebugName, "SimpleAlloc: Request {0} Pages, Addr {1:X8}, Options {2}", pages, GetAddress(page), (uint)options);
 
             return page;
         }
