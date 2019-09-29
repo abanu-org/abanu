@@ -64,6 +64,12 @@ Open the Debian app and finish the install instructions. Whem command prompt is 
 
 Now you can run unix applications even with graphical user interface.
 
+Additional Tools for Windows:
+
+.. code-block:: powershell
+
+  choco install -y git
+
 Share project directory
 -----------------------
 
