@@ -16,3 +16,18 @@ end
 define hook-kill
     set confirm off
 end
+
+# args of static method
+define args
+	x/10xw $ebp+8
+end
+
+# args of instance method
+define argi
+	x/10xw $ebp+12
+end
+
+# object instance data
+define this
+	x/10xw *(void**)($ebp+8)
+end

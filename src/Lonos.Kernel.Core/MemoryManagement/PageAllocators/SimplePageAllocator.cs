@@ -58,6 +58,8 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 return null;
             }
 
+            KernelMessage.Path(DebugName, "SimpleAlloc: Request {0} Pages", pages);
+
             Page* page;
             if (AddressSpaceKind == AddressSpaceKind.Virtual || (options & AllocatePageOptions.Continuous) == AllocatePageOptions.Continuous)
                 page = AllocatePagesContinuous(pages, options);
@@ -106,7 +108,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         private unsafe Page* AllocatePagesContinuous(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
-            for (var i = 0; i < pages; i++)
+            for (var i = 0; i < _TotalPages; i++)
             {
                 if (i + pages >= _TotalPages)
                     return null;
@@ -218,7 +220,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public Page* NextCompoundPage(Page* page)
         {
-            KernelMessage.WriteLine("NextCompoundPage: {0:X8}, {1:X8}", GetAddress(page), (uint)page->FirstPage);
+            //KernelMessage.WriteLine("NextCompoundPage: {0:X8}, {1:X8}", GetAddress(page), (uint)page->FirstPage);
             return page->FirstPage;
         }
     }
