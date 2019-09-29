@@ -63,60 +63,60 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         static void __SetPageHead(Page* page)
         {
-            page->flags |= (1U << (byte)pageflags.PG_head);
+            page->Flags |= (1U << (byte)pageflags.PG_head);
         }
 
         static void __SetPageTail(Page* page)
         {
-            page->flags |= (1U << (byte)pageflags.PG_tail);
+            page->Flags |= (1U << (byte)pageflags.PG_tail);
         }
 
         static void __SetPageBuddy(Page* page)
         {
-            page->flags |= (1U << (byte)pageflags.PG_buddy);
+            page->Flags |= (1U << (byte)pageflags.PG_buddy);
         }
         /**/
         static void __ClearPageHead(Page* page)
         {
-            page->flags &= ~(1U << (byte)pageflags.PG_head);
+            page->Flags &= ~(1U << (byte)pageflags.PG_head);
         }
 
         static void __ClearPageTail(Page* page)
         {
-            page->flags &= ~(1U << (byte)pageflags.PG_tail);
+            page->Flags &= ~(1U << (byte)pageflags.PG_tail);
         }
 
         static void __ClearPageBuddy(Page* page)
         {
-            page->flags &= ~(1U << (byte)pageflags.PG_buddy);
+            page->Flags &= ~(1U << (byte)pageflags.PG_buddy);
         }
         /**/
         static bool PageHead(Page* page)
         {
-            return (page->flags & (1U << (byte)pageflags.PG_head)) != 0;
+            return (page->Flags & (1U << (byte)pageflags.PG_head)) != 0;
         }
 
         static bool PageTail(Page* page)
         {
-            return (page->flags & (1U << (byte)pageflags.PG_tail)) != 0;
+            return (page->Flags & (1U << (byte)pageflags.PG_tail)) != 0;
         }
 
         static bool PageBuddy(Page* page)
         {
-            return (page->flags & (1U << (byte)pageflags.PG_buddy)) != 0;
+            return (page->Flags & (1U << (byte)pageflags.PG_buddy)) != 0;
         }
 
         // Set the page's order and PG_buddy flags
 
         static void set_page_order_buddy(Page* page, byte order)
         {
-            page->order = order;
+            page->Order = order;
             __SetPageBuddy(page);
         }
 
         static void rmv_page_order_buddy(Page* page)
         {
-            page->order = 0;
+            page->Order = 0;
             __ClearPageBuddy(page);
         }
 
@@ -141,13 +141,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             if (!PageHead(page))
                 return 0; // single page
-            return page->order;
+            return page->Order;
         }
 
         static void set_compound_order(Page* page, byte order)
         {
             //page[1].lru.prev = (void *)order;
-            page->order = order;
+            page->Order = order;
         }
 
         static void BUDDY_BUG(string msg, uint value = 0)
@@ -199,7 +199,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             for (i = 0; i < page_num; i++)
             {
                 page = zone->first_page + i;
-                list_head.INIT_LIST_HEAD(&page->lru);
+                list_head.INIT_LIST_HEAD(&page->Lru);
                 // TODO: init page->lock
                 buddy_free_pages(zone, page);
             }
@@ -226,7 +226,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             {
                 Page* p = page + i;
                 __SetPageTail(p); // The rest of the pages set the tail flag
-                p->first_page = page;
+                p->FirstPage = page;
             }
         }
 
@@ -243,7 +243,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 area--;
                 high_order--;
                 size >>= 1;
-                list_head.list_add(&page[size].lru, &area->free_list);
+                list_head.list_add(&page[size].Lru, &area->free_list);
                 area->nr_free++;
                 // set page order
                 set_page_order_buddy(&page[size], high_order);
@@ -267,9 +267,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 }
                 // remove closest size page
                 //page = list_entry(area->free_list.next, struct page, lru);
-                page = (Page*)&((Page*)area->free_list.next)->lru;
+                page = (Page*)&((Page*)area->free_list.next)->Lru;
 
-                list_head.list_del(&page->lru);
+                list_head.list_del(&page->Lru);
                 rmv_page_order_buddy(page);
                 area->nr_free--;
                 // expand to lower order
@@ -278,7 +278,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 if (order > 0)
                     prepare_compound_pages(page, order);
                 else // single page
-                    page->order = 0;
+                    page->Order = 0;
                 return page;
             }
             return null;
@@ -286,7 +286,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private static Page* container_of(list_head* ptr)
         {
-            return (Page*)((byte*)ptr - (uint)&((Page*)0)->lru);
+            return (Page*)((byte*)ptr - (uint)&((Page*)0)->Lru);
         }
 
         public static Page* buddy_get_pages(mem_zone* zone,
@@ -326,7 +326,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             for (i = 1; i < nr_pages; i++)
             {
                 Page* p = page + i;
-                if (!PageTail(p) || p->first_page != page)
+                if (!PageTail(p) || p->FirstPage != page)
                 {
                     bad++;
                     BUDDY_BUG("destroy_compound_pages: error");
@@ -338,12 +338,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private static bool PageCompound(Page* page)
         {
-            return (page->flags & ((1U << (byte)pageflags.PG_head) | (1U << (byte)pageflags.PG_tail))) != 0;
+            return (page->Flags & ((1U << (byte)pageflags.PG_head) | (1U << (byte)pageflags.PG_tail))) != 0;
         }
 
         private static bool page_is_buddy(Page* page, byte order)
         {
-            return (PageBuddy(page) && (page->order == order));
+            return (PageBuddy(page) && (page->Order == order));
         }
 
         public static void buddy_free_pages(mem_zone* zone,
@@ -366,7 +366,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 buddy = page + (buddy_idx - page_idx);
                 if (!page_is_buddy(buddy, order))
                     break;
-                list_head.list_del(&buddy->lru);
+                list_head.list_del(&buddy->Lru);
                 zone->free_area[order].nr_free--;
                 // remove buddy's flag and order
                 rmv_page_order_buddy(buddy);
@@ -377,7 +377,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 order++;
             }
             set_page_order_buddy(page, order);
-            list_head.list_add(&page->lru, &zone->free_area[order].free_list);
+            list_head.list_add(&page->Lru, &zone->free_area[order].free_list);
             zone->free_area[order].nr_free++;
             //TODO: unlock zone->lock
         }

@@ -4,7 +4,7 @@
 using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.PageManagement;
 
-namespace Lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 {
     public unsafe class VirtualPageAllocator : BasePageFrameAllocator
     {

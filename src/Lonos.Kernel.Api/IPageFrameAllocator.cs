@@ -6,16 +6,24 @@ using System;
 namespace Lonos.Kernel.Core
 {
 
-    public enum PageFrameRequestFlags
+    [Flags]
+    public enum AllocatePageOptions
     {
-        Default,
+        Default = 0,
+        Continuous = 1,
+    }
+
+    public enum AddressSpaceKind
+    {
+        Physical = 0,
+        Virtual = 1,
     }
 
     public unsafe interface IPageFrameAllocator
     {
-        Page* AllocatePages(uint pages);
+        Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default);
 
-        Page* AllocatePage();
+        Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default);
 
         void Free(Page* page);
 
@@ -31,6 +39,17 @@ namespace Lonos.Kernel.Core
         MemoryRegion Region { get; }
 
         Page* NextPage(Page* page);
+        Page* NextCompoundPage(Page* page);
+        uint GetPageIndex(Page* page);
+        uint GetPageIndex(Addr addr);
+
+        bool ContainsPage(Page* page);
+        //bool ContainsAddr(Addr addr);
+        //bool ContainsPageNum(uint pageNum);
+        //bool ContainsPageIndex(uint age);
+
+        AddressSpaceKind AddressSpaceKind { get; }
+
     }
 
 }

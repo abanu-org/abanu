@@ -75,10 +75,10 @@ namespace Lonos.Kernel.Core
             PhysicalPageManager.AllocatePages(10);
             KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
 
-            RawVirtualFrameAllocator.Setup();
-            KernelMessage.WriteLine("free: {0}", RawVirtualFrameAllocator.PagesAvailable);
-            RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(10);
-            KernelMessage.WriteLine("free: {0}", RawVirtualFrameAllocator.PagesAvailable);
+            VirtualPageManager.Setup();
+            KernelMessage.WriteLine("free: {0}", VirtualPageManager.PagesAvailable);
+            VirtualPageManager.RequestRawVirtalMemoryPages(10);
+            KernelMessage.WriteLine("free: {0}", VirtualPageManager.PagesAvailable);
 
             Memory.Setup();
 
@@ -178,7 +178,7 @@ namespace Lonos.Kernel.Core
             if (KConfig.UseTaskStateSegment)
             {
                 //kernelStackSize = 256 * 4096;
-                TssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
+                TssAddr = VirtualPageManager.RequestRawVirtalMemoryPages(1);
                 MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, TssAddr, 4096);
                 //kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 //kernelStackBottom = kernelStack + kernelStackSize;

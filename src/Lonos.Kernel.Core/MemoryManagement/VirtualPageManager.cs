@@ -2,12 +2,15 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.MemoryManagement.PageAllocators;
 using Lonos.Kernel.Core.PageManagement;
 
 namespace Lonos.Kernel.Core.MemoryManagement
 {
-    public static class RawVirtualFrameAllocator
+
+    public static unsafe class VirtualPageManager
     {
 
         //private static Addr _startVirtAddr;
@@ -16,21 +19,47 @@ namespace Lonos.Kernel.Core.MemoryManagement
         private static IPageFrameAllocator Allocator;
         private static IPageFrameAllocator IdentityAllocator;
 
+        private static MemoryRegion AllocSelf(uint size)
+        {
+            // TODO: Do not use AllocatePageOptions.Continuous.
+
+            size = KMath.AlignValueCeil(size, 4096);
+            var allPagesMapPageHead = PhysicalPageManager.AllocatePages(KMath.DivCeil(size, 4096), AllocatePageOptions.Continuous);
+
+            var next = allPagesMapPageHead;
+            var headAddr = PhysicalPageManager.GetAddress(allPagesMapPageHead);
+            while (next != null)
+            {
+                var pageAddr = PhysicalPageManager.GetAddress(next);
+                PageTable.KernelTable.Map(pageAddr, pageAddr, 4096, flush: true);
+                PageTable.KernelTable.SetWritable(pageAddr, 4096);
+                next = PhysicalPageManager.NextCompoundPage(next);
+            }
+            MemoryOperation.Clear4(headAddr, size);
+            return new MemoryRegion(headAddr, size);
+        }
+
         public static void Setup()
         {
+            KernelMessage.WriteLine("Initialize VirtualPageManager");
+
             //_startVirtAddr = Address.VirtMapStart;
             //_nextVirtAddr = _startVirtAddr;
 
-            KernelMessage.WriteLine("Initialize VirualPageAllocator");
+            KernelMessage.WriteLine("Initialize VirtualPageAllocator");
+            var pageArraySize = 0x100000 * (uint)sizeof(Page);
+            KernelMessage.WriteLine("Requesting Size {0:X8} for pageArray", pageArraySize);
 
-            var allocator = new VirtualPageAllocator();
-            allocator.Initialize(new MemoryRegion(Address.VirtMapStart, 100 * 1024 * 1024));
+            var allPages = (Page*)AllocSelf(pageArraySize).Start;
+
+            var allocator = new SimplePageAllocator() { DebugName = "SimpleVirt" };
+            allocator.Initialize(new MemoryRegion(Address.VirtMapStart, 100 * 1024 * 1024), &allPages[Address.VirtMapStart / 4096], AddressSpaceKind.Virtual);
             Allocator = allocator;
 
-            KernelMessage.WriteLine("Initialize VirualIdentityPageAllocator");
+            KernelMessage.WriteLine("Initialize VirtualIdentityPageAllocator");
 
-            var identityAllocator = new VirtualPageAllocator();
-            identityAllocator.Initialize(new MemoryRegion(Address.IdentityMapStart, 20 * 1024 * 1024));
+            var identityAllocator = new SimplePageAllocator() { DebugName = "SimpleVirtIdent" };
+            identityAllocator.Initialize(new MemoryRegion(Address.IdentityMapStart, 20 * 1024 * 1024), &allPages[Address.IdentityMapStart / 4096], AddressSpaceKind.Virtual);
             IdentityAllocator = identityAllocator;
         }
 

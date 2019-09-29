@@ -37,9 +37,13 @@ namespace Lonos.Kernel.Core
         public const uint VirtMapStart = 0x40000000; // 1gb
 
         [Obsolete("Only temporary!")]
-        public const uint PhysMapStart = 128 * 1024 * 1024;
+        public const uint PhysMapStart = 100 * 1024 * 1024;
         [Obsolete("Only temporary!")]
-        public const uint PhysMapSize = 64 * 1024 * 1024;
+        public const uint PhysMapSize = 60 * 1024 * 1024;
+        [Obsolete("Only temporary!")]
+        public const uint PhysMapStart2 = (100 + 64) * 1024 * 1024;
+        [Obsolete("Only temporary!")]
+        public const uint PhysMapSize2 = 32 * 1024 * 1024;
 
         public const uint InterruptControlBlock = 0xC0000000;
 

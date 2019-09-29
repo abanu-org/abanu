@@ -37,12 +37,16 @@ namespace Lonos.Kernel.Core
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct Page
     {
-        public list_head lru;
-        public uint flags;
+        // Fields for buddy allocator
+        public list_head Lru;
+        public uint Flags;
         //union {
-        public byte order;
-        public Page* first_page;
+        public byte Order;
+        public Page* FirstPage;
         //};
+
+        // not needed by buddy allocator, but for other allocators
+        public Addr Address;
 
         public static USize Size => 4096;
 
