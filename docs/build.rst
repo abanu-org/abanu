@@ -32,6 +32,7 @@ Populate the Debian System with Packages:
 
 .. code-block:: sh
 
+  apt-get update && apt-get install -y wget
   wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
 
 This will take a while. After that, you have a fully featured build environment.
@@ -51,7 +52,7 @@ Install the package xming:
 
 .. code-block:: powershell
 
-  choco install xming
+  choco install -y xming
 
 You can launch now `XLaunch` from Start menu. Simply follow the wizard without making changes.
 
