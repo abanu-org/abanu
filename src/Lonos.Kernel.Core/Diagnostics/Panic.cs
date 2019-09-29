@@ -126,7 +126,7 @@ namespace Lonos.Kernel.Core.Diagnostics
             return;
             while (true)
             {
-                var entry = Internal.GetStackTraceEntry(depth, new IntPtr(EBP), new IntPtr(EIP));
+                var entry = Internal.GetStackTraceEntry(depth, new Mosa.Runtime.Pointer(EBP), new Mosa.Runtime.Pointer(EIP));
 
                 if (!entry.Valid)
                     return;

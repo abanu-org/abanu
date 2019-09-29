@@ -53,7 +53,7 @@ namespace Lonos.Kernel.Core.Collections
         private void DestryArray(T[] array)
         {
             var ptr = Mosa.Runtime.Intrinsic.GetObjectAddress(array);
-            Memory.Free(ptr);
+            Memory.Free((uint)ptr);
         }
 
         public void Destroy()
@@ -61,7 +61,7 @@ namespace Lonos.Kernel.Core.Collections
             if (_items.Length > 0)
                 DestryArray(_items);
             var ptr = Mosa.Runtime.Intrinsic.GetObjectAddress(this);
-            Memory.Free(ptr);
+            Memory.Free((uint)ptr);
         }
 
         public KList(IEnumerable<T> collection)

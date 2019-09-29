@@ -138,7 +138,7 @@ namespace Lonos.Kernel.Core
         {
             Assert.True(row < Rows);
             Assert.True(column < Columns);
-            IntPtr address = new IntPtr(ScreenMemoryAddress + (((row * Columns) + column) * 2));
+            Pointer address = new Pointer(ScreenMemoryAddress + (((row * Columns) + column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);
@@ -156,7 +156,7 @@ namespace Lonos.Kernel.Core
                 return;
             }
 
-            IntPtr address = new IntPtr(ScreenMemoryAddress + (((Row * Columns) + Column) * 2));
+            Pointer address = new Pointer(ScreenMemoryAddress + (((Row * Columns) + Column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
             Intrinsic.Store8(address, 1, color);

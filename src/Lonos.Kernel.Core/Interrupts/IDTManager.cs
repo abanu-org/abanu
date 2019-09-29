@@ -50,9 +50,9 @@ namespace Lonos.Kernel.Core.Interrupts
             KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
 
             // Setup IDT table
-            Mosa.Runtime.Internal.MemoryClear(new IntPtr((uint)IDTAddr), 6);
-            Intrinsic.Store16(new IntPtr((uint)IDTAddr), (Offset.TotalSize * 256) - 1);
-            Intrinsic.Store32(new IntPtr((uint)IDTAddr), 2, IDTAddr + 6);
+            Mosa.Runtime.Internal.MemoryClear(new Pointer((uint)IDTAddr), 6);
+            Intrinsic.Store16(new Pointer((uint)IDTAddr), (Offset.TotalSize * 256) - 1);
+            Intrinsic.Store32(new Pointer((uint)IDTAddr), 2, IDTAddr + 6);
 
             KernelMessage.Write("Set IDT table entries...");
             SetTableEntries();
@@ -145,7 +145,7 @@ namespace Lonos.Kernel.Core.Interrupts
         private static void SetTableEntries()
         {
             // Clear out idt table
-            Mosa.Runtime.Internal.MemoryClear(new IntPtr((void*)IDTAddr) + 6, Offset.TotalSize * 256);
+            Mosa.Runtime.Internal.MemoryClear(new Pointer((void*)IDTAddr) + 6, Offset.TotalSize * 256);
 
             Set(0, IRQ0);
             Set(1, IRQ1);
@@ -1968,7 +1968,7 @@ namespace Lonos.Kernel.Core.Interrupts
         /// <param name="flags">The flags.</param>
         private static void Set(uint irq, uint address, ushort select, byte flags)
         {
-            var entry = new IntPtr(IDTAddr + 6 + (irq * Offset.TotalSize));
+            var entry = new Pointer(IDTAddr + 6 + (irq * Offset.TotalSize));
             Intrinsic.Store16(entry, Offset.BaseLow, (ushort)(address & 0xFFFF));
             Intrinsic.Store16(entry, Offset.BaseHigh, (ushort)(address >> 16 & 0xFFFF));
             Intrinsic.Store16(entry, Offset.Select, select);
@@ -1978,7 +1978,7 @@ namespace Lonos.Kernel.Core.Interrupts
 
         public static void SetPrivilegeLevel(uint irq, byte privLevel)
         {
-            var entry = new IntPtr(IDTAddr + 6 + (irq * Offset.TotalSize));
+            var entry = new Pointer(IDTAddr + 6 + (irq * Offset.TotalSize));
             var value = Intrinsic.Load8(entry, Offset.Flags);
             value = value.SetBits(5, 2, privLevel);
             Intrinsic.Store8(entry, Offset.Flags, value);

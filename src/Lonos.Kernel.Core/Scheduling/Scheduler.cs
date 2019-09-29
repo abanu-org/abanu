@@ -21,7 +21,7 @@ namespace Lonos.Kernel.Core.Scheduling
         public const int ThreadCapacity = 256;
 
         public static bool Enabled;
-        private static IntPtr SignalThreadTerminationMethodAddress;
+        private static Addr SignalThreadTerminationMethodAddress;
 
         private static Thread[] Threads;
 
@@ -160,9 +160,9 @@ namespace Lonos.Kernel.Core.Scheduling
             }
         }
 
-        private static IntPtr GetAddress(ThreadStart d)
+        private static Addr GetAddress(ThreadStart d)
         {
-            return Intrinsic.GetDelegateMethodAddress(d);
+            return (uint)Intrinsic.GetDelegateMethodAddress(d);
         }
 
         private static object SyncRoot = new object();
@@ -200,7 +200,7 @@ namespace Lonos.Kernel.Core.Scheduling
             KernelMessage.WriteLine("Requesting {0} stack pages", stackPages);
             var debugPadding = 8u;
             stackSize = stackPages * PageFrameManager.PageSize;
-            var stack = new IntPtr((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
+            var stack = new Pointer((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
             MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, (uint)stack, stackSize);
 
             if (thread.User && proc.PageTable != PageTable.KernelTable)
@@ -240,8 +240,8 @@ namespace Lonos.Kernel.Core.Scheduling
 
             var stateSize = thread.User ? IDTTaskStack.Size : IDTStack.Size;
 
-            thread.StackTop = stack;
-            thread.StackBottom = stackBottom;
+            thread.StackTop = (uint)stack;
+            thread.StackBottom = (uint)stackBottom;
 
             Intrinsic.Store32(stackBottom, 4, 0xFF00001);          // Debug Marker
             Intrinsic.Store32(stackBottom, 0, 0xFF00002);          // Debug Marker

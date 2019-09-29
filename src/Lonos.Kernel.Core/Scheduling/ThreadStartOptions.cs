@@ -19,7 +19,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
         public ThreadStartOptions(ThreadStart start)
         {
-            MethodAddr = Intrinsic.GetDelegateMethodAddress(start);
+            MethodAddr = (uint)Intrinsic.GetDelegateMethodAddress(start);
             Memory.FreeObject(start);
             AllowUserModeIOPort = KConfig.AllowUserModeIOPort;
             StackSize = KConfig.DefaultStackSize;
