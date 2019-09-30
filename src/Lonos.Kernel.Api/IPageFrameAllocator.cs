@@ -6,10 +6,16 @@ using System;
 namespace Lonos.Kernel.Core
 {
 
-    public enum PageFrameRequestFlags
+    public enum AllocatePageOptions
     {
         Default = 0,
         Continuous = 1,
+    }
+
+    public enum AddressSpaceKind
+    {
+        Physical = 0,
+        Virtual = 1,
     }
 
     public unsafe interface IPageFrameAllocator
