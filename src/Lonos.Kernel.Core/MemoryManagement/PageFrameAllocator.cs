@@ -36,9 +36,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return p;
         }
 
-        public void Free(Page* page)
+        public void FreeAddr(Addr addr)
         {
-            Free(page->Address);
+            Free(GetPageByAddress(addr));
         }
 
         private uint _FreePages;
@@ -58,7 +58,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             _TotalPages = region.Size / PageSize;
             kmap = KernelMemoryMapManager.Allocate(_TotalPages * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
             PageArray = (Page*)kmap.Start;
-            lastAllocatedPage = PageArray;
+            NextTryPage = PageArray;
 
             var firstSelfPageNum = KMath.DivFloor(kmap.Start, 4096);
             var selfPages = KMath.DivFloor(kmap.Size, 4096);
@@ -170,7 +170,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
         }
 
         //static uint _nextAllocacationSearchIndex;
-        private static Page* lastAllocatedPage;
+        private static Page* NextTryPage;
+
+        //private void Test()
+        //{
+        //    Page* head = null;
+        //    Page* p = null;
+        //    head->Tail = p;
+        //}
 
         /// <summary>
         /// Allocate a physical page from the free list
@@ -199,10 +206,10 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
                 uint cnt = 0;
 
-                if (lastAllocatedPage == null)
-                    lastAllocatedPage = PageArray;
+                if (NextTryPage == null)
+                    NextTryPage = PageArray;
 
-                Page* p = lastAllocatedPage->Next;
+                Page* p = NextTryPage;
                 while (true)
                 {
                     statBlocks++;
@@ -222,12 +229,15 @@ namespace Lonos.Kernel.Core.MemoryManagement
                             statMaxBlockPages = Math.Max(statMaxBlockPages, i);
 
                             if (p == null)
-                                break; // Reached end. SorRange is incomplete
-                            if (p->Status != PageStatus.Free) // Used -> so we can abort the searach
+                                break; // Reached end. Our Range is incomplete
+                            if (p->Status != PageStatus.Free) // Used -> so we can abort the search
                                 break;
 
                             if (i == num - 1)
                             { // all loops successful. So we found our range.
+
+                                if (p == null)
+                                    Panic.Error("Tail is null");
 
                                 head->Tail = p;
                                 head->PagesUsed = num;
@@ -243,9 +253,21 @@ namespace Lonos.Kernel.Core.MemoryManagement
                                     p = p->Next;
                                     _FreePages--;
                                 }
-                                lastAllocatedPage = p;
 
-                                //KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}", (uint)head->PhysicalAddress, (uint)head->Tail->PhysicalAddress + 4096 - 1);
+                                // correct version:
+                                NextTryPage = p;
+
+                                // TODO: HACK! Currently, we have somewhere a buffer overrun? Fix that!
+                                NextTryPage = p + 1;
+
+                                //var t = head->Tail;
+                                //var a = t->Address;
+                                //var anum = (uint)a;
+                                ////(uint)head->Tail->Address + 4096 - 1
+
+                                //KernelMessage.Write("<");
+                                //KernelMessage.WriteLine("Allocated from {0:X8} to {1:X8}, Status={2}", (uint)head->Address, anum, (uint)head->Status);
+                                //KernelMessage.Write(">");
 
                                 //if (head->PhysicalAddress == 0x01CA4000)
                                 //{
@@ -279,25 +301,42 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// <summary>
         /// Releases a page to the free list
         /// </summary>
-        private void Free(Addr address)
+        public void Free(Page* page)
         {
             lock (this)
             {
-                var p = GetPageByAddress(address);
-                if (p->Free)
+                var head = page;
+                if (head->Status == PageStatus.Reserved)
+                    Panic.Error("Cannot free reserved page");
+
+                //if (head->Free)
+                if (head->Status == PageStatus.Free)
+                {
+                    Panic.Error("Double Free?");
                     return;
+                }
 
-                var num = p->PagesUsed;
+                var num = head->PagesUsed;
 
+                KernelMessage.Write("F:{0};", num);
+
+                var p = head;
                 for (var n = 0; n < num; n++)
                 {
-                    p->Status = PageStatus.Used;
+                    if (p->Free)
+                    {
+                        Panic.Error("Already Free Page in Compound Page");
+                        return;
+                    }
+
+                    p->Status = PageStatus.Free;
                     p->PagesUsed = 0;
                     p->Head = null;
                     p->Tail = null;
                     p = p->Next;
                     _FreePages++;
                 }
+                NextTryPage = head;
             }
         }
 

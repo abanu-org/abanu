@@ -25,6 +25,22 @@ namespace Lonos.Kernel.Core.PageManagement
                 table.Flush();
         }
 
+        public static void UnMap(this IPageTable table, Addr virtAddr, USize length, bool flush = false)
+        {
+            if (KConfig.TraceMemoryMapping)
+                KernelMessage.WriteLine("UnMap: virt={0:X8}, length={2:X8}", virtAddr, length);
+
+            var pages = KMath.DivCeil(length, 4096);
+            for (var i = 0; i < pages; i++)
+            {
+                table.MapVirtualAddressToPhysical(virtAddr, 0, false);
+
+                virtAddr += 4096;
+            }
+            if (flush)
+                table.Flush();
+        }
+
         /// <summary>
         /// Maps two tables at the same time, with same virt and phys address
         /// </summary>
