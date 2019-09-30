@@ -49,7 +49,7 @@ In Windows, install the packetmanager `chocolatey <https://chocolatey.org>`__. O
 
   Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-Install the package VcXsrv Windows X Server:
+Install the package VcXsrv:
 
 .. code-block:: powershell
 
@@ -66,6 +66,7 @@ Open the Debian app and finish the install instructions. Whem command prompt is 
 Now you can run unix applications even with graphical user interface.
 
 Additional Tools for Windows:
+-----------------------------
 
 .. code-block:: powershell
 
