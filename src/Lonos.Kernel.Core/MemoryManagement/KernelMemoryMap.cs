@@ -124,7 +124,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static void Setup()
         {
-            var addr = Initial_FindIFreePage();
+            var addr = Initial_FindFreePage();
 
             KernelMessage.Path("KernelMemoryMapManager", "Initial Page: {0:X}", addr);
 
@@ -172,7 +172,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         }
 
-        private static Addr Initial_FindIFreePage()
+        private static Addr Initial_FindFreePage()
         {
             for (uint i = 0; i < BootInfo.Header->MemoryMapLength; i++)
             {

@@ -170,17 +170,19 @@ namespace Lonos.Kernel.Loader
         private static void Dummy()
         {
             //This is a dummy call, that get never executed.
-            //Its requied, because we need a real reference to Mosa.Runtime.x86
+            //Its required, because we need a real reference to Mosa.Runtime.x86
             //Without that, the .NET compiler will optimize that reference away
-            //if its nowhere used. Than the Compiler dosnt know about that Refernce
+            //if its nowhere used. Than the Compiler doesn't know about that reference
             //and the Compilation will fail
             Mosa.Runtime.x86.Internal.GetStackFrame(0);
         }
 
-        private static void AssertError(string message)
+        private static void AssertError(string message, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)
         {
-            KernelMessage.Write("ASSERT ERROR! ");
-            KernelMessage.WriteLine(message);
+            KernelMessage.WriteLine("ASSERT ERROR! ");
+            var sb = new StringBuffer();
+            sb.Append(message, arg1, arg2, arg3);
+            KernelMessage.WriteLine(sb);
         }
 
     }

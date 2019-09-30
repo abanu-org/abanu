@@ -24,7 +24,7 @@ b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ13()
 # Page Fault
 b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ14()
 
-b Lonos.Kernel.Program::MessageReceived(Lonos.Kernel.SystemMessage*)
+#b Lonos.Kernel.Program::MessageReceived(Lonos.Kernel.SystemMessage*)
 
 #b *0xc010f128
 #watch *0x4506010

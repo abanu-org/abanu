@@ -11,7 +11,7 @@ namespace Lonos
     public static class Assert
     {
 
-        public delegate void DAssertErrorHandler(string errorMessage);
+        public delegate void DAssertErrorHandler(string errorMessage, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0);
 
         private static DAssertErrorHandler ErrorHandler;
 
@@ -20,13 +20,13 @@ namespace Lonos
             ErrorHandler = errorHandler;
         }
 
-        private static void AssertError(string message)
+        private static void AssertError(string message, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)
         {
             if (ErrorHandler == null)
             {
                 throw new Exception(message);
             }
-            ErrorHandler(message);
+            ErrorHandler(message, arg1, arg2, arg3);
         }
 
         [Conditional("DEBUG")]
@@ -44,10 +44,10 @@ namespace Lonos
         }
 
         [Conditional("DEBUG")]
-        public static void True(bool condition, string userMessage)
+        public static void True(bool condition, string userMessage, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)
         {
             if (!condition)
-                AssertError(userMessage);
+                AssertError(userMessage, arg1, arg2, arg3);
         }
 
         [Conditional("DEBUG")]

@@ -365,9 +365,11 @@ namespace Lonos.Kernel.Core
             Intrinsic.Store8(address, 1, color);
         }
 
-        private static void AssertError(string message)
+        private static void AssertError(string message, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)
         {
-            Panic.Error(message);
+            var sb = new StringBuffer();
+            sb.Append(message, arg1, arg2, arg3);
+            Panic.Error(sb.CreateString());
         }
 
     }

@@ -18,7 +18,7 @@ namespace Lonos.Kernel.Core
         public const int MaxLength = 132;
         public const int EntrySize = (MaxLength * 2) + 4;
 
-        private unsafe fixed char chars[MaxLength];
+        private unsafe fixed byte chars[MaxLength];
 
         public static unsafe StringBuffer CreateFromNullTerminatedString(uint start)
         {
@@ -45,16 +45,16 @@ namespace Lonos.Kernel.Core
                 if (index < 0 || index >= Length) //TODO: Error
                     return '\x0';
 
-                fixed (char* ptr = chars)
-                    return ptr[index];
+                fixed (byte* ptr = chars)
+                    return (char)ptr[index];
             }
 
             set
             {
                 if (index < 0 || index >= Length) //TODO: Error
                     return;
-                fixed (char* ptr = chars)
-                    ptr[index] = value;
+                fixed (byte* ptr = chars)
+                    ptr[index] = (byte)value;
             }
         }
 
@@ -64,16 +64,16 @@ namespace Lonos.Kernel.Core
             {
                 if (index >= Length) //TODO: Error
                     return '\x0';
-                fixed (char* ptr = chars)
-                    return ptr[index];
+                fixed (byte* ptr = chars)
+                    return (char)ptr[index];
             }
 
             set
             {
                 if (index >= Length) //TODO: Error
                     return;
-                fixed (char* ptr = chars)
-                    ptr[index] = value;
+                fixed (byte* ptr = chars)
+                    ptr[index] = (byte)value;
             }
         }
 
@@ -347,8 +347,8 @@ namespace Lonos.Kernel.Core
             }
             while (temp != 0);
 
-            char* first;
-            fixed (char* ptr = chars)
+            byte* first;
+            fixed (byte* ptr = chars)
             {
                 first = ptr + this.length;
             }
@@ -358,7 +358,7 @@ namespace Lonos.Kernel.Core
 
             if (negative)
             {
-                *(first + offset) = '-';
+                *(first + offset) = (byte)'-';
                 offset++;
                 count--;
             }
@@ -368,9 +368,9 @@ namespace Lonos.Kernel.Core
                 uint remainder = uvalue % divisor;
 
                 if (remainder < 10)
-                    *(first + offset + count - 1 - i) = (char)('0' + remainder);
+                    *(first + offset + count - 1 - i) = (byte)('0' + remainder);
                 else
-                    *(first + offset + count - 1 - i) = (char)('A' + remainder - 10);
+                    *(first + offset + count - 1 - i) = (byte)('A' + remainder - 10);
 
                 uvalue /= divisor;
             }
@@ -669,7 +669,7 @@ namespace Lonos.Kernel.Core
 
         public unsafe void WriteTo(IBufferWriter handle)
         {
-            fixed (char* ptr = chars)
+            fixed (byte* ptr = chars)
             {
                 for (var i = 0; i < length; i++)
                 {
@@ -682,7 +682,7 @@ namespace Lonos.Kernel.Core
         {
             var ptr2 = (byte*)addr;
 
-            fixed (char* ptr = chars)
+            fixed (byte* ptr = chars)
             {
                 for (var i = 0; i < length; i++)
                 {
@@ -691,6 +691,15 @@ namespace Lonos.Kernel.Core
             }
         }
 
-    }
+        public unsafe string CreateString()
+        {
+            Append((char)0);
+            fixed (byte* ptr = chars)
+            {
+                var ptr2 = (sbyte*)ptr;
+                return new string(ptr2);
+            }
 
+        }
+    }
 }
