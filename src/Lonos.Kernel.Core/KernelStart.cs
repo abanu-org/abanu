@@ -193,7 +193,7 @@ namespace Lonos.Kernel.Core
             while (true)
             {
                 i++;
-                if (Scheduler.ClockTicks % 18 == 0)
+                if (Scheduler.ClockTicks % 2 == 0)
                 {
                     Screen.Goto(3, 0);
                     Screen.Write("TH_KERNEL:");
@@ -210,7 +210,7 @@ namespace Lonos.Kernel.Core
             while (true)
             {
                 i++;
-                if (Scheduler.ClockTicks % 20 == 0)
+                if (Scheduler.ClockTicks % 3 == 0)
                 {
                     Screen.Goto(0, 0);
                     Screen.Write("TH1:");
@@ -227,7 +227,7 @@ namespace Lonos.Kernel.Core
             while (i < 100)
             {
                 i++;
-                if (Scheduler.ClockTicks % 12 == 0)
+                if (Scheduler.ClockTicks % 5 == 0)
                 {
                     Screen.Goto(1, 0);
                     Screen.Write("TH2:");
