@@ -29,6 +29,7 @@ namespace Lonos.Kernel.Core
         {
             ManagedMemoy.InitializeGCMemory();
             StartUp.InitializeAssembly();
+            KMath.Init();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
             BootInfo.SetupStage1();
