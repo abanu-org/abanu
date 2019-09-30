@@ -6,6 +6,7 @@ using System;
 namespace Lonos.Kernel.Core
 {
 
+    [Flags]
     public enum AllocatePageOptions
     {
         Default = 0,

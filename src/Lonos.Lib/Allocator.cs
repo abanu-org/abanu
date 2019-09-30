@@ -109,7 +109,7 @@ namespace Lonos
             return P->Size = IS_FREE(P) | NSIZE;
         }
 
-        private static size_t MALLOC_MAX_SIZE = ~MAX_SHIFT_BIT;
+        private const size_t MALLOC_MAX_SIZE = ~MAX_SHIFT_BIT;
 
         //malloc_meta* list_heads[PAGE_SHIFT - 1];
         public malloc_meta** List_heads;

@@ -176,7 +176,7 @@ namespace Lonos.Kernel.Core
             {
                 //kernelStackSize = 256 * 4096;
                 TssAddr = VirtualPageManager.AllocatePages(1);
-                MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, TssAddr, 4096);
+                PageTable.KernelTable.SetWritable(TssAddr, 4096);
                 //kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 //kernelStackBottom = kernelStack + kernelStackSize;
 

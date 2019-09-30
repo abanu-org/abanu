@@ -88,7 +88,7 @@ namespace Lonos.Kernel.Core.Processes
 
             // Setup User PageTable
             var pageTableAddr = VirtualPageManager.AllocateIdentityMappedPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
-            MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
+            PageTable.KernelTable.SetWritable(pageTableAddr, proc.PageTable.InitalMemoryAllocationSize);
             proc.PageTable.UserProcSetup(pageTableAddr);
 
             proc.PageTable.MapCopy(PageTable.KernelTable, BootInfoMemoryType.KernelTextSegment);

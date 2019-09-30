@@ -16,6 +16,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             kmallocAllocator = new KernelAllocator();
 
+            // TODO: CRITICAL: KMath.AlignValueCeil --> DivCeil!
             var ptr = (byte*)VirtualPageManager.AllocatePages(KMath.AlignValueCeil(Allocator.headSize, 4096));
             for (var i = 0; i < Allocator.headSize; i++)
                 *(ptr + i) = 0;

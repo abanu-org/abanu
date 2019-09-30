@@ -15,17 +15,34 @@ namespace Lonos.Kernel.Core.MemoryManagement
             Default.Setup();
         }
 
-        public static Page* AllocatePages(uint pages)
+        public static Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
             return Default.AllocatePages(pages);
         }
 
-        public static Page* AllocatePage()
+        public static Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
         {
             var p = Default.AllocatePage();
             //if (p->PhysicalAddress == 0x01CA4000)
             //    Panic.Error("DEBUG-MARKER");
             return p;
+        }
+
+        public static Addr AllocatePageAddr(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        {
+            return AllocatePages(pages)->PhysicalAddress;
+        }
+
+        public static Addr AllocatePageAddr(AllocatePageOptions options = AllocatePageOptions.Default)
+        {
+            return AllocatePage()->PhysicalAddress;
+        }
+
+        public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = AllocatePageOptions.Default)
+        {
+            var pages = KMath.DivCeil(size, 4096);
+            var p = AllocatePages(pages, options);
+            return new MemoryRegion(p->PhysicalAddress, pages * 4096);
         }
 
         public static void Free(Page* page)
