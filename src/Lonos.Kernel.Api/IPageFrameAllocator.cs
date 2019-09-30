@@ -8,7 +8,8 @@ namespace Lonos.Kernel.Core
 
     public enum PageFrameRequestFlags
     {
-        Default,
+        Default = 0,
+        Continuous = 1,
     }
 
     public unsafe interface IPageFrameAllocator
