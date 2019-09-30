@@ -3,7 +3,7 @@
 
 namespace Lonos.Kernel.Core.MemoryManagement
 {
-    public static unsafe class PageFrameManager
+    public static unsafe class PhysicalPageManager
     {
 
         private static PageFrameAllocator Default;

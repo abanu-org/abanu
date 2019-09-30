@@ -64,22 +64,22 @@ namespace Lonos.Kernel.Core
             // Read own ELF-Headers and Sections
             KernelElf.Setup();
 
-            // Initialize the embedded code (actually only a little proof of conecept code)
+            // Initialize the embedded code (actually only a little proof of concept code)
             NativeCalls.Setup();
 
             //InitialKernelProtect();
 
-            PageFrameManager.Setup();
+            PhysicalPageManager.Setup();
 
-            KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
-            PageFrameManager.AllocatePages(10);
-            KernelMessage.WriteLine("free: {0}", PageFrameManager.PagesAvailable);
-            RawVirtualFrameAllocator.Setup();
+            KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
+            PhysicalPageManager.AllocatePages(10);
+            KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
+            VirtualPageManager.Setup();
 
             Memory.Setup();
 
             // Now Memory Sub System is working. At this point it's valid
-            // to allocate memory dynamicly
+            // to allocate memory dynamically
 
             DeviceManager.InitFrameBuffer();
 
@@ -117,7 +117,7 @@ namespace Lonos.Kernel.Core
                 Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(Thread0) { DebugName = "KernelThread0" }).Start();
 
                 var userProc = ProcessManager.CreateEmptyProcess(new ProcessCreateOptions { User = true });
-                userProc.Path = "/bulidin/testproc";
+                userProc.Path = "/buildin/testproc";
                 Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread1) { AllowUserModeIOPort = true, DebugName = "UserThread1" });
                 Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2" });
                 userProc.Start();
@@ -174,7 +174,7 @@ namespace Lonos.Kernel.Core
             if (KConfig.UseTaskStateSegment)
             {
                 //kernelStackSize = 256 * 4096;
-                TssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
+                TssAddr = VirtualPageManager.AllocatePages(1);
                 MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, TssAddr, 4096);
                 //kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 //kernelStackBottom = kernelStack + kernelStackSize;
@@ -280,7 +280,7 @@ namespace Lonos.Kernel.Core
         {
             uint mask = 0x00004000;
             uint v1 = 0x00000007;
-            uint r1 = v1.SetBits(12, 52, mask, 12); //52 with uint makes no sense, but this doesnt matter in this case, the result just works as expected. It works correct with count<32, too, of course.
+            uint r1 = v1.SetBits(12, 52, mask, 12); //52 with uint makes no sense, but this doesn't matter in this case, the result just works as expected. It works correct with count<32, too, of course.
                                                     // r1 =  00004007
             ulong v2 = v1;
             ulong r2 = v2.SetBits(12, 52, mask, 12);
@@ -318,7 +318,7 @@ namespace Lonos.Kernel.Core
             KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
             ar.Destroy();
 
-            KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
+            KernelMessage.WriteLine("Pages free: {0}", PhysicalPageManager.PagesAvailable);
 
             for (var i = 0; i < 10000; i++)
             {
@@ -326,7 +326,7 @@ namespace Lonos.Kernel.Core
                 s[1] = 5;
                 Memory.FreeObject(s);
             }
-            KernelMessage.WriteLine("Pages free: {0}", PageFrameManager.PagesAvailable);
+            KernelMessage.WriteLine("Pages free: {0}", PhysicalPageManager.PagesAvailable);
             //Memory.FreeObject(s);
 
         }
@@ -341,11 +341,11 @@ namespace Lonos.Kernel.Core
 
         private static void Dummy()
         {
-            //This is a dummy call, that get never executed.
-            //Its requied, because we need a real reference to Mosa.Runtime.x86
-            //Without that, the .NET compiler will optimize that reference away
-            //if its nowhere used. Than the Compiler dosnt know about that Refernce
-            //and the Compilation will fail
+            // This is a dummy call, that get never executed.
+            // Its required, because we need a real reference to Mosa.Runtime.x86
+            // Without that, the .NET compiler will optimize that reference away
+            // if its nowhere used. Than the Compiler doesn't know about that reference
+            // and the Compilation will fail
             Mosa.Runtime.x86.Internal.GetStackFrame(0);
         }
 

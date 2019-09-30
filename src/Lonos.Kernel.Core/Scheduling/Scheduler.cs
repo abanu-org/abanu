@@ -220,14 +220,14 @@ namespace Lonos.Kernel.Core.Scheduling
             var argBufSize = options.ArgumentBufferSize;
             thread.ArgumentBufferSize = options.ArgumentBufferSize;
 
-            var stackPages = KMath.DivCeil(stackSize, PageFrameManager.PageSize);
+            var stackPages = KMath.DivCeil(stackSize, PhysicalPageManager.PageSize);
 
             if (KConfig.TraceThreads)
                 KernelMessage.WriteLine("Requesting {0} stack pages", stackPages);
 
             var debugPadding = 8u;
-            stackSize = stackPages * PageFrameManager.PageSize;
-            var stack = new Pointer((void*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(stackPages));
+            stackSize = stackPages * PhysicalPageManager.PageSize;
+            var stack = new Pointer((void*)VirtualPageManager.AllocatePages(stackPages));
             MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, (uint)stack, stackSize);
 
             if (thread.User && proc.PageTable != PageTable.KernelTable)
@@ -256,7 +256,7 @@ namespace Lonos.Kernel.Core.Scheduling
             thread.KernelStackSize = 256 * 4096;
             //thhread.tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
             MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, KernelStart.TssAddr, 4096);
-            thread.KernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+            thread.KernelStack = VirtualPageManager.AllocatePages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
             thread.KernelStackBottom = thread.KernelStack + thread.KernelStackSize;
 
             if (KConfig.TraceThreads)
@@ -288,7 +288,7 @@ namespace Lonos.Kernel.Core.Scheduling
             IDTTaskStack* stackState = null;
             if (thread.User)
             {
-                stackState = (IDTTaskStack*)RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
+                stackState = (IDTTaskStack*)VirtualPageManager.AllocatePages(1);
                 if (proc.PageTable != PageTable.KernelTable)
                     proc.PageTable.MapCopy(PageTable.KernelTable, (uint)stackState, IDTTaskStack.Size);
             }
