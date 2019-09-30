@@ -143,14 +143,14 @@ namespace Lonos.Kernel.Core
                 //// TODO: Optimize Registration
                 //SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
 
-                //var proc = ProcessManager.StartProcess("App.HelloService");
-                //Serv = proc.Service;
+                var proc = ProcessManager.StartProcess("App.HelloService");
+                Serv = proc.Service;
 
-                //var p2 = ProcessManager.StartProcess("App.HelloKernel");
-                ////p2.Threads[0].SetArgument(0, 0x90);
-                ////p2.Threads[0].SetArgument(4, 0x94);
-                ////p2.Threads[0].SetArgument(8, 0x98);
-                //p2.Threads[0].Debug = true;
+                var p2 = ProcessManager.StartProcess("App.HelloKernel");
+                //p2.Threads[0].SetArgument(0, 0x90);
+                //p2.Threads[0].SetArgument(4, 0x94);
+                //p2.Threads[0].SetArgument(8, 0x98);
+                p2.Threads[0].Debug = true;
 
                 var p3 = ProcessManager.StartProcess("App.Shell");
 
@@ -193,10 +193,12 @@ namespace Lonos.Kernel.Core
             while (true)
             {
                 i++;
-                //if (Scheduler.ClockTicks % 100 == 0)
-                //Screen.Goto(3, 0);
-                //Screen.Write("TH_KERNEL:");
-                //Screen.Write(i, 10);
+                if (Scheduler.ClockTicks % 18 == 0)
+                {
+                    Screen.Goto(3, 0);
+                    Screen.Write("TH_KERNEL:");
+                    Screen.Write(i, 10);
+                }
             }
             KernelMessage.WriteLine("Thread0: Finished");
         }
@@ -208,10 +210,12 @@ namespace Lonos.Kernel.Core
             while (true)
             {
                 i++;
-                //if (Scheduler.ClockTicks % 100 == 0)
-                //Screen.Goto(0, 0);
-                //Screen.Write("TH1:");
-                //Screen.Write(i, 10);
+                if (Scheduler.ClockTicks % 20 == 0)
+                {
+                    Screen.Goto(0, 0);
+                    Screen.Write("TH1:");
+                    Screen.Write(i, 10);
+                }
             }
             KernelMessage.WriteLine("Thread1: Finished");
         }
@@ -223,10 +227,12 @@ namespace Lonos.Kernel.Core
             while (i < 100)
             {
                 i++;
-                //if (Scheduler.ClockTicks % 100 == 0)
-                //Screen.Goto(1, 0);
-                //Screen.Write("TH2:");
-                //Screen.Write(i, 10);
+                if (Scheduler.ClockTicks % 12 == 0)
+                {
+                    Screen.Goto(1, 0);
+                    Screen.Write("TH2:");
+                    Screen.Write(i, 10);
+                }
             }
             KernelMessage.WriteLine("Thread2: Finished");
             //while (true)
