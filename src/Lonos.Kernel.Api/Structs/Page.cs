@@ -16,12 +16,16 @@ namespace Lonos.Kernel.Core
         Reserved = 4,
     }
 
+    // This struct can be used for both phys and virt page management. Do not add Specializations!
+
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct Page
     {
         public PageStatus Status;
         public ulong Flags;
         public Atomic UsageCount;
+
+        // TODO: Rename to Address
 
         public Addr PhysicalAddress;
 
@@ -35,6 +39,8 @@ namespace Lonos.Kernel.Core
         /// Number of reserved Page for this allocation. Only set if this is the Head page.
         /// </summary>
         public uint PagesUsed;
+
+        // TODO: Remove the Next-field, because it could be accessed via (Page*)+1
 
         public Page* Next;
 

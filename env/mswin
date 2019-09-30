@@ -9,8 +9,9 @@ echo $(cmd.exe /C "echo|set /p=%CD%")
 nuget="cmd.exe /C external\\MOSA-Project\\Tools\\nuget\\nuget.exe"
 
 PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin:$PATH
-#PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Professional/MSBuild/Current/Bin:$PATH
-#PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Community/MSBuild/Current/Bin:$PATH
+PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Professional/MSBuild/Current/Bin:$PATH
+PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Community/MSBuild/Current/Bin:$PATH
+PATH=/mnt/d/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin:$PATH
 msbuild=MSBuild.exe
 LONOS_BUILD="cmd.exe /C lonos.tools.build.exe"
 

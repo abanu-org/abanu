@@ -32,6 +32,7 @@ Populate the Debian System with Packages:
 
 .. code-block:: sh
 
+  apt-get update && apt-get install -y wget
   wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
 
 This will take a while. After that, you have a fully featured build environment.
@@ -51,7 +52,7 @@ Install the package xming:
 
 .. code-block:: powershell
 
-  choco install xming
+  choco install -y xming
 
 You can launch now `XLaunch` from Start menu. Simply follow the wizard without making changes.
 
@@ -62,6 +63,12 @@ Open the Debian app and finish the install instructions. Whem command prompt is 
   export DISPLAY=:0 && xfce4-terminal &
 
 Now you can run unix applications even with graphical user interface.
+
+Additional Tools for Windows:
+
+.. code-block:: powershell
+
+  choco install -y git
 
 Share project directory
 -----------------------
