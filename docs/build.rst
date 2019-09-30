@@ -32,6 +32,7 @@ Populate the Debian System with Packages:
 
 .. code-block:: sh
 
+  # run as root
   apt-get update && apt-get install -y wget
   wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
 
@@ -40,7 +41,7 @@ This will take a while. After that, you have a fully featured build environment.
 Enabling Graphical Unix Applications
 ------------------------------------
 
-To launch graphical applications like Geany or Qalculate, you need XLaunch. We can do this all via command line:
+To launch graphical applications like Geany or Qalculate, you need XLaunch / VcXsrv Windows X Server. We can do this all via command line:
 
 In Windows, install the packetmanager `chocolatey <https://chocolatey.org>`__. Open a PowerShell with Administrator rights and run:
 
@@ -48,11 +49,11 @@ In Windows, install the packetmanager `chocolatey <https://chocolatey.org>`__. O
 
   Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-Install the package xming:
+Install the package VcXsrv:
 
 .. code-block:: powershell
 
-  choco install -y xming
+  choco install -y vcxsrv
 
 You can launch now `XLaunch` from Start menu. Simply follow the wizard without making changes.
 
@@ -65,6 +66,7 @@ Open the Debian app and finish the install instructions. Whem command prompt is 
 Now you can run unix applications even with graphical user interface.
 
 Additional Tools for Windows:
+-----------------------------
 
 .. code-block:: powershell
 
