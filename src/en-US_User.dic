@@ -1,5 +1,8 @@
 Addr
+bool
 buf
 Lonos
 Metadata
+struct
 uint
+virt

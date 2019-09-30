@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using Lonos.CTypes;
 
 namespace Lonos.Kernel.Core
 {
@@ -21,13 +22,21 @@ namespace Lonos.Kernel.Core
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct Page
     {
+
+        // Fields for buddy allocator
+        public list_head Lru;
+        public uint Flags;
+        //union {
+        public byte Order;
+        public Page* FirstPage;
+        //};
+
+        //---
+
         public PageStatus Status;
-        public ulong Flags;
         public Atomic UsageCount;
 
-        // TODO: Rename to Address
-
-        public Addr PhysicalAddress;
+        public Addr Address;
 
         // If this is the head of an allocated block
         public Page* Head;
@@ -46,7 +55,7 @@ namespace Lonos.Kernel.Core
 
         public static USize Size => 4096;
 
-        public uint PageNum => PhysicalAddress / 4096;
+        public uint PageNum => Address / 4096;
 
         public bool Free => ((uint)Status).IsMaskSet((uint)PageStatus.Free);
 

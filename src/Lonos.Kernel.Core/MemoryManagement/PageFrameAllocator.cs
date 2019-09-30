@@ -23,12 +23,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
     public unsafe class BasePageFrameAllocator : IPageFrameAllocator
     {
 
-        public Page* AllocatePages(uint pages)
+        public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
             return Allocate(pages);
         }
 
-        public Page* AllocatePage()
+        public Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
         {
             var p = Allocate(1);
             //if (p->PhysicalAddress == 0x01CA4000)
@@ -38,24 +38,25 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public void Free(Page* page)
         {
-            Free(page->PhysicalAddress);
+            Free(page->Address);
         }
 
-        private uint FreePages;
+        private uint _FreePages;
 
         private Page* PageArray;
-        private uint PageCount;
+        private uint _TotalPages;
 
         private KernelMemoryMap kmap;
 
         /// <summary>
         /// Setup the physical page manager
         /// </summary>
-        public void Setup()
+        public void Setup(MemoryRegion region, AddressSpaceKind addrKind)
         {
-            uint physMem = BootInfo.Header->InstalledPhysicalMemory;
-            PageCount = physMem / PageSize;
-            kmap = KernelMemoryMapManager.Allocate(PageCount * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
+            _AddressSpaceKind = addrKind;
+            _Region = region;
+            _TotalPages = region.Size / PageSize;
+            kmap = KernelMemoryMapManager.Allocate(_TotalPages * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
             PageArray = (Page*)kmap.Start;
             lastAllocatedPage = PageArray;
 
@@ -67,9 +68,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
             PageTableExtensions.SetWritable(PageTable.KernelTable, kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
 
-            for (uint i = 0; i < PageCount; i++)
+            for (uint i = 0; i < _TotalPages; i++)
             {
-                PageArray[i].PhysicalAddress = i * PageSize;
+                PageArray[i].Address = i * PageSize;
                 if (i != 0)
                     PageArray[i - 1].Next = &PageArray[i];
             }
@@ -85,16 +86,16 @@ namespace Lonos.Kernel.Core.MemoryManagement
             if (!BootInfo.Present)
                 return;
 
-            for (uint i = 0; i < PageCount; i++)
+            for (uint i = 0; i < _TotalPages; i++)
                 PageArray[i].Status = PageStatus.Reserved;
 
             SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
             SetInitialPageStatus(&KernelMemoryMapManager.Header->Used, PageStatus.Used);
 
-            FreePages = 0;
-            for (uint i = 0; i < PageCount; i++)
+            _FreePages = 0;
+            for (uint i = 0; i < _TotalPages; i++)
                 if (PageArray[i].Status == PageStatus.Free)
-                    FreePages++;
+                    _FreePages++;
 
             //if (GetPhysPage(0x01CA3000)->Status != PageStatus.Used)
             //{
@@ -134,19 +135,19 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private void DumpPage(Page* p)
         {
-            KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", p->PageNum, p->PhysicalAddress, (uint)p->Status, (uint)p, (uint)p / 4096);
+            KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", p->PageNum, p->Address, (uint)p->Status, (uint)p, (uint)p / 4096);
         }
 
         public void Dump()
         {
             var sb = new StringBuffer();
 
-            for (uint i = 0; i < PageCount; i++)
+            for (uint i = 0; i < _TotalPages; i++)
             {
                 var p = &PageArray[i];
                 if (i % 64 == 0)
                 {
-                    sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, p->PageNum, p->PhysicalAddress, (uint)p);
+                    sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, p->PageNum, p->Address, (uint)p);
                     sb.WriteTo(DeviceManager.Serial1);
                     sb.Clear();
                 }
@@ -156,14 +157,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
             }
         }
 
-        public Page* GetPhysPage(Addr physAddr)
+        public Page* GetPageByAddress(Addr physAddr)
         {
             return GetPageByNum((uint)physAddr / PageSize);
         }
 
         public Page* GetPageByNum(uint pageNum)
         {
-            if (pageNum > PageCount)
+            if (pageNum > _TotalPages)
                 return null;
             return &PageArray[pageNum];
         }
@@ -240,7 +241,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                                     p->Head = head;
                                     p->Tail = head->Tail;
                                     p = p->Next;
-                                    FreePages--;
+                                    _FreePages--;
                                 }
                                 lastAllocatedPage = p;
 
@@ -264,7 +265,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                         p = p->Tail;
 
                     p = p->Next;
-                    if (++cnt > PageCount)
+                    if (++cnt > _TotalPages)
                         break;
                 }
 
@@ -282,7 +283,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             lock (this)
             {
-                var p = GetPhysPage(address);
+                var p = GetPageByAddress(address);
                 if (p->Free)
                     return;
 
@@ -295,9 +296,56 @@ namespace Lonos.Kernel.Core.MemoryManagement
                     p->Head = null;
                     p->Tail = null;
                     p = p->Next;
-                    FreePages++;
+                    _FreePages++;
                 }
             }
+        }
+
+        public uint GetAddress(Page* page)
+        {
+            return page->Address;
+        }
+
+        public uint GetPageNum(Page* page)
+        {
+            return page->PageNum;
+        }
+
+        public Page* GetPageByIndex(uint pageIndex)
+        {
+            return &PageArray[pageIndex];
+        }
+
+        public Page* NextPage(Page* page)
+        {
+            return page->Next;
+        }
+
+        public Page* NextCompoundPage(Page* page)
+        {
+            if (page == null)
+                return null;
+
+            var next = page->Next;
+            if (next == null)
+                return null;
+
+            return next;
+        }
+
+        public uint GetPageIndex(Page* page)
+        {
+            return page->PageNum;
+        }
+
+        public uint GetPageIndex(Addr addr)
+        {
+            return addr / 4096;
+        }
+
+        public bool ContainsPage(Page* page)
+        {
+            return _Region.Contains(page->Address);
         }
 
         /// <summary>
@@ -309,9 +357,18 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             get
             {
-                return FreePages;
+                return _FreePages;
             }
         }
 
+        public uint TotalPages => _TotalPages;
+
+        private MemoryRegion _Region;
+        public MemoryRegion Region => _Region;
+
+        private AddressSpaceKind _AddressSpaceKind;
+        public AddressSpaceKind AddressSpaceKind => _AddressSpaceKind;
+
+        public uint FreePages => _FreePages;
     }
 }
