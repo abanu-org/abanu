@@ -31,3 +31,8 @@ end
 define this
 	x/10xw *(void**)($ebp+8)
 end
+
+define q
+	kill
+	quit
+end
