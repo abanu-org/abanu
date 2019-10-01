@@ -31,7 +31,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
             Header->SystemUsable = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset1), 50);
             Header->Used = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset2), 100);
-            Header->CustomReserved = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset3), 100);
+            Header->KernelReserved = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset3), 100);
 
             for (uint i = 0; i < BootInfo.Header->MemoryMapLength; i++)
             {
@@ -43,17 +43,17 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 }
                 else
                 {
-                    if (kmap.Type == BootInfoMemoryType.CustomReserved)
-                        Header->CustomReserved.Add(kmap);
+                    if (kmap.Type == BootInfoMemoryType.KernelReserved)
+                        Header->KernelReserved.Add(kmap);
                     else
                         Header->Used.Add(kmap);
                 }
             }
             Header->Used.Add(InitialMap);
 
-            KernelMessage.Path("KernelMemoryMapManager", "Filling Lists Done. SystemUsable: {0}, CustomReserved: {1}, Used: {2}", Header->SystemUsable.Count, Header->CustomReserved.Count, Header->Used.Count);
+            KernelMessage.Path("KernelMemoryMapManager", "Filling Lists Done. SystemUsable: {0}, CustomReserved: {1}, Used: {2}", Header->SystemUsable.Count, Header->KernelReserved.Count, Header->Used.Count);
             PrintMapArray("SytemUsable", &Header->SystemUsable);
-            PrintMapArray("CustomReserved", &Header->CustomReserved);
+            PrintMapArray("CustomReserved", &Header->KernelReserved);
             PrintMapArray("Used", &Header->Used);
 
             //Debug_FillAvailableMemory();
@@ -151,7 +151,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             if (Header->Used.Intersects(tryMap))
                 return false;
 
-            if (Header->CustomReserved.Intersects(tryMap))
+            if (Header->KernelReserved.Intersects(tryMap))
                 return false;
 
             if (!Header->SystemUsable.Contains(tryMap))

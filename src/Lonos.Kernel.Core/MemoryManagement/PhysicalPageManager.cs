@@ -17,30 +17,36 @@ namespace Lonos.Kernel.Core.MemoryManagement
             Default = new PageFrameAllocator();
             Default.Setup(new MemoryRegion(0, BootInfo.Header->InstalledPhysicalMemory), AddressSpaceKind.Physical);
 
-            ClearCustomReserved();
+            ClearKernelReserved();
             SelfTest();
         }
 
-        private static void ClearCustomReserved()
+        private static void ClearKernelReserved()
         {
             // TODO: Determine dynamically
             //ClearRegionsOfInterest(0x0, 640 * 1024);
-            for (var mapIdx = 0; mapIdx < KernelMemoryMapManager.Header->CustomReserved.Count; mapIdx++)
+            for (var mapIdx = 0; mapIdx < KernelMemoryMapManager.Header->KernelReserved.Count; mapIdx++)
             {
-                var map = &KernelMemoryMapManager.Header->CustomReserved.Items[mapIdx];
+                var map = &KernelMemoryMapManager.Header->KernelReserved.Items[mapIdx];
+                if ((map->AddressSpaceKind & AddressSpaceKind.Physical) == 0)
+                    continue;
+
+                KernelMessage.WriteLine("Clear kernel reserved region {0:X8}-{1:X8}, Size {2:X8}, Skipping Used Regions.", map->Start, map->Start + map->Size - 1, map->Size);
+
                 var pageStart = map->Start;
                 while (pageStart < map->Start + map->Size)
                 {
                     if (!KernelMemoryMapManager.Header->Used.Contains(pageStart))
-                        ClearCustomReserved(pageStart);
+                        ClearKernelReserved(pageStart);
                     pageStart += 4096;
                 }
             }
         }
 
-        private static void ClearCustomReserved(Addr physPageStart)
+        private static void ClearKernelReserved(Addr physPageStart)
         {
-            KernelMessage.WriteLine("Clear out at {0:X8}", physPageStart);
+            if (SelfTestDump)
+                KernelMessage.WriteLine("Clear out at {0:X8}", physPageStart);
             var mapAddr = 0x2000u;
             PageTable.KernelTable.Map(mapAddr, physPageStart, 4096, true, true);
             var mapPtr = (uint*)mapAddr;
@@ -52,9 +58,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
             PageTable.KernelTable.UnMap(mapAddr, 4096, true);
         }
 
+        private const bool SelfTestDump = false;
+
         public static void SelfTest()
         {
-            Default.Dump();
+            if (SelfTestDump)
+                Default.Dump();
 
             KernelMessage.WriteLine("Begin SelfTest");
 
@@ -68,7 +77,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var mapAddr = 0x2000u;
             for (var i = 0; i < checkPageCount; i++)
             {
-                KernelMessage.Write(".");
+                if (SelfTestDump)
+                    KernelMessage.Write(".");
                 var testPage = Default.AllocatePage();
                 var testAddr = testPage->Address;
                 ptrListMapped[i] = testAddr;
@@ -83,19 +93,25 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 //Default.Free(testPage);
             }
 
-            Default.Dump();
+            if (SelfTestDump)
+                Default.Dump();
 
             KernelMessage.WriteLine("Free Pages now");
             for (var i = 0; i < checkPageCount; i++)
             {
-                KernelMessage.Write(":");
+                if (SelfTestDump)
+                    KernelMessage.Write(":");
                 var testAddr = ptrListMapped[i];
                 Default.FreeAddr(testAddr);
             }
+            Default.FreeAddr(ptrList);
 
             KernelMessage.WriteLine("SelfTest Done");
-            Default.Dump();
-            KernelMessage.WriteLine("Final Dump");
+            if (SelfTestDump)
+            {
+                Default.Dump();
+                KernelMessage.WriteLine("Final Dump");
+            }
         }
 
         public static Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)

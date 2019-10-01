@@ -91,7 +91,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
             SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
             SetInitialPageStatus(&KernelMemoryMapManager.Header->Used, PageStatus.Used);
-            SetInitialPageStatus(&KernelMemoryMapManager.Header->CustomReserved, PageStatus.Used);
+            SetInitialPageStatus(&KernelMemoryMapManager.Header->KernelReserved, PageStatus.Used);
 
             _FreePages = 0;
             for (uint i = 0; i < _TotalPages; i++)

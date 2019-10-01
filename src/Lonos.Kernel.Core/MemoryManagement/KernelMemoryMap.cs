@@ -119,6 +119,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
     {
         public KernelMemoryMapArray Used;
         public KernelMemoryMapArray SystemUsable;
-        public KernelMemoryMapArray CustomReserved;
+        public KernelMemoryMapArray KernelReserved;
     }
 }

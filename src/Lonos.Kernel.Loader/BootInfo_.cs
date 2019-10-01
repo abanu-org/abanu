@@ -90,7 +90,14 @@ namespace Lonos.Kernel.Loader
                 BootInfo->MemoryMapArray[i].AddressSpaceKind = addressSpaceKind;
             }
 
+            // It's possible, that the BIOS-Area (@640K) is not correctly setup by Multiboot. So add it here manually to be sure
             var idx = mbMapCount + 0;
+            BootInfo->MemoryMapArray[idx].Start = 640 * 1024;
+            BootInfo->MemoryMapArray[idx].Size = (1024 - 640) * 1024;
+            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.CustomReserved;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
+
+            idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.OriginalKernelElfSection;
             BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.OriginalKernelElfImage;
@@ -155,7 +162,7 @@ namespace Lonos.Kernel.Loader
             idx++;
             BootInfo->MemoryMapArray[idx].Start = 0x0;
             BootInfo->MemoryMapArray[idx].Size = 1024 * 1024;
-            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.CustomReserved;
+            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelReserved;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
 
             BootInfo->MemoryMapLength = idx + 1;

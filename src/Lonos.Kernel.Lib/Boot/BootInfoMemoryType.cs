@@ -22,13 +22,21 @@ namespace Lonos.Kernel.Core.Boot
         PageTable = 12,
         InitialStack = 13,
         InitialGCMemory = 14,
-        KernelReserved = 16,
+
+        /// <summary>
+        /// like <see cref="Reserved"/>, but added manually.
+        /// </summary>
+        CustomReserved = 15,
 
         // Kernel side
 
         KernelMemoryMap = 17,
         PageFrameAllocator = 18,
-        CustomReserved = 19,
+
+        /// <summary>
+        /// Page manager will avoid this region, even if usable. Can overlap with other regions.
+        /// </summary>
+        KernelReserved = 19,
 
         KernelElfVirt = 30,
         KernelTextSegment = 30,
