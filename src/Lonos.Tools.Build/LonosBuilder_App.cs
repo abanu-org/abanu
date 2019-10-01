@@ -86,7 +86,9 @@ namespace Lonos.Tools.Build
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
             Options.EnableBitTracker = false;
-            //Options.EnableMethodScanner = true;
+            Options.EnableLoopInvariantCodeMotion = false;
+            Options.EnablePlatformOptimizations = false;
+            Options.EnableMethodScanner = false;
 
             //Options.VBEVideo = true;
         }
