@@ -72,9 +72,9 @@ namespace Lonos.Kernel.Core
 
             PhysicalPageManager.Setup();
 
-            KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
+            KernelMessage.WriteLine("free: {0}", PhysicalPageManager.TotalPages);
             PhysicalPageManager.AllocatePages(10);
-            KernelMessage.WriteLine("free: {0}", PhysicalPageManager.PagesAvailable);
+            KernelMessage.WriteLine("free: {0}", PhysicalPageManager.TotalPages);
             VirtualPageManager.Setup();
 
             Memory.Setup();
@@ -319,7 +319,7 @@ namespace Lonos.Kernel.Core
             KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
             ar.Destroy();
 
-            KernelMessage.WriteLine("Pages free: {0}", PhysicalPageManager.PagesAvailable);
+            KernelMessage.WriteLine("Pages free: {0}", PhysicalPageManager.TotalPages);
 
             for (var i = 0; i < 10000; i++)
             {
@@ -327,7 +327,7 @@ namespace Lonos.Kernel.Core
                 s[1] = 5;
                 Memory.FreeObject(s);
             }
-            KernelMessage.WriteLine("Pages free: {0}", PhysicalPageManager.PagesAvailable);
+            KernelMessage.WriteLine("Pages free: {0}", PhysicalPageManager.TotalPages);
             //Memory.FreeObject(s);
 
         }

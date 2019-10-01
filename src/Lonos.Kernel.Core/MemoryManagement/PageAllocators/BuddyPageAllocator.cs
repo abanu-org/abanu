@@ -14,14 +14,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
     /// <summary>
     /// A physical page allocator.
     /// </summary>
-    public abstract unsafe class BasePageFrameAllocator : IPageFrameAllocator
+    public abstract unsafe class BuddyPageAllocator : IPageFrameAllocator
     {
 
         private BuddyAllocatorImplementation.mem_zone Zone;
         private BuddyAllocatorImplementation.mem_zone* ZonePtr;
         protected Page* Pages;
 
-        public BasePageFrameAllocator()
+        public BuddyPageAllocator()
         {
         }
 

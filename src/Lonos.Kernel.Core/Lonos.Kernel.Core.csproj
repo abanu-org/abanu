@@ -44,12 +44,13 @@
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
     <Compile Include="MemoryManagement\KernelAllocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMapManager.cs" />
-    <Compile Include="MemoryManagement\PageAllocators\BasePageFrameAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\BuddyPageAllocator.cs" />
     <Compile Include="MemoryManagement\PageAllocators\BuddyAllocatorImplementation.cs" />
     <Compile Include="MemoryManagement\PageAllocators\MultiAllocator.cs" />
-    <Compile Include="MemoryManagement\PageAllocators\PhysicalPageAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocatorExtensions.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\PhysicalBuddyPageAllocator.cs" />
     <Compile Include="MemoryManagement\PageAllocators\SimplePageAllocator.cs" />
-    <Compile Include="MemoryManagement\PageAllocators\VirtualPageAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\VirtualBuddyPageAllocator.cs" />
     <Compile Include="MemoryManagement\PhysicalPageManager.cs" />
     <Compile Include="MemoryManagement\PageTableExtensions.cs" />
     <Compile Include="Collections\FifoQueue.cs" />
@@ -85,7 +86,7 @@
     <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
     <Compile Include="Boot\BootInfo.cs" />
-    <Compile Include="MemoryManagement\PageFrameAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\InitialPhysicalPageAllocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMap.cs" />
     <Compile Include="Tests\buddy-malloc.cs" />
     <Compile Include="Collections\KList.cs" />

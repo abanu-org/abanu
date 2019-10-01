@@ -16,7 +16,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
     /// <summary>
     /// A physical page allocator.
     /// </summary>
-    public unsafe class PageFrameAllocator : IPageFrameAllocator
+    public unsafe class InitialPhysicalPageAllocator : IPageFrameAllocator
     {
 
         public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
@@ -30,11 +30,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //if (p->PhysicalAddress == 0x01CA4000)
             //    Panic.Error("DEBUG-MARKER");
             return p;
-        }
-
-        public void FreeAddr(Addr addr)
-        {
-            Free(GetPageByAddress(addr));
         }
 
         private uint _FreePages;
@@ -133,30 +128,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
             }
         }
 
-        private void DumpPage(Page* p)
-        {
-            KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", p->PageNum, p->Address, (uint)p->Status, (uint)p, (uint)p / 4096);
-        }
-
-        public void Dump()
-        {
-            var sb = new StringBuffer();
-
-            for (uint i = 0; i < _TotalPages; i++)
-            {
-                var p = &PageArray[i];
-                if (i % 64 == 0)
-                {
-                    sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, p->PageNum, p->Address, (uint)p);
-                    sb.WriteTo(DeviceManager.Serial1);
-                    sb.Clear();
-                }
-                sb.Append((int)p->Status);
-                sb.WriteTo(DeviceManager.Serial1);
-                sb.Clear();
-            }
-        }
-
         public Page* GetPageByAddress(Addr physAddr)
         {
             return GetPageByNum((uint)physAddr / PageSize);
@@ -171,38 +142,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         //static uint _nextAllocacationSearchIndex;
         private static Page* NextTryPage;
-
-        private Page* TestCorrect(Page* p, Page* head)
-        {
-            Mosa.Runtime.x86.Native.Nop();
-            Mosa.Runtime.Intrinsic.Load8((Pointer)0x12345678u);
-
-            head->Tail = p;
-
-            Mosa.Runtime.Intrinsic.Load8((Pointer)0x12345678u);
-            Mosa.Runtime.x86.Native.Nop();
-
-            return null;
-        }
-
-        private Page* Test(uint num)
-        {
-            Page* p = NextTryPage;
-
-            var head = p;
-
-            p = p + 1;
-
-            Mosa.Runtime.x86.Native.Nop();
-            Mosa.Runtime.Intrinsic.Load8((Pointer)0x12345678u);
-
-            head->Tail = p;
-
-            Mosa.Runtime.Intrinsic.Load8((Pointer)0x12345678u);
-            Mosa.Runtime.x86.Native.Nop();
-
-            return null;
-        }
 
         /// <summary>
         /// Allocate a physical page from the free list
@@ -317,7 +256,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 }
 
                 KernelMessage.WriteLine("Blocks={0} FreeBlocks={1} MaxBlockPages={2} RangeChecks={3} cnt={4}", statBlocks, statFreeBlocks, (uint)statMaxBlockPages, statRangeChecks, cnt);
-                Dump();
+                this.Dump();
                 Panic.Error("PageFrameAllocator: Could not allocate " + num + " Pages.");
                 return null;
             }

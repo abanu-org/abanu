@@ -9,13 +9,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
     public static unsafe class PhysicalPageManager
     {
 
-        private static PageFrameAllocator Default;
+        private static IPageFrameAllocator Default;
         public const uint PageSize = 4096;
 
         public static void Setup()
         {
-            Default = new PageFrameAllocator();
-            Default.Setup(new MemoryRegion(0, BootInfo.Header->InstalledPhysicalMemory), AddressSpaceKind.Physical);
+            var allocator = new InitialPhysicalPageAllocator();
+            allocator.Setup(new MemoryRegion(0, BootInfo.Header->InstalledPhysicalMemory), AddressSpaceKind.Physical);
+            Default = allocator;
 
             ClearKernelReserved();
             SelfTest();
@@ -129,19 +130,17 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static Addr AllocatePageAddr(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
-            return AllocatePages(pages)->Address;
+            return Default.AllocatePagesAddr(pages, options);
         }
 
         public static Addr AllocatePageAddr(AllocatePageOptions options = AllocatePageOptions.Default)
         {
-            return AllocatePage()->Address;
+            return Default.AllocatePageAddr(options);
         }
 
         public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = AllocatePageOptions.Default)
         {
-            var pages = KMath.DivCeil(size, 4096);
-            var p = AllocatePages(pages, options);
-            return new MemoryRegion(p->Address, pages * 4096);
+            return Default.AllocateRegion(size, options);
         }
 
         public static void Free(Page* page)
@@ -159,11 +158,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return Default.GetPageByNum(pageNum);
         }
 
-        public static uint PagesAvailable
+        public static uint TotalPages
         {
             get
             {
-                return Default.PagesAvailable;
+                return Default.TotalPages;
             }
         }
 
