@@ -11,7 +11,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static void DumpPage(this IPageFrameAllocator allocator, Page* p)
         {
-            KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", p->PageNum, p->Address, (uint)p->Status, (uint)p, (uint)p / 4096);
+            KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", allocator.GetPageNum(p), allocator.GetAddress(p), (uint)p->Status, (uint)p, (uint)p / 4096);
         }
 
         public static void Dump(this IPageFrameAllocator allocator)
@@ -23,7 +23,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 var p = allocator.GetPageByIndex(i);
                 if (i % 64 == 0)
                 {
-                    sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, p->PageNum, p->Address, (uint)p);
+                    sb.Append("\nIndex={0} Page {1} at {2:X8}, PageStructAddr={3:X8}: ", i, allocator.GetPageNum(p), allocator.GetAddress(p), (uint)p);
                     sb.WriteTo(DeviceManager.Serial1);
                     sb.Clear();
                 }
@@ -52,7 +52,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             var pages = KMath.DivCeil(size, 4096);
             var p = allocator.AllocatePages(pages, options);
-            return new MemoryRegion(p->Address, pages * 4096);
+            return new MemoryRegion(allocator.GetAddress(p), pages * 4096);
         }
 
     }

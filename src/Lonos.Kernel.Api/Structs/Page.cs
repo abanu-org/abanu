@@ -55,8 +55,6 @@ namespace Lonos.Kernel.Core
 
         public static USize Size => 4096;
 
-        public uint PageNum => Address / 4096;
-
         public bool Free => ((uint)Status).IsMaskSet((uint)PageStatus.Free);
 
         public bool Unset => ((uint)Status).IsMaskSet((uint)PageStatus.Unset);

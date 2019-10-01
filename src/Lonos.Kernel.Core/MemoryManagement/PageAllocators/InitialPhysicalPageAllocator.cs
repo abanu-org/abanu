@@ -39,6 +39,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private KernelMemoryMap kmap;
 
+        private uint FistPageNum;
+
         /// <summary>
         /// Setup the physical page manager
         /// </summary>
@@ -46,6 +48,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             _AddressSpaceKind = addrKind;
             _Region = region;
+            FistPageNum = region.Start / PageSize;
             _TotalPages = region.Size / PageSize;
             kmap = KernelMemoryMapManager.Allocate(_TotalPages * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Both);
             PageArray = (Page*)kmap.Start;
@@ -311,7 +314,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public uint GetPageNum(Page* page)
         {
-            return page->PageNum;
+            return GetAddress(page) / 4096;
         }
 
         public Page* GetPageByIndex(uint pageIndex)
@@ -338,7 +341,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public uint GetPageIndex(Page* page)
         {
-            return page->PageNum;
+            return GetPageNum(page) - FistPageNum;
         }
 
         public uint GetPageIndex(Addr addr)

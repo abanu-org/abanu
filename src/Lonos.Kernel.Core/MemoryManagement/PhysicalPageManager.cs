@@ -81,7 +81,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 if (SelfTestDump)
                     KernelMessage.Write(".");
                 var testPage = Default.AllocatePage();
-                var testAddr = testPage->Address;
+                var testAddr = Default.GetAddress(testPage);
                 ptrListMapped[i] = testAddr;
                 PageTable.KernelTable.Map(mapAddr, testAddr, 4096, true, true);
                 var mapPtr = (uint*)mapAddr;
@@ -164,6 +164,16 @@ namespace Lonos.Kernel.Core.MemoryManagement
             {
                 return Default.TotalPages;
             }
+        }
+
+        public static Addr GetAddress(Page* page)
+        {
+            return Default.GetAddress(page);
+        }
+
+        public static Page* NextPage(Page* page)
+        {
+            return Default.NextPage(page);
         }
 
     }
