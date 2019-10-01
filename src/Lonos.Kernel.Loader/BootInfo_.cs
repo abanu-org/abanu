@@ -50,13 +50,11 @@ namespace Lonos.Kernel.Loader
             };
         }
 
-        private const uint MemoryMapReserve = 30;
+        private const uint MemoryMapReserve = 40;
 
         private static void SetupMemoryMap()
         {
-            uint customMaps = 11;
             var mbMapCount = Multiboot.MemoryMapCount;
-            BootInfo->MemoryMapLength = mbMapCount + customMaps;
             BootInfo->MemoryMapArray = (BootInfoMemory*)MallocBootInfoData((USize)(sizeof(MultiBootMemoryMap) * MemoryMapReserve));
 
             for (uint i = 0; i < mbMapCount; i++)
@@ -146,6 +144,8 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapArray[idx].Start = 0x0;
             BootInfo->MemoryMapArray[idx].Size = 1024 * 1024;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.CustomReserved;
+
+            BootInfo->MemoryMapLength = idx + 1;
         }
 
         public static void AddMap(BootInfoMemory map)
