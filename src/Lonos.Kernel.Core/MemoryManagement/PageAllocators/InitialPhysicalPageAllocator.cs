@@ -120,12 +120,16 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 for (var p = fistPageNum; p < fistPageNum + mapPages; p++)
                 {
                     var addr = p * 4096;
+                    if (!Region.Contains(addr))
+                        continue;
+
                     if (addr >= BootInfo.Header->InstalledPhysicalMemory)
                     {
                         KernelMessage.WriteLine("addr >= BootInfo.Header->InstalledPhysicalMemory");
                         break;
                     }
                     var page = GetPageByNum(p);
+                    Assert.IsSet(page, "page == null");
                     page->Status = status;
                 }
             }
@@ -133,14 +137,15 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public Page* GetPageByAddress(Addr physAddr)
         {
-            return GetPageByNum((uint)physAddr / PageSize);
+            return GetPageByNum(physAddr / PageSize);
         }
 
         public Page* GetPageByNum(uint pageNum)
         {
-            if (pageNum > _TotalPages)
+            var pageIdx = pageNum - FistPageNum;
+            if (pageIdx > _TotalPages)
                 return null;
-            return &PageArray[pageNum];
+            return &PageArray[pageIdx];
         }
 
         //static uint _nextAllocacationSearchIndex;
@@ -346,7 +351,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public uint GetPageIndex(Addr addr)
         {
-            return addr / 4096;
+            return (addr / 4096) - FistPageNum;
         }
 
         public bool ContainsPage(Page* page)
@@ -358,14 +363,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// Gets the size of a single memory page.
         /// </summary>
         public static uint PageSize => 4096;
-
-        public uint PagesAvailable
-        {
-            get
-            {
-                return _FreePages;
-            }
-        }
 
         public uint TotalPages => _TotalPages;
 

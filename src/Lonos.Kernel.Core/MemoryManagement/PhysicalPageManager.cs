@@ -15,6 +15,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static void Setup()
         {
             var allocator = new InitialPhysicalPageAllocator();
+            //allocator.Setup(new MemoryRegion(2 * 1024 * 1024, BootInfo.Header->InstalledPhysicalMemory - (2 * 1024 * 1024)), AddressSpaceKind.Physical);
             allocator.Setup(new MemoryRegion(0, BootInfo.Header->InstalledPhysicalMemory), AddressSpaceKind.Physical);
             Default = allocator;
 
@@ -59,7 +60,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             PageTable.KernelTable.UnMap(mapAddr, 4096, true);
         }
 
-        private const bool SelfTestDump = false;
+        private const bool SelfTestDump = true;
 
         public static void SelfTest()
         {
