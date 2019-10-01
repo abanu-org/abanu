@@ -122,11 +122,6 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialGCMemory;
 
             idx++;
-            BootInfo->MemoryMapArray[idx].Start = 0x0;
-            BootInfo->MemoryMapArray[idx].Size = 0xA0000; // 640 KB
-            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelReserved;
-
-            idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".bss")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".bss")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelBssSegment;
@@ -145,6 +140,12 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".data")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".data")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelDataSegment;
+
+            // Avoiding the use of the first megabyte of RAM
+            idx++;
+            BootInfo->MemoryMapArray[idx].Start = 0x0;
+            BootInfo->MemoryMapArray[idx].Size = 1024 * 1024;
+            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.CustomReserved;
         }
 
         public static void AddMap(BootInfoMemory map)

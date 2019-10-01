@@ -28,6 +28,7 @@ namespace Lonos.Kernel.Core.Boot
 
         KernelMemoryMap = 17,
         PageFrameAllocator = 18,
+        CustomReserved = 19,
 
         KernelElfVirt = 30,
         KernelTextSegment = 30,

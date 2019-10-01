@@ -91,6 +91,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
             SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
             SetInitialPageStatus(&KernelMemoryMapManager.Header->Used, PageStatus.Used);
+            SetInitialPageStatus(&KernelMemoryMapManager.Header->CustomReserved, PageStatus.Used);
 
             _FreePages = 0;
             for (uint i = 0; i < _TotalPages; i++)
@@ -283,7 +284,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                                 NextTryPage = p;
 
                                 // TODO: HACK! Currently, we have somewhere a buffer overrun? Fix that!
-                                NextTryPage = p + 1;
+                                //NextTryPage = p + 1;
 
                                 //var t = head->Tail;
                                 //var a = t->Address;
@@ -343,7 +344,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
                 var num = head->PagesUsed;
 
-                KernelMessage.Write("F:{0};", num);
+                //KernelMessage.Write("F:{0};", num);
 
                 var p = head;
                 for (var n = 0; n < num; n++)

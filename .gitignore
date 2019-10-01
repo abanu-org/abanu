@@ -79,3 +79,23 @@ logs/
 
 # nohup output files
 *.out
+
+# dumps
+/mem*
+/m[0-9]*
+/mem[0-9]*
+/m
+*.mem
+*.dmp
+*.dump
+
+# images or disks
+*.img
+*.image
+*.bin
+*.disk
+*.dsk
+*.raw
+*.iso
+*.drive
+*.qcow

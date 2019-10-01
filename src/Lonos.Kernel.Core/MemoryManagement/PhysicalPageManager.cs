@@ -17,7 +17,39 @@ namespace Lonos.Kernel.Core.MemoryManagement
             Default = new PageFrameAllocator();
             Default.Setup(new MemoryRegion(0, BootInfo.Header->InstalledPhysicalMemory), AddressSpaceKind.Physical);
 
+            ClearRegionsOfInterest();
             //SelfTest();
+        }
+
+        private static void ClearRegionsOfInterest()
+        {
+            // TODO: Determine dynamically
+            //ClearRegionsOfInterest(0x0, 640 * 1024);
+            for (var mapIdx = 0; mapIdx < KernelMemoryMapManager.Header->CustomReserved.Count; mapIdx++)
+            {
+                var map = &KernelMemoryMapManager.Header->CustomReserved.Items[mapIdx];
+                var pageStart = map->Start;
+                while (pageStart < map->Start + map->Size)
+                {
+                    if (!KernelMemoryMapManager.Header->Used.Contains(pageStart))
+                        ClearRegionsOfInterest(pageStart);
+                    pageStart += 4096;
+                }
+            }
+        }
+
+        private static void ClearRegionsOfInterest(Addr physPageStart)
+        {
+            KernelMessage.WriteLine("Clear out at {0:X8}", physPageStart);
+            var mapAddr = 0x2000u;
+            PageTable.KernelTable.Map(mapAddr, physPageStart, 4096, true, true);
+            var mapPtr = (uint*)mapAddr;
+            for (var pos = 0; pos < 4096 / 4; pos++)
+            {
+                *mapPtr = 0xFFFFFFFF;
+                mapPtr += 1;
+            }
+            PageTable.KernelTable.UnMap(mapAddr, 4096, true);
         }
 
         public static void SelfTest()
@@ -26,7 +58,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
             KernelMessage.WriteLine("Begin SelfTest");
 
-            var ptrMem = (Addr*)AllocatePageAddr(2);
+            var ptrMem = (Addr*)AllocatePageAddr(32); // pointers for 4GB of pages
             var checkPageCount = Default.FreePages;
             checkPageCount -= 1000;
             //checkPageCount = 32;
@@ -36,9 +68,15 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 KernelMessage.Write(".");
                 var testPage = Default.AllocatePage();
                 var testAddr = testPage->Address;
-                Default.Free(testPage);
                 PageTable.KernelTable.Map(mapAddr, testAddr, 4096, true, true);
+                var mapPtr = (uint*)mapAddr;
+                for (var pos = 0; pos < 1024; pos++)
+                {
+                    *mapPtr = 0xF5F6F7F8;
+                    mapPtr += 1;
+                }
                 PageTable.KernelTable.UnMap(mapAddr, 4096, true);
+                //Default.Free(testPage);
             }
             KernelMessage.WriteLine("SelfTest Done");
             Default.Dump();

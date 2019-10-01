@@ -114,6 +114,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
     {
         public KernelMemoryMapArray Used;
         public KernelMemoryMapArray SystemUsable;
+        public KernelMemoryMapArray CustomReserved;
     }
 
     public static unsafe class KernelMemoryMapManager
@@ -136,10 +137,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
             Header = (KernelMemoryMapHeader*)InitialMap.Start;
 
             var arrayOffset1 = 0x1000;
-            var arrayOffset2 = 0x3000;
+            var arrayOffset2 = 0x2000;
+            var arrayOffset3 = 0x3000;
 
             Header->SystemUsable = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset1), 50);
             Header->Used = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset2), 100);
+            Header->CustomReserved = new KernelMemoryMapArray((KernelMemoryMap*)(InitialMap.Start + arrayOffset3), 100);
 
             for (uint i = 0; i < BootInfo.Header->MemoryMapLength; i++)
             {
@@ -151,11 +154,30 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 }
                 else
                 {
-                    Header->Used.Add(kmap);
+                    if (kmap.Type == BootInfoMemoryType.CustomReserved)
+                        Header->CustomReserved.Add(kmap);
+                    else
+                        Header->Used.Add(kmap);
                 }
             }
             Header->Used.Add(InitialMap);
+
+            KernelMessage.Path("KernelMemoryMapManager", "Filling Lists Done. SystemUsable: {0}, CustomReserved: {1}, Used: {2}", Header->SystemUsable.Count, Header->CustomReserved.Count, Header->Used.Count);
+            PrintMapArray("SytemUsable", &Header->SystemUsable);
+            PrintMapArray("CustomReserved", &Header->CustomReserved);
+            PrintMapArray("Used", &Header->Used);
+
             //Debug_FillAvailableMemory();
+        }
+
+        private static void PrintMapArray(string name, KernelMemoryMapArray* mapArray)
+        {
+            KernelMessage.WriteLine("Items of MemoryMap Array [{0}]", name);
+            for (var i = 0; i < mapArray->Count; i++)
+            {
+                var mm = &mapArray->Items[i];
+                KernelMessage.WriteLine("Map Start={0:X8}, Size={1:X8}, Type={2}", mm->Start, mm->Size, (uint)mm->Type);
+            }
         }
 
         public static void Debug_FillAvailableMemory()
@@ -200,16 +222,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 if (BootInfo.Header->MemoryMapArray[i].Type == BootInfoMemoryType.SystemUsable)
                 {
                     if (AddressInMap(checkAddr, BootInfo.Header->MemoryMapArray[i]))
-                    {
                         inUsableSystemMap = true;
-                    }
                 }
                 else
                 {
                     if (AddressInMap(checkAddr, BootInfo.Header->MemoryMapArray[i]))
-                    {
                         return false;
-                    }
                 }
 
             }
@@ -242,6 +260,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             var tryMap = new KernelMemoryMap(map.Start + map.Size, size, BootInfoMemoryType.Unknown);
             if (Header->Used.Intersects(tryMap))
+                return false;
+
+            if (Header->CustomReserved.Intersects(tryMap))
                 return false;
 
             if (!Header->SystemUsable.Contains(tryMap))
