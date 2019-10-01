@@ -8,33 +8,33 @@ using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.PageManagement;
 using Mosa.Runtime;
 
-//using Mosa.Kernel.x86;
-
 namespace Lonos.Kernel.Core.MemoryManagement
 {
 
-    public unsafe class InitialPhysicalPageAllocator : IPageFrameAllocator
+    /// <summary>
+    /// This is a simple, but working Allocator. Its flexible to use.
+    /// </summary>
+    public abstract unsafe class InitialPageAllocator : IPageFrameAllocator
     {
 
-        private uint _FreePages;
+        protected uint _FreePages;
 
-        private Page* PageArray;
-        private uint _TotalPages;
+        protected Page* PageArray;
+        protected uint _TotalPages;
 
-        private KernelMemoryMap kmap;
+        private MemoryRegion kmap;
 
         private uint FistPageNum;
 
-        /// <summary>
-        /// Setup the physical page manager
-        /// </summary>
+        protected abstract MemoryRegion AllocRawMemory(uint size);
+
         public void Setup(MemoryRegion region, AddressSpaceKind addrKind)
         {
             _AddressSpaceKind = addrKind;
             _Region = region;
             FistPageNum = region.Start / PageSize;
             _TotalPages = region.Size / PageSize;
-            kmap = KernelMemoryMapManager.Allocate(_TotalPages * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Both);
+            kmap = AllocRawMemory(_TotalPages * (uint)sizeof(Page));
             PageArray = (Page*)kmap.Start;
             NextTryPage = PageArray;
 
@@ -58,68 +58,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             SetupFreeMemory();
         }
 
-        /// <summary>
-        /// Setups the free memory.
-        /// </summary>
-        private unsafe void SetupFreeMemory()
-        {
-            if (!BootInfo.Present)
-                return;
-
-            for (uint i = 0; i < _TotalPages; i++)
-                PageArray[i].Status = PageStatus.Reserved;
-
-            SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
-            SetInitialPageStatus(&KernelMemoryMapManager.Header->Used, PageStatus.Used);
-            SetInitialPageStatus(&KernelMemoryMapManager.Header->KernelReserved, PageStatus.Used);
-
-            _FreePages = 0;
-            for (uint i = 0; i < _TotalPages; i++)
-                if (PageArray[i].Status == PageStatus.Free)
-                    _FreePages++;
-
-            //if (GetPhysPage(0x01CA3000)->Status != PageStatus.Used)
-            //{
-            //    Panic.Error("01CA3000!!!");
-            //}
-            //KernelMessage.WriteLine("DEBUG-MARKER");
-            //DumpPage(GetPhysPage(0x01CA3000));
-
-            KernelMessage.WriteLine("Pages Free: {0}", FreePages);
-        }
-
-        private void SetInitialPageStatus(KernelMemoryMapArray* maps, PageStatus status)
-        {
-            for (var i = 0; i < maps->Count; i++)
-            {
-                var map = maps->Items[i];
-                if (map.Start >= BootInfo.Header->InstalledPhysicalMemory)
-                    continue;
-
-                if ((map.AddressSpaceKind & AddressSpaceKind.Physical) == 0)
-                    continue;
-
-                var mapPages = KMath.DivCeil(map.Size, 4096);
-                var fistPageNum = KMath.DivFloor(map.Start, 4096);
-                KernelMessage.WriteLine("Mark Pages from {0:X8}, Size {1:X8}, Type {2}, FirstPage {3}, Pages {4}, Status {5}", map.Start, map.Size, (uint)map.Type, (uint)fistPageNum, mapPages, (uint)status);
-
-                for (var p = fistPageNum; p < fistPageNum + mapPages; p++)
-                {
-                    var addr = p * 4096;
-                    if (!Region.Contains(addr))
-                        continue;
-
-                    if (addr >= BootInfo.Header->InstalledPhysicalMemory)
-                    {
-                        KernelMessage.WriteLine("addr >= BootInfo.Header->InstalledPhysicalMemory");
-                        break;
-                    }
-                    var page = GetPageByNum(p);
-                    Assert.IsSet(page, "page == null");
-                    page->Status = status;
-                }
-            }
-        }
+        protected abstract void SetupFreeMemory();
 
         public Page* GetPageByAddress(Addr physAddr)
         {
@@ -141,6 +80,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             return AllocatePages(1, options);
         }
+
         public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
             lock (this)
@@ -361,5 +301,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public AddressSpaceKind AddressSpaceKind => _AddressSpaceKind;
 
         public uint FreePages => _FreePages;
+
     }
+
 }

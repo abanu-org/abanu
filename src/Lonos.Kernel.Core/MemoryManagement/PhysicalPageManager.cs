@@ -14,7 +14,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static void Setup()
         {
-            var allocator = new InitialPhysicalPageAllocator();
+            var allocator = new PhysicalInitialPageAllocator();
             //allocator.Setup(new MemoryRegion(2 * 1024 * 1024, BootInfo.Header->InstalledPhysicalMemory - (2 * 1024 * 1024)), AddressSpaceKind.Physical);
             allocator.Setup(new MemoryRegion(0, BootInfo.Header->InstalledPhysicalMemory), AddressSpaceKind.Physical);
             Default = allocator;

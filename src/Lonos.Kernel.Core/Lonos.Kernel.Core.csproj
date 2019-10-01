@@ -46,6 +46,7 @@
     <Compile Include="MemoryManagement\KernelMemoryMapManager.cs" />
     <Compile Include="MemoryManagement\PageAllocators\BuddyPageAllocator.cs" />
     <Compile Include="MemoryManagement\PageAllocators\BuddyAllocatorImplementation.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\InitialPageAllocator.cs" />
     <Compile Include="MemoryManagement\PageAllocators\MultiAllocator.cs" />
     <Compile Include="MemoryManagement\PageAllocatorExtensions.cs" />
     <Compile Include="MemoryManagement\PageAllocators\PhysicalBuddyPageAllocator.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
     <Compile Include="Boot\BootInfo.cs" />
-    <Compile Include="MemoryManagement\PageAllocators\InitialPhysicalPageAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\PhysicalInitialPageAllocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMap.cs" />
     <Compile Include="Tests\buddy-malloc.cs" />
     <Compile Include="Collections\KList.cs" />

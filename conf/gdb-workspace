@@ -11,7 +11,7 @@ b *0x0
 #b LoaderStart.cs:82
 
 #b Lonos.Kernel.Core.IDTManager::IRQ32()
-b SysCallManager.cs:121
+#b SysCallManager.cs:121
 b Thread.cs:68
 b HostCommunicator.cs:107
 
