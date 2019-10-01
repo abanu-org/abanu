@@ -172,12 +172,37 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //static uint _nextAllocacationSearchIndex;
         private static Page* NextTryPage;
 
-        //private void Test()
-        //{
-        //    Page* head = null;
-        //    Page* p = null;
-        //    head->Tail = p;
-        //}
+        private Page* TestCorrect(Page* p, Page* head)
+        {
+            Mosa.Runtime.x86.Native.Nop();
+            Mosa.Runtime.Intrinsic.Load8((Pointer)0x12345678u);
+
+            head->Tail = p;
+
+            Mosa.Runtime.Intrinsic.Load8((Pointer)0x12345678u);
+            Mosa.Runtime.x86.Native.Nop();
+
+            return null;
+        }
+
+        private Page* Test(uint num)
+        {
+            Page* p = NextTryPage;
+
+            var head = p;
+
+            p = p + 1;
+
+            Mosa.Runtime.x86.Native.Nop();
+            Mosa.Runtime.Intrinsic.Load8((Pointer)0x12345678u);
+
+            head->Tail = p;
+
+            Mosa.Runtime.Intrinsic.Load8((Pointer)0x12345678u);
+            Mosa.Runtime.x86.Native.Nop();
+
+            return null;
+        }
 
         /// <summary>
         /// Allocate a physical page from the free list
