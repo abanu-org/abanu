@@ -44,6 +44,12 @@
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
     <Compile Include="MemoryManagement\KernelAllocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMapManager.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\BasePageFrameAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\BuddyAllocatorImplementation.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\MultiAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\PhysicalPageAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\SimplePageAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\VirtualPageAllocator.cs" />
     <Compile Include="MemoryManagement\PhysicalPageManager.cs" />
     <Compile Include="MemoryManagement\PageTableExtensions.cs" />
     <Compile Include="Collections\FifoQueue.cs" />
@@ -122,9 +128,7 @@
       <Name>Lonos.Primitives</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MemoryManagement\PageAllocators\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

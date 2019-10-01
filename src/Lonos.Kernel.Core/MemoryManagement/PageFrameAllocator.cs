@@ -13,14 +13,10 @@ using Mosa.Runtime;
 namespace Lonos.Kernel.Core.MemoryManagement
 {
 
-    public unsafe class PageFrameAllocator : BasePageFrameAllocator
-    {
-    }
-
     /// <summary>
     /// A physical page allocator.
     /// </summary>
-    public unsafe class BasePageFrameAllocator : IPageFrameAllocator
+    public unsafe class PageFrameAllocator : IPageFrameAllocator
     {
 
         public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)

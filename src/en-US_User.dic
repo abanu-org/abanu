@@ -21,6 +21,7 @@ framebuffer
 fwrite
 gdb
 Ident
+Init
 irq
 iso
 kb
