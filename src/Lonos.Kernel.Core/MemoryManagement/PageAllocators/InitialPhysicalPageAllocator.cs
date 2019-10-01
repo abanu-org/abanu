@@ -62,11 +62,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
             PageTableExtensions.SetWritable(PageTable.KernelTable, kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
 
+            var addr = FistPageNum * 4096;
             for (uint i = 0; i < _TotalPages; i++)
             {
-                PageArray[i].Address = i * PageSize;
+                PageArray[i].Address = addr;
                 if (i != 0)
                     PageArray[i - 1].Next = &PageArray[i];
+                addr += 4096;
             }
 
             SetupFreeMemory();
@@ -324,6 +326,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public Page* GetPageByIndex(uint pageIndex)
         {
+            if (pageIndex >= _TotalPages)
+                return null;
             return &PageArray[pageIndex];
         }
 
