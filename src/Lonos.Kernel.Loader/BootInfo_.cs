@@ -63,6 +63,7 @@ namespace Lonos.Kernel.Loader
                 BootInfo->MemoryMapArray[i].Size = Multiboot.GetMemoryMapLength(i);
                 var memType = BootInfoMemoryType.Reserved;
                 var type = (BIOSMemoryMapType)Multiboot.GetMemoryMapType(i);
+                var addressSpaceKind = AddressSpaceKind.Physical;
 
                 switch (type)
                 {
@@ -86,64 +87,76 @@ namespace Lonos.Kernel.Loader
                         break;
                 }
                 BootInfo->MemoryMapArray[i].Type = memType;
+                BootInfo->MemoryMapArray[i].AddressSpaceKind = addressSpaceKind;
             }
 
             var idx = mbMapCount + 0;
             BootInfo->MemoryMapArray[idx].Start = Address.OriginalKernelElfSection;
             BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.OriginalKernelElfImage;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.KernelElfSection;
             BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelElf;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.KernelBootInfo;
             BootInfo->MemoryMapArray[idx].Size = 0x1000;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeader;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = BootInfo->HeapStart;
-            BootInfo->MemoryMapArray[idx].Size = 0x1000; //TODO: Recaluclate after Setup all Infos
+            BootInfo->MemoryMapArray[idx].Size = 0x1000; //TODO: Recalculate after Setup all Infos
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeap;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
 
             idx++;
             uint stackSize = 0x100000; // 1MB
             BootInfo->MemoryMapArray[idx].Start = Address.InitialStack - stackSize;
             BootInfo->MemoryMapArray[idx].Size = stackSize;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialStack;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.GCInitialMemory;
             BootInfo->MemoryMapArray[idx].Size = Address.GCInitialMemorySize;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialGCMemory;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".bss")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".bss")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelBssSegment;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Virtual;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".text")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".text")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelTextSegment;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Virtual;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".rodata")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".rodata")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelROdataSegment;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Virtual;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".data")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".data")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelDataSegment;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Virtual;
 
             // Avoiding the use of the first megabyte of RAM
             idx++;
             BootInfo->MemoryMapArray[idx].Start = 0x0;
             BootInfo->MemoryMapArray[idx].Size = 1024 * 1024;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.CustomReserved;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
 
             BootInfo->MemoryMapLength = idx + 1;
         }

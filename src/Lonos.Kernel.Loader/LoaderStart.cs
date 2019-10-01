@@ -51,7 +51,7 @@ namespace Lonos.Kernel.Loader
             BootInfo_.Setup();
 
             // Setup Global Descriptor Table
-            var map = BootMemory.AllocateMemoryMap(0x1000, BootInfoMemoryType.GDT);
+            var map = BootMemory.AllocateMemoryMap(0x1000, BootInfoMemoryType.GDT, AddressSpaceKind.Both);
             BootInfo_.AddMap(map);
             GDT.Setup(map.Start);
 
@@ -59,7 +59,7 @@ namespace Lonos.Kernel.Loader
             // Because IDT is not setup yet, that could handle this kind of exception.
 
             PageTable.ConfigureType(BootInfo_.BootInfo->PageTableType);
-            map = BootMemory.AllocateMemoryMap(PageTable.KernelTable.InitalMemoryAllocationSize, BootInfoMemoryType.PageTable);
+            map = BootMemory.AllocateMemoryMap(PageTable.KernelTable.InitalMemoryAllocationSize, BootInfoMemoryType.PageTable, AddressSpaceKind.Both);
             BootInfo_.AddMap(map);
             PageTable.KernelTable.Setup(map.Start);
 
@@ -111,6 +111,7 @@ namespace Lonos.Kernel.Loader
                 Start = phys + diff,
                 Size = OriginalKernelElf.TotalFileSize,
                 Type = BootInfoMemoryType.KernelElfVirt,
+                AddressSpaceKind = AddressSpaceKind.Virtual,
             };
             BootInfo_.AddMap(map);
         }

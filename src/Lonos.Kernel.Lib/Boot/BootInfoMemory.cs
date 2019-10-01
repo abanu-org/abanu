@@ -10,6 +10,11 @@ namespace Lonos.Kernel.Core.Boot
         public Addr Start;
         public USize Size;
         public BootInfoMemoryType Type;
+
+        /// <summary>
+        /// Specifies the address space kind of <see cref="Start"/>
+        /// </summary>
+        public AddressSpaceKind AddressSpaceKind;
         //public bool CanWrite;
         //public bool CanExecute;
     }

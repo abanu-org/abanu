@@ -56,7 +56,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             _AddressSpaceKind = addrKind;
             _Region = region;
             _TotalPages = region.Size / PageSize;
-            kmap = KernelMemoryMapManager.Allocate(_TotalPages * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator);
+            kmap = KernelMemoryMapManager.Allocate(_TotalPages * (uint)sizeof(Page), BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Both);
             PageArray = (Page*)kmap.Start;
             NextTryPage = PageArray;
 
@@ -114,6 +114,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
             {
                 var map = maps->Items[i];
                 if (map.Start >= BootInfo.Header->InstalledPhysicalMemory)
+                    continue;
+
+                if ((map.AddressSpaceKind & AddressSpaceKind.Physical) == 0)
                     continue;
 
                 var mapPages = KMath.DivCeil(map.Size, 4096);

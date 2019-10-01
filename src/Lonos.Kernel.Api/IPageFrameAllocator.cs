@@ -13,10 +13,13 @@ namespace Lonos.Kernel.Core
         Continuous = 1,
     }
 
+    [Flags]
     public enum AddressSpaceKind
     {
-        Physical = 0,
-        Virtual = 1,
+        None = 0,
+        Physical = 1,
+        Virtual = 2,
+        Both = Physical | Virtual,
     }
 
     public unsafe interface IPageFrameAllocator

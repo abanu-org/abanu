@@ -38,13 +38,14 @@ namespace Lonos.Kernel.Loader
 
         private static Addr PageStartAddr;
 
-        public static BootInfoMemory AllocateMemoryMap(USize size, BootInfoMemoryType type)
+        public static BootInfoMemory AllocateMemoryMap(USize size, BootInfoMemoryType type, AddressSpaceKind addressSpaceKind)
         {
             var map = new BootInfoMemory
             {
                 Start = PageStartAddr,
                 Size = size,
                 Type = type,
+                AddressSpaceKind = addressSpaceKind,
             };
             PageStartAddr += size;
 
