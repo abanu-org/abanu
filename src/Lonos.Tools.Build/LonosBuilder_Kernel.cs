@@ -83,7 +83,8 @@ namespace Lonos.Tools.Build
             Options.EnableSSA = false;
             Options.EnableIROptimizations = false;
             Options.EnableSparseConditionalConstantPropagation = false;
-            Options.EnableInlinedMethods = false;
+            Options.EnableInlinedMethods = true;
+            Options.InlineOnlyExplicit = true;
             Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;

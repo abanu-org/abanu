@@ -1,37 +1,45 @@
 ﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
+using System.Runtime.CompilerServices;
+
 namespace Lonos
 {
     public static class BitHelper
     {
         #region Byte
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsMaskSet(this byte self, byte mask)
         {
             return (self & mask) == mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBitSet(this byte self, byte bit)
         {
             return (self & (0x1 << bit)) == (0x1 << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte SetMask(this byte self, byte mask)
         {
             return (byte)(self | mask);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte SetBit(this byte self, byte bit)
         {
             return (byte)(self | (0x1 << bit));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte ClearMask(this byte self, byte mask)
         {
             return (byte)(self & ~mask);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte ClearBit(this byte self, byte bit)
         {
             return (byte)(self & ~(0x1 << bit));
@@ -53,16 +61,19 @@ namespace Lonos
                 return (byte)(self & ~(0x1 << bit));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte CircularLeftShift(this byte a, byte n)
         {
             return (byte)(a << n | a >> (8 - n));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte CircularRightShift(this byte a, byte n)
         {
             return (byte)(a >> n | a << (8 - n));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte GetBits(this byte self, byte index, byte count)
         {
             return (byte)((self >> index) << (8 - count));
@@ -79,31 +90,37 @@ namespace Lonos
 
         #region uint
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsMaskSet(this uint self, uint mask)
         {
             return (self & mask) == mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBitSet(this uint self, byte bit)
         {
             return (self & (0x1 << bit)) == (0x1 << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint SetMask(this uint self, byte mask)
         {
             return self | mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint SetBit(this uint self, byte bit)
         {
             return self | (0x1U << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint ClearMask(this uint self, uint mask)
         {
             return self & ~mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint ClearBit(this uint self, byte bit)
         {
             return self & ~(0x1U << bit);
@@ -125,21 +142,25 @@ namespace Lonos
                 return self & ~(0x1U << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint CircularLeftShift(this uint a, byte n)
         {
             return a << n | a >> (32 - n);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint CircularRightShift(this uint a, byte n)
         {
             return a >> n | a << (32 - n);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint GetBits(this uint self, byte index, byte count)
         {
             return (self >> index) << (32 - count);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint GetBits(this uint self, byte index, byte count, byte sourceIndex)
         {
             return (self >> index) << (32 - count) << sourceIndex;
@@ -164,36 +185,43 @@ namespace Lonos
 
         #region ulong
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsMaskSet(this ulong self, ulong mask)
         {
             return (self & mask) == mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBitSet(this ulong self, byte bit)
         {
             return (self & (0x1u << bit)) == (0x1u << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong SetMask(this ulong self, byte mask)
         {
             return self | mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong SetBit(this ulong self, byte bit)
         {
             return self | (0x1U << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ClearMask(this ulong self, ulong mask)
         {
             return self & ~mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ClearBit(this ulong self, byte bit)
         {
             return self & ~(0x1U << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong SetMask(this ulong self, uint mask, bool state)
         {
             if (state)
@@ -210,21 +238,25 @@ namespace Lonos
                 return self & ~(0x1U << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong CircularLeftShift(this ulong a, byte n)
         {
             return a << n | a >> (64 - n);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong CircularRightShift(this ulong a, byte n)
         {
             return a >> n | a << (64 - n);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong GetBits(this ulong self, byte index, byte count)
         {
             return (self >> index) << (64 - count);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong GetBits(this ulong self, byte index, byte count, byte sourceIndex)
         {
             return (self >> index) << (64 - count) << sourceIndex;
@@ -249,31 +281,37 @@ namespace Lonos
 
         #region *Byte
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool IsMaskSet(byte* self, byte mask)
         {
             return (*self & mask) == mask;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool IsBitSet(byte* self, byte bit)
         {
             return (*self & (0x1 << bit)) == (0x1 << bit);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void SetMask(byte* self, byte mask)
         {
             *self = (byte)(*self | mask);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void SetBit(byte* self, byte bit)
         {
             *self = (byte)(*self | (0x1 << bit));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void ClearMask(byte* self, byte mask)
         {
             *self = (byte)(*self & ~mask);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void ClearBit(byte* self, byte bit)
         {
             *self = (byte)(*self & ~(0x1 << bit));
@@ -295,16 +333,19 @@ namespace Lonos
                 *self = (byte)(*self & ~(0x1 << bit));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void CircularLeftShift(byte* a, byte n)
         {
             *a = (byte)(*a << n | *a >> (8 - n));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void CircularRightShift(byte* a, byte n)
         {
             *a = (byte)(*a >> n | *a << (8 - n));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void GetBits(byte* self, byte index, byte count)
         {
             *self = (byte)((*self >> index) << (8 - count));

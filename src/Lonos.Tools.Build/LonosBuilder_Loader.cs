@@ -68,11 +68,12 @@ namespace Lonos.Tools.Build
             Options.EnableIROptimizations = true;
             Options.EnableSparseConditionalConstantPropagation = true;
             Options.EnableInlinedMethods = true;
-            Options.EnableLongExpansion = false; // Compiler commit 2e23a85: If true, the loader is not able to display the section names
+            Options.InlineOnlyExplicit = true;
+            Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = true;
             Options.TwoPassOptimizations = true;
-            Options.EnableBitTracker = false;
-            Options.EnableLoopInvariantCodeMotion = false;
+            Options.EnableBitTracker = true;
+            Options.EnableLoopInvariantCodeMotion = true;
             Options.EnablePlatformOptimizations = false;
             Options.EnableMethodScanner = false;
 
