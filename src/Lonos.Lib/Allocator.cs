@@ -19,7 +19,7 @@ using size_t = System.UInt32;
 #endif
 
 // Do not modify this Allocator very much
-// Future: Assign mmap-metod dynamicly.
+// Future: Assign mmap-method dynamically.
 
 namespace Lonos
 {

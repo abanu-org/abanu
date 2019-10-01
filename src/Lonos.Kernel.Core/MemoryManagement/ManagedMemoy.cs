@@ -14,7 +14,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static void InitializeGCMemory()
         {
-            // Wipe GCMemory from Bootloader
+            // Wipe GCMemory from Boot loader
             MemoryOperation.Clear4(Address.GCInitialMemory, Address.GCInitialMemorySize);
         }
 

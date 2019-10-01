@@ -35,7 +35,7 @@ namespace Lonos.Kernel.Core
             var block = (InterruptControlBlock*)Address.InterruptControlBlock;
             Native.SetCR3(block->KernelPageTableAddr);
 
-            //KernelMessage.WriteLine("Interrupt occured");
+            //KernelMessage.WriteLine("Interrupt occurred");
 
             var stack = (IDTStack*)stackStatePointer;
             var irq = stack->Interrupt;

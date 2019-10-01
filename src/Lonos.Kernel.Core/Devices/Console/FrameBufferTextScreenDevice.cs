@@ -78,7 +78,7 @@ namespace Lonos.Kernel.Core
         private uint CharHeight = 14;
         private uint CharWidth = 8;
 
-        // important Note: Not not cause Console Output while drawing
+        // important Note: Do not cause Console Output while drawing
         // otherwise, a stack overflow will occur!
         internal unsafe void DrawChar(FrameBuffer fb, uint screenX, uint screenY, uint charIdx)
         {

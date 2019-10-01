@@ -24,7 +24,7 @@ namespace Lonos.Kernel.Core.Devices
         internal static FrameBuffer Fb;
 
         /// <summary>
-        /// Pseudeo devices
+        /// Pseudo devices
         /// </summary>
         public static void InitStage1()
         {

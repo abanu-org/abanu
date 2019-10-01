@@ -16,7 +16,7 @@ namespace Lonos.Kernel.Core.Interrupts
         private const byte ICW1_LevelTriggeredEdgeMode = 0x08;
         private const byte ICW1_INIT = 0x10;
 
-        // Offsets needs be be >=20, so it does not conflict with CPU Exceptions interrupts
+        // Offsets needs be >=20, so it does not conflict with CPU Exceptions interrupts
         // Offsets needs to be divisible by 8.
         private const byte ICW2_MasterOffset = 0x20;
         private const byte ICW2_SlaveOffset = 0x28;
@@ -77,7 +77,7 @@ namespace Lonos.Kernel.Core.Interrupts
         /// <summary>
         /// Sends the end of interrupt.
         /// </summary>
-        /// <param name="irq">The irq.</param>
+        /// <param name="irq">The IRQ.</param>
         public static void SendEndOfInterrupt(uint irq)
         {
             if (irq >= ICW2_SlaveOffset) // or untranslated: IRQ >= 8

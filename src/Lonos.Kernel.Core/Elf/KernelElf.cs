@@ -31,7 +31,7 @@ namespace Lonos.Kernel.Core.Elf
             if (elfHeader->Ident1 != ElfHeader.Magic1)
             {
                 KernelMessage.WriteLine("No valid ELF found at {0:X8}", elfStart);
-                // TODO: Throw Excetion
+                // TODO: Throw Exception
             }
 
             if (KConfig.TraceELF)

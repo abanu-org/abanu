@@ -9,7 +9,7 @@ namespace Lonos.Runtime
 {
 
     /// <summary>
-    /// Pure calls. This is no Framwork. No helpers!
+    /// Pure calls. This is no Framework. No helpers!
     /// </summary>
     public static unsafe class SysCalls
     {

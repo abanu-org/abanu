@@ -28,7 +28,7 @@ namespace Lonos.Kernel.Core
         public static readonly string KernelEntryName = "Lonos.OS.Core.x86.Start::Main()";
 
         /// <summary>
-        /// If turned on, only Pages with Writeable=1 are writable.
+        /// If turned on, only Pages with Writable=1 are writable.
         /// </summary>
         public const bool UseKernelMemoryProtection = true;
 
@@ -39,9 +39,9 @@ namespace Lonos.Kernel.Core
 
         /// <summary>
         /// If tuned on, only Pages with NXE=1 are executable.
-        /// Requieres PAE Paging.
-        /// Requieres a X64 Maschine.
-        /// Does not requiere Long Mode.
+        /// Requires PAE Paging.
+        /// Requires a X64 Machine.
+        /// Does not require Long Mode.
         /// </summary>
         public const bool UseExecutionProtection = true && UsePAE;
 

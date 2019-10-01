@@ -8,7 +8,7 @@ namespace Lonos.Kernel.Core
 {
     /// <summary>
     /// Represents a string as struct, so it can used before memory and runtime initialization.
-    /// Use only where needed. Do not incease the struct size more as needed. A good limit would be the maximum horizontal text resolution.
+    /// Use only where needed. Do not increase the struct size more as needed. A good limit would be the maximum horizontal text resolution.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct StringBuffer
@@ -36,7 +36,7 @@ namespace Lonos.Kernel.Core
         }
 
         /// <summary>
-        /// Acces a char at a specific index
+        /// Access a char at a specific index
         /// </summary>
         public unsafe char this[int index]
         {
@@ -250,7 +250,7 @@ namespace Lonos.Kernel.Core
                     Append(value.String);
                     break;
                 default:
-                    Append("Unkown ArgumentType");
+                    Append("Unknown ArgumentType");
                     break;
             }
         }

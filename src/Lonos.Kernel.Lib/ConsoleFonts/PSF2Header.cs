@@ -15,7 +15,7 @@ namespace Lonos.Kernel.Core.ConsoleFonts
         public uint Version;
         public uint Headersize;
         public uint Flags;
-        public uint Length; //number of glyphs
+        public uint Length; // number of glyphs
         public uint Charsize;
         public uint Height;
         public uint Width;

@@ -74,7 +74,7 @@ namespace Lonos.Tools.Build
             Options.GenerateMapFile = true;
             Options.GenerateDebugFile = true;
             //Options.EmitRelocations = true;
-            //Options.EmitSymbols = true; // Kernel Loader needs to resolve Adress of Start Method
+            //Options.EmitSymbols = true; // Kernel Loader needs to resolve Address of Start Method
             //Options.Emitx86IRQMethods = true;
             Options.EmitAllSymbols = true;
 

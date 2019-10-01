@@ -19,7 +19,7 @@ namespace Lonos.Kernel.Core.Elf
         // Maybe a mono problem / old .NET Version?
         //public unsafe fixed uint Ident[4]; // Offset = 0, Size = 16
 
-        // Workarround:
+        // Workaround:
         public unsafe uint Ident1;
         public unsafe uint Ident2;
         public unsafe uint Ident3;

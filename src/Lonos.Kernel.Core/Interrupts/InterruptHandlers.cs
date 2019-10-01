@@ -140,7 +140,7 @@ namespace Lonos.Kernel.Core.Interrupts
         /// </summary>
         public static void StackException(IDTStack* stack)
         {
-            Error(stack, "Stack Excetion");
+            Error(stack, "Stack Exception");
         }
 
         /// <summary>

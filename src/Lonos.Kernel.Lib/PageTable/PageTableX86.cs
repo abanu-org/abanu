@@ -142,7 +142,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
             // Hint: TableEntries are  not initialized. So set every field
             // Hint: All Table Entries have a known location (yet).
-            // FUTURE: Change this! Allocate dynamicly
+            // FUTURE: Change this! Allocate dynamically
 
             var entry = GetTableEntry(virtualAddress);
             entry->PhysicalAddress = physicalAddress;
@@ -152,7 +152,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
             //Native.Invlpg(virtualAddress); Not implemented in MOSA yet
 
-            // workarround:
+            // workaround:
             //Flush();
         }
 

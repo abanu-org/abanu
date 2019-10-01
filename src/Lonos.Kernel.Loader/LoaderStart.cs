@@ -148,7 +148,7 @@ namespace Lonos.Kernel.Loader
 
         private static unsafe void SetupKernelSection()
         {
-            // TODO: Respect section progream header adresses.
+            // TODO: Respect section program header address.
             // Currently, we can make a raw copy of ELF file
             MemoryOperation.Copy4(Address.OriginalKernelElfSection, Address.KernelElfSection, OriginalKernelElf.TotalFileSize);
         }

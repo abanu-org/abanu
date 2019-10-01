@@ -102,7 +102,7 @@ namespace Lonos.Kernel.Core
      * allocation larger than MIN_ALLOC has a node in this tree (and therefore a
      * bit in this array).
      *
-     * Given the index for a node, lineraized binary trees allow you to traverse to
+     * Given the index for a node, linearized binary trees allow you to traverse to
      * the parent node or the child nodes just by doing simple arithmetic on the
      * index:
      *
@@ -537,10 +537,10 @@ namespace Lonos.Kernel.Core
             List_push(&buckets[bucket], (List_t*)Ptr_for_node(i, bucket));
         }
 
-        //TODO: Exteral
+        //TODO: External
         protected abstract bool Brk(void* addr);
 
-        //TODO: Exteral
+        //TODO: External
         protected abstract void* Sbrk(uint size);
 
         public struct Page

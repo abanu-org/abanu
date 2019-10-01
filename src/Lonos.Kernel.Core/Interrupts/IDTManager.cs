@@ -140,7 +140,7 @@ namespace Lonos.Kernel.Core.Interrupts
         /// </summary>
         private static void SetTableEntries()
         {
-            // Clear out idt table
+            // Clear out IDT table
             Mosa.Runtime.Internal.MemoryClear(new Pointer((void*)IDTAddr) + 6, Offset.TotalSize * 256);
 
             Set(0, IRQ0);

@@ -4,7 +4,7 @@
 namespace Lonos.Kernel.Core
 {
     /// <summary>
-    /// Static known adresses.
+    /// Static known addresses.
     /// Because Members are accessed before Runtime-Initialization, only constants and Readonly-Properties are allowed
     /// </summary>
     public static class Address

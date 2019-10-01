@@ -336,7 +336,7 @@ namespace Lonos.Kernel.Core
         {
             KernelMessage.WriteLine("Kernel ready");
 
-            // We have nothing todo (yet). So let's stop.
+            // We have nothing to do (yet). So let's stop.
             Debug.Break();
         }
 

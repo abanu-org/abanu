@@ -51,7 +51,7 @@ namespace Lonos.Kernel
         /// <summary>
         /// Processes the interrupt.
         /// </summary>
-        /// <param name="irq">The irq.</param>
+        /// <param name="irq">The IRQ.</param>
         public override void ProcessInterrupt(byte irq)
         {
             HAL.ProcessInterrupt(irq);
