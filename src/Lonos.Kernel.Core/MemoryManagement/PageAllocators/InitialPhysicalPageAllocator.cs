@@ -13,24 +13,8 @@ using Mosa.Runtime;
 namespace Lonos.Kernel.Core.MemoryManagement
 {
 
-    /// <summary>
-    /// A physical page allocator.
-    /// </summary>
     public unsafe class InitialPhysicalPageAllocator : IPageFrameAllocator
     {
-
-        public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
-        {
-            return Allocate(pages);
-        }
-
-        public Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
-        {
-            var p = Allocate(1);
-            //if (p->PhysicalAddress == 0x01CA4000)
-            //    Panic.Error("DEBUG-MARKER");
-            return p;
-        }
 
         private uint _FreePages;
 
@@ -153,22 +137,22 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //static uint _nextAllocacationSearchIndex;
         private static Page* NextTryPage;
 
-        /// <summary>
-        /// Allocate a physical page from the free list
-        /// </summary>
-        /// <returns>The page</returns>
-        private Page* Allocate(uint num)
+        public Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
+        {
+            return AllocatePages(1, options);
+        }
+        public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
             lock (this)
             {
-                if (num == 0)
+                if (pages == 0)
                 {
                     KernelMessage.WriteLine("Requesting zero pages");
                     return null;
                 }
-                else if (num > 1 && KConfig.TracePageAllocation)
+                else if (pages > 1 && KConfig.TracePageAllocation)
                 {
-                    KernelMessage.WriteLine("Requesting {0} pages", num);
+                    KernelMessage.WriteLine("Requesting {0} pages", pages);
                 }
 
                 //KernelMessage.WriteLine("Request {0} pages...", num);
@@ -197,7 +181,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                         var head = p;
 
                         // Found free Page. Check now free range.
-                        for (var i = 0; i < num; i++)
+                        for (var i = 0; i < pages; i++)
                         {
                             statRangeChecks++;
                             statMaxBlockPages = Math.Max(statMaxBlockPages, i);
@@ -207,16 +191,16 @@ namespace Lonos.Kernel.Core.MemoryManagement
                             if (p->Status != PageStatus.Free) // Used -> so we can abort the search
                                 break;
 
-                            if (i == num - 1)
+                            if (i == pages - 1)
                             { // all loops successful. So we found our range.
 
                                 if (p == null)
                                     Panic.Error("Tail is null");
 
                                 head->Tail = p;
-                                head->PagesUsed = num;
+                                head->PagesUsed = pages;
                                 p = head;
-                                for (var n = 0; n < num; n++)
+                                for (var n = 0; n < pages; n++)
                                 {
                                     if (p->Status != PageStatus.Free)
                                         Panic.Error("Page is not Free. PageFrame Array corrupted?");
@@ -267,7 +251,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
                 KernelMessage.WriteLine("Blocks={0} FreeBlocks={1} MaxBlockPages={2} RangeChecks={3} cnt={4}", statBlocks, statFreeBlocks, (uint)statMaxBlockPages, statRangeChecks, cnt);
                 this.Dump();
-                Panic.Error("PageFrameAllocator: Could not allocate " + num + " Pages.");
+                Panic.Error("PageFrameAllocator: Could not allocate " + pages + " Pages.");
                 return null;
             }
         }
