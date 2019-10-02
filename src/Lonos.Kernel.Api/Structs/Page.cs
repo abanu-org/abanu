@@ -24,7 +24,7 @@ namespace Lonos.Kernel.Core
     {
 
         // Fields for buddy allocator
-        public list_head Lru;
+        public list_head Lru; // MUST be on first position, for safe casting
         public uint Flags;
         //union {
         public byte Order;

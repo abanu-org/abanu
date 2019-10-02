@@ -56,6 +56,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
             }
 
             SetupFreeMemory();
+
+            _FreePages = 0;
+            for (uint i = 0; i < _TotalPages; i++)
+                if (PageArray[i].Status == PageStatus.Free)
+                    _FreePages++;
+
+            KernelMessage.WriteLine("Pages Free: {0}", FreePages);
         }
 
         protected abstract void SetupFreeMemory();

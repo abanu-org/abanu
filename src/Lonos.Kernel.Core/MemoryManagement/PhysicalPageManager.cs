@@ -60,7 +60,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             PageTable.KernelTable.UnMap(mapAddr, 4096, true);
         }
 
-        private const bool SelfTestDump = false;
+        private const bool SelfTestDump = true;
 
         public static void SelfTest()
         {

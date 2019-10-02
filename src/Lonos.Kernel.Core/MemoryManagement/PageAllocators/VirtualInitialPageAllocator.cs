@@ -36,13 +36,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
             SetInitialPageStatus(&KernelMemoryMapManager.Header->Used, PageStatus.Used);
             SetInitialPageStatus(&KernelMemoryMapManager.Header->KernelReserved, PageStatus.Used);
-
-            _FreePages = 0;
-            for (uint i = 0; i < _TotalPages; i++)
-                if (PageArray[i].Status == PageStatus.Free)
-                    _FreePages++;
-
-            KernelMessage.WriteLine("Virt Pages Free: {0}", FreePages);
         }
 
         private void SetInitialPageStatus(KernelMemoryMapArray* maps, PageStatus status)
