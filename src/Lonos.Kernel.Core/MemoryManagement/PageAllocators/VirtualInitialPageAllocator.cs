@@ -13,7 +13,7 @@ using Mosa.Runtime;
 namespace Lonos.Kernel.Core.MemoryManagement
 {
 
-    public unsafe class VirtualInitialPageAllocator : InitialPageAllocator
+    public unsafe class VirtualInitialPageAllocator : InitialPageAllocator2
     {
 
         protected override MemoryRegion AllocRawMemory(uint size)
