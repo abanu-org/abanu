@@ -74,7 +74,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         }
 
         //static uint _nextAllocacationSearchIndex;
-        private static Page* NextTryPage;
+        private Page* NextTryPage;
 
         public Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
         {

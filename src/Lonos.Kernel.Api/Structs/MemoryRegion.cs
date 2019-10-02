@@ -32,6 +32,19 @@ namespace Lonos.Kernel.Core
             return new MemoryRegion(start, end - start);
         }
 
+        public MemoryRegion SubRegion(USize offset)
+        {
+            return new MemoryRegion(Start + offset, Size - offset);
+        }
+
+        public MemoryRegion SubRegion(USize offset, USize length)
+        {
+
+            var reg = new MemoryRegion(Start + offset, length - offset);
+            Assert.False(reg.Start + reg.Size > Start + Size, "MemoryRegion::SubRegion: Argument Exception");
+            return reg;
+        }
+
     }
 
     public unsafe struct LinkedMemoryRegion

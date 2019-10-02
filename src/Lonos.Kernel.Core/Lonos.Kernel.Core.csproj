@@ -50,6 +50,7 @@
     <Compile Include="MemoryManagement\PageAllocators\MultiAllocator.cs" />
     <Compile Include="MemoryManagement\PageAllocatorExtensions.cs" />
     <Compile Include="MemoryManagement\PageAllocators\PhysicalBuddyPageAllocator.cs" />
+    <Compile Include="MemoryManagement\PageAllocators\VirtualInitialPageAllocator.cs" />
     <Compile Include="MemoryManagement\PageAllocators\SimplePageAllocator.cs" />
     <Compile Include="MemoryManagement\PageAllocators\VirtualBuddyPageAllocator.cs" />
     <Compile Include="MemoryManagement\PhysicalPageManager.cs" />

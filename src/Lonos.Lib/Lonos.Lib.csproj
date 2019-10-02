@@ -64,7 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Allocator.cs" />
-    <Compile Include="Assert.cs" />
     <Compile Include="BitConversion.cs" />
     <Compile Include="KMath.cs" />
     <Compile Include="MessageManager.cs" />

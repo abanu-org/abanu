@@ -9,6 +9,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
     public static class VirtualPageManager
     {
 
+        private static InitialPageAllocator Allocator;
+
         private static Addr _startVirtAddr;
         private static Addr _nextVirtAddr;
 
@@ -20,32 +22,50 @@ namespace Lonos.Kernel.Core.MemoryManagement
             _startVirtAddr = Address.VirtMapStart;
             _nextVirtAddr = _startVirtAddr;
 
+            var allocator = new VirtualInitialPageAllocator();
+            allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
+            Allocator = allocator;
+
             _identityStartVirtAddr = Address.IdentityMapStart;
             _identityNextVirtAddr = _identityStartVirtAddr;
 
         }
 
-        /// <summary>
-        /// Returns raw, unmanaged Memory.
-        /// Consumer: Kernel, Memory allocators
-        /// Should be used for larger Chunks.
-        /// </summary>
+        //internal static unsafe Addr AllocatePages(uint pages)
+        //{
+        //    Addr virt = _nextVirtAddr;
+        //    var head = PhysicalPageManager.AllocatePages(pages);
+        //    if (head == null)
+        //        return Addr.Zero;
+
+        //    var p = head;
+        //    for (var i = 0; i < pages; i++)
+        //    {
+        //        PageTable.KernelTable.MapVirtualAddressToPhysical(_nextVirtAddr, PhysicalPageManager.GetAddress(p));
+        //        _nextVirtAddr += 4096;
+        //        p = PhysicalPageManager.NextCompoundPage(p);
+        //    }
+        //    PageTable.KernelTable.Flush();
+        //    return virt;
+        //}
+
         internal static unsafe Addr AllocatePages(uint pages)
         {
-            Addr virt = _nextVirtAddr;
-            var head = PhysicalPageManager.AllocatePages(pages);
-            if (head == null)
+            var physHead = PhysicalPageManager.AllocatePages(pages);
+            if (physHead == null)
                 return Addr.Zero;
+            var virtHead = Allocator.AllocatePages(pages);
 
-            var p = head;
+            var p = physHead;
+            var v = virtHead;
             for (var i = 0; i < pages; i++)
             {
-                PageTable.KernelTable.MapVirtualAddressToPhysical(_nextVirtAddr, PhysicalPageManager.GetAddress(p));
-                _nextVirtAddr += 4096;
+                PageTable.KernelTable.Map(Allocator.GetAddress(v), PhysicalPageManager.GetAddress(p));
                 p = PhysicalPageManager.NextCompoundPage(p);
+                v = Allocator.NextCompoundPage(v);
             }
             PageTable.KernelTable.Flush();
-            return virt;
+            return Allocator.GetAddress(virtHead);
         }
 
         /// <summary>

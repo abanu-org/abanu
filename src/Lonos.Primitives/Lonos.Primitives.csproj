@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Addr.cs" />
+    <Compile Include="Assert.cs" />
     <Compile Include="BitHelper.cs" />
     <Compile Include="BitMask.cs" />
     <Compile Include="BitMask64.cs" />

@@ -25,6 +25,16 @@ namespace Lonos.Kernel.Core.PageManagement
                 table.Flush();
         }
 
+        public static void Map(this IPageTable table, Addr virtAddr, Addr physAddr, bool present = true, bool flush = false)
+        {
+            Map(table, virtAddr, physAddr, 4096, present, flush);
+        }
+
+        public static void UnMap(this IPageTable table, Addr virtAddr, bool flush = false)
+        {
+            UnMap(table, virtAddr, flush);
+        }
+
         public static void UnMap(this IPageTable table, Addr virtAddr, USize length, bool flush = false)
         {
             if (KConfig.TraceMemoryMapping)
