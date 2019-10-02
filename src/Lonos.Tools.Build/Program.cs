@@ -128,11 +128,15 @@ namespace Lonos.Tools.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -s -S -m 256");
-                    Thread.Sleep(500);
-                    var gdb = ExecAsync("${gdb}", false);
-                    gdb.WaitForExit();
-                    break;
+                    using (var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -s -S -m 256"))
+                    {
+                        Thread.Sleep(500);
+                        using (var gdb = ExecAsync("${gdb}", false))
+                        {
+                            gdb.WaitForExit();
+                            break;
+                        }
+                    }
             }
             return null;
         }

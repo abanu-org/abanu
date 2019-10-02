@@ -183,22 +183,24 @@ namespace Lonos.Kernel
                     {
                         Console.Write("Found: " + filename);
 
-                        var fatFileStream = new FatFileStream(fat, location);
-
-                        uint len = (uint)fatFileStream.Length;
-
-                        Console.WriteLine(" - Length: " + len.ToString());
-
-                        Console.Write("Reading File: ");
-
-                        while (true)
+                        using (var fatFileStream = new FatFileStream(fat, location))
                         {
-                            int i = fatFileStream.ReadByte();
 
-                            if (i < 0)
-                                break;
+                            uint len = (uint)fatFileStream.Length;
 
-                            Console.Write((char)i);
+                            Console.WriteLine(" - Length: " + len.ToString());
+
+                            Console.Write("Reading File: ");
+
+                            while (true)
+                            {
+                                int i = fatFileStream.ReadByte();
+
+                                if (i < 0)
+                                    break;
+
+                                Console.Write((char)i);
+                            }
                         }
 
                         Console.WriteLine();

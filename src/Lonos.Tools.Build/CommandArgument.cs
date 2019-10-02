@@ -25,7 +25,7 @@ namespace Lonos.Tools.Build
 
         public override string ToString()
         {
-            return Convert.ToString(Value ?? "");
+            return Convert.ToString(Value ?? "", Env.LocaleInvariant);
         }
 
         public static CommandArgument FromString(string value) => new CommandArgument(value);

@@ -176,39 +176,41 @@ namespace Lonos.Tools.HostCommunication
 
         private static void ReadThread()
         {
-            var reader = new BinaryReader(stream);
-            try
+            using (var reader = new BinaryReader(stream))
             {
-                while (true)
+                try
                 {
-                    var lineType = reader.ReadByte();
-                    switch (lineType)
+                    while (true)
                     {
-                        case 200:
-                            var msgId = reader.ReadInt32();
-                            var command = reader.ReadInt32();
-                            HeaderReceived(msgId, command);
-                            break;
-                        case 201:
-                            var length = reader.ReadInt32();
-                            var data = reader.ReadBytes(length);
-                            ArgReceived(data);
-                            break;
-                        case 202:
-                            var length2 = reader.ReadInt32();
-                            var data2 = reader.ReadBytes(length2);
-                            DataReceived(data2);
-                            break;
-                        case 203:
-                            EndReceived();
-                            break;
+                        var lineType = reader.ReadByte();
+                        switch (lineType)
+                        {
+                            case 200:
+                                var msgId = reader.ReadInt32();
+                                var command = reader.ReadInt32();
+                                HeaderReceived(msgId, command);
+                                break;
+                            case 201:
+                                var length = reader.ReadInt32();
+                                var data = reader.ReadBytes(length);
+                                ArgReceived(data);
+                                break;
+                            case 202:
+                                var length2 = reader.ReadInt32();
+                                var data2 = reader.ReadBytes(length2);
+                                DataReceived(data2);
+                                break;
+                            case 203:
+                                EndReceived();
+                                break;
+                        }
                     }
                 }
-            }
-            catch (Exception)
-            {
-                if (!IsConnecting)
-                    Restart();
+                catch (Exception)
+                {
+                    if (!IsConnecting)
+                        Restart();
+                }
             }
         }
 

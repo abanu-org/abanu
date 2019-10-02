@@ -3,13 +3,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Lonos.Tools
 {
+
     public static class Env
     {
+
+        public static CultureInfo LocaleInvariant = CultureInfo.InvariantCulture;
 
         public static void Set(string name, string value)
         {

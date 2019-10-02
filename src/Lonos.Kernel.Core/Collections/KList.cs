@@ -13,7 +13,7 @@ namespace Lonos.Kernel.Core.Collections
     {
         private const int _defaultCapacity = 4;
 
-        private static readonly T[] _emptyArray = new T[0];
+        private static readonly T[] _emptyArray = Array.Empty<T>();
 
         private T[] _items;
         private int _size;

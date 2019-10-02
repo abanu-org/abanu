@@ -32,6 +32,7 @@ namespace Lonos.Kernel.Core.Processes
         {
             //Memory.FreeObject(StdIn);
             VirtualPageManager.FreeAddrIdentity(PageTableAllocAddr);
+            Threads.Dispose();
         }
 
         public void Start()
