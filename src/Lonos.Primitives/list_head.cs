@@ -10,21 +10,20 @@ using System.Threading.Tasks;
 
 #pragma warning disable SA1300 // Element should begin with upper-case letter
 #pragma warning disable IDE1006 // Naming Styles
-#pragma warning disable SA1400 // Access modifier should be declared
 #pragma warning disable SA1307 // Accessible fields should begin with upper-case letter
-#pragma warning disable CA1822 // Mark members as static
-#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
-#pragma warning disable SA1502 // Element should not be on a single line
-#pragma warning disable SA1119 // Statement should not use unnecessary parenthesis
-#pragma warning disable SA1120 // Comments should contain text
-#pragma warning disable SA1507 // Code should not contain multiple blank lines in a row
 #pragma warning disable SA1313 // Parameter names should begin with lower-case letter
-#pragma warning disable SA1117 // Parameters should be on same line or separate lines
-#pragma warning disable SA1116 // Split parameters should start on line after declaration
 
 namespace Lonos.CTypes
 {
 
+    /// <summary>
+    /// Simple doubly linked list implementation.
+    /// </summary>
+    /// <remarks>
+    /// Some of the internal functions("__xxx") are useful when manipulating whole lists rather than single entries, as
+    /// sometimes we already know the next/prev entries and we can generate better code by using them directly rather than
+    /// using the generic single-entry routines.
+    /// </remarks>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe struct list_head
     {
@@ -40,7 +39,13 @@ namespace Lonos.CTypes
             list->prev = list;
         }
 
-        static void __list_add(list_head* New, list_head* prev, list_head* next)
+        /// <summary>
+        /// Insert a new entry between two known consecutive entries.
+        /// </summary>
+        /// <remarks>
+        /// This is only for internal list manipulation where we know the prev/next entries already!
+        /// </remarks>
+        private static void __list_add(list_head* New, list_head* prev, list_head* next)
         {
             next->prev = New;
             New->next = next;
@@ -48,27 +53,56 @@ namespace Lonos.CTypes
             prev->next = New;
         }
 
+        /// <summary>
+        /// Add a new entry
+        /// </summary>
+        /// <param name="New">new entry to be added</param>
+        /// <param name="head">list head to add it after</param>
+        /// <remarks>
+        /// Insert a new entry after the specified head. This is good for implementing stacks.
+        /// </remarks>
         public static void list_add(list_head* New, list_head* head)
         {
             __list_add(New, head, head->next);
         }
 
+        /// <summary>
+        /// Add a new entry
+        /// </summary>
+        /// <param name="New">new entry to be added</param>
+        /// <param name="head">list head to add it before</param>
+        /// <remarks>
+        /// Insert a new entry before the specified head. This is useful for implementing queues.
+        /// </remarks>
         public static void list_add_tail(list_head* New, list_head* head)
         {
             __list_add(New, head->prev, head);
         }
 
-        static void __list_del(list_head* prev, list_head* next)
+        /// <summary>
+        /// Delete a list entry by making the prev/next entries point to each other.
+        /// </summary>
+        /// <remarks>
+        /// This is only for internal list manipulation where we know the prev/next entries already!
+        /// </remarks>
+        private static void __list_del(list_head* prev, list_head* next)
         {
             next->prev = prev;
             prev->next = next;
         }
 
-        static void __list_del_entry(list_head* entry)
+        private static void __list_del_entry(list_head* entry)
         {
             __list_del(entry->prev, entry->next);
         }
 
+        /// <summary>
+        /// Deletes entry from list.
+        /// </summary>
+        /// <param name="entry">The element to delete from the list.</param>
+        /// <remarks>
+        /// Note: <see cref="list_empty(list_head*)"/> on entry does not return true after this, the entry is in an undefined state.
+        /// </remarks>
         public static void list_del(list_head* entry)
         {
             __list_del(entry->prev, entry->next);
@@ -76,6 +110,11 @@ namespace Lonos.CTypes
             entry->prev = (list_head*)LIST_POISON2;
         }
 
+        /// <summary>
+        /// Replace old entry by new one
+        /// </summary>
+        /// <param name="old">The element to be replaced</param>
+        /// <param name="New">The new element to insert</param>
         public static void list_replace(list_head* old, list_head* New)
         {
             New->next = old->next;
@@ -84,9 +123,22 @@ namespace Lonos.CTypes
             New->prev->next = New;
         }
 
+        /// <summary>
+        /// tests whether a list is empty
+        /// </summary>
+        /// <param name="head">The list to test</param>
         public static bool list_empty(list_head* head)
         {
             return head->next == head;
+        }
+
+        /// <summary>
+        /// Tests whether a list has just one entry.
+        /// </summary>
+        /// <param name="head">The list to test</param>
+        public static bool list_is_singular(list_head* head)
+        {
+            return !list_empty(head) && (head->next == head->prev);
         }
 
         #region Macros
@@ -103,6 +155,5 @@ namespace Lonos.CTypes
         #endregion
 
     }
-
 
 }

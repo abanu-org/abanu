@@ -1,23 +1,25 @@
-﻿using System;
+﻿// This file is part of Lonos Project, an Operating System written in C#. Web: https://www.lonos.io
+// Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Sockets;
 using System.IO;
-using System.Threading;
+using System.Linq;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lonos.Tools.HostCommunication
 {
-    class Program
+    internal class Program
     {
         private static NetworkStream stream;
-        private static Thread conThread;
         private static Thread thRead;
         private static Thread thWrite;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
 
             var networkDiskName = Env.Get("${LONOS_PROJDIR}/tmp/network-disk.img");
@@ -73,26 +75,33 @@ namespace Lonos.Tools.HostCommunication
                 {
                     stream?.Dispose();
                 }
-                catch { }
+                catch
+                {
+                }
                 try
                 {
                     client?.Dispose();
                 }
-                catch { }
+                catch
+                {
+                }
                 try
                 {
                     thRead?.Abort();
                 }
-                catch { }
+                catch
+                {
+                }
                 try
                 {
                     thWrite?.Abort();
                 }
-                catch { }
+                catch
+                {
+                }
                 thRead = null;
                 thWrite = null;
 
-                expectedLength = 0;
                 ms.SetLength(0);
                 WriteQueue.Clear();
 
@@ -181,12 +190,12 @@ namespace Lonos.Tools.HostCommunication
                             HeaderReceived(msgId, command);
                             break;
                         case 201:
-                            var length = reader.ReadInt32(); ;
+                            var length = reader.ReadInt32();
                             var data = reader.ReadBytes(length);
                             ArgReceived(data);
                             break;
                         case 202:
-                            var length2 = reader.ReadInt32(); ;
+                            var length2 = reader.ReadInt32();
                             var data2 = reader.ReadBytes(length2);
                             DataReceived(data2);
                             break;
@@ -204,29 +213,28 @@ namespace Lonos.Tools.HostCommunication
         }
 
         private static MemoryStream ms = new MemoryStream();
-        private static int expectedLength = 0;
 
         private static int CurrentCommand;
         private static int MessageId;
-        static void HeaderReceived(int msgId, int command)
+        private static void HeaderReceived(int msgId, int command)
         {
             CurrentCommand = command;
             MessageId = msgId;
         }
 
-        static List<byte[]> Args = new List<byte[]>();
+        private static List<byte[]> Args = new List<byte[]>();
 
-        static void ArgReceived(byte[] data)
+        private static void ArgReceived(byte[] data)
         {
             Args.Add(data);
         }
 
-        static void DataReceived(byte[] data)
+        private static void DataReceived(byte[] data)
         {
             ms.Write(data, 0, data.Length);
         }
 
-        static void EndReceived()
+        private static void EndReceived()
         {
             var data = ms.ToArray();
             var args = Args.ToArray();

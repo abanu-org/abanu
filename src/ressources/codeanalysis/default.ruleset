@@ -74,9 +74,17 @@
     <Rule Id="CS0162" Action="None" />
     <Rule Id="CS0168" Action="Info" />
     <Rule Id="CS0219" Action="Info" />
+    <Rule Id="CS0419" Action="Error" />
     <Rule Id="CS1062" Action="Info" />
+    <Rule Id="CS1570" Action="Info" />
+    <Rule Id="CS1574" Action="Error" />
+    <Rule Id="CS1580" Action="Error" />
+    <Rule Id="CS1581" Action="Error" />
+    <Rule Id="CS1584" Action="Error" />
+    <Rule Id="CS1591" Action="Info" />
     <Rule Id="CS1710" Action="None" />
     <Rule Id="CS1720" Action="None" />
+    <Rule Id="CS8018" Action="Error" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1016" Action="None" />
@@ -94,6 +102,9 @@
     <Rule Id="CA1815" Action="Info" />
     <Rule Id="CA1823" Action="Info" />
     <Rule Id="CA2211" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeQuality.CSharp.Analyzers" RuleNamespace="Microsoft.CodeQuality.CSharp.Analyzers">
+    <Rule Id="CA1200" Action="Error" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" />

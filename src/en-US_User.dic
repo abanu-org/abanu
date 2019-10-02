@@ -43,6 +43,7 @@ Nullable
 num
 Offscreen
 os
+prev
 proc
 ptr
 qemu
