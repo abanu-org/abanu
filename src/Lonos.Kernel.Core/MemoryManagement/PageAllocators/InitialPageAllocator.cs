@@ -50,8 +50,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
             for (uint i = 0; i < _TotalPages; i++)
             {
                 PageArray[i].Address = addr;
-                if (i != 0)
-                    PageArray[i - 1].Next = &PageArray[i];
+                //if (i != 0)
+                //    PageArray[i - 1].Next = &PageArray[i];
                 addr += 4096;
             }
 
@@ -148,7 +148,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                                     p->Status = PageStatus.Used;
                                     p->Head = head;
                                     p->Tail = head->Tail;
-                                    p = p->Next;
+                                    p = NextPage(p);
                                     _FreePages--;
                                 }
 
@@ -176,7 +176,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                                 return head;
                             }
 
-                            p = p->Next;
+                            p = NextPage(p);
                         }
 
                     }
@@ -184,7 +184,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                     if (p->Tail != null)
                         p = p->Tail;
 
-                    p = p->Next;
+                    p = NextPage(p);
                     if (++cnt > _TotalPages)
                         break;
                 }
@@ -231,7 +231,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                     p->PagesUsed = 0;
                     p->Head = null;
                     p->Tail = null;
-                    p = p->Next;
+                    p = NextPage(p);
                     _FreePages++;
                 }
                 NextTryPage = head;
@@ -257,7 +257,10 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public Page* NextPage(Page* page)
         {
-            return page->Next;
+            var pageIdx = GetPageIndex(page) + 1;
+            if (pageIdx >= _TotalPages)
+                return null;
+            return &PageArray[pageIdx];
         }
 
         public Page* NextCompoundPage(Page* page)
@@ -265,11 +268,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             if (page == null)
                 return null;
 
-            var next = page->Next;
-            if (next == null)
-                return null;
-
-            return next;
+            return NextPage(page);
         }
 
         public uint GetPageIndex(Page* page)

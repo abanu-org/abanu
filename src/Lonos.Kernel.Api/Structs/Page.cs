@@ -51,7 +51,7 @@ namespace Lonos.Kernel.Core
 
         // TODO: Remove the Next-field, because it could be accessed via (Page*)+1
 
-        public Page* Next;
+        //public Page* Next;
 
         public static USize Size => 4096;
 
