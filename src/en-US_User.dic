@@ -43,6 +43,7 @@ Nullable
 num
 Offscreen
 os
+pos
 prev
 proc
 ptr

@@ -55,13 +55,17 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 addr += 4096;
             }
 
+            KernelMessage.WriteLine("Setup free memory");
             SetupFreeMemory();
+            KernelMessage.WriteLine("Build linked lists");
             BuildLinkedLists();
 
             _FreePages = 0;
             for (uint i = 0; i < _TotalPages; i++)
                 if (PageArray[i].Status == PageStatus.Free)
                     _FreePages++;
+
+            Assert.True(list_head.list_count(FreeList) == _FreePages, "list_head.list_count(FreeList) == _FreePages");
 
             KernelMessage.WriteLine("Pages Free: {0}", FreePages);
         }
@@ -72,14 +76,17 @@ namespace Lonos.Kernel.Core.MemoryManagement
             for (var i = 0; i < _TotalPages; i++)
             {
                 var p = &PageArray[i];
-                if (FreeList == null & p->Free)
+                if (p->Free)
                 {
-                    FreeList = (list_head*)p;
-                    list_head.INIT_LIST_HEAD(FreeList);
-                }
-                else
-                {
-                    list_head.list_add_tail((list_head*)p, FreeList);
+                    if (FreeList == null)
+                    {
+                        FreeList = (list_head*)p;
+                        list_head.INIT_LIST_HEAD(FreeList);
+                    }
+                    else
+                    {
+                        list_head.list_add_tail((list_head*)p, FreeList);
+                    }
                 }
             }
         }
@@ -114,6 +121,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 var head = FreeList;
                 FreeList = head->next;
                 list_head.list_del_init(head);
+                ((Page*)head)->Status = PageStatus.Used;
                 _FreePages--;
                 // ---
 
@@ -121,6 +129,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 {
                     var tmpNextFree = FreeList->next;
                     list_head.list_move_tail(FreeList, head);
+                    ((Page*)FreeList)->Status = PageStatus.Used;
                     FreeList = tmpNextFree;
                     _FreePages--;
                 }
@@ -136,8 +145,18 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             lock (this)
             {
-                _FreePages += list_head.list_count((list_head*)page);
-                list_head.list_splice_tail((list_head*)page, (list_head*)FreePages);
+                Page* temp = page;
+                uint result = 0;
+
+                do
+                {
+                    temp = (Page*)temp->Lru.next;
+                    _FreePages++;
+                    page->Status = PageStatus.Free;
+                }
+                while (temp != page);
+
+                list_head.list_headless_splice_tail((list_head*)page, FreeList);
             }
         }
 

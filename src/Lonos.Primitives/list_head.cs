@@ -17,6 +17,72 @@ using System.Threading.Tasks;
 namespace Lonos.CTypes
 {
 
+    /*
+        Non-initialized list:
+
+        +-------------+
+        |    HEAD     |
+        | prev | next |
+        |POISON POISON|
+        +-------------+
+
+        Empty list:
+
+        +----------+-----------+
+        |          |           |
+        |          |           |
+        |   +------v------+    |
+        |   |    HEAD     |    |
+        +---+ prev | next +----+
+            | HEAD   HEAD |
+            +-------------+
+
+        List with one element:
+
+        +--------------+--------------+
+        |              |              |
+        |              |              |
+        |       +------v------+       |
+        |       |    HEAD     |       |
+        |   +---+ prev | next +--+    |
+        |   |   |ITEM1   ITEM1|  |    |
+        |   |   +-------------+  |    |
+        |   +--------------------+    |
+        |              |              |
+        |       +------v------+       |
+        |       |    ITEM1    |       |
+        +-------+ prev | next +-------+
+                |    DATA1    |
+                +-------------+
+
+        Two items in the list:
+
+              +----------+
+              |          |
+              |          |
+              |   +------v------+
+              |   |    HEAD     |
+           +------+ prev | next +----+
+           |  |   |ITEM2   ITEM1|    |
+           |  |   +-------------+    |
+        +----------------------------+
+        |  |  |          |
+        |  |  |   +------v------+
+        |  |  |   |    ITEM1    |
+        |  |  +---+ prev | next +----+
+        |  |  |   |    DATA1    |    |
+        |  |  |   +-------------+    |
+        |  +-------------------------+
+        |     |          |
+        |     |   +------v------+
+        |     |   |    ITEM2    |
+        +---------+ prev | next +----+
+              |   |    DATA2    |    |
+              |   +-------------+    |
+              |                      |
+              +----------------------+
+    */
+
     /// <summary>
     /// Simple doubly linked list implementation.
     /// </summary>
@@ -411,6 +477,18 @@ namespace Lonos.CTypes
             }
 
             return result;
+        }
+
+        // --- custom headless functions. It assumes not having a dedicated node.
+
+        /// <summary>
+        /// Join two lists, each list being a queue. This method assumes, that <paramref name="list"/> has not a dedicated node.
+        /// </summary>
+        /// <param name="list">The new list to add.</param>
+        /// <param name="head">The place to add it in the first list.</param>
+        public static void list_headless_splice_tail(list_head* list, list_head* head)
+        {
+            __list_splice(list, head->prev, head);
         }
 
     }
