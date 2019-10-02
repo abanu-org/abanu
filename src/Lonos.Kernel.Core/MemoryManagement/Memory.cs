@@ -24,7 +24,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             ManagedMemoy.UseAllocator = true;
             KernelMessage.WriteLine("EarlyBootBytesUsed: {0} bytes", ManagedMemoy.EarlyBootBytesUsed);
 
-            KernelMessage.WriteLine("Memory free: {0} MB", PhysicalPageManager.TotalPages * 4096 / 1024 / 1024);
+            KernelMessage.WriteLine("Memory free: {0} MB", PhysicalPageManager.FreePages * 4096 / 1024 / 1024);
         }
 
         private static uint RequiredPagesForSize(USize size)

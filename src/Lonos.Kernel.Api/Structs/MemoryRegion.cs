@@ -45,6 +45,11 @@ namespace Lonos.Kernel.Core
             return reg;
         }
 
+        public MemoryRegion TrimEndLocation(Addr addr)
+        {
+            return FromLocation(Start, addr);
+        }
+
     }
 
     public unsafe struct LinkedMemoryRegion

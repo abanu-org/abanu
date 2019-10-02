@@ -27,6 +27,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private uint FistPageNum;
 
+        public string DebugName;
+
         protected abstract MemoryRegion AllocRawMemory(uint size);
 
         public void Setup(MemoryRegion region, AddressSpaceKind addrKind)
@@ -67,7 +69,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
             Assert.True(list_head.list_count(FreeList) == _FreePages, "list_head.list_count(FreeList) == _FreePages");
 
-            KernelMessage.WriteLine("Pages Free: {0}", FreePages);
+            KernelMessage.Path(DebugName, "Pages Free: {0}", FreePages);
         }
 
         protected void BuildLinkedLists()
