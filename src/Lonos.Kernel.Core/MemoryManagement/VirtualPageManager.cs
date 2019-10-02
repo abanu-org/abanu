@@ -95,9 +95,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
             Allocator.FreeAddr(addr);
         }
 
-        internal static unsafe void FreeIdentity(Addr virtAddr)
+        internal static unsafe void FreeAddrIdentity(Addr addr)
         {
-            //IdentityAllocator.FreeAddr(addr);
+            IdentityAllocator.FreeAddr(addr);
         }
 
     }

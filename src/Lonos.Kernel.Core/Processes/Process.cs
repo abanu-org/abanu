@@ -20,6 +20,7 @@ namespace Lonos.Kernel.Core.Processes
         public IPageTable PageTable;
         public Service Service;
         //public FifoQueue<byte> StdIn;
+        internal Addr PageTableAllocAddr;
 
         public Process()
         {
@@ -30,6 +31,7 @@ namespace Lonos.Kernel.Core.Processes
         public void Dispose()
         {
             //Memory.FreeObject(StdIn);
+            VirtualPageManager.FreeAddrIdentity(PageTableAllocAddr);
         }
 
         public void Start()
