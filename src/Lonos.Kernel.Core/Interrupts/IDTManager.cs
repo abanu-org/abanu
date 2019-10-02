@@ -35,6 +35,8 @@ namespace Lonos.Kernel.Core.Interrupts
 
         #endregion Data Members
 
+        public static bool Enabled = false;
+
         internal static InterruptInfo[] Handlers;
 
         private static Addr IDTAddr;
@@ -43,6 +45,7 @@ namespace Lonos.Kernel.Core.Interrupts
         public static void Setup()
         {
             KernelMessage.WriteLine("Setup IDT");
+            Enabled = false;
 
             InitControlBlock();
 
@@ -95,12 +98,7 @@ namespace Lonos.Kernel.Core.Interrupts
             SetInterruptHandler(KnownInterrupt.Keyboard, InterruptHandlers.Keyboard);
             SetInterruptHandler(KnownInterrupt.TerminateCurrentThread, InterruptHandlers.TermindateCurrentThread);
 
-            KernelMessage.Write("Enabling interrupts...");
-
-            Flush();
-
-            IDT.Enabled = true;
-            KernelMessage.WriteLine("done");
+            Start();
         }
 
         private static void InitControlBlock()
@@ -112,11 +110,29 @@ namespace Lonos.Kernel.Core.Interrupts
             ControlBlock->KernelPageTableAddr = PageTable.KernelTable.GetPageTablePhysAddr();
         }
 
+        public static void Start()
+        {
+            KernelMessage.Write("Enabling interrupts...");
+            Enabled = true;
+            Flush();
+            KernelMessage.WriteLine("done");
+        }
+
+        public static void Stop()
+        {
+            KernelMessage.Write("Disable interrupts");
+            Native.Cli();
+            Enabled = false;
+        }
+
         public static void Flush()
         {
+            if (!Enabled)
+                return;
+
             var idtAddr = (uint)IDTAddr;
             Native.Lidt(idtAddr);
-            Native.Sti();
+            Native.Cli();
         }
 
         internal static void SetInterruptHandler(KnownInterrupt interrupt, InterruptHandler interruptHandler)

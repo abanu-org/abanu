@@ -22,8 +22,6 @@ namespace Lonos.Kernel.Core
     public static unsafe class IDT
     {
 
-        public static bool Enabled = false;
-
         /// <summary>
         /// Interrupts the handler.
         /// </summary>
@@ -50,7 +48,7 @@ namespace Lonos.Kernel.Core
                     KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
             }
 
-            if (!Enabled)
+            if (!IDTManager.Enabled)
             {
                 PIC.SendEndOfInterrupt(irq);
                 return;

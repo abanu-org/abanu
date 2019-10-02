@@ -184,7 +184,11 @@ namespace Lonos.Kernel.Core
 
                 //MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, kernelStack, 256 * 4096);
             }
+
+            // Disabling Interrupts here is very important, otherwise we will get randomly an Invalid TSS Exception.
+            IDTManager.Stop();
             GDT.SetupUserMode(TssAddr);
+            IDTManager.Start();
         }
 
         private static void Thread0()
