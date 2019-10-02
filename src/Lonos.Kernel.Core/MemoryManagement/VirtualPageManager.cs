@@ -90,9 +90,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return Allocator.GetAddress(virtHead);
         }
 
-        internal static unsafe void FreeRawVirtalMemoryPages(Addr virtAddr)
+        internal static unsafe void FreeAddr(Addr addr)
         {
+            Allocator.FreeAddr(addr);
+        }
 
+        internal static unsafe void FreeIdentity(Addr virtAddr)
+        {
+            //IdentityAllocator.FreeAddr(addr);
         }
 
     }

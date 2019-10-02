@@ -25,8 +25,6 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private static void ClearKernelReserved()
         {
-            // TODO: Determine dynamically
-            //ClearRegionsOfInterest(0x0, 640 * 1024);
             for (var mapIdx = 0; mapIdx < KernelMemoryMapManager.Header->KernelReserved.Count; mapIdx++)
             {
                 var map = &KernelMemoryMapManager.Header->KernelReserved.Items[mapIdx];
@@ -147,6 +145,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static void Free(Page* page)
         {
             Default.Free(page);
+        }
+
+        public static void FreeAddr(Addr addr)
+        {
+            Default.FreeAddr(addr);
         }
 
         public static Page* GetPhysPage(Addr physAddr)
