@@ -19,6 +19,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         protected override MemoryRegion AllocRawMemory(uint size)
         {
             var kmap = PhysicalPageManager.AllocateRegion(size);
+            KernelMemoryMapManager.Header->Used.Add(new KernelMemoryMap(kmap.Start, kmap.Size, BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Virtual));
             PageTable.KernelTable.Map(kmap.Start, kmap.Start, kmap.Size, flush: true);
             PageTable.KernelTable.SetWritable(kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);

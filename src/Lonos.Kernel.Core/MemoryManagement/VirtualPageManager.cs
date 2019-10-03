@@ -24,6 +24,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //_nextVirtAddr = _startVirtAddr;
 
             var allocator = new VirtualInitialPageAllocator() { DebugName = "VirtInitial" };
+            //allocator.Setup(new MemoryRegion(0, Address.VirtMapStart + (60 * 1024 * 1024)), AddressSpaceKind.Virtual);
             allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             Allocator = allocator;
 
@@ -33,6 +34,15 @@ namespace Lonos.Kernel.Core.MemoryManagement
             allocator = new VirtualInitialPageAllocator() { DebugName = "VirtIdentityInitial" };
             allocator.Setup(new MemoryRegion(Address.IdentityMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             IdentityAllocator = allocator;
+        }
+
+        private static void UnmapFreePages()
+        {
+            Addr addr = 0;
+            while (addr < Address.MaximumMemory)
+            {
+                addr += 4096;
+            }
         }
 
         //internal static unsafe Addr AllocatePages(uint pages)

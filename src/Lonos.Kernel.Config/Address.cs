@@ -37,7 +37,7 @@ namespace Lonos.Kernel.Core
         public const uint InterruptControlBlock = 0xC0000000;
 
         public const uint ReserveMemory = 0x00100000;  // 1MB
-        public const uint MaximumMemory = 0xFFFFFFFF;  // 4GB
+        public const uint MaximumMemory = 0xFFFFF000;  // 4GB
 
         public const uint UnitTestStack = 0x00004000;  // 4KB (stack grows down)
         public const uint UnitTestQueue = 0x01E00000;  // 30MB [Size=2MB] - previous: 5KB [Size=1KB] 0x00005000
