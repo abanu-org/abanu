@@ -104,7 +104,7 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
 
             idx++;
-            BootInfo->MemoryMapArray[idx].Start = Address.KernelElfSection;
+            BootInfo->MemoryMapArray[idx].Start = Address.KernelElfSectionPhys;
             BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelElf;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
@@ -161,7 +161,7 @@ namespace Lonos.Kernel.Loader
             // Avoiding the use of the first megabyte of RAM
             idx++;
             BootInfo->MemoryMapArray[idx].Start = 0x0;
-            BootInfo->MemoryMapArray[idx].Size = 1024 * 1024;
+            BootInfo->MemoryMapArray[idx].Size = Address.ReserveMemory;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelReserved;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
 

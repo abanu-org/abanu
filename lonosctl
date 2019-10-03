@@ -11,6 +11,7 @@ mkdir -p $LONOS_OSDIR
 mkdir -p $LONOS_LOGDIR
 mkdir -p $LONOS_TMPDIR
 mkdir -p $LONOS_ISODIR
+touch tmp/network-disk.img
 loadenv auto
 
 #set -x

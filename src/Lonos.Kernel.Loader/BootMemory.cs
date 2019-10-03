@@ -16,7 +16,7 @@ namespace Lonos.Kernel.Loader
 
         public static void Setup()
         {
-            PageStartAddr = Address.InitialDynamicPage;
+            PageStartAddr = Address.InitialLoaderDynamicPage;
             //PageStartAddr = Address.GCInitialMemory;
         }
 

@@ -94,7 +94,7 @@ namespace Lonos.Kernel.Loader
 
         private static void MapKernelImage()
         {
-            var phys = Address.KernelElfSection;
+            var phys = Address.KernelElfSectionPhys;
             var diff = Address.KernelBaseVirt - Address.KernelBasePhys;
             var endPhys = phys + OriginalKernelElf.TotalFileSize;
             var addr = phys;
@@ -150,7 +150,7 @@ namespace Lonos.Kernel.Loader
         {
             // TODO: Respect section program header address.
             // Currently, we can make a raw copy of ELF file
-            MemoryOperation.Copy4(Address.OriginalKernelElfSection, Address.KernelElfSection, OriginalKernelElf.TotalFileSize);
+            MemoryOperation.Copy4(Address.OriginalKernelElfSection, Address.KernelElfSectionPhys, OriginalKernelElf.TotalFileSize);
         }
 
         public static unsafe void DumpElfInfo()
