@@ -34,5 +34,10 @@ namespace Lonos.Kernel.Core
             return CpuCyclesSinceSystemBoot() - 12500000000L;
         }
 
+        public static uint GetReadableCounter()
+        {
+            return (uint)(CpuCyclesSinceSystemBoot() / 1000000UL);
+        }
+
     }
 }

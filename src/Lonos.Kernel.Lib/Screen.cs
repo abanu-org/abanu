@@ -370,5 +370,29 @@ namespace Lonos.Kernel.Core
             Skip(count);
             UpdateCursor();
         }
+
+        public static void SetChar(char chr, uint row, uint column)
+        {
+            SetCharInternal(chr, row, column, color);
+        }
+
+        public static void SetChar(char chr, uint row, uint column, ConsoleColor foregroundColor)
+        {
+            SetCharInternal(chr, row, column, (byte)(((byte)foregroundColor & 0x0F) | (BackgroundColor << 4)));
+        }
+
+        public static void SetChar(char chr, uint row, uint column, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
+        {
+            SetCharInternal(chr, row, column, (byte)(((byte)foregroundColor & 0x0F) | ((byte)backgroundColor << 4)));
+        }
+
+        private static void SetCharInternal(char chr, uint row, uint column, byte color)
+        {
+            Pointer address = new Pointer(ScreenMemoryAddress + (((row * Columns) + column) * 2));
+
+            Intrinsic.Store8(address, (byte)chr);
+            Intrinsic.Store8(address, 1, color);
+        }
+
     }
 }

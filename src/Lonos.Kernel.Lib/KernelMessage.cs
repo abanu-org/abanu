@@ -40,9 +40,7 @@ namespace Lonos.Kernel.Core
             if (!UseTimeStamp)
                 return;
 
-            ulong cycles = PerformanceCounter.CpuCyclesSinceKernelBoot();
-            ulong dividor = 1000000;
-            uint timestamp = (uint)(cycles / dividor);
+            uint timestamp = PerformanceCounter.GetReadableCounter();
 
             var diff = timestamp - OldTimeStamp;
 

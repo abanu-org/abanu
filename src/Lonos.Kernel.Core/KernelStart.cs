@@ -196,16 +196,21 @@ namespace Lonos.Kernel.Core
         private static void Thread0()
         {
             KernelMessage.WriteLine("Thread0: Enter");
-            uint i = 0;
+            uint tsLast = 0;
+            //var chars = new char[] { '-', '/', '|', '\\' };
+            var chars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            var charIdx = 0;
             while (true)
             {
-                i++;
-                if (Scheduler.ClockTicks % 2 == 0)
-                {
-                    Screen.Goto(3, 0);
-                    Screen.Write("TH_KERNEL:");
-                    Screen.Write(i, 10);
-                }
+                var ts = PerformanceCounter.GetReadableCounter();
+                if (ts - tsLast < 1000)
+                    continue;
+
+                Screen.SetChar(chars[charIdx], 0, 30, ConsoleColor.White, ConsoleColor.Red);
+                charIdx++;
+                if (charIdx >= chars.Length)
+                    charIdx = 0;
+                tsLast = ts;
             }
             KernelMessage.WriteLine("Thread0: Finished");
         }
@@ -213,16 +218,21 @@ namespace Lonos.Kernel.Core
         private static void Thread1()
         {
             KernelMessage.WriteLine("Thread1: Enter");
-            uint i = 0;
+            uint tsLast = 0;
+            //var chars = new char[] { '-', '/', '|', '\\' };
+            var chars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            var charIdx = 0;
             while (true)
             {
-                i++;
-                if (Scheduler.ClockTicks % 3 == 0)
-                {
-                    Screen.Goto(0, 0);
-                    Screen.Write("TH1:");
-                    Screen.Write(i, 10);
-                }
+                var ts = PerformanceCounter.GetReadableCounter();
+                if (ts - tsLast < 1000)
+                    continue;
+
+                Screen.SetChar(chars[charIdx], 0, 32, ConsoleColor.White, ConsoleColor.Green);
+                charIdx++;
+                if (charIdx >= chars.Length)
+                    charIdx = 0;
+                tsLast = ts;
             }
             KernelMessage.WriteLine("Thread1: Finished");
         }
@@ -230,16 +240,24 @@ namespace Lonos.Kernel.Core
         private static void Thread2()
         {
             KernelMessage.WriteLine("Thread2: Enter");
-            uint i = 0;
-            while (i < 100)
+            uint tsLast = 0;
+            //var chars = new char[] { '-', '/', '|', '\\' };
+            var chars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            var charIdx = 0;
+            var i = 0;
+            while (true)
             {
-                i++;
-                if (Scheduler.ClockTicks % 5 == 0)
-                {
-                    Screen.Goto(1, 0);
-                    Screen.Write("TH2:");
-                    Screen.Write(i, 10);
-                }
+                var ts = PerformanceCounter.GetReadableCounter();
+                if (ts - tsLast < 1000)
+                    continue;
+
+                Screen.SetChar(chars[charIdx], 0, 34, ConsoleColor.White, ConsoleColor.Red);
+                charIdx++;
+                if (charIdx >= chars.Length)
+                    charIdx = 0;
+                tsLast = ts;
+                if (i++ > 10)
+                    break;
             }
             KernelMessage.WriteLine("Thread2: Finished");
             //while (true)
