@@ -83,6 +83,7 @@
     <Rule Id="CS1584" Action="Error" />
     <Rule Id="CS1591" Action="Info" />
     <Rule Id="CS1710" Action="None" />
+    <Rule Id="CS1717" Action="Error" />
     <Rule Id="CS1720" Action="None" />
     <Rule Id="CS8018" Action="Error" />
   </Rules>
@@ -97,6 +98,8 @@
     <Rule Id="CA1063" Action="None" />
     <Rule Id="CA1707" Action="None" />
     <Rule Id="CA1710" Action="None" />
+    <Rule Id="CA1714" Action="None" />
+    <Rule Id="CA1717" Action="None" />
     <Rule Id="CA1720" Action="None" />
     <Rule Id="CA1801" Action="Info" />
     <Rule Id="CA1815" Action="Info" />
