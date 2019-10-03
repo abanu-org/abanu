@@ -12,10 +12,27 @@ namespace Lonos.Kernel.Core
 {
     public static class PerformanceCounter
     {
+        public static ulong KernelBootStartCycles { get; private set; }
+
+        public static void Setup()
+        {
+            //KernelBootStartCycles = CpuCyclesSinceSystemBoot();
+        }
+
+        public static void Setup(ulong kernelBootStartCycles)
+        {
+            // It will generate invalid opcode!!
+            //_KernelBootStartCycles = kernelBootStartCycles;
+        }
 
         [DllImport("x86/Lonos.CpuCyclesSinceBoot.o", EntryPoint = "CpuCyclesSinceBoot")]
-        public static extern uint CpuCyclesSinceBoot();
+        public static extern ulong CpuCyclesSinceSystemBoot();
+
+        public static ulong CpuCyclesSinceKernelBoot()
+        {
+            //return CpuCyclesSinceSystemBoot() - KernelBootStartCycles;
+            return CpuCyclesSinceSystemBoot() - 12500000000L;
+        }
 
     }
-
 }

@@ -47,6 +47,7 @@ namespace Lonos.Kernel.Core
 
             // Write first output
             KernelMessage.WriteLine("<KERNEL:CONSOLE:BEGIN>");
+            PerformanceCounter.Setup(BootInfo.Header->KernelBootStartCycles);
             KernelMessage.WriteLine("Starting Lonos Kernel...");
 
             KernelMessage.WriteLine("KConfig.UseKernelMemoryProtection: {0}", KConfig.UseKernelMemoryProtection);

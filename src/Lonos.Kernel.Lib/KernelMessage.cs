@@ -32,18 +32,34 @@ namespace Lonos.Kernel.Core
             UseTimeStamp = false;
         }
 
+        private static uint OldTimeStamp = 0;
+        private const uint TimeStampThreshold = 1000;
+
         private static void WriteTimeStamp()
         {
             if (!UseTimeStamp)
                 return;
 
-            //ulong cycles = PerformanceCounter.CpuCyclesSinceBoot();
-            //ulong dividor = 1 * 1000 * 1000;
-            //var num = cycles / dividor;
-            //var intValue = (uint)num;
-            //Write('[');
-            //Write("{0}", 5);
-            //Write(']');
+            ulong cycles = PerformanceCounter.CpuCyclesSinceKernelBoot();
+            ulong dividor = 1000000;
+            uint timestamp = (uint)(cycles / dividor);
+
+            var diff = timestamp - OldTimeStamp;
+
+            var sb = new StringBuffer();
+            sb.Append('[');
+            sb.Append(timestamp);
+
+            if (diff > TimeStampThreshold)
+            {
+                sb.Append(" (+");
+                sb.Append(diff);
+                sb.Append(")");
+            }
+            OldTimeStamp = timestamp;
+
+            sb.Append("] ");
+            sb.WriteTo(Dev);
         }
 
         public static void Write(string value)
@@ -58,7 +74,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine()
         {
-            WriteLine();
+            WriteTimeStamp();
             Dev.Write('\n');
         }
 
@@ -180,7 +196,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, int arg0)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, (uint)arg0); //TODO
             buf.Append('\n');
@@ -189,7 +205,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, int arg0, int arg1)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, (uint)arg0, (uint)arg1); //TODO
             buf.Append('\n');
@@ -198,7 +214,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, int arg0, int arg1, int arg2)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, (uint)arg0, (uint)arg1, (uint)arg2); //TODO
             buf.Append('\n');
@@ -207,7 +223,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, uint arg0, uint arg1)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, arg0, arg1);
             buf.Append('\n');
@@ -216,7 +232,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, uint arg0, uint arg1, uint arg2)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, arg0, arg1, arg2);
             buf.Append('\n');
@@ -225,7 +241,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, uint arg0, uint arg1, uint arg2, uint arg3)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, arg0, arg1, arg2, arg3);
             buf.Append('\n');
@@ -234,7 +250,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, arg0, arg1, arg2, arg3, arg4);
             buf.Append('\n');
@@ -243,7 +259,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, arg0, arg1, arg2, arg3, arg4, arg5);
             buf.Append('\n');
@@ -252,7 +268,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
             buf.Append('\n');
@@ -268,7 +284,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(uint value)
         {
-            WriteLine();
+            WriteTimeStamp();
             var sb = new StringBuffer();
             sb.Append(value);
             sb.Append('\n');
@@ -277,7 +293,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(NullTerminatedString* value)
         {
-            WriteLine();
+            WriteTimeStamp();
             var sb = new StringBuffer();
             sb.Append(value);
             sb.Append('\n');
@@ -293,7 +309,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLineHex(uint value)
         {
-            WriteLine();
+            WriteTimeStamp();
             var buf = new StringBuffer(value, "X");
             buf.Append('\n');
             buf.WriteTo(Dev);
@@ -315,7 +331,7 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(StringBuffer sb)
         {
-            WriteLine();
+            WriteTimeStamp();
             Write(sb);
             Write('\n');
         }

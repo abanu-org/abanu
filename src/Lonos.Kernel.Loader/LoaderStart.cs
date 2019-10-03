@@ -34,6 +34,7 @@ namespace Lonos.Kernel.Loader
             KernelMessage.SetHandler(kmsgHandler);
             KernelMessage.WriteLine("<LOADER:CONSOLE:BEGIN>");
             Assert.Setup(AssertError);
+            PerformanceCounter.Setup();
 
             // Parse Boot Informations
             Multiboot.Setup();

@@ -28,6 +28,7 @@ namespace Lonos.Kernel.Core.Boot
 
         public uint InstalledPhysicalMemory;
         public PageTableType PageTableType;
+        public ulong KernelBootStartCycles;
 
         public bool FBPresent;
         public BootInfoFramebufferInfo FbInfo;

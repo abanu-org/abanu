@@ -13,12 +13,12 @@ namespace Lonos.Kernel.Core
     [StructLayout(LayoutKind.Sequential)]
     public struct StringBuffer
     {
-        private uint length;
+        private uint _length;
 
         public const int MaxLength = 132;
         public const int EntrySize = (MaxLength * 2) + 4;
 
-        private unsafe fixed byte chars[MaxLength];
+        private unsafe fixed byte _chars[MaxLength];
 
         public static unsafe StringBuffer CreateFromNullTerminatedString(uint start)
         {
@@ -45,7 +45,7 @@ namespace Lonos.Kernel.Core
                 if (index < 0 || index >= Length) //TODO: Error
                     return '\x0';
 
-                fixed (byte* ptr = chars)
+                fixed (byte* ptr = _chars)
                     return (char)ptr[index];
             }
 
@@ -53,7 +53,7 @@ namespace Lonos.Kernel.Core
             {
                 if (index < 0 || index >= Length) //TODO: Error
                     return;
-                fixed (byte* ptr = chars)
+                fixed (byte* ptr = _chars)
                     ptr[index] = (byte)value;
             }
         }
@@ -64,7 +64,7 @@ namespace Lonos.Kernel.Core
             {
                 if (index >= Length) //TODO: Error
                     return '\x0';
-                fixed (byte* ptr = chars)
+                fixed (byte* ptr = _chars)
                     return (char)ptr[index];
             }
 
@@ -72,14 +72,14 @@ namespace Lonos.Kernel.Core
             {
                 if (index >= Length) //TODO: Error
                     return;
-                fixed (byte* ptr = chars)
+                fixed (byte* ptr = _chars)
                     ptr[index] = (byte)value;
             }
         }
 
         public void Clear()
         {
-            length = 0;
+            _length = 0;
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Lonos.Kernel.Core
 
         public void Append(StringBuffer value)
         {
-            if (value.length == 0)
+            if (value._length == 0)
                 return;
 
             for (var i = 0; i < value.Length; i++)
@@ -195,14 +195,14 @@ namespace Lonos.Kernel.Core
 
         public void Append(StringBuffer value, uint start)
         {
-            if (value.length == 0)
+            if (value._length == 0)
                 return;
             Append(value, start, value.Length - start);
         }
 
         public void Append(StringBuffer value, uint start, uint length)
         {
-            if (value.length == 0)
+            if (value._length == 0)
                 return;
             for (uint i = 0; i < length; i++)
                 Append(value[i + start]);
@@ -210,19 +210,29 @@ namespace Lonos.Kernel.Core
 
         public unsafe void Append(char value)
         {
-            if (length + 1 >= MaxLength)
+            if (_length + 1 >= MaxLength)
             {
                 //TODO: Error
                 return;
             }
             //isSet = 1;
-            length++;
-            this[length - 1] = value;
+            _length++;
+            this[_length - 1] = value;
         }
 
         public void Append(uint value)
         {
             Append(value, false, false);
+        }
+
+        public void Append(ulong value)
+        {
+            Append(value, false, false);
+        }
+
+        public void Append(long value)
+        {
+            Append((ulong)value, true, false);
         }
 
         public void Append(int value)
@@ -257,34 +267,34 @@ namespace Lonos.Kernel.Core
 
         public void Append(uint value, StringBuffer format)
         {
-            if (format.length == 0)
+            if (format._length == 0)
             {
                 Append(value, 10, -1);
                 return;
             }
 
-            if (format.length >= 1 && format[0] == 'X')
+            if (format._length >= 1 && format[0] == 'X')
             {
-                if (format.length == 1)
+                if (format._length == 1)
                 {
                     Append(value, 16, -1);
                     return;
                 }
-                if (format.length == 2)
+                if (format._length == 2)
                 {
                     Append(value, 16, CharDigitToInt(format[1]));
                     return;
                 }
             }
 
-            if (format.length >= 1 && format[0] == 'D')
+            if (format._length >= 1 && format[0] == 'D')
             {
-                if (format.length == 1)
+                if (format._length == 1)
                 {
                     Append(value, 10, -1);
                     return;
                 }
-                if (format.length == 2)
+                if (format._length == 2)
                 {
                     Append(value, 10, CharDigitToInt(format[1]));
                     return;
@@ -348,9 +358,9 @@ namespace Lonos.Kernel.Core
             while (temp != 0);
 
             byte* first;
-            fixed (byte* ptr = chars)
+            fixed (byte* ptr = _chars)
             {
-                first = ptr + this.length;
+                first = ptr + this._length;
             }
 
             len = count;
@@ -366,6 +376,64 @@ namespace Lonos.Kernel.Core
             for (int i = 0; i < count; i++)
             {
                 uint remainder = uvalue % divisor;
+
+                if (remainder < 10)
+                    *(first + offset + count - 1 - i) = (byte)('0' + remainder);
+                else
+                    *(first + offset + count - 1 - i) = (byte)('A' + remainder - 10);
+
+                uvalue /= divisor;
+            }
+        }
+
+        private unsafe void Append(ulong value, bool signed, bool hex)
+        {
+            int offset = 0;
+
+            ulong uvalue = (ulong)value;
+            ushort divisor = hex ? (ushort)16 : (ushort)10;
+            uint len = 0;
+            uint count = 0;
+            ulong temp;
+            bool negative = false;
+
+            if (value < 0 && !hex && signed)
+            {
+                count++;
+                // TODO
+                //uvalue = (ulong)-value;
+                uvalue = (ulong)(-(uint)value);
+                negative = true;
+            }
+
+            temp = uvalue;
+
+            do
+            {
+                temp /= divisor;
+                count++;
+            }
+            while (temp != 0);
+
+            byte* first;
+            fixed (byte* ptr = _chars)
+            {
+                first = ptr + this._length;
+            }
+
+            len = count;
+            Length += len;
+
+            if (negative)
+            {
+                *(first + offset) = (byte)'-';
+                offset++;
+                count--;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                ulong remainder = uvalue % divisor;
 
                 if (remainder < 10)
                     *(first + offset + count - 1 - i) = (byte)('0' + remainder);
@@ -495,11 +563,11 @@ namespace Lonos.Kernel.Core
         {
             var indexBuffer = new StringBuffer
             {
-                length = 0,
+                _length = 0,
             };
             var argsBuffer = new StringBuffer
             {
-                length = 0,
+                _length = 0,
             };
 
             var inParam = false;
@@ -617,7 +685,7 @@ namespace Lonos.Kernel.Core
         {
             get
             {
-                return length;
+                return _length;
             }
 
             set
@@ -627,7 +695,7 @@ namespace Lonos.Kernel.Core
                     //TODO: Error
                     value = MaxLength;
                 }
-                length = value;
+                _length = value;
             }
         }
 
@@ -636,10 +704,10 @@ namespace Lonos.Kernel.Core
         /// </summary>
         public int IndexOf(string value)
         {
-            if (this.length == 0)
+            if (this._length == 0)
                 return -1;
 
-            return IndexOfImpl(value, 0, this.length);
+            return IndexOfImpl(value, 0, this._length);
         }
 
         private int IndexOfImpl(string value, uint startIndex, uint count)
@@ -669,9 +737,9 @@ namespace Lonos.Kernel.Core
 
         public unsafe void WriteTo(IBufferWriter handle)
         {
-            fixed (byte* ptr = chars)
+            fixed (byte* ptr = _chars)
             {
-                for (var i = 0; i < length; i++)
+                for (var i = 0; i < _length; i++)
                 {
                     handle.Write(ptr[i]);
                 }
@@ -682,9 +750,9 @@ namespace Lonos.Kernel.Core
         {
             var ptr2 = (byte*)addr;
 
-            fixed (byte* ptr = chars)
+            fixed (byte* ptr = _chars)
             {
-                for (var i = 0; i < length; i++)
+                for (var i = 0; i < _length; i++)
                 {
                     ptr2[i] = (byte)ptr[i];
                 }
@@ -694,7 +762,7 @@ namespace Lonos.Kernel.Core
         public unsafe string CreateString()
         {
             Append((char)0);
-            fixed (byte* ptr = chars)
+            fixed (byte* ptr = _chars)
             {
                 var ptr2 = (sbyte*)ptr;
                 return new string(ptr2);
