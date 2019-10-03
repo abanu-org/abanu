@@ -21,7 +21,7 @@ namespace Lonos.Kernel.Core
         public const uint LoaderBasePhys = 0x00200000;  // 2MB
 
         /// <summary>
-        /// Lonos.OS.Core.x86.bin
+        /// Size of Lonos.OS.Core.x86.bin
         /// </summary>
         public const uint OriginalKernelElfSize = 30 * 1024 * 1024;
 

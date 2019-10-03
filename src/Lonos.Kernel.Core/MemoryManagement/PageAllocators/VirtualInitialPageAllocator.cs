@@ -16,12 +16,34 @@ namespace Lonos.Kernel.Core.MemoryManagement
     public unsafe class VirtualInitialPageAllocator : InitialPageAllocator2
     {
 
+        private bool AllocRawSelfMemoryPhysical;
+
+        public VirtualInitialPageAllocator(bool allocRawSelfMemoryPhysical)
+        {
+            AllocRawSelfMemoryPhysical = allocRawSelfMemoryPhysical;
+        }
+
         protected override MemoryRegion AllocRawMemory(uint size)
+        {
+            if (AllocRawSelfMemoryPhysical)
+                return AllocRawMemoryPhys(size);
+            else
+                return AllocRawMemoryVirt(size);
+        }
+
+        protected static MemoryRegion AllocRawMemoryPhys(uint size)
         {
             var kmap = PhysicalPageManager.AllocateRegion(size);
             KernelMemoryMapManager.Header->Used.Add(new KernelMemoryMap(kmap.Start, kmap.Size, BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Virtual));
             PageTable.KernelTable.Map(kmap.Start, kmap.Start, kmap.Size, flush: true);
             PageTable.KernelTable.SetWritable(kmap.Start, kmap.Size);
+            MemoryOperation.Clear4(kmap.Start, kmap.Size);
+            return new MemoryRegion(kmap.Start, kmap.Size);
+        }
+
+        protected static MemoryRegion AllocRawMemoryVirt(uint size)
+        {
+            var kmap = VirtualPageManager.AllocateRegion(size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
             return new MemoryRegion(kmap.Start, kmap.Size);
         }

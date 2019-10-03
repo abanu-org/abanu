@@ -23,7 +23,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //_startVirtAddr = Address.VirtMapStart;
             //_nextVirtAddr = _startVirtAddr;
 
-            var allocator = new VirtualInitialPageAllocator() { DebugName = "VirtInitial" };
+            var allocator = new VirtualInitialPageAllocator(true) { DebugName = "VirtInitial" };
             //allocator.Setup(MemoryRegion.FromLocation(0, Address.VirtMapStart + (60 * 1024 * 1024)), AddressSpaceKind.Virtual);
             allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             Allocator = allocator;
@@ -31,7 +31,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //_identityStartVirtAddr = Address.IdentityMapStart;
             //_identityNextVirtAddr = _identityStartVirtAddr;
 
-            allocator = new VirtualInitialPageAllocator() { DebugName = "VirtIdentityInitial" };
+            allocator = new VirtualInitialPageAllocator(false) { DebugName = "VirtIdentityInitial" };
             allocator.Setup(new MemoryRegion(Address.IdentityMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             IdentityAllocator = allocator;
         }
@@ -63,9 +63,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //    return virt;
         //}
 
-        internal static unsafe Addr AllocatePages(uint pages)
+        internal static unsafe Addr AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
-            var physHead = PhysicalPageManager.AllocatePages(pages);
+            var physHead = PhysicalPageManager.AllocatePages(pages, options);
             if (physHead == null)
                 return Addr.Zero;
             var virtHead = Allocator.AllocatePages(pages);
@@ -108,6 +108,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
         internal static unsafe void FreeAddrIdentity(Addr addr)
         {
             IdentityAllocator.FreeAddr(addr);
+        }
+
+        public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = AllocatePageOptions.Default)
+        {
+            size = KMath.DivCeil(size, 4096);
+            var start = AllocatePages(size, options);
+            return new MemoryRegion(start, size);
         }
 
     }
