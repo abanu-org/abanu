@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 {
     public unsafe class MultiAllocator : IPageFrameAllocator
     {

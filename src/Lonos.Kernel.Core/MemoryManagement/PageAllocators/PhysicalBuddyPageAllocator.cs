@@ -7,7 +7,7 @@ using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.Collections;
 using Lonos.Kernel.Core.PageManagement;
 
-namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
+namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators.PageAllocators
 {
     public unsafe class PhysicalBuddyPageAllocator : BuddyPageAllocator
     {

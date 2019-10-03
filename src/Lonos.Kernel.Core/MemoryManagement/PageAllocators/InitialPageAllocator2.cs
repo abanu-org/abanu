@@ -9,7 +9,7 @@ using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.PageManagement;
 using Mosa.Runtime;
 
-namespace Lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 {
 
     /// <summary>

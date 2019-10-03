@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using Lonos.Kernel.Core.Boot;
+using Lonos.Kernel.Core.MemoryManagement.PageAllocators;
 using Lonos.Kernel.Core.PageManagement;
 
 namespace Lonos.Kernel.Core.MemoryManagement

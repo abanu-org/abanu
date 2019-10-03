@@ -10,7 +10,7 @@ using Mosa.Runtime;
 
 //using Mosa.Kernel.x86;
 
-namespace Lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 {
 
     public unsafe class VirtualInitialPageAllocator : InitialPageAllocator2

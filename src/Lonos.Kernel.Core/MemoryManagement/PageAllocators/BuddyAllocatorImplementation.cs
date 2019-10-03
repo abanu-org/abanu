@@ -23,7 +23,7 @@ using Lonos.CTypes;
 #pragma warning disable SA1117 // Parameters should be on same line or separate lines
 #pragma warning disable SA1116 // Split parameters should start on line after declaration
 
-namespace Lonos.Kernel.Core.MemoryManagement
+namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 {
     internal static unsafe class BuddyAllocatorImplementation
     {
