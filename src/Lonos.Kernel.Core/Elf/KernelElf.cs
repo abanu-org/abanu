@@ -20,7 +20,7 @@ namespace Lonos.Kernel.Core.Elf
             //KernelMessage.WriteLine("Image Header:");
             //KernelMemory.DumpToConsoleLine(Address.KernelElfSection, 124);
 
-            Main = FromAddress(Address.KernelElfSectionPhys);
+            Main = FromAddress(Address.KernelElfSectionVirt);
             Native = FromSectionName("native");
         }
 

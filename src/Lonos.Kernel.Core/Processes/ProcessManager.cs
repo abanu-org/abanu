@@ -68,8 +68,7 @@ namespace Lonos.Kernel.Core.Processes
         public static unsafe Process StartProcessFromBuffer(uint addr, uint argumentBufferSize = 0)
         {
             // TODO: Copy Buffer!!
-            var phys = PageTable.KernelTable.GetPhysicalAddressFromVirtual(addr);
-            var elf = KernelElf.FromAddress(phys);
+            var elf = KernelElf.FromAddress(addr);
             return StartProcessFromElf(elf, "memory", argumentBufferSize);
         }
 
@@ -120,7 +119,7 @@ namespace Lonos.Kernel.Core.Processes
                 //MemoryOperation.Copy4(elf.GetSectionPhysAddr(section), section->Addr, section->Size);
 
                 // Map the Sections
-                proc.PageTable.Map(virtAddr, srcAddr, size);
+                proc.PageTable.MapCopy(PageTable.KernelTable, srcAddr, virtAddr, size);
                 if (name->Equals(".text"))
                     proc.PageTable.SetExecutable(virtAddr, size);
 
