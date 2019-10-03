@@ -27,6 +27,19 @@ function configure {
 			git clone --recursive git@github.com:lonos-project/lonos-tools.git tools
 			;;
 
+		git)
+			git remote set-url origin git@github.com:lonos-project/lonos.git
+
+			cd external/MOSA-Project
+			git remote set-url origin git@github.com:arakis/MOSA-Project.git
+			git remote add upstream https://github.com/mosa/MOSA-Project.git 2> /dev/null
+			git remote add tgiphil https://github.com/tgiphil/MOSA-Project.git 2> /dev/null
+			git fetch origin
+			git fetch upstream
+			git fetch tgiphil
+			cd ../..
+			;;
+
 		patch)
 			patch ${@:2}
 			;;
@@ -46,7 +59,7 @@ function configure {
 			;;
 
 		*)
-			echo $"Usage: lonosctl configure {all|patch|mosa|packages}"
+			echo $"Usage: lonosctl configure {all|patch|mosa|packages|git}"
 			exit 1
 	esac
 }
