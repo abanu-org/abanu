@@ -32,6 +32,10 @@ define this
 	x/10xw *(void**)($ebp+8)
 end
 
+define stack
+	x/20xw *(void**)($esp)
+end
+
 define q
 	kill
 	quit

@@ -94,6 +94,8 @@ namespace Lonos.Kernel.Core.Processes
             proc.PageTable.MapCopy(PageTable.KernelTable, BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.SetExecutable(BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.MapCopy(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
+            proc.PageTable.MapCopy(PageTable.KernelTable, KernelMemoryMapManager.Header->Used.GetMap(BootInfoMemoryType.IDT));
+            proc.PageTable.MapCopy(PageTable.KernelTable, KernelMemoryMapManager.Header->Used.GetMap(BootInfoMemoryType.TSS));
 
             // Setup ELF Sections
             for (uint i = 0; i < elf.SectionHeaderCount; i++)

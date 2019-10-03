@@ -24,7 +24,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //_nextVirtAddr = _startVirtAddr;
 
             var allocator = new VirtualInitialPageAllocator() { DebugName = "VirtInitial" };
-            //allocator.Setup(new MemoryRegion(0, Address.VirtMapStart + (60 * 1024 * 1024)), AddressSpaceKind.Virtual);
+            //allocator.Setup(MemoryRegion.FromLocation(0, Address.VirtMapStart + (60 * 1024 * 1024)), AddressSpaceKind.Virtual);
             allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             Allocator = allocator;
 

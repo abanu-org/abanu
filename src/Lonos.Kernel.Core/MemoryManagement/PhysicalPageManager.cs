@@ -86,7 +86,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 var mapPtr = (uint*)mapAddr;
                 for (var pos = 0; pos < 1024; pos++)
                 {
-                    *mapPtr = 0xEEEEEEEE;
+                    *mapPtr = 0xEBFEEBFE;
                     mapPtr += 1;
                 }
                 PageTable.KernelTable.UnMap(mapAddr, 4096, true);

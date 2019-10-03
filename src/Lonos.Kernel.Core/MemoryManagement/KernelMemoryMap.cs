@@ -86,6 +86,16 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return false;
         }
 
+        public KernelMemoryMap* GetMap(BootInfoMemoryType type)
+        {
+            for (var i = 0; i < Count; i++)
+            {
+                if (Items[i].Type == type)
+                    return &Items[i];
+            }
+            return null;
+        }
+
         public bool Contains(KernelMemoryMap map)
         {
             for (var i = 0; i < Count; i++)

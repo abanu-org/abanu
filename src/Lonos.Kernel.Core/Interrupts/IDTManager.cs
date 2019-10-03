@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.MemoryManagement;
 using Lonos.Kernel.Core.PageManagement;
 using Lonos.Kernel.Core.Scheduling;
@@ -49,7 +50,9 @@ namespace Lonos.Kernel.Core.Interrupts
 
             InitControlBlock();
 
-            IDTAddr = PhysicalPageManager.AllocatePageAddr(AllocatePageOptions.Continuous);
+            //IDTAddr = PhysicalPageManager.AllocatePageAddr(AllocatePageOptions.Continuous);
+            IDTAddr = VirtualPageManager.AllocatePages(1);
+            KernelMemoryMapManager.Header->Used.Add(new KernelMemoryMap(IDTAddr, 4096, BootInfoMemoryType.IDT, AddressSpaceKind.Virtual));
             PageTable.KernelTable.SetWritable(IDTAddr, 4096);
             KernelMessage.WriteLine("Address of IDT: {0:X8}", IDTAddr);
 

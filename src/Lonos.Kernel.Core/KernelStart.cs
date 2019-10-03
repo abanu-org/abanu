@@ -167,7 +167,7 @@ namespace Lonos.Kernel.Core
         //public static Addr kernelStackBottom = null;
         //public static USize kernelStackSize = null;
 
-        public static void InitializeUserMode()
+        public static unsafe void InitializeUserMode()
         {
             if (!KConfig.UseUserMode)
                 return;
@@ -177,6 +177,7 @@ namespace Lonos.Kernel.Core
                 //kernelStackSize = 256 * 4096;
                 TssAddr = VirtualPageManager.AllocatePages(1);
                 PageTable.KernelTable.SetWritable(TssAddr, 4096);
+                KernelMemoryMapManager.Header->Used.Add(new KernelMemoryMap(TssAddr, 4096, BootInfoMemoryType.TSS, AddressSpaceKind.Virtual));
                 //kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
                 //kernelStackBottom = kernelStack + kernelStackSize;
 

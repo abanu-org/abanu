@@ -22,6 +22,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
             table.MapCopy(fromTable, mm->Start, mm->Size, present, flush);
         }
 
+        public static void MapCopy(this IPageTable table, IPageTable fromTable, KernelMemoryMap* mm, bool present = true, bool flush = false)
+        {
+            table.MapCopy(fromTable, mm->Start, mm->Size, present, flush);
+        }
+
         public static unsafe void SetWritable(this IPageTable table, BootInfoMemoryType type)
         {
             var mm = BootInfo.GetMap(type);

@@ -37,6 +37,8 @@ namespace Lonos.Kernel.Core.Boot
         /// Page manager will avoid this region, even if usable. Can overlap with other regions.
         /// </summary>
         KernelReserved = 19,
+        IDT = 20,
+        TSS = 21,
 
         KernelElfVirt = 30,
         KernelTextSegment = 30,
