@@ -97,11 +97,11 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.CustomReserved;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
 
-            idx++;
-            BootInfo->MemoryMapArray[idx].Start = Address.OriginalKernelElfSection;
-            BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
-            BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.OriginalKernelElfImage;
-            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
+            //idx++;
+            //BootInfo->MemoryMapArray[idx].Start = Address.OriginalKernelElfSection;
+            //BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
+            //BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.OriginalKernelElfImage;
+            //BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.KernelElfSectionPhys;

@@ -61,9 +61,15 @@ namespace Lonos.Kernel.Core
 
         /// <summary>
         /// Base physical address where the kernel ELF begins (first byte of ELF file).
-        /// The Loader will copy it from <see cref="OriginalKernelElfSection"/>.
+        /// The Loader will copy it from <see cref="OriginalKernelElfSection"/> and mapped to <see cref="KernelElfSectionVirt"/>
         /// </summary>
         public const uint KernelElfSectionPhys = KernelBasePhys - 0x1000; // 20MB+4KB
+
+        /// <summary>
+        /// Base virtual address where the kernel ELF begins (first byte of ELF file).
+        /// Its mapped to <see cref="KernelElfSectionPhys"/>
+        /// </summary>
+        public const uint KernelElfSectionVirt = KernelBaseVirt - 0x1000;
 
         /// <summary>
         /// Loader will pass boot informations here for the Kernel
