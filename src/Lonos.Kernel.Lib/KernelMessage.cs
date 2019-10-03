@@ -50,7 +50,7 @@ namespace Lonos.Kernel.Core
             sb.Append('[');
             sb.Append(timestamp);
 
-            if (diff > TimeStampThreshold)
+            if (diff > TimeStampThreshold && TimeStampThreshold > 0)
             {
                 sb.Append(" (+");
                 sb.Append(diff);
