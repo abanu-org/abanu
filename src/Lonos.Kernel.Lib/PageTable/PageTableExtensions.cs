@@ -92,6 +92,27 @@ namespace Lonos.Kernel.Core.PageManagement
                 table.Flush();
         }
 
+        /// <summary>
+        /// Sync specific mappings with another table.
+        /// </summary>
+        public static void MapCopy(this IPageTable table, IPageTable fromTable, Addr srcVirtAddr, Addr destVirtAddr, USize length, bool present = true, bool flush = false)
+        {
+            if (KConfig.TraceMemoryMapping)
+                KernelMessage.WriteLine("MapCopy: srcVirt={0:X8}, destVirt={1:X8}, length={2:X8}", srcVirtAddr, destVirtAddr, length);
+
+            var pages = KMath.DivCeil(length, 4096);
+            for (var i = 0; i < pages; i++)
+            {
+                var physAddr = fromTable.GetPhysicalAddressFromVirtual(srcVirtAddr);
+                table.MapVirtualAddressToPhysical(destVirtAddr, physAddr, present);
+
+                srcVirtAddr += 4096;
+                destVirtAddr += 4096;
+            }
+            if (flush)
+                table.Flush();
+        }
+
         public static Addr GetPageTablePhysAddr(this IPageTable table)
         {
             return PageTable.KernelTable.GetPhysicalAddressFromVirtual(table.VirtAddr);
