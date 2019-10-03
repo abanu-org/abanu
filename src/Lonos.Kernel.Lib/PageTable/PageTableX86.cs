@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
@@ -15,7 +16,7 @@ namespace Lonos.Kernel.Core.PageManagement
     {
 
         public uint AddrPageDirectory;
-        public uint AddrPageTable;
+        public PageTableEntry* PageTableEntries;
 
         public const uint PagesPerDictionaryEntry = 1024;
         public const uint EntriesPerPageEntryEntry = 1024;
@@ -65,11 +66,11 @@ namespace Lonos.Kernel.Core.PageManagement
             KernelMessage.WriteLine("Setup PageTable");
 
             AddrPageDirectory = entriesAddr;
-            AddrPageTable = entriesAddr + InitalPageDirectorySize;
+            PageTableEntries = (PageTableEntry*)(entriesAddr + InitalPageDirectorySize);
 
             // Setup Page Directory
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
-            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
+            PageTableEntry* pte = (PageTableEntry*)PageTableEntries;
 
             KernelMessage.WriteLine("Total Page Entries: {0}", InitialPageTableEntries);
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
@@ -106,7 +107,7 @@ namespace Lonos.Kernel.Core.PageManagement
         {
             KernelMessage.WriteLine("PageDirectoryPhys: {0:X8}", this.GetPageTablePhysAddr());
             KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
-            KernelMessage.WriteLine("PageTable: {0:X8}", AddrPageTable);
+            KernelMessage.WriteLine("PageTable: {0:X8}", (uint)PageTableEntries);
         }
 
         private bool WritableAddress(uint physAddr)
@@ -117,16 +118,16 @@ namespace Lonos.Kernel.Core.PageManagement
         public override void KernelSetup(Addr entriesAddr)
         {
             AddrPageDirectory = entriesAddr;
-            AddrPageTable = entriesAddr + InitalPageDirectorySize;
+            PageTableEntries = (PageTableEntry*)(entriesAddr + InitalPageDirectorySize);
             //PrintAddress();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public PageTableEntry* GetTableEntry(uint forVirtualAddress)
         {
             //return (PageTableEntry*)(AddrPageTable + ((forVirtualAddress & 0xFFFFF000u) >> 10));
             var pageNum = forVirtualAddress >> 12;
-            PageTableEntry* table = (PageTableEntry*)AddrPageTable;
-            return &table[pageNum];
+            return &PageTableEntries[pageNum];
         }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public override void SetKernelWriteProtectionForAllInitialPages()
         {
-            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
+            PageTableEntry* pte = (PageTableEntry*)PageTableEntries;
             for (int index = 0; index < InitialPageTableEntries; index++)
             {
                 var e = &pte[index];
@@ -330,11 +331,13 @@ namespace Lonos.Kernel.Core.PageManagement
             /// </summary>
             public uint PhysicalAddress
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Value & AddressMask;
                 }
 
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set
                 {
                     Assert.True(value << AddressBitSize == 0, "PageTableEntry.PhysicalAddress needs to be 4k aligned");

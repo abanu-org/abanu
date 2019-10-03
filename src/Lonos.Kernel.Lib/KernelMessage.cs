@@ -33,7 +33,7 @@ namespace Lonos.Kernel.Core
         }
 
         private static uint OldTimeStamp = 0;
-        private const uint TimeStampThreshold = 1000;
+        private const uint TimeStampThreshold = 500;
 
         private static void WriteTimeStamp()
         {
@@ -48,7 +48,7 @@ namespace Lonos.Kernel.Core
             sb.Append('[');
             sb.Append(timestamp);
 
-            if (diff > TimeStampThreshold && TimeStampThreshold > 0)
+            if (diff > TimeStampThreshold && OldTimeStamp > 0)
             {
                 sb.Append(" (+");
                 sb.Append(diff);
@@ -78,12 +78,14 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine(string value)
         {
+            WriteTimeStamp();
             Dev.Write(value);
             Dev.Write('\n');
         }
 
         public static void WriteLine(string format, bool arg0)
         {
+            WriteTimeStamp();
             var buf = new StringBuffer();
             buf.Append(format, arg0 == true ? "yes" : "no");
             buf.Append('\n');

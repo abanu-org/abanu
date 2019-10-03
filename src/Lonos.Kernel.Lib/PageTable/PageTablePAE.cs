@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
@@ -16,7 +17,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public uint AddrPageDirectoryPT;
         public uint AddrPageDirectory;
-        public uint AddrPageTable;
+        public PageTableEntry* PageTableEntries;
 
         public const uint EntriesPerPTTable = 4;
         public const uint PagesPerDictionaryEntry = 512;
@@ -41,7 +42,7 @@ namespace Lonos.Kernel.Core.PageManagement
         {
             AddrPageDirectoryPT = entriesAddr;
             AddrPageDirectory = entriesAddr + InitalPageDirectoryPTSize;
-            AddrPageTable = entriesAddr + InitalPageDirectoryPTSize + InitalPageDirectorySize;
+            PageTableEntries = (PageTableEntry*)(entriesAddr + InitalPageDirectoryPTSize + InitalPageDirectorySize);
         }
 
         /// <summary>
@@ -95,7 +96,7 @@ namespace Lonos.Kernel.Core.PageManagement
             // Setup Page Directory
             PageDirectoryPointerTableEntry* pdpt = (PageDirectoryPointerTableEntry*)AddrPageDirectoryPT;
             PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
-            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
+            PageTableEntry* pte = PageTableEntries;
 
             KernelMessage.WriteLine("Total PDPT: {0}", InitialDirectoryPTEntries);
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
@@ -143,7 +144,7 @@ namespace Lonos.Kernel.Core.PageManagement
             KernelMessage.WriteLine("PageDirectoryPTPhys: {0:X8}", this.GetPageTablePhysAddr());
             KernelMessage.WriteLine("PageDirectoryPT: {0:X8}", AddrPageDirectoryPT);
             KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
-            KernelMessage.WriteLine("PageTable: {0:X8}", AddrPageTable);
+            KernelMessage.WriteLine("PageTable: {0:X8}", (uint)PageTableEntries);
         }
 
         private bool WritableAddress(uint physAddr)
@@ -157,12 +158,11 @@ namespace Lonos.Kernel.Core.PageManagement
             //PrintAddress();
         }
 
-        public PageTableEntry* GetTableEntry(uint forVirtualAddress)
-        //public static PageTableEntry* GetTableEntry(uint forVirtualAddress)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private PageTableEntry* GetTableEntry(uint forVirtualAddress)
         {
             var pageNum = forVirtualAddress >> 12;
-            PageTableEntry* table = (PageTableEntry*)AddrPageTable;
-            return &table[pageNum];
+            return &PageTableEntries[pageNum];
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public override void SetKernelWriteProtectionForAllInitialPages()
         {
-            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
+            PageTableEntry* pte = (PageTableEntry*)PageTableEntries;
             for (int index = 0; index < InitialPageTableEntries; index++)
             {
                 var e = &pte[index];
@@ -232,7 +232,7 @@ namespace Lonos.Kernel.Core.PageManagement
             // Must be enabled before setting the page bits, otherwise you get a PageFault exception because of using an reserved bit.
             EnableExecutionProtection();
 
-            PageTableEntry* pte = (PageTableEntry*)AddrPageTable;
+            PageTableEntry* pte = (PageTableEntry*)PageTableEntries;
             for (uint index = 0; index < InitialPageTableEntries; index++)
             {
                 var virtAddr = index * 4096;
@@ -506,11 +506,13 @@ namespace Lonos.Kernel.Core.PageManagement
             /// </summary>
             public uint PhysicalAddress
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get
                 {
                     return Value & AddressMask;
                 }
 
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set
                 {
                     Assert.True(value << AddressBitSize == 0, "PageTableEntry.PhysicalAddress needs to be 4k aligned");
