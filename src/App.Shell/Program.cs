@@ -35,11 +35,11 @@ namespace Lonos.Kernel
             while (true)
             {
                 //SysCalls.WriteDebugChar('~');
-                //var gotBytes = SysCalls.ReadFile(kb, buf);
-                //if (gotBytes > 0)
-                //{
-                //    SysCalls.WriteDebugChar('&');
-                //}
+                var gotBytes = SysCalls.ReadFile(kb, buf);
+                if (gotBytes > 0)
+                {
+                    SysCalls.WriteDebugChar('&');
+                }
                 //SysCalls.WriteDebugChar('?');
             }
         }

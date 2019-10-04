@@ -50,9 +50,23 @@ namespace Lonos.Kernel.Core.Elf
 
         public static unsafe ElfHelper FromSectionName(string name)
         {
+
+            bool success;
+            var elf = FromSectionName(name, out success);
+            if (!success)
+                Panic.Error("Could not find section " + name);
+            return elf;
+        }
+
+        public static unsafe ElfHelper FromSectionName(string name, out bool success)
+        {
             var sec = Main.GetSectionHeader(name);
             if (sec == null)
-                Panic.Error("Could not find section " + name);
+            {
+                success = false;
+                return new ElfHelper();
+            }
+            success = true;
             var addr = Main.GetSectionPhysAddr(sec);
             return FromAddress(addr);
         }

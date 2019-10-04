@@ -72,7 +72,6 @@ namespace Lonos.Kernel.Core
 
         public static void WriteLine()
         {
-            WriteTimeStamp();
             Dev.Write('\n');
         }
 

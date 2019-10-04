@@ -13,10 +13,22 @@ namespace Lonos.Kernel.Core.Scheduling
         public Process Process;
         public ServiceStatus Status;
 
+        private Addr MethodAddr;
+
         public Service(Process proc)
         {
             Process = proc;
             Status = ServiceStatus.NotInizialized;
+        }
+
+        internal void Init()
+        {
+            bool success;
+            var elf = KernelElf.FromSectionName(Process.Path, out success);
+            if (success)
+            {
+                MethodAddr = GetEntryPointFromElf(elf);
+            }
         }
 
         // Methods is always called within Interrupt with Interrupt disabled
@@ -25,9 +37,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
         public unsafe void SwitchToThreadMethod(SystemMessage* args)
         {
-            var elf = KernelElf.FromSectionName(Process.Path);
-            var methodAddr = GetEntryPointFromElf(elf);
-            var th = CreateThread(methodAddr, SystemMessage.Size);
+            var th = CreateThread(MethodAddr, SystemMessage.Size);
             var argAddr = (SystemMessage*)th.GetArgumentAddr(0);
             argAddr[0] = *args;
             SwitchToThread(th);

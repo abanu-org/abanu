@@ -249,8 +249,6 @@ namespace Lonos.Kernel.Core.Scheduling
 
             if (thread.DebugName != null)
                 KernelMessage.WriteLine(" Thread DebugName: {0}", thread.DebugName);
-            else
-                KernelMessage.WriteLine();
 
             // -- kernel stack
             thread.KernelStackSize = 4 * 4096;

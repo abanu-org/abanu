@@ -37,6 +37,7 @@ namespace Lonos.Kernel.Core.Processes
 
         public void Start()
         {
+            Service.Init();
             lock (Threads)
                 for (var i = 0; i < Threads.Count; i++)
                     Threads[i].Start();

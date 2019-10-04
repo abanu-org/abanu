@@ -91,7 +91,7 @@ namespace Lonos.Kernel.Core
             /// <summary>
             /// Trace every Page Allocation
             /// </summary>
-            public const bool PageAllocation = false;
+            public const bool PageAllocation = true;
 
             /// <summary>
             /// Trace every Thread switch
