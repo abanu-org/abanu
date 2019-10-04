@@ -57,6 +57,7 @@ namespace Lonos.Kernel.Core.Scheduling
             VirtualPageManager.FreeAddr(StackTop);
             if (User)
                 VirtualPageManager.FreeAddr(StackState);
+            VirtualPageManager.FreeAddr(KernelStack);
         }
 
         public void Start()

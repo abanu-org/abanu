@@ -131,10 +131,25 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         private Page* AllocateInternal(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
+            if (pages > 1)
+                KernelMessage.Path(DebugName, "Requesting Pages: {0}. Available: {1}", pages, _FreePages);
+
             lock (this)
             {
                 if (pages > 1 && (AddressSpaceKind == AddressSpaceKind.Virtual || (options & AllocatePageOptions.Continuous) == AllocatePageOptions.Continuous))
-                    MoveToFreeContinuous(pages);
+                {
+                    if (!MoveToFreeContinuous(pages))
+                    {
+                        // Compact
+                        KernelMessage.WriteLine("Compacting Linked List");
+                        BuildLinkedLists();
+                        if (!MoveToFreeContinuous(pages))
+                        {
+                            this.Dump();
+                            Panic.Error("out of memory");
+                        }
+                    }
+                }
 
                 // ---
                 var head = FreeList;
@@ -153,18 +168,27 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                     _FreePages--;
                 }
 
+                if (pages > 1)
+                    KernelMessage.Path(DebugName, "Allocation done. Addr: {0:X8} Available: {1}", GetAddress((Page*)head), _FreePages);
+
                 return (Page*)head;
             }
+
         }
 
-        private void MoveToFreeContinuous(uint pages)
+        private bool MoveToFreeContinuous(uint pages)
         {
             Page* tryHead = (Page*)FreeList;
+            var loopedPages = 0;
 
             Page* tmpHead = tryHead;
             var found = false;
             for (int i = 0; i < pages; i++)
             {
+                if (loopedPages >= _FreePages)
+                    return false;
+                loopedPages++;
+
                 var next = (Page*)tmpHead->Lru.next;
                 if (GetPageNum(next) - GetPageNum(tmpHead) != 1)
                 {
@@ -180,6 +204,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                     found = true;
             }
             FreeList = (list_head*)tryHead;
+            return true;
         }
 
         /// <summary>
@@ -187,6 +212,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         /// </summary>
         public void Free(Page* page)
         {
+            var oldFree = _FreePages;
             lock (this)
             {
                 Page* temp = page;
@@ -196,12 +222,15 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 {
                     temp = (Page*)temp->Lru.next;
                     _FreePages++;
-                    page->Status = PageStatus.Free;
+                    temp->Status = PageStatus.Free;
                 }
                 while (temp != page);
 
                 list_head.list_headless_splice_tail((list_head*)page, FreeList);
             }
+            var freedPages = _FreePages - oldFree;
+            if (freedPages > 1)
+                KernelMessage.Path(DebugName, "Freed Pages: {0}. Addr: {1:X8}. Now available: {2} --> {3}", freedPages, GetAddress(page), oldFree, _FreePages);
         }
 
         public uint GetAddress(Page* page)

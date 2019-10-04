@@ -150,6 +150,16 @@ namespace Lonos.Kernel.Core
             EnableTimeStamp();
         }
 
+        public static void Path(string prefix, string format, uint arg0, uint arg1, uint arg2, uint arg3)
+        {
+            WriteTimeStamp();
+            Write(prefix);
+            Write(": ");
+            DisableTimeStamp();
+            WriteLine(format, arg0, arg1, arg2, arg3);
+            EnableTimeStamp();
+        }
+
         public static void Write(string format, uint arg0)
         {
             var buf = new StringBuffer();
