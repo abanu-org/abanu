@@ -44,8 +44,6 @@ namespace Lonos.Kernel.Core
             {
                 dataSelector = (ushort)thread.DataSelector;
                 pageTableAddr = thread.Process.PageTable.GetPageTablePhysAddr();
-                if (KConfig.TraceInterrupts)
-                    KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
             }
 
             if (!IDTManager.Enabled)
@@ -55,13 +53,15 @@ namespace Lonos.Kernel.Core
             }
 
             var interruptInfo = IDTManager.Handlers[irq];
+            if (KConfig.Trace.Interrupts && interruptInfo.Trace && thread != null)
+                KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
 
             IDTManager.RaisedCount++;
 
             if (interruptInfo.CountStatistcs)
                 IDTManager.RaisedCountCustom++;
 
-            if (KConfig.TraceInterrupts)
+            if (KConfig.Trace.Interrupts)
             {
                 if (interruptInfo.Trace)
                     KernelMessage.WriteLine("Interrupt: {0}", irq);

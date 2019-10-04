@@ -33,7 +33,7 @@ namespace Lonos.Kernel.Core
         }
 
         private static uint OldTimeStamp = 0;
-        private const uint TimeStampThreshold = 500;
+        private const uint TimeStampThreshold = 200;
 
         private static void WriteTimeStamp()
         {

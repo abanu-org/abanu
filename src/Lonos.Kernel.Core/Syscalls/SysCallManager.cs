@@ -236,7 +236,7 @@ namespace Lonos.Kernel.Core.SysCalls
 
             var commandNum = GetCommandNum(args.Target);
 
-            if (KConfig.TraceSysCall)
+            if (KConfig.Trace.SysCall)
                 KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);

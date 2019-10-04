@@ -103,7 +103,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         internal static unsafe void FreeAddr(Addr addr)
         {
+            var physAddr = PageTable.KernelTable.GetPhysicalAddressFromVirtual(addr);
             Allocator.FreeAddr(addr);
+            PhysicalPageManager.FreeAddr(physAddr);
         }
 
         internal static unsafe void FreeAddrIdentity(Addr addr)

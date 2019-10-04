@@ -18,6 +18,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             var sb = new StringBuffer();
 
+            sb.Append("Allocator Dump. TotalPages={0} Free={1}", allocator.TotalPages, allocator.FreePages);
+
             for (uint i = 0; i < allocator.TotalPages; i++)
             {
                 var p = allocator.GetPageByIndex(i);
@@ -31,6 +33,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 sb.WriteTo(DeviceManager.Serial1);
                 sb.Clear();
             }
+            DeviceManager.Serial1.Write('\n');
         }
 
         public static void FreeAddr(this IPageFrameAllocator allocator, Addr addr)

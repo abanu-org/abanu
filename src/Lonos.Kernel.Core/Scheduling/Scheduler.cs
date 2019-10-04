@@ -222,7 +222,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
             var stackPages = KMath.DivCeil(stackSize, PhysicalPageManager.PageSize);
 
-            if (KConfig.TraceThreads)
+            if (KConfig.Trace.Threads)
                 KernelMessage.WriteLine("Requesting {0} stack pages", stackPages);
 
             var debugPadding = 8u;
@@ -236,10 +236,10 @@ namespace Lonos.Kernel.Core.Scheduling
             stackSize -= debugPadding;
             var stackBottom = stack + (int)stackSize;
 
-            if (KConfig.TraceThreads)
+            if (KConfig.Trace.Threads)
                 KernelMessage.Write("Create Thread {0}. EntryPoint: {1:X8} Stack: {2:X8}-{3:X8} Type: ", threadID, options.MethodAddr, (uint)stack, (uint)stackBottom - 1);
 
-            if (KConfig.TraceThreads)
+            if (KConfig.Trace.Threads)
             {
                 if (thread.User)
                     KernelMessage.Write("User");
@@ -253,13 +253,13 @@ namespace Lonos.Kernel.Core.Scheduling
                 KernelMessage.WriteLine();
 
             // -- kernel stack
-            thread.KernelStackSize = 256 * 4096;
+            thread.KernelStackSize = 4 * 4096;
             //thhread.tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
             PageTable.KernelTable.SetWritable(KernelStart.TssAddr, 4096);
-            thread.KernelStack = VirtualPageManager.AllocatePages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+            thread.KernelStack = VirtualPageManager.AllocatePages(KMath.DivCeil(thread.KernelStackSize, 4096)); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
             thread.KernelStackBottom = thread.KernelStack + thread.KernelStackSize;
 
-            if (KConfig.TraceThreads)
+            if (KConfig.Trace.Threads)
                 KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", KernelStart.TssAddr, thread.KernelStack, thread.KernelStackBottom - 1);
 
             PageTable.KernelTable.SetWritable(thread.KernelStack, 256 * 4096);
@@ -298,7 +298,7 @@ namespace Lonos.Kernel.Core.Scheduling
             }
             thread.StackState = stackState;
 
-            if (thread.User && KConfig.TraceThreads)
+            if (thread.User && KConfig.Trace.Threads)
                 KernelMessage.WriteLine("StackState at {0:X8}", (uint)stackState);
 
             stackState->Stack.EFLAGS = X86_EFlags.Reserved1;
@@ -353,7 +353,7 @@ namespace Lonos.Kernel.Core.Scheduling
                 thread.StackState = (IDTTaskStack*)stackState;
             }
 
-            if (KConfig.TraceTaskSwitch)
+            if (KConfig.Trace.TaskSwitch)
             {
                 KernelMessage.Write("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, EIP={3:X8}", threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->Stack.EIP);
                 if (thread.User)
@@ -390,7 +390,7 @@ namespace Lonos.Kernel.Core.Scheduling
             var thread = Threads[threadID];
             var proc = thread.Process;
 
-            if (KConfig.TraceTaskSwitch)
+            if (KConfig.Trace.TaskSwitch)
                 KernelMessage.WriteLine("Switching to Thread {0}. StackState: {1:X8}", threadID, (uint)thread.StackState);
 
             //Assert.True(thread != null, "invalid thread id");
@@ -479,7 +479,7 @@ namespace Lonos.Kernel.Core.Scheduling
                 }
 
                 thread.FreeMemory();
-                if (KConfig.TraceThreads)
+                if (KConfig.Trace.Threads)
                     KernelMessage.WriteLine("Thread disposed");
 
                 thread.Status = ThreadStatus.Empty;

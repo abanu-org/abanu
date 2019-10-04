@@ -56,41 +56,6 @@ namespace Lonos.Kernel.Core
         public const bool UseTaskStateSegment = true;
 
         /// <summary>
-        /// Trace every Task switch
-        /// </summary>
-        public const bool TraceTaskSwitch = false;
-
-        /// <summary>
-        /// Trace every Thread switch
-        /// </summary>
-        public const bool TraceThreads = true;
-
-        /// <summary>
-        /// Trace every Page Allocation
-        /// </summary>
-        public const bool TracePageAllocation = true;
-
-        /// <summary>
-        /// Trace every Thread switch
-        /// </summary>
-        public const bool TraceMemoryMapping = false;
-
-        /// <summary>
-        /// Trace every Page Mapping
-        /// </summary>
-        public const bool TraceSysCall = false;
-
-        /// <summary>
-        /// Trace every Interrupt except Clock
-        /// </summary>
-        public const bool TraceInterrupts = false;
-
-        /// <summary>
-        /// Trace ELF format related calls
-        /// </summary>
-        public const bool TraceELF = false;
-
-        /// <summary>
         /// If false, no User Segments will be created.
         /// </summary>
         public const bool UseUserMode = true;
@@ -110,6 +75,44 @@ namespace Lonos.Kernel.Core
         /// FUTURE: Request Virtual Memory
         /// </summary>
         public const uint DefaultStackSize = 0x4000;
+
+        public static class Trace
+        {
+            /// <summary>
+            /// Trace every Task switch
+            /// </summary>
+            public const bool TaskSwitch = false;
+
+            /// <summary>
+            /// Trace every Thread switch
+            /// </summary>
+            public const bool Threads = false;
+
+            /// <summary>
+            /// Trace every Page Allocation
+            /// </summary>
+            public const bool PageAllocation = false;
+
+            /// <summary>
+            /// Trace every Thread switch
+            /// </summary>
+            public const bool MemoryMapping = false;
+
+            /// <summary>
+            /// Trace every Page Mapping
+            /// </summary>
+            public const bool SysCall = false;
+
+            /// <summary>
+            /// Trace every Interrupt except Clock
+            /// </summary>
+            public const bool Interrupts = false;
+
+            /// <summary>
+            /// Trace ELF format related calls
+            /// </summary>
+            public const bool ELF = false;
+        }
     }
 
     public enum KConfigCpu

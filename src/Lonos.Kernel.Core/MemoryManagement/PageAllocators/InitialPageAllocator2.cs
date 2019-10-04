@@ -131,8 +131,13 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         private Page* AllocateInternal(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
         {
-            if (pages > 1)
+            if (pages > 1 && KConfig.Trace.PageAllocation)
                 KernelMessage.Path(DebugName, "Requesting Pages: {0}. Available: {1}", pages, _FreePages);
+
+            if (pages == 256)
+            {
+                Debug.Nop();
+            }
 
             lock (this)
             {
@@ -141,12 +146,14 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                     if (!MoveToFreeContinuous(pages))
                     {
                         // Compact
-                        KernelMessage.WriteLine("Compacting Linked List");
+                        KernelMessage.Path(DebugName, "Compacting Linked List");
+                        this.Dump();
                         BuildLinkedLists();
                         if (!MoveToFreeContinuous(pages))
                         {
                             this.Dump();
-                            Panic.Error("out of memory");
+                            KernelMessage.WriteLine("Requesting {0} pages failed", pages);
+                            Panic.Error("Requesting pages failed: out of memory");
                         }
                     }
                 }
@@ -168,7 +175,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                     _FreePages--;
                 }
 
-                if (pages > 1)
+                if (pages > 1 && KConfig.Trace.PageAllocation)
                     KernelMessage.Path(DebugName, "Allocation done. Addr: {0:X8} Available: {1}", GetAddress((Page*)head), _FreePages);
 
                 return (Page*)head;
@@ -229,7 +236,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 list_head.list_headless_splice_tail((list_head*)page, FreeList);
             }
             var freedPages = _FreePages - oldFree;
-            if (freedPages > 1)
+            if (freedPages > 1 && KConfig.Trace.PageAllocation)
                 KernelMessage.Path(DebugName, "Freed Pages: {0}. Addr: {1:X8}. Now available: {2} --> {3}", freedPages, GetAddress(page), oldFree, _FreePages);
         }
 

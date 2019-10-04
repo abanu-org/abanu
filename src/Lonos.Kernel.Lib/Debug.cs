@@ -24,5 +24,10 @@ namespace Lonos.Kernel.Core
             }
         }
 
+        public static void Nop()
+        {
+            Native.Nop();
+        }
+
     }
 }

@@ -16,13 +16,13 @@ namespace Lonos.Kernel.Core
 
         public static void Setup()
         {
-            //KernelBootStartCycles = CpuCyclesSinceSystemBoot();
+            KernelBootStartCycles = CpuCyclesSinceSystemBoot();
         }
 
         public static void Setup(ulong kernelBootStartCycles)
         {
             // It will generate invalid opcode!!
-            //_KernelBootStartCycles = kernelBootStartCycles;
+            //KernelBootStartCycles = kernelBootStartCycles;
         }
 
         [DllImport("x86/Lonos.CpuCyclesSinceBoot.o", EntryPoint = "CpuCyclesSinceBoot")]
