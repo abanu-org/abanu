@@ -106,7 +106,7 @@ namespace Lonos.Kernel.Core.Interrupts
 
         private static void InitControlBlock()
         {
-            var p = PhysicalPageManager.AllocatePageAddr(AllocatePageOptions.Continuous);
+            var p = PhysicalPageManager.AllocatePageAddr(new AllocatePageOptions { Continuous = true });
             PageTable.KernelTable.Map(Address.InterruptControlBlock, p, 4096, flush: true);
             PageTable.KernelTable.SetWritable(Address.InterruptControlBlock, 4096);
             ControlBlock = (InterruptControlBlock*)Address.InterruptControlBlock;

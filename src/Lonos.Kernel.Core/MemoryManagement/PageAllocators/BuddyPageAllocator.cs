@@ -53,12 +53,12 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         protected abstract uint AllocRawMemory(uint size);
 
-        public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        public Page* AllocatePages(uint pages, AllocatePageOptions options = default)
         {
             return Allocate(pages);
         }
 
-        public Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
+        public Page* AllocatePage(AllocatePageOptions options = default)
         {
             var p = Allocate(1);
             return p;
@@ -181,5 +181,8 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             return next;
         }
 
+        public void SetTraceOptions(PageFrameAllocatorTraceOptions options)
+        {
+        }
     }
 }

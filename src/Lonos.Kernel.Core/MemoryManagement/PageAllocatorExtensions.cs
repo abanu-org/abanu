@@ -41,17 +41,17 @@ namespace Lonos.Kernel.Core.MemoryManagement
             allocator.Free(allocator.GetPageByAddress(addr));
         }
 
-        public static Addr AllocatePagesAddr(this IPageFrameAllocator allocator, uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        public static Addr AllocatePagesAddr(this IPageFrameAllocator allocator, uint pages, AllocatePageOptions options = default)
         {
             return allocator.GetAddress(allocator.AllocatePages(pages, options));
         }
 
-        public static Addr AllocatePageAddr(this IPageFrameAllocator allocator, AllocatePageOptions options = AllocatePageOptions.Default)
+        public static Addr AllocatePageAddr(this IPageFrameAllocator allocator, AllocatePageOptions options = default)
         {
             return allocator.GetAddress(allocator.AllocatePage(options));
         }
 
-        public static MemoryRegion AllocateRegion(this IPageFrameAllocator allocator, USize size, AllocatePageOptions options = AllocatePageOptions.Default)
+        public static MemoryRegion AllocateRegion(this IPageFrameAllocator allocator, USize size, AllocatePageOptions options = default)
         {
             var pages = KMath.DivCeil(size, 4096);
             var p = allocator.AllocatePages(pages, options);

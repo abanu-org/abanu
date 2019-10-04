@@ -7,13 +7,6 @@ namespace Lonos.Kernel.Core
 {
 
     [Flags]
-    public enum AllocatePageOptions
-    {
-        Default = 0,
-        Continuous = 1,
-    }
-
-    [Flags]
     public enum AddressSpaceKind
     {
         None = 0,
@@ -24,9 +17,9 @@ namespace Lonos.Kernel.Core
 
     public unsafe interface IPageFrameAllocator
     {
-        Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default);
+        Page* AllocatePages(uint pages, AllocatePageOptions options = default);
 
-        Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default);
+        Page* AllocatePage(AllocatePageOptions options = default);
 
         void Free(Page* page);
 
@@ -53,6 +46,23 @@ namespace Lonos.Kernel.Core
 
         AddressSpaceKind AddressSpaceKind { get; }
 
+        void SetTraceOptions(PageFrameAllocatorTraceOptions options);
+
+    }
+
+    public struct AllocatePageOptions
+    {
+        public bool Continuous;
+        public string DebugName;
+
+        public static AllocatePageOptions Default;
+
+    }
+
+    public struct PageFrameAllocatorTraceOptions
+    {
+        public bool Enabled;
+        public uint MinPages;
     }
 
 }

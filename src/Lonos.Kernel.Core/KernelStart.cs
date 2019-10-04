@@ -158,6 +158,7 @@ namespace Lonos.Kernel.Core
 
                 ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
             }
+            VirtualPageManager.SetTraceOptions(new PageFrameAllocatorTraceOptions { Enabled = true, MinPages = 1 });
 
             KernelMessage.WriteLine("Enter Main Loop");
             AppMain();

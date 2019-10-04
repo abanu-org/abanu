@@ -28,7 +28,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         protected override void* mmap(uint unknown, uint flags, size_t pages)
         {
             var bytes = pages * 4096;
-            var ptr = (byte*)VirtualPageManager.AllocatePages(pages);
+            var ptr = (byte*)VirtualPageManager.AllocatePages(pages, new AllocatePageOptions { DebugName = "KernelAllocator" });
             //KernelMessage.WriteLine("mmap: Pages: {0}, Addr: {1:X8}", pages, (uint)ptr);
             for (var i = 0; i < bytes; i++)
                 *(ptr + i) = 0;
@@ -38,6 +38,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         protected override uint munmap(void* addr)
         {
+            VirtualPageManager.FreeAddr(addr);
             return 0;
         }
 

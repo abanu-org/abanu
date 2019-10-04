@@ -149,6 +149,16 @@ namespace Lonos.Kernel.Core
             EnableTimeStamp();
         }
 
+        public static void Path(string prefix, string format, string arg0, uint arg1, uint arg2)
+        {
+            WriteTimeStamp();
+            Write(prefix);
+            Write(": ");
+            DisableTimeStamp();
+            WriteLine(format, arg0, arg1, arg2);
+            EnableTimeStamp();
+        }
+
         public static void Path(string prefix, string format, uint arg0, uint arg1, uint arg2, uint arg3)
         {
             WriteTimeStamp();
@@ -156,6 +166,36 @@ namespace Lonos.Kernel.Core
             Write(": ");
             DisableTimeStamp();
             WriteLine(format, arg0, arg1, arg2, arg3);
+            EnableTimeStamp();
+        }
+
+        public static void Path(string prefix, string format, string arg0, uint arg1, uint arg2, uint arg3)
+        {
+            WriteTimeStamp();
+            Write(prefix);
+            Write(": ");
+            DisableTimeStamp();
+            WriteLine(format, arg0, arg1, arg2, arg3);
+            EnableTimeStamp();
+        }
+
+        public static void Path(string prefix, string format, string arg0, uint arg1, uint arg2, uint arg3, uint arg4)
+        {
+            WriteTimeStamp();
+            Write(prefix);
+            Write(": ");
+            DisableTimeStamp();
+            WriteLine(format, arg0, arg1, arg2, arg3, arg4);
+            EnableTimeStamp();
+        }
+
+        public static void Path(string prefix, string format, string arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5)
+        {
+            WriteTimeStamp();
+            Write(prefix);
+            Write(": ");
+            DisableTimeStamp();
+            WriteLine(format, arg0, arg1, arg2, arg3, arg4, arg5);
             EnableTimeStamp();
         }
 
@@ -248,7 +288,25 @@ namespace Lonos.Kernel.Core
             buf.WriteTo(Dev);
         }
 
+        public static void WriteLine(string format, string arg0, uint arg1, uint arg2)
+        {
+            WriteTimeStamp();
+            var buf = new StringBuffer();
+            buf.Append(format, arg0, arg1, arg2);
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
         public static void WriteLine(string format, uint arg0, uint arg1, uint arg2, uint arg3)
+        {
+            WriteTimeStamp();
+            var buf = new StringBuffer();
+            buf.Append(format, arg0, arg1, arg2, arg3);
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
+        public static void WriteLine(string format, string arg0, uint arg1, uint arg2, uint arg3)
         {
             WriteTimeStamp();
             var buf = new StringBuffer();
@@ -266,7 +324,25 @@ namespace Lonos.Kernel.Core
             buf.WriteTo(Dev);
         }
 
+        public static void WriteLine(string format, string arg0, uint arg1, uint arg2, uint arg3, uint arg4)
+        {
+            WriteTimeStamp();
+            var buf = new StringBuffer();
+            buf.Append(format, arg0, arg1, arg2, arg3, arg4);
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
         public static void WriteLine(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5)
+        {
+            WriteTimeStamp();
+            var buf = new StringBuffer();
+            buf.Append(format, arg0, arg1, arg2, arg3, arg4, arg5);
+            buf.Append('\n');
+            buf.WriteTo(Dev);
+        }
+
+        public static void WriteLine(string format, string arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5)
         {
             WriteTimeStamp();
             var buf = new StringBuffer();

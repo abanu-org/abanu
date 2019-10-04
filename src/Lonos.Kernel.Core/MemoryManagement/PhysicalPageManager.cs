@@ -115,30 +115,30 @@ namespace Lonos.Kernel.Core.MemoryManagement
             }
         }
 
-        public static Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        public static Page* AllocatePages(uint pages, AllocatePageOptions options = default)
         {
-            return Default.AllocatePages(pages);
+            return Default.AllocatePages(pages, options);
         }
 
-        public static Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
+        public static Page* AllocatePage(AllocatePageOptions options = default)
         {
-            var p = Default.AllocatePage();
+            var p = Default.AllocatePage(options);
             //if (p->PhysicalAddress == 0x01CA4000)
             //    Panic.Error("DEBUG-MARKER");
             return p;
         }
 
-        public static Addr AllocatePageAddr(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        public static Addr AllocatePageAddr(uint pages, AllocatePageOptions options = default)
         {
             return Default.AllocatePagesAddr(pages, options);
         }
 
-        public static Addr AllocatePageAddr(AllocatePageOptions options = AllocatePageOptions.Default)
+        public static Addr AllocatePageAddr(AllocatePageOptions options = default)
         {
             return Default.AllocatePageAddr(options);
         }
 
-        public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = AllocatePageOptions.Default)
+        public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = default)
         {
             return Default.AllocateRegion(size, options);
         }
@@ -192,6 +192,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static Page* NextCompoundPage(Page* page)
         {
             return Default.NextCompoundPage(page);
+        }
+
+        public static void SetTraceOptions(PageFrameAllocatorTraceOptions options)
+        {
+            Default.SetTraceOptions(options);
         }
 
     }

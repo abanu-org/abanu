@@ -83,12 +83,12 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         //static uint _nextAllocacationSearchIndex;
         private Page* NextTryPage;
 
-        public Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
+        public Page* AllocatePage(AllocatePageOptions options = default)
         {
             return AllocatePages(1, options);
         }
 
-        public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        public Page* AllocatePages(uint pages, AllocatePageOptions options = default)
         {
             lock (this)
             {
@@ -307,6 +307,10 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         public AddressSpaceKind AddressSpaceKind => _AddressSpaceKind;
 
         public uint FreePages => _FreePages;
+
+        public void SetTraceOptions(PageFrameAllocatorTraceOptions options)
+        {
+        }
 
     }
 

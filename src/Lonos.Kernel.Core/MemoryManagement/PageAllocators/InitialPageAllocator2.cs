@@ -8,6 +8,7 @@ using Lonos.Kernel.Core.Devices;
 using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.PageManagement;
 using Mosa.Runtime;
+using Mosa.Runtime.x86;
 
 namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 {
@@ -28,11 +29,15 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         private uint FistPageNum;
 
         public string DebugName;
+        public int Allocations;
+
+        public PageFrameAllocatorTraceOptions TraceOptions;
 
         protected abstract MemoryRegion AllocRawMemory(uint size);
 
         public void Setup(MemoryRegion region, AddressSpaceKind addrKind)
         {
+            TraceOptions = new PageFrameAllocatorTraceOptions();
             _AddressSpaceKind = addrKind;
             _Region = region;
             FistPageNum = region.Start / PageSize;
@@ -108,31 +113,31 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             return &PageArray[pageIdx];
         }
 
-        public Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
+        public Page* AllocatePage(AllocatePageOptions options = default)
         {
             return AllocatePages(1, options);
         }
 
         private list_head* FreeList;
 
-        public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        public Page* AllocatePages(uint pages, AllocatePageOptions options = default)
         {
             Page* page = AllocateInternal(pages, options);
 
             if (page == null)
             {
                 //KernelMessage.WriteLine("DebugName: {0}", DebugName);
-                KernelMessage.WriteLine("Free pages: {0:X8}, Requested: {1:X8}, Options {2}", FreePages, pages, (uint)options);
+                KernelMessage.WriteLine("Free pages: {0:X8}, Requested: {1:X8}", FreePages, pages);
                 Panic.Error("Out of Memory");
             }
 
             return page;
         }
 
-        private Page* AllocateInternal(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        private Page* AllocateInternal(uint pages, AllocatePageOptions options = default)
         {
-            if (pages > 1 && KConfig.Trace.PageAllocation)
-                KernelMessage.Path(DebugName, "Requesting Pages: {0}. Available: {1}", pages, _FreePages);
+            if (KConfig.Trace.PageAllocation && TraceOptions.Enabled && pages >= TraceOptions.MinPages)
+                KernelMessage.Path(DebugName, "Requesting Pages: {1}. Available: {2} DebugName={0}", options.DebugName, pages, _FreePages);
 
             if (pages == 256)
             {
@@ -141,7 +146,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
             lock (this)
             {
-                if (pages > 1 && (AddressSpaceKind == AddressSpaceKind.Virtual || (options & AllocatePageOptions.Continuous) == AllocatePageOptions.Continuous))
+                if (pages > 1 && (AddressSpaceKind == AddressSpaceKind.Virtual || options.Continuous))
                 {
                     if (!MoveToFreeContinuous(pages))
                     {
@@ -160,9 +165,15 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
                 // ---
                 var head = FreeList;
+                var headPage = (Page*)head;
                 FreeList = head->next;
                 list_head.list_del_init(head);
-                ((Page*)head)->Status = PageStatus.Used;
+                headPage->Status = PageStatus.Used;
+                if (KConfig.Trace.PageAllocation)
+                    if (options.DebugName != null)
+                        headPage->DebugTag = (uint)Intrinsic.GetObjectAddress(options.DebugName);
+                    else
+                        headPage->DebugTag = null;
                 _FreePages--;
                 // ---
 
@@ -170,15 +181,17 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 {
                     var tmpNextFree = FreeList->next;
                     list_head.list_move_tail(FreeList, head);
-                    ((Page*)FreeList)->Status = PageStatus.Used;
+                    var p = (Page*)FreeList;
+                    p->Status = PageStatus.Used;
                     FreeList = tmpNextFree;
                     _FreePages--;
                 }
 
-                if (pages > 1 && KConfig.Trace.PageAllocation)
-                    KernelMessage.Path(DebugName, "Allocation done. Addr: {0:X8} Available: {1}", GetAddress((Page*)head), _FreePages);
+                if (KConfig.Trace.PageAllocation && TraceOptions.Enabled && pages >= TraceOptions.MinPages)
+                    KernelMessage.Path(DebugName, "Allocation done. Addr: {0:X8} Available: {1}", GetAddress(headPage), _FreePages);
 
-                return (Page*)head;
+                Allocations++;
+                return headPage;
             }
 
         }
@@ -220,6 +233,10 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         public void Free(Page* page)
         {
             var oldFree = _FreePages;
+            string debugName = null;
+            if (page->DebugTag != null)
+                debugName = (string)Intrinsic.GetObjectFromAddress((Pointer)(uint)page->DebugTag);
+
             lock (this)
             {
                 Page* temp = page;
@@ -236,8 +253,10 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 list_head.list_headless_splice_tail((list_head*)page, FreeList);
             }
             var freedPages = _FreePages - oldFree;
-            if (freedPages > 1 && KConfig.Trace.PageAllocation)
-                KernelMessage.Path(DebugName, "Freed Pages: {0}. Addr: {1:X8}. Now available: {2} --> {3}", freedPages, GetAddress(page), oldFree, _FreePages);
+            if (KConfig.Trace.PageAllocation && TraceOptions.Enabled && freedPages >= TraceOptions.MinPages)
+                KernelMessage.Path(DebugName, "Freed Pages: {1}. Addr: {2:X8}. Now available: {3} --> {4}. Allocations={5} DebugName={0}.", debugName, freedPages, GetAddress(page), oldFree, _FreePages, (uint)Allocations);
+
+            Allocations--;
         }
 
         public uint GetAddress(Page* page)
@@ -302,6 +321,11 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         public AddressSpaceKind AddressSpaceKind => _AddressSpaceKind;
 
         public uint FreePages => _FreePages;
+
+        public void SetTraceOptions(PageFrameAllocatorTraceOptions options)
+        {
+            TraceOptions = options;
+        }
 
     }
 

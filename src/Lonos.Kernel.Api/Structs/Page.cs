@@ -49,6 +49,11 @@ namespace Lonos.Kernel.Core
         /// </summary>
         public uint PagesUsed;
 
+        /// <summary>
+        /// General Purpose Debug Tag.
+        /// </summary>
+        public Addr DebugTag;
+
         // TODO: Remove the Next-field, because it could be accessed via (Page*)+1
 
         //public Page* Next;

@@ -493,11 +493,37 @@ namespace Lonos.Kernel.Core
                 new Argument());
         }
 
+        public unsafe void Append(string format, string arg0, uint arg1, uint arg2)
+        {
+            Append(
+                format,
+                new Argument { String = arg0, Type = ArgumentType.String },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument());
+        }
+
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2, uint arg3)
         {
             Append(
                 format,
                 new Argument { UInt = arg0, Type = ArgumentType.UInt },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
+                new Argument { UInt = arg3, Type = ArgumentType.UInt },
+                new Argument(),
+                new Argument(),
+                new Argument());
+        }
+
+        public unsafe void Append(string format, string arg0, uint arg1, uint arg2, uint arg3)
+        {
+            Append(
+                format,
+                new Argument { String = arg0, Type = ArgumentType.String },
                 new Argument { UInt = arg1, Type = ArgumentType.UInt },
                 new Argument { UInt = arg2, Type = ArgumentType.UInt },
                 new Argument { UInt = arg3, Type = ArgumentType.UInt },
@@ -519,11 +545,37 @@ namespace Lonos.Kernel.Core
                 new Argument());
         }
 
+        public unsafe void Append(string format, string arg0, uint arg1, uint arg2, uint arg3, uint arg4)
+        {
+            Append(
+                format,
+                new Argument { String = arg0, Type = ArgumentType.String },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
+                new Argument { UInt = arg3, Type = ArgumentType.UInt },
+                new Argument { UInt = arg4, Type = ArgumentType.UInt },
+                new Argument(),
+                new Argument());
+        }
+
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5)
         {
             Append(
                 format,
                 new Argument { UInt = arg0, Type = ArgumentType.UInt },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument { UInt = arg2, Type = ArgumentType.UInt },
+                new Argument { UInt = arg3, Type = ArgumentType.UInt },
+                new Argument { UInt = arg4, Type = ArgumentType.UInt },
+                new Argument { UInt = arg5, Type = ArgumentType.UInt },
+                new Argument());
+        }
+
+        public unsafe void Append(string format, string arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5)
+        {
+            Append(
+                format,
+                new Argument { String = arg0, Type = ArgumentType.String },
                 new Argument { UInt = arg1, Type = ArgumentType.UInt },
                 new Argument { UInt = arg2, Type = ArgumentType.UInt },
                 new Argument { UInt = arg3, Type = ArgumentType.UInt },

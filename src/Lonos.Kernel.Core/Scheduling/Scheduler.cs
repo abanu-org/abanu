@@ -37,6 +37,8 @@ namespace Lonos.Kernel.Core.Scheduling
         {
             Enabled = false;
             Threads = new Thread[ThreadCapacity];
+            ThreadsAllocated = 0;
+            ThreadsMaxAllocated = 0;
             CurrentThreadID = 0;
             clockTicks = 0;
 
@@ -191,6 +193,9 @@ namespace Lonos.Kernel.Core.Scheduling
 
         private static object SyncRoot = new object();
 
+        public static uint ThreadsAllocated;
+        public static uint ThreadsMaxAllocated;
+
         public static unsafe Thread CreateThread(Process proc, ThreadStartOptions options)
         {
             Thread thread;
@@ -227,7 +232,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
             var debugPadding = 8u;
             stackSize = stackPages * PhysicalPageManager.PageSize;
-            var stack = new Pointer((void*)VirtualPageManager.AllocatePages(stackPages));
+            var stack = new Pointer((void*)VirtualPageManager.AllocatePages(stackPages, new AllocatePageOptions { DebugName = "ThreadStack" }));
             PageTable.KernelTable.SetWritable((uint)stack, stackSize);
 
             if (thread.User && proc.PageTable != PageTable.KernelTable)
@@ -254,7 +259,9 @@ namespace Lonos.Kernel.Core.Scheduling
             thread.KernelStackSize = 4 * 4096;
             //thhread.tssAddr = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(1);
             PageTable.KernelTable.SetWritable(KernelStart.TssAddr, 4096);
-            thread.KernelStack = VirtualPageManager.AllocatePages(KMath.DivCeil(thread.KernelStackSize, 4096)); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
+            thread.KernelStack = VirtualPageManager.AllocatePages(
+                KMath.DivCeil(thread.KernelStackSize, 4096),
+                new AllocatePageOptions { DebugName = "ThreadKernelStack" }); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
             thread.KernelStackBottom = thread.KernelStack + thread.KernelStackSize;
 
             if (KConfig.Trace.Threads)
@@ -286,7 +293,7 @@ namespace Lonos.Kernel.Core.Scheduling
             IDTTaskStack* stackState = null;
             if (thread.User)
             {
-                stackState = (IDTTaskStack*)VirtualPageManager.AllocatePages(1);
+                stackState = (IDTTaskStack*)VirtualPageManager.AllocatePages(1, new AllocatePageOptions { DebugName = "ThreadStackState" });
                 if (proc.PageTable != PageTable.KernelTable)
                     proc.PageTable.MapCopy(PageTable.KernelTable, (uint)stackState, IDTTaskStack.Size);
             }
@@ -327,6 +334,12 @@ namespace Lonos.Kernel.Core.Scheduling
                 proc.Threads.Add(thread);
             }
 
+            ThreadsAllocated++;
+            if (ThreadsAllocated > ThreadsMaxAllocated)
+            {
+                ThreadsMaxAllocated = ThreadsAllocated;
+                KernelMessage.WriteLine("Threads Max Allocated: {0}", ThreadsMaxAllocated);
+            }
             return thread;
         }
 
@@ -477,6 +490,7 @@ namespace Lonos.Kernel.Core.Scheduling
                 }
 
                 thread.FreeMemory();
+                ThreadsAllocated--;
                 if (KConfig.Trace.Threads)
                     KernelMessage.WriteLine("Thread disposed");
 

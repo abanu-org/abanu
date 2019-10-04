@@ -64,12 +64,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //    return virt;
         //}
 
-        internal static unsafe Addr AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        internal static unsafe Addr AllocatePages(uint pages, AllocatePageOptions options = default)
         {
             var physHead = PhysicalPageManager.AllocatePages(pages, options);
             if (physHead == null)
                 return Addr.Zero;
-            var virtHead = Allocator.AllocatePages(pages);
+            var virtHead = Allocator.AllocatePages(pages, options);
 
             var p = physHead;
             var v = virtHead;
@@ -113,11 +113,17 @@ namespace Lonos.Kernel.Core.MemoryManagement
             IdentityAllocator.FreeAddr(addr);
         }
 
-        public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = AllocatePageOptions.Default)
+        public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = default)
         {
             size = KMath.DivCeil(size, 4096);
             var start = AllocatePages(size, options);
             return new MemoryRegion(start, size);
+        }
+
+        public static void SetTraceOptions(PageFrameAllocatorTraceOptions options)
+        {
+            Allocator.SetTraceOptions(options);
+            IdentityAllocator.SetTraceOptions(options);
         }
 
     }

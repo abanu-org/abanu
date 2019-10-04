@@ -79,12 +79,12 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             return null;
         }
 
-        public Page* AllocatePage(AllocatePageOptions options = AllocatePageOptions.Default)
+        public Page* AllocatePage(AllocatePageOptions options = default)
         {
             return Allocators[0].AllocatePage(options);
         }
 
-        public Page* AllocatePages(uint pages, AllocatePageOptions options = AllocatePageOptions.Default)
+        public Page* AllocatePages(uint pages, AllocatePageOptions options = default)
         {
             if (pages <= 512)
                 return Allocators[0].AllocatePages(pages, options);
@@ -150,6 +150,13 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         {
             return GetAllocatorByPage(page).NextCompoundPage(page);
         }
+
+        public void SetTraceOptions(PageFrameAllocatorTraceOptions options)
+        {
+            for (var i = 0; i < Allocators.Length; i++)
+                Allocators[i].SetTraceOptions(options);
+        }
+
     }
 
 }
