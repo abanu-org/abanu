@@ -6,10 +6,10 @@ namespace Lonos.Kernel.Core.Scheduling
     public enum ThreadStatus
     {
         Empty = 0,
-        Creating,
-        ScheduleForStart,
-        Running,
-        Waiting,
-        Terminated,
+        Creating = 1,
+        ScheduleForStart = 2,
+        Running = 3,
+        Waiting = 4,
+        Terminated = 5,
     }
 }

@@ -98,8 +98,9 @@ namespace Lonos.Kernel.Core.Interrupts
             SetInterruptHandler(KnownInterrupt.CoProcessorError, InterruptHandlers.CoProcessorError);
             SetInterruptHandler(KnownInterrupt.SIMDFloatinPointException, InterruptHandlers.SIMDFloatinPointException);
             SetInterruptHandler(KnownInterrupt.ClockTimer, InterruptHandlers.ClockTimer);
-            SetInterruptHandler(KnownInterrupt.Keyboard, InterruptHandlers.Keyboard);
             SetInterruptHandler(KnownInterrupt.TerminateCurrentThread, InterruptHandlers.TermindateCurrentThread);
+
+            SetInterruptPreHandler(KnownInterrupt.Keyboard, InterruptHandlers.Keyboard);
 
             Start();
         }
@@ -136,6 +137,16 @@ namespace Lonos.Kernel.Core.Interrupts
             var idtAddr = (uint)IDTAddr;
             Native.Lidt(idtAddr);
             Native.Cli();
+        }
+
+        internal static void SetInterruptPreHandler(KnownInterrupt interrupt, InterruptHandler interruptHandler)
+        {
+            SetInterruptPreHandler((uint)interrupt, interruptHandler);
+        }
+
+        internal static void SetInterruptPreHandler(uint interrupt, InterruptHandler interruptHandler)
+        {
+            Handlers[interrupt].PreHandler = interruptHandler;
         }
 
         internal static void SetInterruptHandler(KnownInterrupt interrupt, InterruptHandler interruptHandler)

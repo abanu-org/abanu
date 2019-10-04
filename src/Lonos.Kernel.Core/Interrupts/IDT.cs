@@ -82,6 +82,9 @@ namespace Lonos.Kernel.Core
             if (irq < 0 || irq > 255)
                 Panic.Error("Invalid Interrupt");
 
+            if (interruptInfo.PreHandler != null)
+                interruptInfo.PreHandler(stack);
+
             if (interruptInfo.Handler == null)
             {
                 Panic.Error("Handler is null");

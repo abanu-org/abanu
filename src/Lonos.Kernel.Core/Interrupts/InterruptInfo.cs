@@ -9,6 +9,7 @@ namespace Lonos.Kernel.Core.Interrupts
 {
     public struct InterruptInfo
     {
+        public InterruptHandler PreHandler;
         public InterruptHandler Handler;
         public bool CountStatistcs;
         public bool Trace;

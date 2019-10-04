@@ -365,10 +365,18 @@ namespace Lonos.Kernel.Core.Scheduling
 
         public static void Dump()
         {
+            KernelMessage.WriteLine("Threads, Can scheduled:");
+            Dump(true);
+            KernelMessage.WriteLine("Non-Schedulable Threads:");
+            Dump(false);
+        }
+
+        public static void Dump(bool canScheduled)
+        {
             for (var i = 0; i < ThreadCapacity; i++)
             {
                 var th = Threads[i];
-                if (th.CanScheduled)
+                if (th.CanScheduled == canScheduled && th.Status != ThreadStatus.Empty)
                 {
                     KernelMessage.Write("ThreadID={0} Status={1}", th.ThreadID, (uint)th.Status);
                     if (th.DebugName != null)

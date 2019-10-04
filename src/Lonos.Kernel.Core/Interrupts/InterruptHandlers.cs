@@ -3,6 +3,7 @@
 
 using System;
 using Lonos.Kernel.Core.Diagnostics;
+using Lonos.Kernel.Core.MemoryManagement;
 using Lonos.Kernel.Core.Scheduling;
 using Lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
@@ -243,6 +244,9 @@ namespace Lonos.Kernel.Core.Interrupts
                 case 0x07:
                     Key6();
                     break;
+                case 0x58:
+                    KeyF12();
+                    break;
             }
         }
 
@@ -274,6 +278,11 @@ namespace Lonos.Kernel.Core.Interrupts
 
         private static void Key6()
         {
+        }
+
+        private static void KeyF12()
+        {
+            Scheduler.Dump();
         }
 
     }
