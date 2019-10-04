@@ -29,6 +29,15 @@ namespace Lonos.Kernel.Core.Scheduling
         public bool Debug;
         public string DebugName;
         public uint ArgumentBufferSize;
+        public SystemMessage DebugSystemMessage;
+
+        public bool CanScheduled
+        {
+            get
+            {
+                return Status == ThreadStatus.ScheduleForStart || Status == ThreadStatus.Running;
+            }
+        }
 
         /// <summary>
         /// 0: Default

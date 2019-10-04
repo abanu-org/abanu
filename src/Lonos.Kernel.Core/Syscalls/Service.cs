@@ -38,6 +38,7 @@ namespace Lonos.Kernel.Core.Scheduling
         public unsafe void SwitchToThreadMethod(SystemMessage* args)
         {
             var th = CreateThread(MethodAddr, SystemMessage.Size);
+            th.DebugSystemMessage = *args;
             var argAddr = (SystemMessage*)th.GetArgumentAddr(0);
             argAddr[0] = *args;
             SwitchToThread(th);
@@ -45,7 +46,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
         public Thread CreateThread(uint methodAddr, uint argumentBufferSize)
         {
-            return Scheduler.CreateThread(Process, new ThreadStartOptions(methodAddr) { ArgumentBufferSize = argumentBufferSize });
+            return Scheduler.CreateThread(Process, new ThreadStartOptions(methodAddr) { ArgumentBufferSize = argumentBufferSize, DebugName = "ServiceCall" });
         }
 
         public static unsafe void SwitchToThread(Thread th)

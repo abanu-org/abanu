@@ -178,12 +178,21 @@ namespace Lonos.Kernel.Core.Scheduling
                 if (thread.ChildThread != null)
                     continue;
 
-                if (thread.Status == ThreadStatus.Running || thread.Status == ThreadStatus.ScheduleForStart)
+                if (thread.CanScheduled)
                     return threadID;
 
                 if (currentThreadID == threadID)
                     return 0; // idle thread
             }
+        }
+
+        public static uint GetActiveThreadCount()
+        {
+            uint n = 0;
+            for (var i = 0; i < ThreadCapacity; i++)
+                if (Threads[i].CanScheduled)
+                    n++;
+            return n;
         }
 
         private static Addr GetAddress(ThreadStart d)
@@ -252,8 +261,13 @@ namespace Lonos.Kernel.Core.Scheduling
                     KernelMessage.Write("Kernel");
             }
 
-            if (thread.DebugName != null)
-                KernelMessage.WriteLine(" Thread DebugName: {0}", thread.DebugName);
+            if (KConfig.Trace.Threads)
+            {
+                if (thread.DebugName != null)
+                    KernelMessage.Write(" Thread DebugName: {0}", thread.DebugName);
+                if (thread.Process != null)
+                    KernelMessage.WriteLine(" Process: {0}", thread.Process.Path);
+            }
 
             // -- kernel stack
             thread.KernelStackSize = 4 * 4096;
@@ -338,9 +352,40 @@ namespace Lonos.Kernel.Core.Scheduling
             if (ThreadsAllocated > ThreadsMaxAllocated)
             {
                 ThreadsMaxAllocated = ThreadsAllocated;
-                KernelMessage.WriteLine("Threads Max Allocated: {0}", ThreadsMaxAllocated);
+                KernelMessage.WriteLine("Threads Max Allocated: {0}. Allocated {0} Active: {1}", ThreadsMaxAllocated, ThreadsAllocated, GetActiveThreadCount());
+                if (KConfig.Trace.Threads)
+                    Dump();
+            }
+            else if (KConfig.Trace.Threads)
+            {
+                KernelMessage.WriteLine("Threads Allocated {0} Active: {1}", ThreadsAllocated, GetActiveThreadCount());
             }
             return thread;
+        }
+
+        public static void Dump()
+        {
+            for (var i = 0; i < ThreadCapacity; i++)
+            {
+                var th = Threads[i];
+                if (th.CanScheduled)
+                {
+                    KernelMessage.Write("ThreadID={0} Status={1}", th.ThreadID, (uint)th.Status);
+                    if (th.DebugName != null)
+                        KernelMessage.Write(" DebugName=" + th.DebugName);
+                    if (th.Process != null && th.Process.Path != null)
+                        KernelMessage.Write(" proc=" + th.Process.Path);
+                    if (th.Process != null)
+                        KernelMessage.Write(" procID=" + th.Process.ProcessID);
+
+                    if (th.DebugSystemMessage.Target > 0)
+                    {
+                        var msg = th.DebugSystemMessage;
+                        KernelMessage.Write(" Target={0} arg1={1} arg2={2} arg3={3}", (uint)msg.Target, msg.Arg1, msg.Arg2, msg.Arg3);
+                    }
+                    KernelMessage.Write('\n');
+                }
+            }
         }
 
         public static unsafe void SaveThreadState(uint threadID, IntPtr stackState)
@@ -489,10 +534,11 @@ namespace Lonos.Kernel.Core.Scheduling
                     }
                 }
 
+                if (KConfig.Trace.Threads)
+                    KernelMessage.WriteLine("Disposing Thread {0}", thread.DebugName);
+
                 thread.FreeMemory();
                 ThreadsAllocated--;
-                if (KConfig.Trace.Threads)
-                    KernelMessage.WriteLine("Thread disposed");
 
                 thread.Status = ThreadStatus.Empty;
             }

@@ -65,6 +65,14 @@ namespace Lonos.Kernel.Core
             Dev.Write(value);
         }
 
+        public static void Write(string format, string arg0)
+        {
+            WriteTimeStamp();
+            var buf = new StringBuffer();
+            buf.Append(format, arg0);
+            buf.WriteTo(Dev);
+        }
+
         public static void Write(char value)
         {
             Dev.Write(value);
