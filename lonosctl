@@ -277,8 +277,8 @@ function debug {
 			#trap '' SIGINT
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
-			qemu_app=$QEMU_X64
-			#qemu_app=$QEMU_X86
+			#qemu_app=$QEMU_X64
+			qemu_app=$QEMU_X86
 			#echo $qemu_app
 			#-gdb stdio
 			$qemu_app \

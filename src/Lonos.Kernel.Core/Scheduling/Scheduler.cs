@@ -67,10 +67,15 @@ namespace Lonos.Kernel.Core.Scheduling
             IDTManager.SetPrivilegeLevel((uint)KnownInterrupt.TerminateCurrentThread, 0x03);
             GDT.Tss->ESP0 = Threads[0].KernelStackBottom;
             GDT.LoadTaskRegister();
-            Native.Int((int)KnownInterrupt.ClockTimer);
+            TriggerScheduler();
 
             // Normally, you should never get here
             Panic.Error("Main-Thread still alive");
+        }
+
+        private static void TriggerScheduler()
+        {
+            Native.Int((int)KnownInterrupt.ClockTimer);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -119,8 +124,16 @@ namespace Lonos.Kernel.Core.Scheduling
 
         public static void Sleep(uint time)
         {
-            var threadID = GetCurrentThreadID();
-            ScheduleNextThread(threadID);
+            // TODO: respect time. Change to TimeSpan.
+            // Currently, it's a Fake sleep, it assumes always time=0, so it's like a ThreadYield()
+
+            var th = GetCurrentThread();
+            if (th.Process.IsKernelProcess)
+            {
+                //TriggerScheduler(); // BUG. TODO: Save Kernel Stack
+                return;
+            }
+            ScheduleNextThread(th.ThreadID);
         }
 
         private static void ScheduleNextThread(uint currentThreadID)

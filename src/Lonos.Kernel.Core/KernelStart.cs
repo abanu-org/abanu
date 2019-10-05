@@ -56,6 +56,7 @@ namespace Lonos.Kernel.Core
 
             Ulongtest1();
             Ulongtest2();
+            InlineTest();
 
             // Detect environment (Memory Maps, Video Mode, etc.)
             BootInfo.SetupStage2();
@@ -130,7 +131,7 @@ namespace Lonos.Kernel.Core
                 KernelMessage.WriteLine("Waiting for Service");
                 while (FileServ.Status != ServiceStatus.Ready)
                 {
-                    //Scheduler.Sleep(0);
+                    Scheduler.Sleep(0);
                 }
                 KernelMessage.WriteLine("Service Ready");
 
@@ -204,7 +205,7 @@ namespace Lonos.Kernel.Core
             var charIdx = 0;
             while (true)
             {
-                //Scheduler.Sleep(0);
+                Scheduler.Sleep(0);
                 var ts = PerformanceCounter.GetReadableCounter();
                 if (ts - tsLast < 1000)
                     continue;
@@ -227,7 +228,7 @@ namespace Lonos.Kernel.Core
             var charIdx = 0;
             while (true)
             {
-                //Scheduler.Sleep(0);
+                Scheduler.Sleep(0);
                 var ts = PerformanceCounter.GetReadableCounter();
                 if (ts - tsLast < 1000)
                     continue;
@@ -251,7 +252,7 @@ namespace Lonos.Kernel.Core
             var i = 0;
             while (true)
             {
-                //Scheduler.Sleep(0);
+                Scheduler.Sleep(0);
                 var ts = PerformanceCounter.GetReadableCounter();
                 if (ts - tsLast < 1000)
                     continue;
@@ -319,6 +320,13 @@ namespace Lonos.Kernel.Core
 
             KernelMessage.WriteLine("bla1: {0:X8}", r1);
             KernelMessage.WriteLine("bla2: {0:X8}", r2Int);
+        }
+
+        private static unsafe void InlineTest()
+        {
+            Addr addr = 0x1000;
+            Addr addr2 = 0x1000u;
+            Addr addr3 = addr + addr3;
         }
 
         private static unsafe void Ulongtest2()

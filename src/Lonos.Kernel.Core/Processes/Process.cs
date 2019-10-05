@@ -22,6 +22,8 @@ namespace Lonos.Kernel.Core.Processes
         //public FifoQueue<byte> StdIn;
         internal Addr PageTableAllocAddr;
 
+        public bool IsKernelProcess => PageTable == PageManagement.PageTable.KernelTable;
+
         public Process()
         {
             Threads = new KList<Thread>(1);
