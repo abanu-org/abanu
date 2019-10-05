@@ -69,16 +69,16 @@ namespace Lonos.Kernel.Core.PageManagement
             KernelMessage.WriteLine("Total Page Entries: {0}", InitialPageTableEntries);
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
 
-            //for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
-            //{
-            //    pte[pidx] = new PageTableEntry
-            //    {
-            //        Present = true,
-            //        Writable = true,
-            //        User = true,
-            //        PhysicalAddress = (uint)(pidx * 4096),
-            //    };
-            //}
+            for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
+            {
+                pte[pidx] = new PageTableEntry
+                {
+                    Present = true,
+                    Writable = true,
+                    User = true,
+                    PhysicalAddress = (uint)(pidx * 4096),
+                };
+            }
 
             for (int didx = 0; didx < InitialDirectoryEntries; didx++)
             {

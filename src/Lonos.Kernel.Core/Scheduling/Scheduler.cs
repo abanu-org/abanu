@@ -474,6 +474,9 @@ namespace Lonos.Kernel.Core.Scheduling
 
             thread.StackState->Stack.EFLAGS |= X86_EFlags.InterruptEnableFlag;
 
+            if (proc.PageTable != PageTable.KernelTable)
+                Debug.Nop();
+
             uint pageDirAddr = proc.PageTable.GetPageTablePhysAddr();
             //KernelMessage.WriteLine("PageDirAddr: {0:X8}", pageDirAddr);
             uint stackStateAddr = (uint)thread.StackState;
