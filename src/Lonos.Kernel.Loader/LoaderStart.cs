@@ -176,7 +176,7 @@ namespace Lonos.Kernel.Loader
             //Without that, the .NET compiler will optimize that reference away
             //if its nowhere used. Than the Compiler doesn't know about that reference
             //and the Compilation will fail
-            Mosa.Runtime.x86.Internal.GetStackFrame(0);
+            Mosa.Runtime.x86.Internal.ExceptionHandler();
         }
 
         private static void AssertError(string message, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)

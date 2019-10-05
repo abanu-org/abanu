@@ -22,21 +22,23 @@ namespace Lonos.Kernel.Core
         public static void Setup(ulong kernelBootStartCycles)
         {
             // It will generate invalid opcode!!
-            //KernelBootStartCycles = kernelBootStartCycles;
+            KernelBootStartCycles = kernelBootStartCycles;
         }
+
+        public static bool Initialized => KernelBootStartCycles > 0;
 
         [DllImport("x86/Lonos.CpuCyclesSinceBoot.o", EntryPoint = "CpuCyclesSinceBoot")]
         public static extern ulong CpuCyclesSinceSystemBoot();
 
         public static ulong CpuCyclesSinceKernelBoot()
         {
-            //return CpuCyclesSinceSystemBoot() - KernelBootStartCycles;
-            return CpuCyclesSinceSystemBoot() - 12500000000L;
+            return CpuCyclesSinceSystemBoot() - KernelBootStartCycles;
+            //return CpuCyclesSinceSystemBoot() - 12500000000L;
         }
 
         public static uint GetReadableCounter()
         {
-            return (uint)(CpuCyclesSinceSystemBoot() / 1000000UL);
+            return (uint)(CpuCyclesSinceKernelBoot() / 1000000UL);
         }
 
     }

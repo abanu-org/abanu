@@ -372,7 +372,7 @@ namespace Lonos.Kernel.Core
             // Without that, the .NET compiler will optimize that reference away
             // if its nowhere used. Than the Compiler doesn't know about that reference
             // and the Compilation will fail
-            Mosa.Runtime.x86.Internal.GetStackFrame(0);
+            Mosa.Runtime.x86.Internal.ExceptionHandler();
         }
 
         public const uint Columns = 80;

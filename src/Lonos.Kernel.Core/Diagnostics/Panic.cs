@@ -124,22 +124,22 @@ namespace Lonos.Kernel.Core.Diagnostics
         private static void DumpStackTrace(uint depth)
         {
             return;
-            while (true)
-            {
-                var entry = Internal.GetStackTraceEntry(depth, new Mosa.Runtime.Pointer(EBP), new Mosa.Runtime.Pointer(EIP));
+            //while (true)
+            //{
+            //    var entry = Internal.GetStackTraceEntry(depth, new Mosa.Runtime.Pointer(EBP), new Mosa.Runtime.Pointer(EIP));
 
-                if (!entry.Valid)
-                    return;
+            //    if (!entry.Valid)
+            //        return;
 
-                if (!entry.Skip)
-                {
-                    Screen.Write(entry.ToString());
-                    Screen.Row++;
-                    Screen.Column = 0;
-                }
+            //    if (!entry.Skip)
+            //    {
+            //        Screen.Write(entry.ToString());
+            //        Screen.Row++;
+            //        Screen.Column = 0;
+            //    }
 
-                depth++;
-            }
+            //    depth++;
+            //}
         }
     }
 }

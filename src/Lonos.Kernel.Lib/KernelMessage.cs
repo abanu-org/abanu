@@ -40,6 +40,9 @@ namespace Lonos.Kernel.Core
             if (!UseTimeStamp)
                 return;
 
+            if (!PerformanceCounter.Initialized)
+                return;
+
             uint timestamp = PerformanceCounter.GetReadableCounter();
 
             var diff = timestamp - OldTimeStamp;
