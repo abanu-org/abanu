@@ -87,12 +87,14 @@ namespace Lonos.Kernel.Core.Processes
 
             // Setup User PageTable
             proc.PageTableAllocAddr = VirtualPageManager.AllocateIdentityMappedPages(KMath.DivCeil(proc.PageTable.InitalMemoryAllocationSize, 4096));
+            proc.PageTable.Map(proc.PageTableAllocAddr, proc.PageTableAllocAddr, proc.PageTable.InitalMemoryAllocationSize);
             PageTable.KernelTable.SetWritable(proc.PageTableAllocAddr, proc.PageTable.InitalMemoryAllocationSize);
             proc.PageTable.UserProcSetup(proc.PageTableAllocAddr);
 
             proc.PageTable.MapCopy(PageTable.KernelTable, BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.SetExecutable(BootInfoMemoryType.KernelTextSegment);
             proc.PageTable.MapCopy(PageTable.KernelTable, Address.InterruptControlBlock, 4096);
+            proc.PageTable.MapCopy(PageTable.KernelTable, KernelMemoryMapManager.Header->Used.GetMap(BootInfoMemoryType.GDT));
             proc.PageTable.MapCopy(PageTable.KernelTable, KernelMemoryMapManager.Header->Used.GetMap(BootInfoMemoryType.IDT));
             proc.PageTable.MapCopy(PageTable.KernelTable, KernelMemoryMapManager.Header->Used.GetMap(BootInfoMemoryType.TSS));
 

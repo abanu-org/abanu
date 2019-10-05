@@ -52,6 +52,19 @@ namespace Lonos.Kernel.Core.PageManagement
         public override void UserProcSetup(Addr entriesAddr)
         {
             SetupBasicStructure(entriesAddr);
+
+            //PageTableEntry* pte = PageTableEntries;
+            //for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
+            //{
+            //    pte[pidx] = new PageTableEntry
+            //    {
+            //        Present = true,
+            //        Writable = true,
+            //        User = true,
+            //        PhysicalAddress = (uint)(pidx * 4096),
+            //    };
+            //}
+
         }
 
         private void SetupBasicStructure(Addr entriesAddr)
@@ -63,22 +76,22 @@ namespace Lonos.Kernel.Core.PageManagement
             PageTableEntries = (PageTableEntry*)(entriesAddr + InitalPageDirectorySize);
 
             // Setup Page Directory
-            PageDirectoryEntry* pde = (PageDirectoryEntry*)PageDirectoryEntries;
+            PageDirectoryEntry* pde = PageDirectoryEntries;
             PageTableEntry* pte = PageTableEntries;
 
             KernelMessage.WriteLine("Total Page Entries: {0}", InitialPageTableEntries);
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
 
-            for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
-            {
-                pte[pidx] = new PageTableEntry
-                {
-                    Present = true,
-                    Writable = true,
-                    User = true,
-                    PhysicalAddress = (uint)(pidx * 4096),
-                };
-            }
+            //for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
+            //{
+            //    pte[pidx] = new PageTableEntry
+            //    {
+            //        Present = true,
+            //        Writable = true,
+            //        User = true,
+            //        PhysicalAddress = (uint)(pidx * 4096),
+            //    };
+            //}
 
             for (int didx = 0; didx < InitialDirectoryEntries; didx++)
             {

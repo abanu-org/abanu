@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using Lonos.Kernel.Core;
 
 namespace Lonos
@@ -106,31 +107,37 @@ namespace Lonos
             return MultiplyDeBruijnBitPosition2[((value * 0x077CB531U) & 0xFFFFFFFFu) >> 27];
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint AlignValueCeil(uint value, uint dividor)
         {
             return (value / dividor * dividor) + dividor;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint AlignValueFloor(uint value, uint dividor)
         {
             return value / dividor * dividor;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint DivCeil(uint value, uint dividor)
         {
             return ((value - 1) / dividor) + 1;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong DivCeil(ulong value, ulong dividor)
         {
             return ((value - 1) / dividor) + 1;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static USize DivCeil(USize value, USize dividor)
         {
             return ((value - 1) / dividor) + 1;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint DivFloor(uint value, uint dividor)
         {
             return value / dividor;
