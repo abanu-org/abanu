@@ -43,6 +43,11 @@ namespace Lonos.Runtime
             MessageManager.Send(SysCallTarget.SetThreadPriority, (uint)priority);
         }
 
+        public static void ThreadSleep(uint time)
+        {
+            MessageManager.Send(SysCallTarget.ThreadSleep, time);
+        }
+
         // TODO: Datetime
         public static long GetSystemTime()
         {

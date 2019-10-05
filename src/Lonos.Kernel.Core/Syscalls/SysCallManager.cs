@@ -43,6 +43,7 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.WriteDebugMessage, Cmd_WriteDebugMessage);
             SetCommand(SysCallTarget.WriteDebugChar, Cmd_WriteDebugChar);
             SetCommand(SysCallTarget.SetThreadPriority, Cmd_SetThreadPriority);
+            SetCommand(SysCallTarget.ThreadSleep, Cmd_ThreadSleep);
             SetCommand(SysCallTarget.RegisterService, Cmd_RegisterService);
             SetCommand(SysCallTarget.SetServiceStatus, Cmd_SetServiceStatus);
             SetCommand(SysCallTarget.RegisterInterrupt, Cmd_RegisterInterrupt);
@@ -138,6 +139,14 @@ namespace Lonos.Kernel.Core.SysCalls
         private static uint Cmd_SetThreadPriority(SystemMessage* args)
         {
             Scheduler.SetThreadPriority((int)args->Arg1);
+
+            return 0;
+        }
+
+        private static uint Cmd_ThreadSleep(SystemMessage* args)
+        {
+            var time = args->Arg1;
+            Scheduler.Sleep(time);
 
             return 0;
         }

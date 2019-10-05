@@ -25,6 +25,7 @@ namespace Lonos.Kernel
 
         CreateMemoryProcess = 40,
         SetThreadPriority = 41,
+        ThreadSleep = 42,
 
         SetServiceStatus = 50,
         RegisterService = 51,

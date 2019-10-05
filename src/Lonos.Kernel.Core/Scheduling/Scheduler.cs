@@ -91,7 +91,6 @@ namespace Lonos.Kernel.Core.Scheduling
             if (!Enabled)
                 return;
 
-            // Save current stack state
             var threadID = GetCurrentThreadID();
             var th = GetCurrentThread();
             if (th != null)
@@ -112,8 +111,15 @@ namespace Lonos.Kernel.Core.Scheduling
                 }
             }
 
+            // Save current stack state
             SaveThreadState(threadID, stackSate);
 
+            ScheduleNextThread(threadID);
+        }
+
+        public static void Sleep(uint time)
+        {
+            var threadID = GetCurrentThreadID();
             ScheduleNextThread(threadID);
         }
 
