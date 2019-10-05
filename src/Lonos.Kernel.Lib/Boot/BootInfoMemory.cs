@@ -17,5 +17,9 @@ namespace Lonos.Kernel.Core.Boot
         public AddressSpaceKind AddressSpaceKind;
         //public bool CanWrite;
         //public bool CanExecute;
+
+        public bool PreMap;
+
     }
+
 }

@@ -63,6 +63,8 @@ namespace Lonos.Kernel.Loader
             map = BootMemory.AllocateMemoryMap(PageTable.KernelTable.InitalMemoryAllocationSize, BootInfoMemoryType.PageTable, AddressSpaceKind.Both);
             BootInfo_.AddMap(map);
             PageTable.KernelTable.Setup(map.Start);
+            MapMemory();
+            PageTable.KernelTable.EnablePaging();
 
             // Because Kernel is compiled in virtual address space, we need to remap the pages
             MapKernelImage();
@@ -91,6 +93,25 @@ namespace Lonos.Kernel.Loader
             KernelMessage.WriteLine("Unexpected return from Kernel Start");
 
             Debug.Break();
+        }
+
+        private static void MapMemory()
+        {
+            for (var mapIdx = 0; mapIdx < BootInfo_.BootInfo->MemoryMapLength; mapIdx++)
+            {
+                var map = BootInfo_.BootInfo->MemoryMapArray[mapIdx];
+                KernelMessage.WriteLine("Test map Type={0:X8} Start={1:X8}", (uint)map.Type, map.Start);
+                if (map.PreMap && (map.AddressSpaceKind & AddressSpaceKind.Physical) != 0)
+                {
+                    KernelMessage.WriteLine("Map!");
+                    PageTable.KernelTable.Map(map.Start, map.Start, map.Size);
+                }
+            }
+
+            PageTable.KernelTable.Map(Address.LoaderBasePhys, Address.LoaderBasePhys, Address.LoaderSize);
+            PageTable.KernelTable.Map(BootInfo_.BootInfo->HeapStart, BootInfo_.BootInfo->HeapStart, BootInfo_.BootInfo->HeapSize);
+            PageTable.KernelTable.Map(Address.OriginalKernelElfSection, Address.OriginalKernelElfSection, Address.OriginalKernelElfSize);
+            PageTable.KernelTable.Flush();
         }
 
         private static void MapKernelImage()

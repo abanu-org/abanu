@@ -30,6 +30,7 @@ namespace Lonos.Kernel.Core.Boot
 
         // Kernel side
 
+        LoaderBinary = 16,
         KernelMemoryMap = 17,
         PageFrameAllocator = 18,
 

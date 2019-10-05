@@ -64,9 +64,6 @@ namespace Lonos.Kernel.Core.PageManagement
             // Enable PAE
             Native.SetCR4(Native.GetCR4() | 0x20);
 
-            // Set CR0 register on processor - turns on virtual memory
-            Native.SetCR0(Native.GetCR0() | 0x80000000);
-
             KernelMessage.WriteLine("Done");
         }
 

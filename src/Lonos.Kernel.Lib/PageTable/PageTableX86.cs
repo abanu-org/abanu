@@ -15,7 +15,7 @@ namespace Lonos.Kernel.Core.PageManagement
     public unsafe class PageTableX86 : PageTable
     {
 
-        public uint AddrPageDirectory;
+        public PageDirectoryEntry* PageDirectoryEntries;
         public PageTableEntry* PageTableEntries;
 
         public const uint PagesPerDictionaryEntry = 1024;
@@ -32,7 +32,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public override USize InitalMemoryAllocationSize => InitalPageDirectorySize + InitalPageTableSize;
 
-        public override Addr VirtAddr => AddrPageDirectory;
+        public override Addr VirtAddr => PageDirectoryEntries;
 
         /// <summary>
         /// Sets up the PageTable
@@ -42,18 +42,11 @@ namespace Lonos.Kernel.Core.PageManagement
             SetupBasicStructure(entriesAddr);
 
             // Set CR3 register on processor - sets page directory
-            KernelMessage.WriteLine("Set CR3 to {0:X8}", AddrPageDirectory);
+            KernelMessage.WriteLine("Set CR3 to {0:X8}", (uint)PageDirectoryEntries);
             Flush();
-
-            KernelMessage.Write("Enable Paging... ");
 
             if (KConfig.UseKernelMemoryProtection)
                 EnableKernelWriteProtection();
-
-            // Set CR0 register on processor - turns on virtual memory
-            Native.SetCR0(Native.GetCR0() | 0x80000000);
-
-            KernelMessage.WriteLine("Done");
         }
 
         public override void UserProcSetup(Addr entriesAddr)
@@ -64,27 +57,28 @@ namespace Lonos.Kernel.Core.PageManagement
         private void SetupBasicStructure(Addr entriesAddr)
         {
             KernelMessage.WriteLine("Setup PageTable");
+            MemoryOperation.Clear4(entriesAddr, InitalMemoryAllocationSize);
 
-            AddrPageDirectory = entriesAddr;
+            PageDirectoryEntries = (PageDirectoryEntry*)entriesAddr;
             PageTableEntries = (PageTableEntry*)(entriesAddr + InitalPageDirectorySize);
 
             // Setup Page Directory
-            PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
-            PageTableEntry* pte = (PageTableEntry*)PageTableEntries;
+            PageDirectoryEntry* pde = (PageDirectoryEntry*)PageDirectoryEntries;
+            PageTableEntry* pte = PageTableEntries;
 
             KernelMessage.WriteLine("Total Page Entries: {0}", InitialPageTableEntries);
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
 
-            for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
-            {
-                pte[pidx] = new PageTableEntry
-                {
-                    Present = true,
-                    Writable = true,
-                    User = true,
-                    PhysicalAddress = (uint)(pidx * 4096),
-                };
-            }
+            //for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
+            //{
+            //    pte[pidx] = new PageTableEntry
+            //    {
+            //        Present = true,
+            //        Writable = true,
+            //        User = true,
+            //        PhysicalAddress = (uint)(pidx * 4096),
+            //    };
+            //}
 
             for (int didx = 0; didx < InitialDirectoryEntries; didx++)
             {
@@ -98,7 +92,7 @@ namespace Lonos.Kernel.Core.PageManagement
             }
 
             // Unmap the first page for null pointer exceptions
-            MapVirtualAddressToPhysical(0x0, 0x0, false);
+            //MapVirtualAddressToPhysical(0x0, 0x0, false);
 
             PrintAddress();
         }
@@ -106,7 +100,7 @@ namespace Lonos.Kernel.Core.PageManagement
         private void PrintAddress()
         {
             KernelMessage.WriteLine("PageDirectoryPhys: {0:X8}", this.GetPageTablePhysAddr());
-            KernelMessage.WriteLine("PageDirectory: {0:X8}", AddrPageDirectory);
+            KernelMessage.WriteLine("PageDirectory: {0:X8}", (uint)PageDirectoryEntries);
             KernelMessage.WriteLine("PageTable: {0:X8}", (uint)PageTableEntries);
         }
 
@@ -117,7 +111,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public override void KernelSetup(Addr entriesAddr)
         {
-            AddrPageDirectory = entriesAddr;
+            PageDirectoryEntries = (PageDirectoryEntry*)entriesAddr;
             PageTableEntries = (PageTableEntry*)(entriesAddr + InitalPageDirectorySize);
             //PrintAddress();
         }
@@ -128,6 +122,12 @@ namespace Lonos.Kernel.Core.PageManagement
             //return (PageTableEntry*)(AddrPageTable + ((forVirtualAddress & 0xFFFFF000u) >> 10));
             var pageNum = forVirtualAddress >> 12;
             return &PageTableEntries[pageNum];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public PageDirectoryEntry* GetPageDirectoryEntry(uint forVirtualAddress)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -145,9 +145,18 @@ namespace Lonos.Kernel.Core.PageManagement
 
             var entry = GetTableEntry(virtualAddress);
             entry->PhysicalAddress = physicalAddress;
-            entry->Present = present;
             entry->Writable = true;
             entry->User = true;
+            entry->Present = present;
+
+            //var dirEntry = GetPageDirectoryEntry(virtualAddress);
+            //if (!dirEntry->Present)
+            //{
+            //    dirEntry->Writable = true;
+            //    dirEntry->User = true;
+            //    dirEntry->PageTableEntry = entry;
+            //    dirEntry->Present = true;
+            //}
 
             //Native.Invlpg(virtualAddress); Not implemented in MOSA yet
 
@@ -170,7 +179,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public override void SetKernelWriteProtectionForAllInitialPages()
         {
-            PageTableEntry* pte = (PageTableEntry*)PageTableEntries;
+            PageTableEntry* pte = PageTableEntries;
             for (int index = 0; index < InitialPageTableEntries; index++)
             {
                 var e = &pte[index];
@@ -180,9 +189,9 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public override void Flush()
         {
-            if (PageTable.KernelTable != this)
+            if (KernelTable != this)
                 return;
-            Native.SetCR3(AddrPageDirectory);
+            Native.SetCR3((uint)PageDirectoryEntries);
         }
 
         public override void Flush(Addr virtAddr)

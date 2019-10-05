@@ -27,6 +27,8 @@ namespace Lonos.Kernel.Core.PageManagement
 
         void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true);
 
+        void EnablePaging();
+
         void EnableKernelWriteProtection();
 
         void DisableKernelWriteProtection();

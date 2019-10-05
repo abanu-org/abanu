@@ -65,6 +65,7 @@ namespace Lonos.Kernel.Loader
                 var memType = BootInfoMemoryType.Reserved;
                 var type = (BIOSMemoryMapType)Multiboot.GetMemoryMapType(i);
                 var addressSpaceKind = AddressSpaceKind.Physical;
+                var preMap = false;
 
                 switch (type)
                 {
@@ -89,6 +90,7 @@ namespace Lonos.Kernel.Loader
                 }
                 BootInfo->MemoryMapArray[i].Type = memType;
                 BootInfo->MemoryMapArray[i].AddressSpaceKind = addressSpaceKind;
+                BootInfo->MemoryMapArray[i].PreMap = preMap;
             }
 
             // It's possible, that the BIOS-Area (@640K) is not correctly setup by Multiboot. So add it here manually to be sure
@@ -96,31 +98,29 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapArray[idx].Start = 640 * 1024;
             BootInfo->MemoryMapArray[idx].Size = (1024 - 640) * 1024;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.CustomReserved;
-            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
-
-            //idx++;
-            //BootInfo->MemoryMapArray[idx].Start = Address.OriginalKernelElfSection;
-            //BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
-            //BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.OriginalKernelElfImage;
-            //BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
+            BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both; //TODO: Physical
+            BootInfo->MemoryMapArray[idx].PreMap = true;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.KernelElfSectionPhys;
             BootInfo->MemoryMapArray[idx].Size = KMath.AlignValueCeil(LoaderStart.OriginalKernelElf.TotalFileSize, 0x1000);
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelElf;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Physical;
+            BootInfo->MemoryMapArray[idx].PreMap = true;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.KernelBootInfo;
             BootInfo->MemoryMapArray[idx].Size = 0x1000;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeader;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
+            BootInfo->MemoryMapArray[idx].PreMap = true;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = BootInfo->HeapStart;
             BootInfo->MemoryMapArray[idx].Size = 0x1000; //TODO: Recalculate after Setup all Infos
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.BootInfoHeap;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
+            BootInfo->MemoryMapArray[idx].PreMap = true;
 
             idx++;
             uint stackSize = 0x100000; // 1MB
@@ -128,36 +128,42 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapArray[idx].Size = stackSize;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialStack;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
+            BootInfo->MemoryMapArray[idx].PreMap = true;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = Address.GCInitialMemory;
             BootInfo->MemoryMapArray[idx].Size = Address.GCInitialMemorySize;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.InitialGCMemory;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
+            BootInfo->MemoryMapArray[idx].PreMap = true;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".bss")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".bss")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelBssSegment;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Virtual;
+            BootInfo->MemoryMapArray[idx].PreMap = false;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".text")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".text")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelTextSegment;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Virtual;
+            BootInfo->MemoryMapArray[idx].PreMap = false;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".rodata")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".rodata")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelROdataSegment;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Virtual;
+            BootInfo->MemoryMapArray[idx].PreMap = false;
 
             idx++;
             BootInfo->MemoryMapArray[idx].Start = LoaderStart.OriginalKernelElf.GetSectionHeader(".data")->Addr;
             BootInfo->MemoryMapArray[idx].Size = LoaderStart.OriginalKernelElf.GetSectionHeader(".data")->Size;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelDataSegment;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Virtual;
+            BootInfo->MemoryMapArray[idx].PreMap = false;
 
             // Avoiding the use of the first megabyte of RAM
             idx++;
@@ -165,6 +171,7 @@ namespace Lonos.Kernel.Loader
             BootInfo->MemoryMapArray[idx].Size = Address.ReserveMemory;
             BootInfo->MemoryMapArray[idx].Type = BootInfoMemoryType.KernelReserved;
             BootInfo->MemoryMapArray[idx].AddressSpaceKind = AddressSpaceKind.Both;
+            BootInfo->MemoryMapArray[idx].PreMap = false;
 
             BootInfo->MemoryMapLength = idx + 1;
         }

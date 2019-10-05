@@ -18,7 +18,6 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public static void ConfigureType(PageTableType type)
         {
-
             KernelTable = CreateInstance(type);
         }
 
@@ -48,6 +47,16 @@ namespace Lonos.Kernel.Core.PageManagement
         public abstract void UserProcSetup(Addr entriesAddr);
 
         public abstract void MapVirtualAddressToPhysical(Addr virtualAddress, Addr physicalAddress, bool present = true);
+
+        public void EnablePaging()
+        {
+            KernelMessage.Write("Enable Paging... ");
+
+            // Set CR0 register on processor - turns on virtual memory
+            Native.SetCR0(Native.GetCR0() | 0x80000000);
+
+            KernelMessage.WriteLine("Done");
+        }
 
         public void EnableKernelWriteProtection()
         {

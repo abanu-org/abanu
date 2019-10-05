@@ -32,7 +32,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public static void UnMap(this IPageTable table, Addr virtAddr, bool flush = false)
         {
-            UnMap(table, virtAddr, flush);
+            UnMap(table, virtAddr, 4096, flush);
         }
 
         public static void UnMap(this IPageTable table, Addr virtAddr, USize length, bool flush = false)

@@ -33,7 +33,7 @@ namespace Lonos.Kernel.Loader
             var retAddr = nextAddr;
             nextAddr += size;
 
-            return (IntPtr)(((uint)Address.GCInitialMemory) + retAddr);
+            return (IntPtr)(Address.GCInitialMemory + retAddr);
         }
 
         private static Addr PageStartAddr;
@@ -46,6 +46,7 @@ namespace Lonos.Kernel.Loader
                 Size = size,
                 Type = type,
                 AddressSpaceKind = addressSpaceKind,
+                PreMap = true,
             };
             PageStartAddr += size;
 

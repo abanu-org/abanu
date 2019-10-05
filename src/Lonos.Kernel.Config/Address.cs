@@ -43,6 +43,11 @@ namespace Lonos.Kernel.Core
         public const uint LoaderBasePhys = 0x00200000;  // 2MB
 
         /// <summary>
+        /// Size of the Loader Binary
+        /// </summary>
+        public const uint LoaderSize = 0x6 * 1024 * 1024;
+
+        /// <summary>
         /// Size of Lonos.OS.Core.x86.bin
         /// </summary>
         public const uint OriginalKernelElfSize = 30 * 1024 * 1024;

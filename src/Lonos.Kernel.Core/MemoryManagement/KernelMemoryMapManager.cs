@@ -17,11 +17,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var addr = Initial_FindFreePage();
 
             KernelMessage.Path("KernelMemoryMapManager", "Initial Page: {0:X}", addr);
+            PageTable.KernelTable.Map(addr, addr, flush: true);
 
             // 80KB should be enough
             // TODO: Check if really 80KB are available after this address.
             InitialMap = new KernelMemoryMap(addr, 0x1000 * 20, BootInfoMemoryType.KernelMemoryMap, AddressSpaceKind.Both);
-            PageTableExtensions.SetWritable(PageTable.KernelTable, InitialMap.Start, InitialMap.Size);
+            PageTable.KernelTable.Map(InitialMap.Start, InitialMap.Start, InitialMap.Size, flush: true);
+            PageTable.KernelTable.SetWritable(InitialMap.Start, InitialMap.Size);
 
             Header = (KernelMemoryMapHeader*)InitialMap.Start;
 
