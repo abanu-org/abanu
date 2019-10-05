@@ -129,7 +129,7 @@ namespace Lonos.Kernel.Core.PageManagement
             //PrintAddress();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public PageTableEntry* GetTableEntry(uint forVirtualAddress)
         {
             //return (PageTableEntry*)(AddrPageTable + ((forVirtualAddress & 0xFFFFF000u) >> 10));

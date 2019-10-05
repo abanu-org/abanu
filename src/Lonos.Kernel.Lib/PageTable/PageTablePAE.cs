@@ -52,19 +52,11 @@ namespace Lonos.Kernel.Core.PageManagement
         {
             SetupBasicStructure(entriesAddr);
 
-            // Set CR3 register on processor - sets page directory
-            KernelMessage.WriteLine("Set CR3 to {0:X8}", AddrPageDirectoryPT);
-            Flush();
-
-            KernelMessage.Write("Enable Paging... ");
-
             if (KConfig.UseKernelMemoryProtection)
                 EnableKernelWriteProtection();
 
             // Enable PAE
             Native.SetCR4(Native.GetCR4() | 0x20);
-
-            KernelMessage.WriteLine("Done");
         }
 
         public override void UserProcSetup(Addr entriesAddr)
@@ -99,16 +91,16 @@ namespace Lonos.Kernel.Core.PageManagement
             KernelMessage.WriteLine("Total Page Dictionary Entries: {0}", InitialDirectoryEntries);
             KernelMessage.WriteLine("Total Page Table Entries: {0}", InitialPageTableEntries);
 
-            for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
-            {
-                pte[pidx] = new PageTableEntry
-                {
-                    Present = true,
-                    Writable = true,
-                    User = true,
-                    PhysicalAddress = (uint)(pidx * 4096),
-                };
-            }
+            //for (int pidx = 0; pidx < InitialPageTableEntries; pidx++)
+            //{
+            //    pte[pidx] = new PageTableEntry
+            //    {
+            //        Present = true,
+            //        Writable = true,
+            //        User = true,
+            //        PhysicalAddress = (uint)(pidx * 4096),
+            //    };
+            //}
 
             for (int didx = 0; didx < InitialDirectoryEntries; didx++)
             {
@@ -131,7 +123,7 @@ namespace Lonos.Kernel.Core.PageManagement
             }
 
             // Unmap the first page for null pointer exceptions
-            MapVirtualAddressToPhysical(0x0, 0x0, false);
+            //MapVirtualAddressToPhysical(0x0, 0x0, false);
 
             PrintAddress();
         }
@@ -191,6 +183,7 @@ namespace Lonos.Kernel.Core.PageManagement
         /// Gets the physical memory.
         /// </summary>
         /// <param name="virtualAddress">The virtual address.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Addr GetPhysicalAddressFromVirtual(Addr virtualAddress)
         {
             //var entry = GetTableEntry(virtualAddress);
@@ -251,13 +244,15 @@ namespace Lonos.Kernel.Core.PageManagement
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Flush()
         {
-            if (PageTable.KernelTable != this)
+            if (KernelTable != this)
                 return;
             Native.SetCR3(AddrPageDirectoryPT);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Flush(Addr virtAddr)
         {
             Flush(); //TODO: Use Native.InvPg!
@@ -519,26 +514,25 @@ namespace Lonos.Kernel.Core.PageManagement
 
             public bool Present
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get { return Value.IsBitSet(Offset.Present); }
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set { Value = Value.SetBit(Offset.Present, value); }
             }
 
             public bool Writable
             {
-                get
-                {
-                    return Value.IsBitSet(Offset.Readonly);
-                }
-
-                set
-                {
-                    Value = Value.SetBit(Offset.Readonly, value);
-                }
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get { return Value.IsBitSet(Offset.Readonly); }
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                set { Value = Value.SetBit(Offset.Readonly, value); }
             }
 
             public bool User
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get { return Value.IsBitSet(Offset.User); }
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set { Value = Value.SetBit(Offset.User, value); }
             }
 

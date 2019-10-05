@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 //using pmeta = lonos.test.malloc4.malloc_meta*; //not possible
 using System.Runtime.InteropServices;
 using Lonos.Kernel.Core.Diagnostics;
@@ -36,6 +37,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return ptr;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override uint munmap(void* addr)
         {
             VirtualPageManager.FreeAddr(addr);

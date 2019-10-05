@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 //using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
 using System.Runtime.InteropServices;
 
@@ -74,36 +75,43 @@ namespace Lonos
 
         private const size_t MAX_SHIFT_BIT = (size_t)1 << ((sizofSize_t * 8) - 1);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static malloc_meta* MIN(malloc_meta* A, malloc_meta* B)
         {
             return A > B ? B : A;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static size_t MIN(size_t A, size_t B)
         {
             return A > B ? B : A;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void SET_INUSE(malloc_meta* P)
         {
             P->Size &= ~MAX_SHIFT_BIT;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static size_t SET_FREE(malloc_meta* P)
         {
             return P->Size |= MAX_SHIFT_BIT;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static size_t IS_FREE(malloc_meta* P)
         {
             return P->Size & MAX_SHIFT_BIT;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static size_t GET_SIZE(malloc_meta* P)
         {
             return P->Size & ~MAX_SHIFT_BIT;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static size_t SET_SIZE(malloc_meta* P, size_t NSIZE)
         {
             return P->Size = IS_FREE(P) | NSIZE;
@@ -144,6 +152,7 @@ namespace Lonos
             return res;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static size_t size_to_page_number(size_t size)
         {
             return ((size - 1) / PAGE_SIZE) + 1;
@@ -175,6 +184,7 @@ namespace Lonos
                 to_del->Data.Free.Prev->Data.Free.Next = to_del->Data.Free.Next;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static malloc_meta* create_meta(void* p, size_t l)
         {
             malloc_meta* meta = (malloc_meta*)p;
@@ -205,6 +215,7 @@ namespace Lonos
             return (malloc_meta*)addr;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static malloc_meta* get_meta(void* ptr)
         {
             byte* cptr = (byte*)ptr;

@@ -11,6 +11,15 @@ namespace Lonos.Kernel.Core
 
         public static void Copy(Addr source, Addr destination, USize length)
         {
+            if (length > 100)
+            {
+                if (source % 4 == 0 && destination % 4 == 0 && length % 4 == 0)
+                {
+                    Copy4(source, destination, length);
+                    return;
+                }
+            }
+
             for (uint i = 0; i < length; i++)
                 Native.Set8(destination + i, Native.Get8(source + i));  //TODO: Optimize with Set32
         }
@@ -45,10 +54,13 @@ namespace Lonos.Kernel.Core
         /// <param name="bytes">The bytes.</param>
         public static void Clear(Addr start, USize bytes)
         {
-            if (bytes % 4 == 0)
+            if (bytes > 100)
             {
-                Clear4(start, bytes);
-                return;
+                if (start % 4 == 0 && bytes % 4 == 0)
+                {
+                    Clear4(start, bytes);
+                    return;
+                }
             }
 
             for (uint at = start; at < (start + bytes); at++)

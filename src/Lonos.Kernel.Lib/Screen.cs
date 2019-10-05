@@ -42,9 +42,9 @@ namespace Lonos.Kernel.Core
         public static uint ScreenMemoryAddress = 0x0B8000;
         public static uint ScreenMemorySize = 25 * 80 * 2;
 
-        public static uint _column = 0;
-        public static uint _row = 0;
-        private static byte color = 23;
+        public static uint _Column = 0;
+        public static uint _Row = 0;
+        private static byte _Color = 23;
 
         /// <summary>
         /// The columns
@@ -64,8 +64,8 @@ namespace Lonos.Kernel.Core
         /// </value>
         public static uint Column
         {
-            get { return _column; }
-            set { _column = value; }
+            get { return _Column; }
+            set { _Column = value; }
         }
 
         /// <summary>
@@ -76,21 +76,21 @@ namespace Lonos.Kernel.Core
         /// </value>
         public static uint Row
         {
-            get { return _row; }
-            set { _row = value; }
+            get { return _Row; }
+            set { _Row = value; }
         }
 
         public static byte Color
         {
             get
             {
-                return (byte)(color & 0x0F);
+                return (byte)(_Color & 0x0F);
             }
 
             set
             {
-                color &= 0xF0;
-                color |= (byte)(value & 0x0F);
+                _Color &= 0xF0;
+                _Color |= (byte)(value & 0x0F);
             }
         }
 
@@ -98,13 +98,13 @@ namespace Lonos.Kernel.Core
         {
             get
             {
-                return (byte)(color >> 4);
+                return (byte)(_Color >> 4);
             }
 
             set
             {
-                color &= 0x0F;
-                color |= (byte)((value & 0x0F) << 4);
+                _Color &= 0x0F;
+                _Color |= (byte)((value & 0x0F) << 4);
             }
         }
 
@@ -113,9 +113,9 @@ namespace Lonos.Kernel.Core
         /// </summary>
         private static void Next()
         {
-            Column++;
+            _Column++;
 
-            if (Column >= Columns)
+            if (_Column >= Columns)
             {
                 NextLine();
             }
@@ -159,7 +159,7 @@ namespace Lonos.Kernel.Core
             Pointer address = new Pointer(ScreenMemoryAddress + (((Row * Columns) + Column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);
-            Intrinsic.Store8(address, 1, color);
+            Intrinsic.Store8(address, 1, _Color);
 
             Next();
             UpdateCursor();
@@ -218,21 +218,21 @@ namespace Lonos.Kernel.Core
         /// </summary>
         public static void NextLine()
         {
-            Column = 0;
-            if (_row >= Rows - 1)
+            _Column = 0;
+            if (_Row >= Rows - 1)
             {
                 // Copy All rows one line up
                 // TODO: Normally, Reading from mapped ROM is much slower
                 // than reading from normal RAM. Consider using Offscreen Buffer
-                MemoryOperation.Copy(ScreenMemoryAddress + (Columns * 2), ScreenMemoryAddress, (Rows - 1) * Columns * 2);
+                MemoryOperation.Copy4(ScreenMemoryAddress + (Columns * 2), ScreenMemoryAddress, (Rows - 1) * Columns * 2);
 
                 //Blank last line
                 for (uint c = 0; c < Columns; c++)
-                    RawWrite(_row, c, ' ', color);
+                    RawWrite(_Row, c, ' ', _Color);
             }
             else
             {
-                Row++;
+                _Row++;
             }
             UpdateCursor();
         }
@@ -244,13 +244,13 @@ namespace Lonos.Kernel.Core
         {
             GotoTop();
 
-            byte c = Color;
-            Color = 0x0;
+            byte c = _Color;
+            _Color = 0x0;
 
             for (int i = 0; i < Columns * Rows; i++)
                 Write(' ');
 
-            Color = c;
+            _Color = c;
             GotoTop();
         }
 
@@ -261,8 +261,8 @@ namespace Lonos.Kernel.Core
         /// <param name="col">The col.</param>
         public static void Goto(uint row, uint col)
         {
-            Row = row;
-            Column = col;
+            _Row = row;
+            _Column = col;
             UpdateCursor();
         }
 
@@ -365,15 +365,15 @@ namespace Lonos.Kernel.Core
                 val /= digits;
             }
 
-            Column = x;
-            Row = y;
+            _Column = x;
+            _Row = y;
             Skip(count);
             UpdateCursor();
         }
 
         public static void SetChar(char chr, uint row, uint column)
         {
-            SetCharInternal(chr, row, column, color);
+            SetCharInternal(chr, row, column, _Color);
         }
 
         public static void SetChar(char chr, uint row, uint column, ConsoleColor foregroundColor)

@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Lonos.Kernel.Core
@@ -77,6 +78,7 @@ namespace Lonos.Kernel.Core
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear()
         {
             _length = 0;
@@ -208,6 +210,7 @@ namespace Lonos.Kernel.Core
                 Append(value[i + start]);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe void Append(char value)
         {
             if (_length + 1 >= MaxLength)

@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using Lonos.CTypes;
 using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.Devices;
@@ -100,6 +101,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         protected abstract void SetupFreeMemory();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Page* GetPageByAddress(Addr physAddr)
         {
             return GetPageByNum(physAddr / PageSize);
@@ -259,11 +261,13 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             Allocations--;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint GetAddress(Page* page)
         {
             return page->Address;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint GetPageNum(Page* page)
         {
             return GetAddress(page) / 4096;
@@ -292,16 +296,19 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             return (Page*)page->Lru.next;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint GetPageIndex(Page* page)
         {
             return GetPageNum(page) - FistPageNum;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint GetPageIndex(Addr addr)
         {
             return (addr / 4096) - FistPageNum;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ContainsPage(Page* page)
         {
             return _Region.Contains(page->Address);

@@ -100,6 +100,7 @@ namespace Lonos.CTypes
         public const uint LIST_POISON1 = 0x00100100;
         public const uint LIST_POISON2 = 0x00200200;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void INIT_LIST_HEAD(list_head* list)
         {
             list->next = list;
@@ -128,6 +129,7 @@ namespace Lonos.CTypes
         /// <remarks>
         /// Insert a new entry after the specified head. This is good for implementing stacks.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void list_add(list_head* New, list_head* head)
         {
             __list_add(New, head, head->next);
@@ -141,6 +143,7 @@ namespace Lonos.CTypes
         /// <remarks>
         /// Insert a new entry before the specified head. This is useful for implementing queues.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void list_add_tail(list_head* New, list_head* head)
         {
             __list_add(New, head->prev, head);
@@ -152,12 +155,14 @@ namespace Lonos.CTypes
         /// <remarks>
         /// This is only for internal list manipulation where we know the prev/next entries already!
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void __list_del(list_head* prev, list_head* next)
         {
             next->prev = prev;
             prev->next = next;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void __list_del_entry(list_head* entry)
         {
             __list_del(entry->prev, entry->next);
@@ -170,6 +175,7 @@ namespace Lonos.CTypes
         /// <remarks>
         /// Note: <see cref="list_empty(list_head*)"/> on entry does not return true after this, the entry is in an undefined state.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void list_del(list_head* entry)
         {
             __list_del(entry->prev, entry->next);
@@ -182,6 +188,7 @@ namespace Lonos.CTypes
         /// </summary>
         /// <param name="list">the entry to move</param>
         /// <param name="head">the head that will precede our entry</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void list_move(list_head* list, list_head* head)
         {
             __list_del_entry(list);
@@ -193,6 +200,7 @@ namespace Lonos.CTypes
         /// </summary>
         /// <param name="list">The entry to move</param>
         /// <param name="head">The head that will follow our entry</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void list_move_tail(list_head* list, list_head* head)
         {
             __list_del_entry(list);
@@ -238,6 +246,7 @@ namespace Lonos.CTypes
         /// tests whether a list is empty
         /// </summary>
         /// <param name="head">The list to test</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool list_empty(list_head* head)
         {
             return head->next == head;
@@ -247,6 +256,7 @@ namespace Lonos.CTypes
         /// Tests whether a list has just one entry.
         /// </summary>
         /// <param name="head">The list to test</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool list_is_singular(list_head* head)
         {
             return !list_empty(head) && (head->next == head->prev);
@@ -257,6 +267,7 @@ namespace Lonos.CTypes
         /// </summary>
         /// <param name="list">The entry to test</param>
         /// <param name="head">The head of the list</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool list_is_first(list_head* list, list_head* head)
         {
             return list->prev == head;
@@ -267,6 +278,7 @@ namespace Lonos.CTypes
         /// </summary>
         /// <param name="list">The entry to test</param>
         /// <param name="head">The head of the list</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool list_is_last(list_head* list, list_head* head)
         {
             return list->next == head;
@@ -276,6 +288,7 @@ namespace Lonos.CTypes
         /// Deletes entry from list and reinitialize it.
         /// </summary>
         /// <param name="entry">The element to delete from the list.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void list_del_init(list_head* entry)
         {
             __list_del_entry(entry);
@@ -306,6 +319,7 @@ namespace Lonos.CTypes
         /// places it as the tail of <paramref name="list"/>, this effectively rotates the
         /// list so that <paramref name="list"/> is at the front.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void list_rotate_to_front(list_head* list, list_head* head)
         {
             list_move_tail(head, list);
@@ -486,6 +500,7 @@ namespace Lonos.CTypes
         /// </summary>
         /// <param name="list">The new list to add.</param>
         /// <param name="head">The place to add it in the first list.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void list_headless_splice_tail(list_head* list, list_head* head)
         {
             __list_splice(list, head->prev, head);
