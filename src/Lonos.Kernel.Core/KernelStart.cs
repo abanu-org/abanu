@@ -27,80 +27,88 @@ namespace Lonos.Kernel.Core
 
         public static unsafe void Main()
         {
-            ManagedMemoy.InitializeGCMemory();
-            StartUp.InitializeAssembly();
-            KMath.Init();
-            //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
+            try
+            {
 
-            BootInfo.SetupStage1();
+                ManagedMemoy.InitializeGCMemory();
+                StartUp.InitializeAssembly();
+                KMath.Init();
+                //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
-            Memory.InitialKernelProtect();
+                BootInfo.SetupStage1();
 
-            ApiContext.Current = new ApiHost();
-            Assert.Setup(AssertError);
+                Memory.InitialKernelProtect();
 
-            // Setup some pseudo devices
-            DeviceManager.InitStage1();
+                ApiContext.Current = new ApiHost();
+                Assert.Setup(AssertError);
 
-            //Setup Output and Debug devices
-            DeviceManager.InitStage2();
+                // Setup some pseudo devices
+                DeviceManager.InitStage1();
 
-            // Write first output
-            KernelMessage.WriteLine("<KERNEL:CONSOLE:BEGIN>");
-            PerformanceCounter.Setup(BootInfo.Header->KernelBootStartCycles);
-            KernelMessage.WriteLine("Starting Lonos Kernel...");
+                //Setup Output and Debug devices
+                DeviceManager.InitStage2();
 
-            KernelMessage.WriteLine("KConfig.UseKernelMemoryProtection: {0}", KConfig.UseKernelMemoryProtection);
-            KernelMessage.WriteLine("KConfig.UsePAE: {0}", KConfig.UsePAE);
-            KernelMessage.WriteLine("Apply PageTableType: {0}", (uint)BootInfo.Header->PageTableType);
+                // Write first output
+                KernelMessage.WriteLine("<KERNEL:CONSOLE:BEGIN>");
+                PerformanceCounter.Setup(BootInfo.Header->KernelBootStartCycles);
+                KernelMessage.WriteLine("Starting Lonos Kernel...");
 
-            Ulongtest1();
-            Ulongtest2();
-            InlineTest();
+                KernelMessage.WriteLine("KConfig.UseKernelMemoryProtection: {0}", KConfig.UseKernelMemoryProtection);
+                KernelMessage.WriteLine("KConfig.UsePAE: {0}", KConfig.UsePAE);
+                KernelMessage.WriteLine("Apply PageTableType: {0}", (uint)BootInfo.Header->PageTableType);
 
-            // Detect environment (Memory Maps, Video Mode, etc.)
-            BootInfo.SetupStage2();
+                Ulongtest1();
+                Ulongtest2();
+                InlineTest();
 
-            KernelMemoryMapManager.Setup();
-            //KernelMemoryMapManager.Allocate(0x1000 * 1000, BootInfoMemoryType.PageDirectory);
+                // Detect environment (Memory Maps, Video Mode, etc.)
+                BootInfo.SetupStage2();
 
-            // Read own ELF-Headers and Sections
-            KernelElf.Setup();
+                KernelMemoryMapManager.Setup();
+                //KernelMemoryMapManager.Allocate(0x1000 * 1000, BootInfoMemoryType.PageDirectory);
 
-            // Initialize the embedded code (actually only a little proof of concept code)
-            NativeCalls.Setup();
+                // Read own ELF-Headers and Sections
+                KernelElf.Setup();
 
-            //InitialKernelProtect();
+                // Initialize the embedded code (actually only a little proof of concept code)
+                NativeCalls.Setup();
 
-            PhysicalPageManager.Setup();
+                //InitialKernelProtect();
 
-            KernelMessage.WriteLine("Phys free: {0}", PhysicalPageManager.FreePages);
-            PhysicalPageManager.AllocatePages(10);
-            KernelMessage.WriteLine("Phys free: {0}", PhysicalPageManager.FreePages);
-            VirtualPageManager.Setup();
+                PhysicalPageManager.Setup();
 
-            Memory.Setup();
+                KernelMessage.WriteLine("Phys free: {0}", PhysicalPageManager.FreePages);
+                PhysicalPageManager.AllocatePages(10);
+                KernelMessage.WriteLine("Phys free: {0}", PhysicalPageManager.FreePages);
+                VirtualPageManager.Setup();
 
-            // Now Memory Sub System is working. At this point it's valid
-            // to allocate memory dynamically
+                Memory.Setup();
 
-            DeviceManager.InitFrameBuffer();
+                // Now Memory Sub System is working. At this point it's valid
+                // to allocate memory dynamically
 
-            // Setup Programmable Interrupt Table
-            PIC.Setup();
+                DeviceManager.InitFrameBuffer();
 
-            // Setup Interrupt Descriptor Table
-            // Important Note: IDT depends on GDT. Never setup IDT before GDT.
-            IDTManager.Setup();
+                // Setup Programmable Interrupt Table
+                PIC.Setup();
 
-            InitializeUserMode();
-            SysCallManager.Setup();
+                // Setup Interrupt Descriptor Table
+                // Important Note: IDT depends on GDT. Never setup IDT before GDT.
+                IDTManager.Setup();
 
-            KernelMessage.WriteLine("Initialize Runtime Metadata");
-            StartUp.InitializeRuntimeMetadata();
+                InitializeUserMode();
+                SysCallManager.Setup();
 
-            KernelMessage.WriteLine("Performing some Non-Thread Tests");
-            Tests();
+                KernelMessage.WriteLine("Initialize Runtime Metadata");
+                StartUp.InitializeRuntimeMetadata();
+
+                KernelMessage.WriteLine("Performing some Non-Thread Tests");
+                Tests();
+            }
+            catch (Exception ex)
+            {
+                Panic.Error(ex.Message);
+            }
 
             if (KConfig.SingleThread)
                 StartupStage2();
@@ -114,56 +122,63 @@ namespace Lonos.Kernel.Core
 
         public static unsafe void StartupStage2()
         {
-            if (!KConfig.SingleThread)
+            try
             {
-                Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(BackgroundWorker.ThreadMain) { DebugName = "BackgroundWorker" }).Start();
-                Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(Thread0) { DebugName = "KernelThread0" }).Start();
-
-                var userProc = ProcessManager.CreateEmptyProcess(new ProcessCreateOptions { User = true });
-                userProc.Path = "/buildin/testproc";
-                Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread1) { AllowUserModeIOPort = true, DebugName = "UserThread1" });
-                Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2" });
-                userProc.Start();
-
-                var fileProc = ProcessManager.StartProcess("Service.Basic");
-                FileServ = fileProc.Service;
-
-                KernelMessage.WriteLine("Waiting for Service");
-                while (FileServ.Status != ServiceStatus.Ready)
+                if (!KConfig.SingleThread)
                 {
-                    Scheduler.Sleep(0);
+                    Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(BackgroundWorker.ThreadMain) { DebugName = "BackgroundWorker", Priority = -5 }).Start();
+                    Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(Thread0) { DebugName = "KernelThread0", Priority = -5 }).Start();
+
+                    var userProc = ProcessManager.CreateEmptyProcess(new ProcessCreateOptions { User = true });
+                    userProc.Path = "/buildin/testproc";
+                    Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread1) { AllowUserModeIOPort = true, DebugName = "UserThread1", Priority = -5 });
+                    Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2", Priority = -5 });
+                    userProc.Start();
+
+                    var fileProc = ProcessManager.StartProcess("Service.Basic");
+                    FileServ = fileProc.Service;
+
+                    KernelMessage.WriteLine("Waiting for Service");
+                    while (FileServ.Status != ServiceStatus.Ready)
+                    {
+                        Scheduler.Sleep(0);
+                    }
+                    KernelMessage.WriteLine("Service Ready");
+
+                    //var buf = Lonos.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
+                    //var kb = Lonos.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
+                    //KernelMessage.Write("kb Handle: {0:X8}", kb);
+                    //buf.Size = 4;
+                    //Lonos.Runtime.SysCalls.WriteFile(kb, buf);
+                    //Lonos.Runtime.SysCalls.ReadFile(kb, buf);
+
+                    //var procHostCommunication = ProcessManager.StartProcess("Service.HostCommunication");
+                    //ServHostCommunication = new Service(procHostCommunication);
+                    //// TODO: Optimize Registration
+                    //SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
+
+                    var proc = ProcessManager.StartProcess("App.HelloService");
+                    Serv = proc.Service;
+
+                    var p2 = ProcessManager.StartProcess("App.HelloKernel");
+                    //p2.Threads[0].SetArgument(0, 0x90);
+                    //p2.Threads[0].SetArgument(4, 0x94);
+                    //p2.Threads[0].SetArgument(8, 0x98);
+                    p2.Threads[0].Debug = true;
+
+                    var p3 = ProcessManager.StartProcess("App.Shell");
+
+                    ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
                 }
-                KernelMessage.WriteLine("Service Ready");
+                VirtualPageManager.SetTraceOptions(new PageFrameAllocatorTraceOptions { Enabled = true, MinPages = 1 });
 
-                //var buf = Lonos.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
-                //var kb = Lonos.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
-                //KernelMessage.Write("kb Handle: {0:X8}", kb);
-                //buf.Size = 4;
-                //Lonos.Runtime.SysCalls.WriteFile(kb, buf);
-                //Lonos.Runtime.SysCalls.ReadFile(kb, buf);
-
-                //var procHostCommunication = ProcessManager.StartProcess("Service.HostCommunication");
-                //ServHostCommunication = new Service(procHostCommunication);
-                //// TODO: Optimize Registration
-                //SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
-
-                var proc = ProcessManager.StartProcess("App.HelloService");
-                Serv = proc.Service;
-
-                var p2 = ProcessManager.StartProcess("App.HelloKernel");
-                //p2.Threads[0].SetArgument(0, 0x90);
-                //p2.Threads[0].SetArgument(4, 0x94);
-                //p2.Threads[0].SetArgument(8, 0x98);
-                p2.Threads[0].Debug = true;
-
-                var p3 = ProcessManager.StartProcess("App.Shell");
-
-                ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
+                KernelMessage.WriteLine("Enter Main Loop");
+                AppMain();
             }
-            VirtualPageManager.SetTraceOptions(new PageFrameAllocatorTraceOptions { Enabled = true, MinPages = 1 });
-
-            KernelMessage.WriteLine("Enter Main Loop");
-            AppMain();
+            catch (Exception ex)
+            {
+                Panic.Error(ex.Message);
+            }
         }
 
         public static Addr TssAddr = null;

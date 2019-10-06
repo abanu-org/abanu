@@ -33,12 +33,15 @@ namespace Lonos.Kernel
             var port = Serial.COM2;
             Serial.SetupPort(port);
 
-            var path = "os/App.Shell.bin";
-            StartProcess(path);
+            //var path = "os/App.Shell.bin";
+            //StartProcess(path);
         }
 
         public static unsafe void StartProcess(string path)
         {
+            if (SharedDisk == null)
+                return;
+
             var fileSize = (uint)GetFileLenth(path);
             var target = SysCalls.GetProcessIDForCommand(SysCallTarget.CreateMemoryProcess);
             var fileBuf = SysCalls.RequestMessageBuffer((uint)fileSize, target);

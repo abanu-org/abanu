@@ -41,6 +41,8 @@ namespace Lonos.Kernel
         HostCommunication_WriteFile = 112,
         HostCommunication_CreateProcess = 113,
 
+        TmpDebug = 120,
+
     }
 
 }

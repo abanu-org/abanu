@@ -14,18 +14,28 @@ namespace Lonos.Runtime
 {
 
     public unsafe delegate void OnMessageReceivedDelegate(SystemMessage* msg);
+    public delegate void OnExceptionDelegate(Exception ex);
     //public unsafe delegate void OnInterruptReceivedDelegate(InterruptMessage* msg);
 
     public static class MessageManager
     {
 
         public static OnMessageReceivedDelegate OnMessageReceived;
+        public static OnExceptionDelegate OnDispatchError;
         //public static OnInterruptReceivedDelegate OnInterruptReceived;
 
         public static unsafe void Dispatch(SystemMessage msg)
         {
-            if (OnMessageReceived != null)
-                OnMessageReceived(&msg);
+            try
+            {
+                if (OnMessageReceived != null)
+                    OnMessageReceived(&msg);
+            }
+            catch (Exception ex)
+            {
+                if (OnDispatchError != null)
+                    OnDispatchError(ex);
+            }
         }
 
         //public static unsafe void DispatchInterrupt(InterruptMessage msg)

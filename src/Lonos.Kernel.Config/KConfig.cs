@@ -86,7 +86,7 @@ namespace Lonos.Kernel.Core
             /// <summary>
             /// Trace every Thread Action
             /// </summary>
-            public const bool Threads = true;
+            public const bool Threads = false;
 
             /// <summary>
             /// Trace every Page Allocation
@@ -99,14 +99,14 @@ namespace Lonos.Kernel.Core
             public const bool MemoryMapping = false;
 
             /// <summary>
-            /// Trace every Page Mapping
+            /// Trace every Syscall
             /// </summary>
-            public const bool SysCall = true;
+            public const bool SysCall = false;
 
             /// <summary>
             /// Trace every Interrupt except Clock
             /// </summary>
-            public const bool Interrupts = true;
+            public const bool Interrupts = false;
 
             /// <summary>
             /// Trace ELF format related calls

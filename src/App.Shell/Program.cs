@@ -18,7 +18,7 @@ namespace Lonos.Kernel
     public static class Program
     {
 
-        public static void Main()
+        public static unsafe void Main()
         {
             ApplicationRuntime.Init();
 
@@ -40,7 +40,12 @@ namespace Lonos.Kernel
                 var gotBytes = SysCalls.ReadFile(kb, buf);
                 if (gotBytes > 0)
                 {
-                    SysCalls.WriteDebugChar('&');
+                    var bufPtr = (byte*)buf.Start;
+                    var key = bufPtr[0];
+                    var s = key.ToString("x");
+                    for (var i = 0; i < s.Length; i++)
+                        SysCalls.WriteDebugChar(s[i]);
+                    SysCalls.WriteDebugChar(' ');
                 }
                 //SysCalls.WriteDebugChar('?');
             }

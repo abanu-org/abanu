@@ -221,7 +221,7 @@ namespace Lonos.Kernel.Core.Interrupts
             //Screen.Goto(15, 5);
             //Screen.Write(IDTManager.RaisedCount);
             var code = (uint)Native.In8(0x60);
-            KernelMessage.WriteLine("Got Keyboard scancode: {0:X2}", code);
+            //KernelMessage.WriteLine("Got Keyboard scancode: {0:X2}", code);
 
             // for debugging
             switch (code)
@@ -243,6 +243,9 @@ namespace Lonos.Kernel.Core.Interrupts
                     break;
                 case 0x07:
                     Key6();
+                    break;
+                case 0x57:
+                    KeyF11();
                     break;
                 case 0x58:
                     KeyF12();
@@ -277,6 +280,10 @@ namespace Lonos.Kernel.Core.Interrupts
         }
 
         private static void Key6()
+        {
+        }
+
+        private static void KeyF11()
         {
         }
 

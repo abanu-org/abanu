@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Lonos.Kernel.Core.Collections;
+using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.Interrupts;
 using Lonos.Kernel.Core.MemoryManagement;
 using Lonos.Kernel.Core.PageManagement;
@@ -250,7 +251,11 @@ namespace Lonos.Kernel.Core.SysCalls
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
 
-            stack->EAX = Commands[commandNum].Handler(&args);
+            var info = Commands[commandNum];
+            if (info == null)
+                Panic.Error("Undefined SysCall");
+
+            stack->EAX = info.Handler(&args);
         }
 
         private static SysCallInfo[] Commands;

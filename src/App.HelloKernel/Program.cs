@@ -32,10 +32,18 @@ namespace Lonos.Kernel
             MessageManager.OnMessageReceived = MessageReceived;
 
             SysCalls.RegisterService(SysCallTarget.HostCommunication_CreateProcess);
+            SysCalls.RegisterService(SysCallTarget.TmpDebug);
 
             SysCalls.SetServiceStatus(ServiceStatus.Ready);
 
-            SetupDrivers();
+            try
+            {
+                SetupDrivers();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             while (true)
             {
@@ -45,6 +53,17 @@ namespace Lonos.Kernel
 
         public static unsafe void MessageReceived(SystemMessage* msg)
         {
+            switch (msg->Target)
+            {
+                case SysCallTarget.TmpDebug:
+                    if (msg->Arg1 == 1)
+                    {
+                        //HostCommunicator.StartProcess("os/App.Shell.bin");
+                        Console.Write("debug");
+                    }
+                    break;
+
+            }
         }
 
         private static void SetupDrivers()
@@ -147,7 +166,7 @@ namespace Lonos.Kernel
                 Console.WriteLine();
             }
 
-            //HostCommunicator.Init(disks[1].DeviceDriver as IDiskDevice);
+            HostCommunicator.Init(disks[1].DeviceDriver as IDiskDevice);
 
             partitionService.CreatePartitionDevices();
 

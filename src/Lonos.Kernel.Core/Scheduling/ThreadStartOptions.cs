@@ -16,6 +16,7 @@ namespace Lonos.Kernel.Core.Scheduling
         public bool Debug;
         public string DebugName;
         public uint ArgumentBufferSize;
+        public int Priority;
 
         public ThreadStartOptions(ThreadStart start)
         {
@@ -26,6 +27,7 @@ namespace Lonos.Kernel.Core.Scheduling
             Debug = false;
             DebugName = null;
             ArgumentBufferSize = 0;
+            Priority = 0;
         }
 
         public ThreadStartOptions(Addr methodAddr)
@@ -36,6 +38,7 @@ namespace Lonos.Kernel.Core.Scheduling
             Debug = false;
             DebugName = null;
             ArgumentBufferSize = 0;
+            Priority = 0;
         }
 
     }

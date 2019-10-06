@@ -35,27 +35,34 @@ namespace Lonos.Kernel.Core.Scheduling
 
         public static void Setup(ThreadStart followupTask)
         {
-            Enabled = false;
-            Threads = new Thread[ThreadCapacity];
-            ThreadsAllocated = 0;
-            ThreadsMaxAllocated = 0;
-            CurrentThreadID = 0;
-            clockTicks = 0;
-
-            for (uint i = 0; i < ThreadCapacity; i++)
+            try
             {
-                Threads[i] = new Thread() { ThreadID = i };
+                Enabled = false;
+                Threads = new Thread[ThreadCapacity];
+                ThreadsAllocated = 0;
+                ThreadsMaxAllocated = 0;
+                CurrentThreadID = 0;
+                clockTicks = 0;
+
+                for (uint i = 0; i < ThreadCapacity; i++)
+                {
+                    Threads[i] = new Thread() { ThreadID = i };
+                }
+
+                SignalThreadTerminationMethodAddress = GetAddress(SignalKernelThreadTerminationMethod);
+
+                CreateThread(ProcessManager.Idle, new ThreadStartOptions(IdleThread) { DebugName = "Idle" }).Start();
+                CreateThread(ProcessManager.System, new ThreadStartOptions(followupTask) { DebugName = "KernelMain" }).Start();
+
+                //Debug, for breakpoint
+                //clockTicks++;
+
+                //AsmDebugFunction.DebugFunction1();
             }
-
-            SignalThreadTerminationMethodAddress = GetAddress(SignalKernelThreadTerminationMethod);
-
-            CreateThread(ProcessManager.Idle, new ThreadStartOptions(IdleThread) { DebugName = "Idle" }).Start();
-            CreateThread(ProcessManager.System, new ThreadStartOptions(followupTask) { DebugName = "KernelMain" }).Start();
-
-            //Debug, for breakpoint
-            //clockTicks++;
-
-            //AsmDebugFunction.DebugFunction1();
+            catch (Exception ex)
+            {
+                Panic.Error(ex.Message);
+            }
         }
 
         public static unsafe void Start()
@@ -107,11 +114,6 @@ namespace Lonos.Kernel.Core.Scheduling
                         if (++th.PriorityInterrupts <= th.Priority)
                             return;
                     }
-                    else
-                    {
-                        if (--th.PriorityInterrupts >= th.Priority)
-                            return;
-                    }
                     th.PriorityInterrupts = 0;
                 }
             }
@@ -128,6 +130,15 @@ namespace Lonos.Kernel.Core.Scheduling
             // Currently, it's a Fake sleep, it assumes always time=0, so it's like a ThreadYield()
 
             var th = GetCurrentThread();
+
+            if (th == null)
+            {
+                KernelMessage.WriteLine("bug {0}", CurrentThreadID);
+            }
+
+            Assert.False(th == null, "th==null");
+            Assert.False(th.Process == null, "th.Process==null");
+
             if (th.Process.IsKernelProcess)
             {
                 //TriggerScheduler(); // BUG. TODO: Save Kernel Stack
@@ -198,7 +209,16 @@ namespace Lonos.Kernel.Core.Scheduling
                     continue;
 
                 if (thread.CanScheduled)
+                {
+                    if (thread.Priority < 0)
+                    {
+                        if (--thread.PriorityInterrupts >= thread.Priority)
+                            continue;
+                        thread.PriorityInterrupts = 0;
+                    }
+
                     return threadID;
+                }
 
                 if (currentThreadID == threadID)
                     return 0; // idle thread
@@ -236,6 +256,8 @@ namespace Lonos.Kernel.Core.Scheduling
                 {
                     ResetTerminatedThreads();
                     threadID = FindEmptyThreadSlot();
+
+                    Assert.False(threadID == 0 && Enabled, "No more free Thread-Slots!");
                 }
 
                 thread = Threads[threadID];
@@ -248,6 +270,7 @@ namespace Lonos.Kernel.Core.Scheduling
             thread.User = proc.User;
             thread.Debug = options.Debug;
             thread.DebugName = options.DebugName;
+            thread.Priority = options.Priority;
 
             var stackSize = options.StackSize;
             var argBufSize = options.ArgumentBufferSize;
@@ -371,7 +394,8 @@ namespace Lonos.Kernel.Core.Scheduling
             if (ThreadsAllocated > ThreadsMaxAllocated)
             {
                 ThreadsMaxAllocated = ThreadsAllocated;
-                KernelMessage.WriteLine("Threads Max Allocated: {0}. Allocated {0} Active: {1}", ThreadsMaxAllocated, ThreadsAllocated, GetActiveThreadCount());
+                if (KConfig.Trace.Threads)
+                    KernelMessage.WriteLine("Threads Max Allocated: {0}. Allocated {0} Active: {1}", ThreadsMaxAllocated, ThreadsAllocated, GetActiveThreadCount());
                 if (KConfig.Trace.Threads)
                     Dump();
             }

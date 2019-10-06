@@ -34,6 +34,7 @@ namespace Lonos.Kernel
             Files.Add(new VfsFile { Path = "/dev/screen", Buffer = new FifoFile() });
 
             MessageManager.OnMessageReceived = MessageReceived;
+            MessageManager.OnDispatchError = OnDispatchError;
 
             SysCalls.RegisterService(SysCallTarget.OpenFile);
             SysCalls.RegisterService(SysCallTarget.CreateFifo);
@@ -48,6 +49,11 @@ namespace Lonos.Kernel
             {
                 SysCalls.ThreadSleep(0);
             }
+        }
+
+        public static unsafe void OnDispatchError(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
         }
 
         public static unsafe void MessageReceived(SystemMessage* msg)
@@ -99,8 +105,8 @@ namespace Lonos.Kernel
                 for (var i = 0; i < cnt; i++)
                 {
                     buf[i] = Data[ReadPosition++];
-                    if (WritePosition >= Data.Length)
-                        WritePosition = 0;
+                    if (ReadPosition >= Data.Length)
+                        ReadPosition = 0;
                     Length--;
                 }
 
@@ -192,10 +198,18 @@ namespace Lonos.Kernel
         {
             var code = Native.In8(0x60);
 
-            SysCalls.WriteDebugChar('*');
+            //SysCalls.WriteDebugChar('*');
             //SysCalls.WriteDebugChar((char)(byte)code);
             //SysCalls.WriteDebugChar('*');
+
+            // F11
+            if (code == 0x57)
+            {
+                MessageManager.Send(new SystemMessage(SysCallTarget.TmpDebug, 1));
+            }
+
             KeyBoardFifo.Buffer.Write(&code, 1);
+
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
