@@ -5,6 +5,7 @@
 
 namespace Lonos.Kernel.Core
 {
+
     /// <summary>
     /// Static Kernel Configuration.
     /// Because Members are accessed before Runtime-Initialization, only constants and Readonly-Properties are allowed
@@ -76,8 +77,9 @@ namespace Lonos.Kernel.Core
         /// </summary>
         public const uint DefaultStackSize = 0x4000;
 
-        public static class Trace
+        public static class Log
         {
+
             /// <summary>
             /// Trace every Task switch
             /// </summary>
@@ -86,7 +88,7 @@ namespace Lonos.Kernel.Core
             /// <summary>
             /// Trace every Thread Action
             /// </summary>
-            public const bool Threads = false;
+            public const KLogLevel Threads = KLogLevel.Trace;
 
             /// <summary>
             /// Trace every Page Allocation
@@ -112,6 +114,7 @@ namespace Lonos.Kernel.Core
             /// Trace ELF format related calls
             /// </summary>
             public const bool ELF = false;
+
         }
     }
 

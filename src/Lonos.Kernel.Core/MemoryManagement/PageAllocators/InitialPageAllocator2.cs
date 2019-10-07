@@ -138,7 +138,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         private Page* AllocateInternal(uint pages, AllocatePageOptions options = default)
         {
-            if (KConfig.Trace.PageAllocation && TraceOptions.Enabled && pages >= TraceOptions.MinPages)
+            if (KConfig.Log.PageAllocation && TraceOptions.Enabled && pages >= TraceOptions.MinPages)
                 KernelMessage.Path(DebugName, "Requesting Pages: {1}. Available: {2} DebugName={0}", options.DebugName, pages, _FreePages);
 
             if (pages == 256)
@@ -171,7 +171,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 FreeList = head->next;
                 list_head.list_del_init(head);
                 headPage->Status = PageStatus.Used;
-                if (KConfig.Trace.PageAllocation)
+                if (KConfig.Log.PageAllocation)
                     if (options.DebugName != null)
                         headPage->DebugTag = (uint)Intrinsic.GetObjectAddress(options.DebugName);
                     else
@@ -189,7 +189,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                     _FreePages--;
                 }
 
-                if (KConfig.Trace.PageAllocation && TraceOptions.Enabled && pages >= TraceOptions.MinPages)
+                if (KConfig.Log.PageAllocation && TraceOptions.Enabled && pages >= TraceOptions.MinPages)
                     KernelMessage.Path(DebugName, "Allocation done. Addr: {0:X8} Available: {1}", GetAddress(headPage), _FreePages);
 
                 Allocations++;
@@ -255,7 +255,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 list_head.list_headless_splice_tail((list_head*)page, FreeList);
             }
             var freedPages = _FreePages - oldFree;
-            if (KConfig.Trace.PageAllocation && TraceOptions.Enabled && freedPages >= TraceOptions.MinPages)
+            if (KConfig.Log.PageAllocation && TraceOptions.Enabled && freedPages >= TraceOptions.MinPages)
                 KernelMessage.Path(DebugName, "Freed Pages: {1}. Addr: {2:X8}. Now available: {3} --> {4}. Allocations={5} DebugName={0}.", debugName, freedPages, GetAddress(page), oldFree, _FreePages, (uint)Allocations);
 
             Allocations--;

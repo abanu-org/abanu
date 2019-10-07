@@ -10,7 +10,7 @@ namespace Lonos.Kernel.Core.PageManagement
     {
         public static void Map(this IPageTable table, Addr virtAddr, Addr physAddr, USize length, bool present = true, bool flush = false)
         {
-            if (KConfig.Trace.MemoryMapping && length > 4096)
+            if (KConfig.Log.MemoryMapping && length > 4096)
                 KernelMessage.WriteLine("Map: virt={0:X8}, phys={1:X8}, length={2:X8}", virtAddr, physAddr, length);
 
             var pages = KMath.DivCeil(length, 4096);
@@ -37,7 +37,7 @@ namespace Lonos.Kernel.Core.PageManagement
 
         public static void UnMap(this IPageTable table, Addr virtAddr, USize length, bool flush = false)
         {
-            if (KConfig.Trace.MemoryMapping && length > 4096)
+            if (KConfig.Log.MemoryMapping && length > 4096)
                 KernelMessage.WriteLine("UnMap: virt={0:X8}, length={2:X8}", virtAddr, length);
 
             var pages = KMath.DivCeil(length, 4096);
@@ -56,7 +56,7 @@ namespace Lonos.Kernel.Core.PageManagement
         /// </summary>
         public static void MapDual(this IPageTable table, IPageTable sharedTable, Addr virtAddr, Addr physAddr, USize length, bool present = true, bool flush = false)
         {
-            if (KConfig.Trace.MemoryMapping && length > 4096)
+            if (KConfig.Log.MemoryMapping && length > 4096)
                 KernelMessage.WriteLine("MapDual: virt={0:X8}, phys={1:X8}, length={2:X8}", virtAddr, physAddr, length);
 
             var pages = KMath.DivCeil(length, 4096);
@@ -77,7 +77,7 @@ namespace Lonos.Kernel.Core.PageManagement
         /// </summary>
         public static void MapCopy(this IPageTable table, IPageTable fromTable, Addr virtAddr, USize length, bool present = true, bool flush = false)
         {
-            if (KConfig.Trace.MemoryMapping && length > 4096)
+            if (KConfig.Log.MemoryMapping && length > 4096)
                 KernelMessage.WriteLine("MapCopy: virt={0:X8}, length={1:X8}", virtAddr, length);
 
             var pages = KMath.DivCeil(length, 4096);
@@ -97,7 +97,7 @@ namespace Lonos.Kernel.Core.PageManagement
         /// </summary>
         public static void MapCopy(this IPageTable table, IPageTable fromTable, Addr srcVirtAddr, Addr destVirtAddr, USize length, bool present = true, bool flush = false)
         {
-            if (KConfig.Trace.MemoryMapping && length > 4096)
+            if (KConfig.Log.MemoryMapping && length > 4096)
                 KernelMessage.WriteLine("MapCopy: srcVirt={0:X8}, destVirt={1:X8}, length={2:X8}", srcVirtAddr, destVirtAddr, length);
 
             var pages = KMath.DivCeil(length, 4096);

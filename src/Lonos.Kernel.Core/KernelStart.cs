@@ -129,7 +129,7 @@ namespace Lonos.Kernel.Core
                     Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(BackgroundWorker.ThreadMain) { DebugName = "BackgroundWorker", Priority = -5 }).Start();
                     Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(Thread0) { DebugName = "KernelThread0", Priority = -5 }).Start();
 
-                    var userProc = ProcessManager.CreateEmptyProcess(new ProcessCreateOptions { User = true });
+                    var userProc = ProcessManager.CreateEmptyProcess(new ProcessCreateOptions { User = false });
                     userProc.Path = "/buildin/testproc";
                     Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread1) { AllowUserModeIOPort = true, DebugName = "UserThread1", Priority = -5 });
                     Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2", Priority = -5 });

@@ -97,7 +97,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                     KernelMessage.WriteLine("Requesting zero pages");
                     return null;
                 }
-                else if (pages > 1 && KConfig.Trace.PageAllocation)
+                else if (pages > 1 && KConfig.Log.PageAllocation)
                 {
                     KernelMessage.WriteLine("Requesting {0} pages", pages);
                 }

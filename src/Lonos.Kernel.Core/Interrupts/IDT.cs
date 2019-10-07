@@ -53,7 +53,7 @@ namespace Lonos.Kernel.Core
             }
 
             var interruptInfo = IDTManager.Handlers[irq];
-            if (KConfig.Trace.Interrupts && interruptInfo.Trace && thread != null)
+            if (KConfig.Log.Interrupts && interruptInfo.Trace && thread != null)
                 KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
 
             IDTManager.RaisedCount++;
@@ -61,7 +61,7 @@ namespace Lonos.Kernel.Core
             if (interruptInfo.CountStatistcs)
                 IDTManager.RaisedCountCustom++;
 
-            if (KConfig.Trace.Interrupts)
+            if (KConfig.Log.Interrupts)
             {
                 if (interruptInfo.Trace)
                     KernelMessage.WriteLine("Interrupt: {0}", irq);

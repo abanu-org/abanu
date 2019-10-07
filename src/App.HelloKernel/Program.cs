@@ -60,6 +60,7 @@ namespace Lonos.Kernel
                     {
                         //HostCommunicator.StartProcess("os/App.Shell.bin");
                         Console.Write("debug");
+                        MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
                     }
                     break;
 

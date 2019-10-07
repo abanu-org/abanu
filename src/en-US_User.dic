@@ -29,6 +29,7 @@ keymap
 kmalloc
 len
 localhost
+loglevel
 Loncar
 Lonos
 lonosctl
@@ -51,6 +52,7 @@ qemu
 Readonly
 sbrk
 scancode
+Schedulable
 seg
 sizeof
 src

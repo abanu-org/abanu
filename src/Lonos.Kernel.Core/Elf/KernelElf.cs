@@ -34,7 +34,7 @@ namespace Lonos.Kernel.Core.Elf
                 // TODO: Throw Exception
             }
 
-            if (KConfig.Trace.ELF)
+            if (KConfig.Log.ELF)
                 KernelMessage.WriteLine("Found ELF at {0:X8}", elfStart);
 
             var helper = new ElfHelper
