@@ -56,6 +56,35 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.CreateMemoryProcess, Cmd_CreateMemoryProcess);
         }
 
+        public static void InterruptHandler(IDTStack* stack)
+        {
+            var args = new SystemMessage
+            {
+                Target = (SysCallTarget)stack->EAX,
+                Arg1 = stack->EBX,
+                Arg2 = stack->ECX,
+                Arg3 = stack->EDX,
+                Arg4 = stack->ESI,
+                Arg5 = stack->EDI,
+                Arg6 = stack->EBP,
+            };
+
+            var commandNum = GetCommandNum(args.Target);
+
+            if (KConfig.Log.SysCall)
+                KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
+
+            Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
+
+            var info = Commands[commandNum];
+            if (info == null)
+                Panic.Error("Undefined SysCall");
+
+            stack->EAX = info.Handler(&args);
+        }
+
+        private static SysCallInfo[] Commands;
+
         private static uint nextVirtPage;
 
         private static uint Cmd_RegisteredService(SystemMessage* args)
@@ -231,34 +260,6 @@ namespace Lonos.Kernel.Core.SysCalls
             return (uint)target & CommandMask;
         }
 
-        public static void InterruptHandler(IDTStack* stack)
-        {
-            var args = new SystemMessage
-            {
-                Target = (SysCallTarget)stack->EAX,
-                Arg1 = stack->EBX,
-                Arg2 = stack->ECX,
-                Arg3 = stack->EDX,
-                Arg4 = stack->ESI,
-                Arg5 = stack->EDI,
-                Arg6 = stack->EBP,
-            };
-
-            var commandNum = GetCommandNum(args.Target);
-
-            if (KConfig.Log.SysCall)
-                KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
-
-            Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
-
-            var info = Commands[commandNum];
-            if (info == null)
-                Panic.Error("Undefined SysCall");
-
-            stack->EAX = info.Handler(&args);
-        }
-
-        private static SysCallInfo[] Commands;
     }
 
     public unsafe delegate uint DSysCallInfoHandler(SystemMessage* args);
@@ -271,17 +272,5 @@ namespace Lonos.Kernel.Core.SysCalls
         public DSysCallInfoHandler Handler;
         public Process Process;
     }
-
-    //[StructLayout(LayoutKind.Sequential, Size = 4 * 5)]
-    //public struct ServiceArgs
-    //{
-    //    public const uint Size = 4 * 5;
-
-    //    public uint Arg1;
-    //    public uint Arg2;
-    //    public uint Arg3;
-    //    public uint Arg4;
-    //    public uint Arg5;
-    //}
 
 }

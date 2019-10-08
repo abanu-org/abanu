@@ -88,7 +88,7 @@ namespace Lonos.Kernel.Core
             /// <summary>
             /// Trace every Thread Action
             /// </summary>
-            public const KLogLevel Threads = KLogLevel.Trace;
+            public const KLogLevel Threads = KLogLevel.Info;
 
             /// <summary>
             /// Trace every Page Allocation

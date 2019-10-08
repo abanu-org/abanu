@@ -591,7 +591,7 @@ namespace Lonos.Kernel.Core.Scheduling
                 }
 
                 if (KConfig.Log.Threads >= KLogLevel.Debug)
-                    KernelMessage.WriteLine("Disposing Thread {0}", thread.DebugName);
+                    KernelMessage.WriteLine("Disposing Thread {1} DebugName={0}", thread.DebugName, thread.ThreadID);
 
                 thread.FreeMemory();
                 ThreadsAllocated--;
