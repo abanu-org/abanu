@@ -147,6 +147,13 @@ namespace Lonos.Kernel.Core.Scheduling
             ScheduleNextThread(th.ThreadID);
         }
 
+        public static void ScheduleNextThread()
+        {
+            var currentThreadID = GetCurrentThreadID();
+            var nextThreadID = GetNextThread(currentThreadID);
+            SwitchToThread(nextThreadID);
+        }
+
         private static void ScheduleNextThread(uint currentThreadID)
         {
             var nextThreadID = GetNextThread(currentThreadID);

@@ -35,13 +35,13 @@ namespace Lonos.Kernel.Core.Scheduling
 
         // TODO: Code duplication! Both SwitchToThreadMethod are very similar.
 
-        public unsafe void SwitchToThreadMethod(SystemMessage* args)
+        public unsafe void SwitchToThreadMethod(SystemMessage* args, bool isChild)
         {
             var th = CreateThread(MethodAddr, SystemMessage.Size);
             th.DebugSystemMessage = *args;
             var argAddr = (SystemMessage*)th.GetArgumentAddr(0);
             argAddr[0] = *args;
-            SwitchToThread(th);
+            SwitchToThread(th, isChild);
         }
 
         public Thread CreateThread(uint methodAddr, uint argumentBufferSize)
@@ -49,14 +49,17 @@ namespace Lonos.Kernel.Core.Scheduling
             return Scheduler.CreateThread(Process, new ThreadStartOptions(methodAddr) { ArgumentBufferSize = argumentBufferSize, DebugName = "ServiceCall" });
         }
 
-        public static unsafe void SwitchToThread(Thread th)
+        public static unsafe void SwitchToThread(Thread th, bool isChild)
         {
-            var cThread = Scheduler.GetCurrentThread();
+            if (isChild)
+            {
+                var cThread = Scheduler.GetCurrentThread();
 
-            // Connect Threads
-            cThread.ChildThread = th;
-            cThread.Status = ThreadStatus.Waiting;
-            th.ParentThread = cThread;
+                // Connect Threads
+                cThread.ChildThread = th;
+                cThread.Status = ThreadStatus.Waiting;
+                th.ParentThread = cThread;
+            }
 
             //th.StackState->Stack.ECX = arg0;
 

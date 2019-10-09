@@ -60,7 +60,7 @@ namespace Lonos.Kernel.Core.Interrupts
             };
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
-            handler.Service.SwitchToThreadMethod(&msg);
+            handler.Service.SwitchToThreadMethod(&msg, false);
         }
 
         /// <summary>

@@ -40,12 +40,15 @@ namespace Lonos.Kernel
                 var gotBytes = SysCalls.ReadFile(kb, buf);
                 if (gotBytes > 0)
                 {
-                    var bufPtr = (byte*)buf.Start;
-                    var key = bufPtr[0];
-                    var s = key.ToString("x");
-                    for (var i = 0; i < s.Length; i++)
-                        SysCalls.WriteDebugChar(s[i]);
-                    SysCalls.WriteDebugChar(' ');
+                    for (var byteIdx = 0; byteIdx < gotBytes; byteIdx++)
+                    {
+                        var bufPtr = (byte*)buf.Start;
+                        var key = bufPtr[byteIdx];
+                        var s = key.ToString("x");
+                        for (var i = 0; i < s.Length; i++)
+                            SysCalls.WriteDebugChar(s[i]);
+                        SysCalls.WriteDebugChar(' ');
+                    }
                 }
                 //SysCalls.WriteDebugChar('?');
             }

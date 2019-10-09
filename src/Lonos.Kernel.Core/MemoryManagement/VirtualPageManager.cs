@@ -64,8 +64,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //    return virt;
         //}
 
+        private const bool AddProtectedRegions = true;
+
         internal static unsafe Addr AllocatePages(uint pages, AllocatePageOptions options = default)
         {
+            if (AddProtectedRegions)
+                pages += 2;
+
             var physHead = PhysicalPageManager.AllocatePages(pages, options);
             if (physHead == null)
                 return Addr.Zero;
@@ -75,11 +80,21 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var v = virtHead;
             for (var i = 0; i < pages; i++)
             {
-                PageTable.KernelTable.Map(Allocator.GetAddress(v), PhysicalPageManager.GetAddress(p));
+                var map = true;
+                if (AddProtectedRegions && (i == 0 || i == pages - 1))
+                    map = false;
+
+                if (map)
+                    PageTable.KernelTable.Map(Allocator.GetAddress(v), PhysicalPageManager.GetAddress(p));
+
                 p = PhysicalPageManager.NextCompoundPage(p);
                 v = Allocator.NextCompoundPage(v);
             }
             PageTable.KernelTable.Flush();
+
+            if (AddProtectedRegions)
+                virtHead = Allocator.NextCompoundPage(virtHead);
+
             return Allocator.GetAddress(virtHead);
         }
 
@@ -88,28 +103,45 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// </summary>
         internal static unsafe Addr AllocateIdentityMappedPages(uint pages)
         {
+            if (AddProtectedRegions)
+                pages += 2;
+
             var virtHead = IdentityAllocator.AllocatePages(pages);
 
             var v = virtHead;
             for (var i = 0; i < pages; i++)
             {
                 var addr = Allocator.GetAddress(v);
-                PageTable.KernelTable.Map(addr, addr);
+
+                var map = true;
+                if (AddProtectedRegions && (i == 0 || i == pages - 1))
+                    map = false;
+
+                if (map)
+                    PageTable.KernelTable.Map(addr, addr);
                 v = Allocator.NextCompoundPage(v);
             }
             PageTable.KernelTable.Flush();
+
+            if (AddProtectedRegions)
+                virtHead = Allocator.NextCompoundPage(virtHead);
+
             return Allocator.GetAddress(virtHead);
         }
 
         internal static unsafe void FreeAddr(Addr addr)
         {
             var physAddr = PageTable.KernelTable.GetPhysicalAddressFromVirtual(addr);
+            if (AddProtectedRegions)
+                addr -= 4096;
             Allocator.FreeAddr(addr);
             PhysicalPageManager.FreeAddr(physAddr);
         }
 
         internal static unsafe void FreeAddrIdentity(Addr addr)
         {
+            if (AddProtectedRegions)
+                addr -= 4096;
             IdentityAllocator.FreeAddr(addr);
         }
 

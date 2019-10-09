@@ -92,7 +92,7 @@ namespace Lonos.Kernel.Core.SysCalls
             var commandNum = GetCommandNum(args->Target);
             var targetProcess = Commands[commandNum].Process;
             if (targetProcess.Service != null)
-                targetProcess.Service.SwitchToThreadMethod(args);
+                targetProcess.Service.SwitchToThreadMethod(args, true);
 
             // Normally, code should never reached
             return 0;
@@ -223,18 +223,24 @@ namespace Lonos.Kernel.Core.SysCalls
         private static uint Cmd_ServiceReturn(SystemMessage* args)
         {
             var servThread = Scheduler.GetCurrentThread();
-            var parent = servThread.ParentThread;
-
-            servThread.ParentThread = null;
-            parent.ChildThread = null;
-
             servThread.Status = ThreadStatus.Terminated;
 
-            if (parent.StackState != null)
-                parent.StackState->Stack.EAX = args->Arg1;
+            if (servThread.ParentThread != null)
+            {
+                var parent = servThread.ParentThread;
 
-            Scheduler.SwitchToThread(parent.ThreadID);
+                servThread.ParentThread = null;
+                parent.ChildThread = null;
 
+                if (parent.StackState != null)
+                    parent.StackState->Stack.EAX = args->Arg1;
+
+                Scheduler.SwitchToThread(parent.ThreadID);
+            }
+            else
+            {
+                Scheduler.ScheduleNextThread();
+            }
             return 0;
         }
 
