@@ -26,6 +26,7 @@ namespace Lonos.Kernel
 
             while (true)
             {
+                SysCalls.ThreadSleep(0);
             }
         }
 

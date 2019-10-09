@@ -20,7 +20,7 @@ namespace Lonos.Kernel.Core.Tasks
             while (true)
             {
                 Scheduler.ResetTerminatedThreads();
-                Native.Hlt();
+                Scheduler.Sleep(0);
             }
         }
 

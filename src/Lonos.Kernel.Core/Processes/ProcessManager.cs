@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.Collections;
+using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.Elf;
 using Lonos.Kernel.Core.MemoryManagement;
 using Lonos.Kernel.Core.PageManagement;
@@ -38,8 +39,7 @@ namespace Lonos.Kernel.Core.Processes
             Scheduler.Setup(followupTask);
             Scheduler.Start();
 
-            while (true)
-                Native.Hlt();
+            Panic.Error("Should never get here");
         }
 
         public static Process CreateEmptyProcess(ProcessCreateOptions options)

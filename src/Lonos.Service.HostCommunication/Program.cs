@@ -30,6 +30,7 @@ namespace Lonos.Kernel
             SysCalls.WriteDebugChar('+');
             while (true)
             {
+                SysCalls.ThreadSleep(0);
             }
         }
 

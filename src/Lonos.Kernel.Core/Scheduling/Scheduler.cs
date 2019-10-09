@@ -89,7 +89,7 @@ namespace Lonos.Kernel.Core.Scheduling
         private static void IdleThread()
         {
             while (true)
-                Native.Hlt();
+                Scheduler.Sleep(0);
         }
 
         private static void Dummy(uint local)
@@ -142,6 +142,7 @@ namespace Lonos.Kernel.Core.Scheduling
             if (th.Process.IsKernelProcess)
             {
                 //TriggerScheduler(); // BUG. TODO: Save Kernel Stack
+                TriggerScheduler();
                 return;
             }
             ScheduleNextThread(th.ThreadID);

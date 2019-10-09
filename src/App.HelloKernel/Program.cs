@@ -48,6 +48,7 @@ namespace Lonos.Kernel
             while (true)
             {
                 //Serial.Write(port, (byte)'M');
+                SysCalls.ThreadSleep(0);
             }
         }
 
