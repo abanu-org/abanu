@@ -17,17 +17,27 @@ using Lonos.Kernel.Core.Scheduling;
 
 namespace Lonos.Kernel.Core.SysCalls
 {
+
+    public enum CallingType : byte
+    {
+        Sync,
+        Async,
+    }
+
     public static unsafe class SysCallManager
     {
 
-        public const uint IRQ = 250;
+        public const uint FunctionIRQ = 250;
+        public const uint ActionIRQ = 251;
 
         public static void Setup()
         {
             KernelMessage.WriteLine("Initialize SysCall Manager");
 
-            IDTManager.SetInterruptHandler(IRQ, InterruptHandler);
-            IDTManager.SetPrivilegeLevel(IRQ, 0x03);
+            IDTManager.SetInterruptHandler(FunctionIRQ, FunctionInterruptHandler);
+            IDTManager.SetPrivilegeLevel(FunctionIRQ, 0x03);
+            IDTManager.SetInterruptHandler(ActionIRQ, ActionInterruptHandler);
+            IDTManager.SetPrivilegeLevel(ActionIRQ, 0x03);
             IDTManager.Flush();
 
             Commands = new SysCallInfo[256];
@@ -56,7 +66,17 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.CreateMemoryProcess, Cmd_CreateMemoryProcess);
         }
 
-        public static void InterruptHandler(IDTStack* stack)
+        private static void FunctionInterruptHandler(IDTStack* stack)
+        {
+            InterruptHandler(stack, CallingType.Sync);
+        }
+
+        private static void ActionInterruptHandler(IDTStack* stack)
+        {
+            InterruptHandler(stack, CallingType.Async);
+        }
+
+        private static void InterruptHandler(IDTStack* stack, CallingType callingMethod)
         {
             var args = new SystemMessage
             {
@@ -80,25 +100,30 @@ namespace Lonos.Kernel.Core.SysCalls
             if (info == null)
                 Panic.Error("Undefined SysCall");
 
-            stack->EAX = info.Handler(&args);
+            var ctx = new SysCallContext
+            {
+                CallingType = callingMethod,
+            };
+
+            stack->EAX = info.Handler(&ctx, &args);
         }
 
         private static SysCallInfo[] Commands;
 
         private static uint nextVirtPage;
 
-        private static uint Cmd_RegisteredService(SystemMessage* args)
+        private static uint Cmd_RegisteredService(SysCallContext* context, SystemMessage* args)
         {
             var commandNum = GetCommandNum(args->Target);
             var targetProcess = Commands[commandNum].Process;
             if (targetProcess.Service != null)
-                targetProcess.Service.SwitchToThreadMethod(args, true);
+                targetProcess.Service.SwitchToThreadMethod(context, args);
 
-            // Normally, code should never reached
+            // Will reach only, if callingMethod==Action
             return 0;
         }
 
-        private static uint Cmd_RequestMemory(SystemMessage* args)
+        private static uint Cmd_RequestMemory(SysCallContext* context, SystemMessage* args)
         {
             var pages = KMath.DivCeil(args->Arg1, 4096);
             var page = PhysicalPageManager.AllocatePages(pages);
@@ -108,7 +133,7 @@ namespace Lonos.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        private static uint Cmd_GetPhysicalMemory(SystemMessage* args)
+        private static uint Cmd_GetPhysicalMemory(SysCallContext* context, SystemMessage* args)
         {
             var physAddr = args->Arg1;
             var pages = KMath.DivCeil(args->Arg2, 4096);
@@ -118,13 +143,13 @@ namespace Lonos.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        private static uint Cmd_TranslateVirtualToPhysicalAddress(SystemMessage* args)
+        private static uint Cmd_TranslateVirtualToPhysicalAddress(SysCallContext* context, SystemMessage* args)
         {
             var virtAddr = args->Arg1;
             return Scheduler.GetCurrentThread().Process.PageTable.GetPhysicalAddressFromVirtual(virtAddr);
         }
 
-        private static uint Cmd_RequestMessageBuffer(SystemMessage* args)
+        private static uint Cmd_RequestMessageBuffer(SysCallContext* context, SystemMessage* args)
         {
             var size = args->Arg1;
             var targetProcessID = args->Arg2;
@@ -143,7 +168,7 @@ namespace Lonos.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        private static uint Cmd_WriteDebugMessage(SystemMessage* args)
+        private static uint Cmd_WriteDebugMessage(SysCallContext* context, SystemMessage* args)
         {
             var msg = (NullTerminatedString*)args->Arg1;
             KernelMessage.WriteLine(msg);
@@ -151,14 +176,14 @@ namespace Lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint Cmd_WriteDebugChar(SystemMessage* args)
+        private static uint Cmd_WriteDebugChar(SysCallContext* context, SystemMessage* args)
         {
             var c = (char)args->Arg1;
             KernelMessage.Write(c);
             return 0;
         }
 
-        private static uint Cmd_CreateMemoryProcess(SystemMessage* args)
+        private static uint Cmd_CreateMemoryProcess(SysCallContext* context, SystemMessage* args)
         {
             ProcessManager.StartProcessFromBuffer(args->Arg1);
             //ProcessManager.StartProcess("App.Shell");
@@ -166,14 +191,14 @@ namespace Lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint Cmd_SetThreadPriority(SystemMessage* args)
+        private static uint Cmd_SetThreadPriority(SysCallContext* context, SystemMessage* args)
         {
             Scheduler.SetThreadPriority((int)args->Arg1);
 
             return 0;
         }
 
-        private static uint Cmd_ThreadSleep(SystemMessage* args)
+        private static uint Cmd_ThreadSleep(SysCallContext* context, SystemMessage* args)
         {
             var time = args->Arg1;
             Scheduler.Sleep(time);
@@ -181,7 +206,7 @@ namespace Lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint Cmd_RegisterService(SystemMessage* args)
+        private static uint Cmd_RegisterService(SysCallContext* context, SystemMessage* args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
@@ -190,7 +215,7 @@ namespace Lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint Cmd_RegisterInterrupt(SystemMessage* args)
+        private static uint Cmd_RegisterInterrupt(SysCallContext* context, SystemMessage* args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
@@ -201,7 +226,7 @@ namespace Lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint Cmd_SetServiceStatus(SystemMessage* args)
+        private static uint Cmd_SetServiceStatus(SysCallContext* context, SystemMessage* args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
@@ -210,7 +235,7 @@ namespace Lonos.Kernel.Core.SysCalls
             return 0;
         }
 
-        private static uint Cmd_GetProcessIDForCommand(SystemMessage* args)
+        private static uint Cmd_GetProcessIDForCommand(SysCallContext* context, SystemMessage* args)
         {
             var cmdNum = GetCommandNum((SysCallTarget)args->Arg1);
             var proc = Commands[cmdNum].Process;
@@ -220,7 +245,7 @@ namespace Lonos.Kernel.Core.SysCalls
             return proc.ProcessID;
         }
 
-        private static uint Cmd_ServiceReturn(SystemMessage* args)
+        private static uint Cmd_ServiceReturn(SysCallContext* context, SystemMessage* args)
         {
             var servThread = Scheduler.GetCurrentThread();
             servThread.Status = ThreadStatus.Terminated;
@@ -268,7 +293,12 @@ namespace Lonos.Kernel.Core.SysCalls
 
     }
 
-    public unsafe delegate uint DSysCallInfoHandler(SystemMessage* args);
+    public struct SysCallContext
+    {
+        public CallingType CallingType;
+    }
+
+    public unsafe delegate uint DSysCallInfoHandler(SysCallContext* context, SystemMessage* args);
 
     public class SysCallInfo
     {

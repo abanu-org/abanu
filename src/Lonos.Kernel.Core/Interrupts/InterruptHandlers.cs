@@ -54,13 +54,18 @@ namespace Lonos.Kernel.Core.Interrupts
                 return;
             }
 
+            var ctx = new SysCallContext
+            {
+                CallingType = CallingType.Async, // Important! Otherwise stack will corrupted
+            };
+
             var msg = new SystemMessage(SysCallTarget.Interrupt)
             {
                 Arg1 = stack->Interrupt,
             };
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
-            handler.Service.SwitchToThreadMethod(&msg, false);
+            handler.Service.SwitchToThreadMethod(&ctx, &msg);
         }
 
         /// <summary>
