@@ -12,7 +12,10 @@ mkdir -p $LONOS_LOGDIR
 mkdir -p $LONOS_TMPDIR
 mkdir -p $LONOS_ISODIR
 #dd if=/dev/zero of=/tmp/network-disk.img bs=10M count=1
-touch tmp/network-disk.img
+#touch tmp/network-disk.img
+if [ ! -f /tmp/network-dis.img ]; then
+	dd if=/dev/zero of=tmp/network-disk.img bs=10M count=1
+fi
 loadenv auto
 
 #set -x
