@@ -27,19 +27,87 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //lockObj = new object();
             //LockCount = 0;
 
-            var allocator = new VirtualInitialPageAllocator(true) { DebugName = "VirtInitial" };
-            //allocator.Setup(MemoryRegion.FromLocation(0, Address.VirtMapStart + (60 * 1024 * 1024)), AddressSpaceKind.Virtual);
-            allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
-            Allocator = allocator;
+            Allocator = CreateAllocator();
 
             //_identityStartVirtAddr = Address.IdentityMapStart;
             //_identityNextVirtAddr = _identityStartVirtAddr;
 
-            allocator = new VirtualInitialPageAllocator(false) { DebugName = "VirtIdentityInitial" };
-            allocator.Setup(new MemoryRegion(Address.IdentityMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
-            IdentityAllocator = allocator;
+            var allocator2 = new VirtualInitialPageAllocator(false) { DebugName = "VirtIdentityInitial" };
+            allocator2.Setup(new MemoryRegion(Address.IdentityMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
+            IdentityAllocator = allocator2;
 
             PhysicalPageManager.SelfTest();
+            SelfTest(Allocator);
+            SelfTest(IdentityAllocator);
+        }
+
+        private static IPageFrameAllocator CreateAllocator()
+        {
+            //var allocator = new VirtualInitialPageAllocator(true) { DebugName = "VirtInitial" };
+            var allocator = new VirtualBuddyPageAllocator() { DebugName = "VirtInitial" };
+            allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
+            return allocator;
+        }
+
+        private const bool SelfTestDump = false;
+
+        public static unsafe void SelfTest(IPageFrameAllocator allocator)
+        {
+            if (SelfTestDump)
+                allocator.DumpPages();
+
+            KernelMessage.WriteLine("Begin SelfTest {0}", allocator.DebugName);
+
+            var ptrPages = (allocator.TotalPages * 4) / 4096;
+            var ptrListAddr = AllocatePages(ptrPages); // pointers for 4GB of pages
+            var ptrList = (Addr*)ptrListAddr;
+            var checkPageCount = allocator.FreePages;
+            checkPageCount -= 1000;
+            uint checkPagesEach = 4;
+            checkPageCount /= checkPagesEach;
+            //checkPageCount = 32;
+            var mapPhysAddr = PhysicalPageManager.AllocatePageAddr(checkPagesEach);
+            for (var i = 0; i < checkPageCount; i++)
+            {
+                if (SelfTestDump)
+                    KernelMessage.Write(".");
+                var testAddr = allocator.AllocatePagesAddr(checkPagesEach);
+                ptrList[i] = testAddr;
+                //KernelMessage.WriteLine("{0:X8}-->{1:X8}", testAddr, mapPhysAddr);
+                PageTable.KernelTable.Map(testAddr, mapPhysAddr, 4096 * checkPagesEach, true, true);
+                var mapPtr = (uint*)testAddr;
+                for (var pos = 0; pos < 1024 * checkPagesEach; pos++)
+                {
+                    *mapPtr = 0xEBFEEBFE;
+                    mapPtr += 1;
+                }
+                PageTable.KernelTable.UnMap(testAddr, 4096 * checkPagesEach, true);
+                //Default.Free(testPage);
+            }
+            PhysicalPageManager.FreeAddr(mapPhysAddr);
+
+            if (SelfTestDump)
+                allocator.DumpPages();
+
+            KernelMessage.WriteLine("Free Pages now");
+            for (var i = 0; i < checkPageCount; i++)
+            {
+                if (SelfTestDump)
+                    KernelMessage.Write(":");
+                var testAddr = ptrList[i];
+                //KernelMessage.WriteLine("Free: {0:X8}", testAddr);
+
+                allocator.FreeAddr(testAddr);
+            }
+            KernelMessage.WriteLine("Free ptrList");
+            FreeAddr(ptrListAddr);
+
+            KernelMessage.WriteLine("SelfTest Done");
+            if (SelfTestDump)
+            {
+                allocator.DumpPages();
+                KernelMessage.WriteLine("Final Dump");
+            }
         }
 
         private static void UnmapFreePages()
@@ -124,7 +192,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var v = virtHead;
             for (var i = 0; i < pages; i++)
             {
-                var addr = Allocator.GetAddress(v);
+                var addr = IdentityAllocator.GetAddress(v);
 
                 var map = true;
                 if (AddProtectedRegions && (i == 0 || i == pages - 1))
@@ -132,14 +200,14 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
                 if (map)
                     PageTable.KernelTable.Map(addr, addr);
-                v = Allocator.NextCompoundPage(v);
+                v = IdentityAllocator.NextCompoundPage(v);
             }
             PageTable.KernelTable.Flush();
 
             if (AddProtectedRegions)
-                virtHead = Allocator.NextCompoundPage(virtHead);
+                virtHead = IdentityAllocator.NextCompoundPage(virtHead);
 
-            return Allocator.GetAddress(virtHead);
+            return IdentityAllocator.GetAddress(virtHead);
         }
 
         internal static unsafe void FreeAddr(Addr addr)

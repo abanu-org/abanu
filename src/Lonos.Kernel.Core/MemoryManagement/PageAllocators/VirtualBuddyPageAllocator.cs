@@ -9,13 +9,14 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
     public unsafe class VirtualBuddyPageAllocator : BuddyPageAllocator
     {
 
-        protected override uint AllocRawMemory(uint size)
+        protected override MemoryRegion AllocRawMemory(uint size)
         {
-            var kmap = KernelMemoryMapManager.Allocate(size, BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Both);
+            var kmap = PhysicalPageManager.AllocateRegion(size);
+            KernelMemoryMapManager.Header->Used.Add(new KernelMemoryMap(kmap.Start, kmap.Size, BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Virtual));
             PageTable.KernelTable.Map(kmap.Start, kmap.Start, kmap.Size, flush: true);
             PageTable.KernelTable.SetWritable(kmap.Start, kmap.Size);
             MemoryOperation.Clear4(kmap.Start, kmap.Size);
-            return kmap.Start;
+            return new MemoryRegion(kmap.Start, kmap.Size);
         }
 
     }

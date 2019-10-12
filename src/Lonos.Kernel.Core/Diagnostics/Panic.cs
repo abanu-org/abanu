@@ -119,7 +119,7 @@ namespace Lonos.Kernel.Core.Diagnostics
 
         public static void DumpStackTrace()
         {
-            DumpStackTrace(0);
+            DumpStackTrace(3);
         }
 
         private static void DumpStackTrace(uint depth)
@@ -135,6 +135,8 @@ namespace Lonos.Kernel.Core.Diagnostics
                 if (!entry.Skip)
                 {
                     Screen.Write(entry.ToString());
+                    if (Screen.Row >= Screen.Rows - 2)
+                        break;
                     Screen.Row++;
                     Screen.Column = 0;
                 }

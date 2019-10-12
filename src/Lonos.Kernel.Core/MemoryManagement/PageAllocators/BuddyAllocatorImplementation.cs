@@ -91,17 +91,17 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             page->Flags &= ~(1U << (byte)pageflags.PG_buddy);
         }
         /**/
-        static bool PageHead(Page* page)
+        public static bool PageHead(Page* page)
         {
             return (page->Flags & (1U << (byte)pageflags.PG_head)) != 0;
         }
 
-        static bool PageTail(Page* page)
+        public static bool PageTail(Page* page)
         {
             return (page->Flags & (1U << (byte)pageflags.PG_tail)) != 0;
         }
 
-        static bool PageBuddy(Page* page)
+        public static bool PageBuddy(Page* page)
         {
             return (page->Flags & (1U << (byte)pageflags.PG_buddy)) != 0;
         }
@@ -162,7 +162,9 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         {
             //printf("BUDDY_BUG in %s, %d.\n", f, line);
             //System.Console.WriteLine(msg);
-            KernelMessage.Path("Allocator", msg, value);
+
+            //KernelMessage.Path("Allocator", msg, value);
+
             //assert(0);
         }
 
@@ -336,7 +338,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             return bad != 0;
         }
 
-        private static bool PageCompound(Page* page)
+        public static bool PageCompound(Page* page)
         {
             return (page->Flags & ((1U << (byte)pageflags.PG_head) | (1U << (byte)pageflags.PG_tail))) != 0;
         }
@@ -406,7 +408,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             {
                 //printf("start_addr=0x%lx, end_addr=0x%lx, address=0x%lx\n",
                 //        zone->start_addr, zone->end_addr, address);
-                BUDDY_BUG("virt_to_page: error");
+                BUDDY_BUG("virt_to_page: error. addr: {0:X8}", address);
                 return null;
             }
             page_idx = (address - zone->start_addr) >> BUDDY_PAGE_SHIFT;

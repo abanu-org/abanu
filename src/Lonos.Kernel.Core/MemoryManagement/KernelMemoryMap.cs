@@ -60,7 +60,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public void Add(KernelMemoryMap map)
         {
-            Assert.True(HasCapacity);
+            Assert.True(HasCapacity, "HasCapacity");
 
             Items[Count] = map;
             Count++;

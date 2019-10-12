@@ -136,8 +136,8 @@ namespace Lonos.Kernel.Core
         /// </summary>
         public static void RawWrite(uint row, uint column, char chr, byte color)
         {
-            Assert.True(row < Rows);
-            Assert.True(column < Columns);
+            Assert.True(row < Rows, "row < Rows");
+            Assert.True(column < Columns, "column < Columns");
             Pointer address = new Pointer(ScreenMemoryAddress + (((row * Columns) + column) * 2));
 
             Intrinsic.Store8(address, (byte)chr);

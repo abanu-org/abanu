@@ -40,7 +40,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             _Releases = 0;
         }
 
-        internal virtual void Initialize(MemoryRegion region, Page* pages, AddressSpaceKind addressSpaceKind)
+        public virtual void Setup(MemoryRegion region, AddressSpaceKind addressSpaceKind)
         {
             AddressSpaceKind = addressSpaceKind;
             region.Size = KMath.FloorToPowerOfTwo(region.Size);
@@ -51,10 +51,10 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             // all pages area
             var pages_size = totalPages * (uint)sizeof(Page);
             KernelMessage.WriteLine("Page Array Size in bytes: {0}", pages_size);
-            Pages = pages;
+            Pages = (Page*)AllocRawMemory(pages_size).Start;
             KernelMessage.WriteLine("Page Array Addr: {0:X8}", (uint)Pages);
             var start_addr = region.Start;
-            Zone.free_area = (BuddyAllocatorImplementation.free_area*)AllocRawMemory(BuddyAllocatorImplementation.BUDDY_MAX_ORDER * (uint)sizeof(BuddyAllocatorImplementation.free_area));
+            Zone.free_area = (BuddyAllocatorImplementation.free_area*)AllocRawMemory(BuddyAllocatorImplementation.BUDDY_MAX_ORDER * (uint)sizeof(BuddyAllocatorImplementation.free_area)).Start;
 
             fixed (BuddyAllocatorImplementation.mem_zone* zone = &Zone)
                 ZonePtr = zone;
@@ -66,7 +66,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 totalPages);
         }
 
-        protected abstract uint AllocRawMemory(uint size);
+        protected abstract MemoryRegion AllocRawMemory(uint size);
 
         public Page* AllocatePages(uint pages, AllocatePageOptions options = default)
         {
@@ -129,7 +129,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public Page* GetPageByIndex(uint pageIndex)
         {
-            if (pageIndex < 0 || pageIndex >= TotalPages)
+            if (pageIndex >= TotalPages)
                 return null;
             return &Pages[pageIndex];
         }
@@ -151,7 +151,8 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public Page* NextPage(Page* page)
         {
-            return page + 1;
+            var pageIdx = GetPageIndex(page) + 1;
+            return GetPageByIndex(pageIdx);
         }
 
         public uint GetPageIndex(Page* page)
@@ -189,11 +190,25 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public Page* NextCompoundPage(Page* page)
         {
-            var next = NextPage(page);
-            if (next == null || next->FirstPage != page->FirstPage)
+            if (page == null)
                 return null;
 
-            return next;
+            var next = NextPage(page);
+            if (next == null)
+                return null;
+
+            if (BuddyAllocatorImplementation.PageHead(page))
+                if (BuddyAllocatorImplementation.PageTail(next))
+                    return next;
+                else
+                    return null;
+            else if (BuddyAllocatorImplementation.PageTail(page))
+                if (BuddyAllocatorImplementation.PageTail(next))
+                    return next;
+                else
+                    return null;
+            else
+                return null;
         }
 
         public void SetTraceOptions(PageFrameAllocatorTraceOptions options)
