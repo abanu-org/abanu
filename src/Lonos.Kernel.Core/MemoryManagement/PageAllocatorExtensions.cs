@@ -14,11 +14,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
             KernelMessage.WriteLine("pNum {0}, phys {1:X8} status {2} struct {3:X8} structPage {4}", allocator.GetPageNum(p), allocator.GetAddress(p), (uint)p->Status, (uint)p, (uint)p / 4096);
         }
 
-        public static void Dump(this IPageFrameAllocator allocator)
+        public static void DumpPages(this IPageFrameAllocator allocator)
         {
             var sb = new StringBuffer();
 
-            sb.Append("Allocator Dump. TotalPages={0} Free={1}", allocator.TotalPages, allocator.FreePages);
+            sb.Append("Allocator Dump of {0}. TotalPages={1} Free={2}", allocator.DebugName, allocator.TotalPages, allocator.FreePages);
 
             for (uint i = 0; i < allocator.TotalPages; i++)
             {
@@ -34,6 +34,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 sb.Clear();
             }
             DeviceManager.Serial1.Write('\n');
+        }
+
+        public static void DumpStats(this IPageFrameAllocator allocator)
+        {
+            KernelMessage.WriteLine("Stats for {0}", allocator.DebugName);
+            KernelMessage.WriteLine("TotalPages {0}, FreePages {1}, Requests {2}, Releases {3}, Allocations {4}", allocator.TotalPages, allocator.FreePages, (uint)allocator.Requests, (uint)allocator.Releases, (uint)(allocator.Requests - allocator.Releases));
         }
 
         public static void FreeAddr(this IPageFrameAllocator allocator, Addr addr)

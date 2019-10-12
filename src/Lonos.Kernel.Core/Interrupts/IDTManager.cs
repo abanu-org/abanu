@@ -114,6 +114,14 @@ namespace Lonos.Kernel.Core.Interrupts
             ControlBlock->KernelPageTableAddr = PageTable.KernelTable.GetPageTablePhysAddr();
         }
 
+        [DllImport("x86/Lonos.ReadFlags.o", EntryPoint = "ReadFlags")]
+        public static extern X86_EFlags ReadFlags();
+
+        public static bool InterrupsEnabled()
+        {
+            return (ReadFlags() & X86_EFlags.InterruptEnableFlag) != 0;
+        }
+
         public static void Start()
         {
             KernelMessage.Write("Enabling interrupts...");

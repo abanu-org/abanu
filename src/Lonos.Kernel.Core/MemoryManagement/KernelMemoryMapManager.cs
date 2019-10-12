@@ -54,11 +54,16 @@ namespace Lonos.Kernel.Core.MemoryManagement
             Header->Used.Add(InitialMap);
 
             KernelMessage.Path("KernelMemoryMapManager", "Filling Lists Done. SystemUsable: {0}, CustomReserved: {1}, Used: {2}", Header->SystemUsable.Count, Header->KernelReserved.Count, Header->Used.Count);
+            PrintMapArrays();
+
+            //Debug_FillAvailableMemory();
+        }
+
+        public static void PrintMapArrays()
+        {
             PrintMapArray("SytemUsable", &Header->SystemUsable);
             PrintMapArray("CustomReserved", &Header->KernelReserved);
             PrintMapArray("Used", &Header->Used);
-
-            //Debug_FillAvailableMemory();
         }
 
         private static void PrintMapArray(string name, KernelMemoryMapArray* mapArray)
@@ -67,7 +72,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             for (var i = 0; i < mapArray->Count; i++)
             {
                 var mm = &mapArray->Items[i];
-                KernelMessage.WriteLine("Map Start={0:X8}, Size={1:X8}, Type={2}, AddrKind={3}", mm->Start, mm->Size, (uint)mm->Type, (uint)mm->AddressSpaceKind);
+                KernelMessage.WriteLine("Map {0:X8}-{1:X8}, Size={2:X8}, Type={3}, AddrKind={4}", mm->Start, mm->Start + mm->Size - 1, mm->Size, (uint)mm->Type, (uint)mm->AddressSpaceKind);
             }
         }
 

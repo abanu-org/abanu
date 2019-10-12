@@ -49,6 +49,11 @@ namespace Lonos.Kernel.Core.MemoryManagement
         /// </summary>
         public static unsafe Addr Allocate(USize n, GFP flags)
         {
+            //if (VirtualPageManager.LockCount != 0)
+            //{
+            //    Serial.Write(Serial.COM1, (byte)'~');
+            //}
+
             // var sb = new StringBuffer();
             // sb.Append("Alloc: Size: {0:X8}", (uint)n);
             var addr = kmallocAllocator.malloc(n);

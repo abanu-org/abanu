@@ -113,6 +113,7 @@ namespace Lonos.CTypes
         /// <remarks>
         /// This is only for internal list manipulation where we know the prev/next entries already!
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void __list_add(list_head* New, list_head* prev, list_head* next)
         {
             next->prev = New;

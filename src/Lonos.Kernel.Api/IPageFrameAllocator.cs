@@ -32,6 +32,8 @@ namespace Lonos.Kernel.Core
         uint TotalPages { get; }
 
         uint FreePages { get; }
+        ulong Requests { get; }
+        ulong Releases { get; }
         MemoryRegion Region { get; }
 
         Page* NextPage(Page* page);
@@ -47,6 +49,8 @@ namespace Lonos.Kernel.Core
         AddressSpaceKind AddressSpaceKind { get; }
 
         void SetTraceOptions(PageFrameAllocatorTraceOptions options);
+
+        string DebugName { get; set; }
 
     }
 

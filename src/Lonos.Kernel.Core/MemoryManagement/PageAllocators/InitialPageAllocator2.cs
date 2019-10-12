@@ -8,6 +8,7 @@ using Lonos.Kernel.Core.Boot;
 using Lonos.Kernel.Core.Devices;
 using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.PageManagement;
+using Lonos.Kernel.Core.Scheduling;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
@@ -29,8 +30,18 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         private uint FistPageNum;
 
-        public string DebugName;
-        public int Allocations;
+        private ulong _Requests;
+        public ulong Requests => _Requests;
+
+        private ulong _Releases;
+        public ulong Releases => _Releases;
+
+        private string _DebugName;
+        public string DebugName
+        {
+            get { return _DebugName; }
+            set { _DebugName = value; }
+        }
 
         public PageFrameAllocatorTraceOptions TraceOptions;
 
@@ -133,6 +144,11 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 Panic.Error("Out of Memory");
             }
 
+            if (FreePages < 1000)
+            {
+                KernelMessage.Path(DebugName, "WARNING: Low pages. Available: {0}", FreePages);
+            }
+
             return page;
         }
 
@@ -146,19 +162,21 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 Debug.Nop();
             }
 
-            lock (this)
+            UninterruptableMonitor.Enter(this);
+            try
             {
+                SelfCheck("SC1");
                 if (pages > 1 && (AddressSpaceKind == AddressSpaceKind.Virtual || options.Continuous))
                 {
                     if (!MoveToFreeContinuous(pages))
                     {
                         // Compact
-                        KernelMessage.Path(DebugName, "Compacting Linked List");
-                        this.Dump();
+                        //KernelMessage.Path(DebugName, "Compacting Linked List");
+                        this.DumpPages();
                         BuildLinkedLists();
                         if (!MoveToFreeContinuous(pages))
                         {
-                            this.Dump();
+                            this.DumpPages();
                             KernelMessage.WriteLine("Requesting {0} pages failed", pages);
                             Panic.Error("Requesting pages failed: out of memory");
                         }
@@ -184,6 +202,13 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                     var tmpNextFree = FreeList->next;
                     list_head.list_move_tail(FreeList, head);
                     var p = (Page*)FreeList;
+                    if (p->Status == PageStatus.Used)
+                    {
+                        this.DumpPages();
+                        this.DumpPage(p);
+                        KernelMessage.Path(DebugName, "Double Alloc pages={0} allocs={1} free={2} ptr={3:X8}", pages, (uint)_Requests, _FreePages, (uint)p);
+                        Panic.Error("Double Alloc");
+                    }
                     p->Status = PageStatus.Used;
                     FreeList = tmpNextFree;
                     _FreePages--;
@@ -192,10 +217,50 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 if (KConfig.Log.PageAllocation && TraceOptions.Enabled && pages >= TraceOptions.MinPages)
                     KernelMessage.Path(DebugName, "Allocation done. Addr: {0:X8} Available: {1}", GetAddress(headPage), _FreePages);
 
-                Allocations++;
+                _Requests++;
+
+                CheckAllocation(headPage, pages);
+                SelfCheck("SC2");
+
                 return headPage;
             }
+            finally
+            {
+                UninterruptableMonitor.Exit(this);
+            }
+        }
 
+        private void CheckAllocation(Page* page, uint pages)
+        {
+            return;
+            var count = list_head.list_count((list_head*)page);
+            //Assert.True(count == pages);
+
+            if (count != pages)
+            {
+                KernelMessage.Path(DebugName, "Pages {0} != {1}, num={2} addr={3:X8} ptr={4:X8}", pages, count, GetPageNum(page), GetAddress(page), (uint)page);
+                Debug.Break();
+            }
+        }
+
+        private void SelfCheck(string checkName, uint debugVal = 0)
+        {
+            return;
+            var page = (Page*)FreeList;
+            var count = list_head.list_count(FreeList);
+            if (count != _FreePages)
+            {
+                this.DumpPages();
+                this.DumpStats();
+                this.DumpPage(page);
+                KernelMessage.WriteLine("SelfCheck: {0} DebugVal={1}", checkName, debugVal);
+                KernelMessage.Path(DebugName, "FreeListCount {0} != {1}, num={2} addr={3:X8} ptr={4:X8}", _FreePages, count, GetPageNum(page), GetAddress(page), (uint)page);
+                Debug.Break();
+            }
+            else
+            {
+                //Serial.Write(Serial.COM1, (byte)'!');
+            }
         }
 
         private bool MoveToFreeContinuous(uint pages)
@@ -225,8 +290,15 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 if (i == pages - 1)
                     found = true;
             }
-            FreeList = (list_head*)tryHead;
-            return true;
+            if (found)
+            {
+                FreeList = (list_head*)tryHead;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -239,26 +311,50 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             if (page->DebugTag != null)
                 debugName = (string)Intrinsic.GetObjectFromAddress((Pointer)(uint)page->DebugTag);
 
-            lock (this)
+            UninterruptableMonitor.Enter(this);
+            try
             {
+                var debugCount = list_head.list_count((list_head*)page); // DEBUG
+
+                SelfCheck("SCF1", debugCount);
                 Page* temp = page;
                 uint result = 0;
 
                 do
                 {
-                    temp = (Page*)temp->Lru.next;
-                    _FreePages++;
-                    temp->Status = PageStatus.Free;
-                }
-                while (temp != page);
+                    result++;
+                    if (temp->Status == PageStatus.Free)
+                    {
+                        //Panic.Error("Double Free");
+                        SelfCheck("SCF3", debugCount);
+                        KernelMessage.WriteLine("Double Free. Pages {0} Iteration {1}", debugCount, result);
+                        Debug.Break();
+                    }
 
-                list_head.list_headless_splice_tail((list_head*)page, FreeList);
+                    temp->Status = PageStatus.Free;
+
+                    var oldTemp = temp;
+                    temp = (Page*)temp->Lru.next;
+                    Native.Nop();
+                    _FreePages++;
+
+                    list_head.list_move_tail((list_head*)oldTemp, FreeList);
+
+                }
+                while (temp != page && result != debugCount);
+
+                //list_head.list_headless_splice_tail((list_head*)page, FreeList);
+                SelfCheck("SCF2", debugCount);
+            }
+            finally
+            {
+                UninterruptableMonitor.Exit(this);
             }
             var freedPages = _FreePages - oldFree;
             if (KConfig.Log.PageAllocation && TraceOptions.Enabled && freedPages >= TraceOptions.MinPages)
-                KernelMessage.Path(DebugName, "Freed Pages: {1}. Addr: {2:X8}. Now available: {3} --> {4}. Allocations={5} DebugName={0}.", debugName, freedPages, GetAddress(page), oldFree, _FreePages, (uint)Allocations);
+                KernelMessage.Path(DebugName, "Freed Pages: {1}. Addr: {2:X8}. Now available: {3} --> {4}. Allocations={5} DebugName={0}.", debugName, freedPages, GetAddress(page), oldFree, _FreePages, (uint)Requests);
 
-            Allocations--;
+            _Releases++;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

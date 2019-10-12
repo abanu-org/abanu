@@ -24,6 +24,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //_startVirtAddr = Address.VirtMapStart;
             //_nextVirtAddr = _startVirtAddr;
 
+            //lockObj = new object();
+            //LockCount = 0;
+
             var allocator = new VirtualInitialPageAllocator(true) { DebugName = "VirtInitial" };
             //allocator.Setup(MemoryRegion.FromLocation(0, Address.VirtMapStart + (60 * 1024 * 1024)), AddressSpaceKind.Virtual);
             allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
@@ -35,6 +38,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
             allocator = new VirtualInitialPageAllocator(false) { DebugName = "VirtIdentityInitial" };
             allocator.Setup(new MemoryRegion(Address.IdentityMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             IdentityAllocator = allocator;
+
+            PhysicalPageManager.SelfTest();
         }
 
         private static void UnmapFreePages()
@@ -64,13 +69,19 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //    return virt;
         //}
 
-        private const bool AddProtectedRegions = true;
+        private const bool AddProtectedRegions = false;
+
+        //private static object lockObj;
+        //public static int LockCount = 0;
 
         internal static unsafe Addr AllocatePages(uint pages, AllocatePageOptions options = default)
         {
             if (AddProtectedRegions)
                 pages += 2;
 
+            //lock (lockObj)
+            //{
+            //    LockCount++;
             var physHead = PhysicalPageManager.AllocatePages(pages, options);
             if (physHead == null)
                 return Addr.Zero;
@@ -95,7 +106,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
             if (AddProtectedRegions)
                 virtHead = Allocator.NextCompoundPage(virtHead);
 
+            //LockCount--;
             return Allocator.GetAddress(virtHead);
+            //}
         }
 
         /// <summary>
@@ -136,6 +149,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 addr -= 4096;
             Allocator.FreeAddr(addr);
             PhysicalPageManager.FreeAddr(physAddr);
+
+            PageTable.KernelTable.UnMap(addr);
         }
 
         internal static unsafe void FreeAddrIdentity(Addr addr)
@@ -143,6 +158,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             if (AddProtectedRegions)
                 addr -= 4096;
             IdentityAllocator.FreeAddr(addr);
+            PageTable.KernelTable.UnMap(addr);
         }
 
         public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = default)
@@ -156,6 +172,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             Allocator.SetTraceOptions(options);
             IdentityAllocator.SetTraceOptions(options);
+        }
+
+        public static void DumpStats()
+        {
+            Allocator.DumpStats();
+            IdentityAllocator.DumpStats();
         }
 
     }

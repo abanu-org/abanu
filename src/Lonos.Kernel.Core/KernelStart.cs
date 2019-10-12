@@ -56,6 +56,7 @@ namespace Lonos.Kernel.Core
                 KernelMessage.WriteLine("KConfig.UseKernelMemoryProtection: {0}", KConfig.UseKernelMemoryProtection);
                 KernelMessage.WriteLine("KConfig.UsePAE: {0}", KConfig.UsePAE);
                 KernelMessage.WriteLine("Apply PageTableType: {0}", (uint)BootInfo.Header->PageTableType);
+                KernelMessage.WriteLine("GCInitialMemory: {0:X8}-{1:X8}", Address.GCInitialMemory, Address.GCInitialMemory + Address.GCInitialMemorySize - 1);
 
                 Ulongtest1();
                 Ulongtest2();
@@ -252,6 +253,11 @@ namespace Lonos.Kernel.Core
                 charIdx++;
                 if (charIdx >= chars.Length)
                     charIdx = 0;
+
+                //PhysicalPageManager.DumpPages();
+                //PhysicalPageManager.DumpStats();
+                //VirtualPageManager.DumpStats();
+
                 tsLast = ts;
             }
             KernelMessage.WriteLine("Thread1: Finished");

@@ -392,10 +392,15 @@ namespace Lonos.Kernel.Core.Scheduling
 
             thread.DataSelector = thread.User ? 0x23u : 0x10u;
 
-            lock (proc.Threads)
+            UninterruptableMonitor.Enter(proc.Threads);
+            try
             {
                 thread.Process = proc;
                 proc.Threads.Add(thread);
+            }
+            finally
+            {
+                UninterruptableMonitor.Exit(proc.Threads);
             }
 
             ThreadsAllocated++;
@@ -564,7 +569,8 @@ namespace Lonos.Kernel.Core.Scheduling
 
         public static void ResetTerminatedThreads()
         {
-            lock (Threads)
+            UninterruptableMonitor.Enter(Threads);
+            try
             {
                 for (uint i = 0; i < ThreadCapacity; i++)
                 {
@@ -574,12 +580,17 @@ namespace Lonos.Kernel.Core.Scheduling
                     }
                 }
             }
+            finally
+            {
+                UninterruptableMonitor.Exit(Threads);
+            }
         }
 
         private static unsafe void ResetThread(uint threadID)
         {
             var thread = Threads[threadID];
-            lock (thread)
+            UninterruptableMonitor.Enter(thread);
+            try
             {
                 if (thread.Status != ThreadStatus.Terminated)
                     return;
@@ -587,7 +598,8 @@ namespace Lonos.Kernel.Core.Scheduling
                 if (thread.Process != null)
                 {
                     var proc = thread.Process;
-                    lock (proc.Threads)
+                    UninterruptableMonitor.Enter(proc.Threads);
+                    try
                     {
                         for (var i = 0; i < proc.Threads.Count; i++)
                         {
@@ -595,6 +607,10 @@ namespace Lonos.Kernel.Core.Scheduling
                                 proc.Threads.RemoveAt(i);
                             break;
                         }
+                    }
+                    finally
+                    {
+                        UninterruptableMonitor.Exit(proc.Threads);
                     }
                 }
 
@@ -605,6 +621,10 @@ namespace Lonos.Kernel.Core.Scheduling
                 ThreadsAllocated--;
 
                 thread.Status = ThreadStatus.Empty;
+            }
+            finally
+            {
+                UninterruptableMonitor.Exit(thread);
             }
         }
 

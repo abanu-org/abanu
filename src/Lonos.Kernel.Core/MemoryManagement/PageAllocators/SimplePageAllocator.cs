@@ -15,10 +15,25 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         private Page* Pages;
         private uint FirstPageNum;
-        internal string DebugName = "";
+
+        private ulong _Requests;
+        public ulong Requests => _Requests;
+
+        private ulong _Releases;
+        public ulong Releases => _Releases;
+
+        private string _DebugName;
+        public string DebugName
+        {
+            get { return _DebugName; }
+            set { _DebugName = value; }
+        }
 
         public void Initialize(MemoryRegion region, Page* pages, AddressSpaceKind addressSpaceKind)
         {
+            _Requests = 0;
+            _Releases = 0;
+
             KernelMessage.WriteLine("Init SimplePageAllocator");
             AddressSpaceKind = addressSpaceKind;
             _Region = region;

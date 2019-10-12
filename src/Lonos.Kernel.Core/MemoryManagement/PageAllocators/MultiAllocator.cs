@@ -157,6 +157,35 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 Allocators[i].SetTraceOptions(options);
         }
 
+        public ulong Requests
+        {
+            get
+            {
+                ulong n = 0;
+                for (var i = 0; i < Allocators.Length; i++)
+                    n += Allocators[i].Requests;
+                return n;
+            }
+        }
+
+        public ulong Releases
+        {
+            get
+            {
+                ulong n = 0;
+                for (var i = 0; i < Allocators.Length; i++)
+                    n += Allocators[i].Releases;
+                return n;
+            }
+        }
+
+        private string _DebugName;
+        public string DebugName
+        {
+            get { return _DebugName; }
+            set { _DebugName = value; }
+        }
+
     }
 
 }

@@ -30,6 +30,9 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public void Setup(MemoryRegion region, AddressSpaceKind addrKind)
         {
+            _Requests = 0;
+            _Releases = 0;
+
             _AddressSpaceKind = addrKind;
             _Region = region;
             FistPageNum = region.Start / PageSize;
@@ -197,7 +200,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 }
 
                 KernelMessage.WriteLine("Blocks={0} FreeBlocks={1} MaxBlockPages={2} RangeChecks={3} cnt={4}", statBlocks, statFreeBlocks, (uint)statMaxBlockPages, statRangeChecks, cnt);
-                this.Dump();
+                this.DumpPages();
                 Panic.Error("PageFrameAllocator: Could not allocate " + pages + " Pages.");
                 return null;
             }
@@ -307,6 +310,19 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         public AddressSpaceKind AddressSpaceKind => _AddressSpaceKind;
 
         public uint FreePages => _FreePages;
+
+        private ulong _Requests;
+        public ulong Requests => _Requests;
+
+        private ulong _Releases;
+        public ulong Releases => _Releases;
+
+        private string _DebugName;
+        public string DebugName
+        {
+            get { return _DebugName; }
+            set { _DebugName = value; }
+        }
 
         public void SetTraceOptions(PageFrameAllocatorTraceOptions options)
         {

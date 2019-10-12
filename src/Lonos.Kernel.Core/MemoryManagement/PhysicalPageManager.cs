@@ -80,7 +80,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static void SelfTest()
         {
             if (SelfTestDump)
-                Default.Dump();
+                Default.DumpPages();
 
             KernelMessage.WriteLine("Begin SelfTest");
 
@@ -111,7 +111,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             }
 
             if (SelfTestDump)
-                Default.Dump();
+                Default.DumpPages();
 
             KernelMessage.WriteLine("Free Pages now");
             for (var i = 0; i < checkPageCount; i++)
@@ -126,7 +126,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             KernelMessage.WriteLine("SelfTest Done");
             if (SelfTestDump)
             {
-                Default.Dump();
+                Default.DumpPages();
                 KernelMessage.WriteLine("Final Dump");
             }
         }
@@ -213,6 +213,16 @@ namespace Lonos.Kernel.Core.MemoryManagement
         public static void SetTraceOptions(PageFrameAllocatorTraceOptions options)
         {
             Default.SetTraceOptions(options);
+        }
+
+        public static void DumpStats()
+        {
+            Default.DumpStats();
+        }
+
+        public static void DumpPages()
+        {
+            Default.DumpPages();
         }
 
     }

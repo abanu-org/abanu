@@ -18,6 +18,9 @@ cp InterruptReturn.o ../../bin/$ARCH/Lonos.InterruptReturn.o
 nasm -f bin CpuCyclesSinceBoot.s -o CpuCyclesSinceBoot.o
 cp CpuCyclesSinceBoot.o ../../bin/$ARCH/Lonos.CpuCyclesSinceBoot.o
 
+nasm -f bin ReadFlags.s -o ReadFlags.o
+cp ReadFlags.o ../../bin/$ARCH/Lonos.ReadFlags.o
+
 nasm -f bin LoadTaskRegister.s -o LoadTaskRegister.o
 cp LoadTaskRegister.o ../../bin/$ARCH/Lonos.LoadTaskRegister.o
 

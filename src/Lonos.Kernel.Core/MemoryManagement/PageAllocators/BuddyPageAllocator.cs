@@ -21,8 +21,23 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         private BuddyAllocatorImplementation.mem_zone* ZonePtr;
         protected Page* Pages;
 
+        private ulong _Requests;
+        public ulong Requests => _Requests;
+
+        private ulong _Releases;
+        public ulong Releases => _Releases;
+
+        private string _DebugName;
+        public string DebugName
+        {
+            get { return _DebugName; }
+            set { _DebugName = value; }
+        }
+
         public BuddyPageAllocator()
         {
+            _Requests = 0;
+            _Releases = 0;
         }
 
         internal virtual void Initialize(MemoryRegion region, Page* pages, AddressSpaceKind addressSpaceKind)
