@@ -2,10 +2,11 @@
 
 #echo detected $LONOS_PROJDIR
 
-export LONOS_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Core.x86.exe
-export LONOS_BOOTLOADER_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Loader.x86.exe
+export LONOS_ARCH=x86
+export LONOS_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Core.${LONOS_ARCH}.exe
+export LONOS_BOOTLOADER_EXE=${LONOS_PROJDIR}/bin/Lonos.OS.Loader.${LONOS_ARCH}.exe
 export LONOS_OSDIR=${LONOS_PROJDIR}/os
-export LONOS_NATIVE_FILES=${LONOS_PROJDIR}/bin/x86/Lonos.Native.o
+export LONOS_NATIVE_FILES=${LONOS_PROJDIR}/bin/${LONOS_ARCH}/Lonos.Native.o
 export LONOS_LOGDIR=${LONOS_PROJDIR}/logs
 export LONOS_TMPDIR=${LONOS_PROJDIR}/tmp
 export LONOS_ISODIR=${LONOS_TMPDIR}/iso

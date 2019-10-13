@@ -188,6 +188,7 @@ function build {
 			(cd src && ${msbuild} Lonos.Tools.sln /p:Configuration=Release -verbosity:minimal -m)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
+			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x64.dll bin
 			cp external/MOSA-Project/bin/dnlib.* bin
 			cp external/MOSA-Project/bin/Priority\ Queue.dll bin
 			;;
@@ -197,7 +198,7 @@ function build {
 			;;
 
 		native)
-			src/Lonos.Native.x86/build
+			src/Lonos.Native.${LONOS_ARCH}/build
 			;;
 
 		app)
@@ -286,9 +287,9 @@ function debug {
 			#echo $qemu_app
 			#-gdb stdio
 			$qemu_app \
-				-drive file=${LONOS_OSDIR}/Lonos.OS.Core.x86.img,index=0,media=disk,format=raw \
+				-drive file=${LONOS_OSDIR}/Lonos.OS.Core.${LONOS_ARCH}.img,index=0,media=disk,format=raw \
 				-drive file=${LONOS_TMPDIR}/network-disk.img,index=1,media=disk,format=raw,copy-on-read=off,cache=none \
-				-kernel os/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256
+				-kernel os/Lonos.OS.image.${LONOS_ARCH}.bin -serial file:${LONOS_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256
 			;;
 
 		qemu-grub-hybrid)
@@ -433,7 +434,7 @@ function create_efi_disk {
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/boot ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/NvVars ::/
 	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/.disk ::/
-	mcopy -i $disk -s $LONOS_OSDIR/Lonos.OS.image.x86.bin ::/lonos.bin
+	mcopy -i $disk -s $LONOS_OSDIR/Lonos.OS.image.${LONOS_ARCH}.bin ::/lonos.bin
 	loadenv auto
 }
 
@@ -442,7 +443,7 @@ function create_grub_hybrid_disk {
 	disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-grub-hybrid.disk.img
 	isodir=$LONOS_PROJDIR/tmp/iso-grub-hybrid
 	mkdir -p $isodir;
-	cp $LONOS_OSDIR/lonos.os.image.x86.bin $isodir/lonos.bin
+	cp $LONOS_OSDIR/lonos.os.image.${LONOS_ARCH}.bin $isodir/lonos.bin
 	mkdir -p $isodir/boot/grub
 	cp $LONOS_TOOLSDIR/grub-efi-x86/boot/grub/grub.cfg $isodir/boot/grub
 	grub-mkrescue -o $disk $isodir

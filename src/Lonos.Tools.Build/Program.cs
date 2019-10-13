@@ -64,13 +64,13 @@ namespace Lonos.Tools.Build
         {
             if (args.ContainsFlag("native"))
             {
-                Directory.CreateDirectory(Env.Get("${LONOS_BINDIR}/x86"));
-                Exec("${nasm} -f elf32 ${LONOS_PROJDIR}/src/Lonos.Native.x86/DebugFunction1.s -o ${LONOS_BINDIR}/x86/Lonos.Native.o");
-                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/EnableExecutionProtection.s -o ${LONOS_BINDIR}/x86/Lonos.EnableExecutionProtection.o");
-                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/InterruptReturn.s -o ${LONOS_BINDIR}/x86/Lonos.InterruptReturn.o");
-                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/LoadTaskRegister.s -o ${LONOS_BINDIR}/x86/Lonos.LoadTaskRegister.o");
-                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/DebugFunction1.s -o ${LONOS_BINDIR}/x86/Lonos.DebugFunction1.o");
-                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.x86/App.HelloKernel.s -o ${LONOS_BINDIR}/x86/App.HelloKernel.o");
+                Directory.CreateDirectory(Env.Get("${LONOS_BINDIR}/${LONOS_ARCH}"));
+                Exec("${nasm} -f elf32 ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/DebugFunction1.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.Native.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/EnableExecutionProtection.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.EnableExecutionProtection.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/InterruptReturn.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.InterruptReturn.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/LoadTaskRegister.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.LoadTaskRegister.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/DebugFunction1.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.DebugFunction1.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/App.HelloKernel.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/App.HelloKernel.o");
             }
             return null;
         }
@@ -128,7 +128,7 @@ namespace Lonos.Tools.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    using (var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -s -S -m 256"))
+                    using (var qemu = ExecAsync("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.${LONOS_ARCH}.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -s -S -m 256"))
                     {
                         Thread.Sleep(500);
                         using (var gdb = ExecAsync("${gdb}", false))
@@ -147,7 +147,7 @@ namespace Lonos.Tools.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.x86.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256");
+                    Exec("${qemu} -kernel ${LONOS_OSDIR}/Lonos.OS.image.${LONOS_ARCH}.bin -serial file:${LONOS_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256");
                     break;
             }
             return null;
@@ -268,8 +268,8 @@ namespace Lonos.Tools.Build
 
         public static void LinkImages()
         {
-            var loaderFile = Env.Get("${LONOS_OSDIR}/Lonos.OS.Loader.x86.bin");
-            var kernelFile = Env.Get("${LONOS_OSDIR}/Lonos.OS.Core.x86.bin");
+            var loaderFile = Env.Get("${LONOS_OSDIR}/Lonos.OS.Loader.${LONOS_ARCH}.bin");
+            var kernelFile = Env.Get("${LONOS_OSDIR}/Lonos.OS.Core.${LONOS_ARCH}.bin");
 
             var kernelBytes = File.ReadAllBytes(kernelFile);
 
@@ -315,7 +315,7 @@ namespace Lonos.Tools.Build
                     writer.Write(memSize);
 
                     var bytes = ms.ToArray();
-                    var outFile = Path.Combine(Env.Get("LONOS_OSDIR"), "Lonos.OS.image.x86.bin");
+                    var outFile = Env.Get("${LONOS_OSDIR}/Lonos.OS.image.${LONOS_ARCH}.bin");
                     File.WriteAllBytes(outFile, bytes);
                 }
             }

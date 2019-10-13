@@ -28,10 +28,26 @@ namespace Lonos.Tools.Build
             InputAssembly = inputAssembly;
         }
 
+        public static PlatformType Platform
+        {
+            get
+            {
+                switch (Env.Get("LONOS_ARCH"))
+                {
+                    case "x86":
+                        return PlatformType.x86;
+                    case "x64":
+                        return PlatformType.x64;
+                    default:
+                        return PlatformType.x86;
+                }
+            }
+        }
+
         public LauncherOptions Options { get; set; }
 
         public string TestAssemblyPath { get; set; }
-        public string Platform { get; set; }
+
         public string InputAssembly { get; set; }
         public AppLocations AppLocations { get; set; }
 

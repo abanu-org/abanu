@@ -41,6 +41,9 @@ namespace Lonos.Tools
                         if (!File.Exists(Path.Combine(value, "lonosctl")))
                             value = null;
                         break;
+                    case "LONOS_ARCH":
+                        value = "x86";
+                        break;
                     case "LONOS_BINDIR":
                         value = "${LONOS_PROJDIR}/bin";
                         break;
@@ -48,13 +51,13 @@ namespace Lonos.Tools
                         value = "${LONOS_PROJDIR}/os";
                         break;
                     case "LONOS_NATIVE_FILES":
-                        value = "${LONOS_PROJDIR}/bin/x86/Lonos.Native.o";
+                        value = "${LONOS_PROJDIR}/bin/${LONOS_ARCH}/Lonos.Native.o";
                         break;
                     case "LONOS_BOOTLOADER_EXE":
-                        value = "${LONOS_PROJDIR}/bin/Lonos.OS.Loader.x86.exe";
+                        value = "${LONOS_PROJDIR}/bin/Lonos.OS.Loader.${LONOS_ARCH}.exe";
                         break;
                     case "LONOS_EXE":
-                        value = "${LONOS_PROJDIR}/bin/Lonos.OS.Core.x86.exe";
+                        value = "${LONOS_PROJDIR}/bin/Lonos.OS.Core.${LONOS_ARCH}.exe";
                         break;
                     case "LONOS_LOGDIR":
                         value = "${LONOS_PROJDIR}/logs";

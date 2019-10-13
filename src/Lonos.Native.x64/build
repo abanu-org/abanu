@@ -1,0 +1,31 @@
+#!/bin/sh
+
+cd $(dirname $0)
+
+ARCH=x86
+mkdir -p ../../bin/$ARCH
+
+nasm -f elf32 Native.s -o Native.o
+#nasm -f bin native.s
+cp Native.o ../../bin/$ARCH/Lonos.Native.o
+
+nasm -f bin EnableExecutionProtection.s -o EnableExecutionProtection.o
+cp EnableExecutionProtection.o ../../bin/$ARCH/Lonos.EnableExecutionProtection.o
+
+nasm -f bin InterruptReturn.s -o InterruptReturn.o
+cp InterruptReturn.o ../../bin/$ARCH/Lonos.InterruptReturn.o
+
+nasm -f bin CpuCyclesSinceBoot.s -o CpuCyclesSinceBoot.o
+cp CpuCyclesSinceBoot.o ../../bin/$ARCH/Lonos.CpuCyclesSinceBoot.o
+
+nasm -f bin ReadFlags.s -o ReadFlags.o
+cp ReadFlags.o ../../bin/$ARCH/Lonos.ReadFlags.o
+
+nasm -f bin LoadTaskRegister.s -o LoadTaskRegister.o
+cp LoadTaskRegister.o ../../bin/$ARCH/Lonos.LoadTaskRegister.o
+
+nasm -f bin DebugFunction1.s -o DebugFunction1.o
+cp DebugFunction1.o ../../bin/$ARCH/Lonos.DebugFunction1.o
+
+nasm -f bin App.HelloKernel.s -o App.HelloKernel.o
+cp App.HelloKernel.o ../../bin/$ARCH/App.HelloKernel.o
