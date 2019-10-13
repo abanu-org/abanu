@@ -30,6 +30,22 @@ namespace Lonos.Kernel.Core.PageManagement
             Map(table, virtAddr, physAddr, 4096, present, flush);
         }
 
+        public static unsafe void Map(this IPageTable table, Addr virtAddr, Addr physAddr, IPageFrameAllocator physAllocator, bool present = true, bool flush = false)
+        {
+            var page = physAllocator.GetPageByAddress(physAddr);
+            var pAddr = physAllocator.GetAddress(page);
+
+            while (true)
+            {
+                table.Map(virtAddr, pAddr, present, flush);
+                page = physAllocator.NextCompoundPage(page);
+                pAddr = physAllocator.GetAddress(page);
+                if (page == null || pAddr == physAddr)
+                    break;
+                virtAddr += 4096;
+            }
+        }
+
         public static void UnMap(this IPageTable table, Addr virtAddr, bool flush = false)
         {
             UnMap(table, virtAddr, 4096, flush);

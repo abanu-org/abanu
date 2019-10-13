@@ -13,7 +13,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         {
             var kmap = PhysicalPageManager.AllocateRegion(size);
             KernelMemoryMapManager.Header->Used.Add(new KernelMemoryMap(kmap.Start, kmap.Size, BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Virtual));
-            PageTable.KernelTable.Map(kmap.Start, kmap.Start, kmap.Size, flush: true);
+            PageTable.KernelTable.Map(kmap.Start, kmap.Start, PhysicalPageManager.GetAllocatorByAddr(kmap.Start), flush: true);
             PageTable.KernelTable.SetWritable(kmap.Start, kmap.Size);
             kmap.Clear();
             return kmap;

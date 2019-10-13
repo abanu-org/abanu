@@ -225,5 +225,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             Default.DumpPages();
         }
 
+        public static IPageFrameAllocator GetAllocatorByAddr(Addr addr) => Default;
+
     }
 }

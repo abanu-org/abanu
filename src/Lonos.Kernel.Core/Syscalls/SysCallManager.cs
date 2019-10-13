@@ -125,11 +125,12 @@ namespace Lonos.Kernel.Core.SysCalls
 
         private static uint Cmd_RequestMemory(SysCallContext* context, SystemMessage* args)
         {
-            var pages = KMath.DivCeil(args->Arg1, 4096);
-            var page = PhysicalPageManager.AllocatePages(pages);
+            var size = args->Arg1;
+            size = KMath.AlignValueCeil(size, 4096);
+            var map = PhysicalPageManager.AllocateRegion(size);
             var virtAddr = nextVirtPage;
-            nextVirtPage += pages * 4096;
-            Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, PhysicalPageManager.GetAddress(page), pages * 4096);
+            nextVirtPage += size;
+            Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, map.Start, PhysicalPageManager.GetAllocatorByAddr(map.Start));
             return virtAddr;
         }
 
