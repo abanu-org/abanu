@@ -136,5 +136,10 @@ namespace Lonos.Kernel
         {
             //Panic.Error(message);
         }
+
+        public override void Pause()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

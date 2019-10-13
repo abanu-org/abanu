@@ -38,9 +38,9 @@
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x86\Mosa.Plug.Korlib.x86.csproj">
-      <Project>{028bc31c-2edc-492e-90a3-3714e38ce2cf}</Project>
-      <Name>Mosa.Plug.Korlib.x86</Name>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x64\Mosa.Plug.Korlib.x64.csproj">
+      <Project>{a9deebf5-0e64-44a0-807b-c7b4d3a5480e}</Project>
+      <Name>Mosa.Plug.Korlib.x64</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
