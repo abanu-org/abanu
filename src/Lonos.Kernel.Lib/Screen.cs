@@ -3,7 +3,7 @@
 
 using System;
 using Mosa.Runtime;
-using Mosa.Runtime.x86;
+using Mosa.Runtime.x64;
 
 namespace Lonos.Kernel.Core
 {

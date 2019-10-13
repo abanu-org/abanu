@@ -3,7 +3,7 @@
 
 using System.Runtime.InteropServices;
 using Lonos.Kernel.Core;
-using Mosa.Runtime.x86;
+using Mosa.Runtime.x64;
 
 namespace Lonos.Kernel.Loader
 {
@@ -200,8 +200,8 @@ namespace Lonos.Kernel.Loader
         /// </summary>
         public static unsafe void Setup()
         {
-            uint magic = Native.GetMultibootEAX();
-            uint address = Native.GetMultibootEBX();
+            uint magic = (uint)Native.GetMultibootEAX();
+            uint address = (uint)Native.GetMultibootEBX();
 
             SetMultibootLocation(address, magic);
         }

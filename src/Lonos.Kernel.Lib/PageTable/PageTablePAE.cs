@@ -5,7 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Mosa.Runtime;
-using Mosa.Runtime.x86;
+using Mosa.Runtime.x64;
 
 namespace Lonos.Kernel.Core.PageManagement
 {
@@ -206,8 +206,8 @@ namespace Lonos.Kernel.Core.PageManagement
         private void EnableExecutionProtectionInternal()
         {
             // set IA32_EFER.NXE
-            const uint EFER = 0xC0000080;
-            Native.WrMSR(EFER, Native.RdMSR(EFER) | BitMask.Bit11);
+            //const uint EFER = 0xC0000080;
+            //Native.WrMSR(EFER, Native.RdMSR(EFER) | BitMask.Bit11);
         }
         //[DllImport("x86/Lonos.EnableExecutionProtection.o", EntryPoint = "EnableExecutionProtection")]
         //private extern static void EnableExecutionProtectionInternal();

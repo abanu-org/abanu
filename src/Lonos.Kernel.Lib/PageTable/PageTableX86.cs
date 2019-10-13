@@ -5,7 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Mosa.Runtime;
-using Mosa.Runtime.x86;
+using Mosa.Runtime.x64;
 
 namespace Lonos.Kernel.Core.PageManagement
 {

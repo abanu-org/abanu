@@ -36,7 +36,7 @@ namespace Lonos.Tools.Build
                 ImageFormat = ImageFormat.IMG,
                 //BootFormat = BootFormat.Multiboot_0_7,
                 MultiBootV1 = true,
-                PlatformType = Platform,
+                PlatformType = PlatformType.x64,
                 LinkerFormatType = LinkerFormatType.Elf32,
                 EmulatorMemoryInMB = 128,
                 DestinationDirectory = Env.Get("LONOS_OSDIR"),

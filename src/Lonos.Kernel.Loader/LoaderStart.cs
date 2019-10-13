@@ -8,7 +8,7 @@ using Lonos.Kernel.Core.Elf;
 using Lonos.Kernel.Core.PageManagement;
 using Mosa.Runtime;
 using Mosa.Runtime.Plug;
-using Mosa.Runtime.x86;
+using Mosa.Runtime.x64;
 
 namespace Lonos.Kernel.Loader
 {
@@ -149,7 +149,7 @@ namespace Lonos.Kernel.Loader
 
         private static void CallAddress(uint addr)
         {
-            Native.Call(addr);
+            //Native.Call(addr);
         }
 
         public static ElfHelper OriginalKernelElf;
@@ -197,7 +197,7 @@ namespace Lonos.Kernel.Loader
             //Without that, the .NET compiler will optimize that reference away
             //if its nowhere used. Than the Compiler doesn't know about that reference
             //and the Compilation will fail
-            Mosa.Runtime.x86.Internal.ExceptionHandler();
+            _ = Mosa.Runtime.x64.Native.CpuIdEdx(0);
         }
 
         private static void AssertError(string message, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)
