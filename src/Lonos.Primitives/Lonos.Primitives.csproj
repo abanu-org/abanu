@@ -42,10 +42,6 @@
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
-      <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
-      <Name>Mosa.Runtime.x86</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lonos.Kernel.Config\Lonos.Kernel.Config.csproj">
       <Project>{317e8c4b-089b-469b-8789-d76eb2f87504}</Project>
       <Name>Lonos.Kernel.Config</Name>
