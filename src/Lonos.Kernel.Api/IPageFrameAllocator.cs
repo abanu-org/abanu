@@ -58,9 +58,17 @@ namespace Lonos.Kernel.Core
     {
         public bool Continuous;
         public string DebugName;
+        public PageAllocationPool Pool;
 
         public static AllocatePageOptions Default;
 
+    }
+
+    public enum PageAllocationPool
+    {
+        Normal,
+        Identity,
+        Global,
     }
 
     public struct PageFrameAllocatorTraceOptions

@@ -33,7 +33,7 @@ namespace Lonos.Kernel.Core.Processes
         public void Dispose()
         {
             //Memory.FreeObject(StdIn);
-            VirtualPageManager.FreeAddrIdentity(PageTableAllocAddr);
+            VirtualPageManager.FreeAddr(PageTableAllocAddr);
             Threads.Dispose();
         }
 

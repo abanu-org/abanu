@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.MemoryManagement.PageAllocators;
 using Lonos.Kernel.Core.PageManagement;
 
@@ -10,8 +11,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
     public static class VirtualPageManager
     {
 
-        private static IPageFrameAllocator Allocator;
+        private static IPageFrameAllocator NormalAllocator;
         private static IPageFrameAllocator IdentityAllocator;
+        //private static IPageFrameAllocator GlobalAllocator;
 
         //private static Addr _startVirtAddr;
         //private static Addr _nextVirtAddr;
@@ -27,7 +29,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //lockObj = new object();
             //LockCount = 0;
 
-            Allocator = CreateAllocator();
+            NormalAllocator = CreateAllocator();
 
             //_identityStartVirtAddr = Address.IdentityMapStart;
             //_identityNextVirtAddr = _identityStartVirtAddr;
@@ -36,8 +38,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
             allocator2.Setup(new MemoryRegion(Address.IdentityMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             IdentityAllocator = allocator2;
 
+            //var allocator3 = new VirtualInitialPageAllocator(false) { DebugName = "GlobalInitial" };
+            //allocator3.Setup(new MemoryRegion(600 * 1024 * 1024, 30 * 1024 * 1024), AddressSpaceKind.Virtual);
+            //GlobalAllocator = allocator3;
+
             PhysicalPageManager.SelfTest();
-            SelfTest(Allocator);
+            SelfTest(NormalAllocator);
             SelfTest(IdentityAllocator);
         }
 
@@ -152,7 +158,25 @@ namespace Lonos.Kernel.Core.MemoryManagement
         //private static object lockObj;
         //public static int LockCount = 0;
 
-        internal static unsafe Addr AllocatePages(uint pages, AllocatePageOptions options = default)
+        public static unsafe Addr AllocatePages(uint pages, AllocatePageOptions options = default)
+        {
+            switch (options.Pool)
+            {
+                case PageAllocationPool.Normal:
+                    return AllocatePagesNormal(pages, options);
+                case PageAllocationPool.Identity:
+                    return AllocateIdentityMappedPages(pages, options);
+                case PageAllocationPool.Global:
+                    Panic.Error("Not impl");
+                    break;
+                default:
+                    Panic.Error("invalid pool");
+                    break;
+            }
+            return Addr.Zero;
+        }
+
+        private static unsafe Addr AllocatePagesNormal(uint pages, AllocatePageOptions options = default)
         {
             if (AddProtectedRegions)
                 pages += 2;
@@ -163,7 +187,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var physHead = PhysicalPageManager.AllocatePages(pages, options);
             if (physHead == null)
                 return Addr.Zero;
-            var virtHead = Allocator.AllocatePages(pages, options);
+            var virtHead = NormalAllocator.AllocatePages(pages, options);
 
             var p = physHead;
             var v = virtHead;
@@ -174,30 +198,30 @@ namespace Lonos.Kernel.Core.MemoryManagement
                     map = false;
 
                 if (map)
-                    PageTable.KernelTable.Map(Allocator.GetAddress(v), PhysicalPageManager.GetAddress(p));
+                    PageTable.KernelTable.Map(NormalAllocator.GetAddress(v), PhysicalPageManager.GetAddress(p));
 
                 p = PhysicalPageManager.NextCompoundPage(p);
-                v = Allocator.NextCompoundPage(v);
+                v = NormalAllocator.NextCompoundPage(v);
             }
             PageTable.KernelTable.Flush();
 
             if (AddProtectedRegions)
-                virtHead = Allocator.NextCompoundPage(virtHead);
+                virtHead = NormalAllocator.NextCompoundPage(virtHead);
 
             //LockCount--;
-            return Allocator.GetAddress(virtHead);
+            return NormalAllocator.GetAddress(virtHead);
             //}
         }
 
         /// <summary>
         /// Returns pages, where virtAddr equals physAddr.
         /// </summary>
-        internal static unsafe Addr AllocateIdentityMappedPages(uint pages)
+        private static unsafe Addr AllocateIdentityMappedPages(uint pages, AllocatePageOptions options = default)
         {
             if (AddProtectedRegions)
                 pages += 2;
 
-            var virtHead = IdentityAllocator.AllocatePages(pages);
+            var virtHead = IdentityAllocator.AllocatePages(pages, options);
 
             var v = virtHead;
             for (var i = 0; i < pages; i++)
@@ -222,16 +246,27 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         internal static unsafe void FreeAddr(Addr addr)
         {
+            if (IdentityAllocator.Region.Contains(addr))
+            {
+                FreeAddrIdentity(addr);
+                return;
+            }
+
+            FreeAddrNormal(addr);
+        }
+
+        private static unsafe void FreeAddrNormal(Addr addr)
+        {
             var physAddr = PageTable.KernelTable.GetPhysicalAddressFromVirtual(addr);
             if (AddProtectedRegions)
                 addr -= 4096;
-            Allocator.FreeAddr(addr);
+            NormalAllocator.FreeAddr(addr);
             PhysicalPageManager.FreeAddr(physAddr);
 
             PageTable.KernelTable.UnMap(addr);
         }
 
-        internal static unsafe void FreeAddrIdentity(Addr addr)
+        private static unsafe void FreeAddrIdentity(Addr addr)
         {
             if (AddProtectedRegions)
                 addr -= 4096;
@@ -248,13 +283,13 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static void SetTraceOptions(PageFrameAllocatorTraceOptions options)
         {
-            Allocator.SetTraceOptions(options);
+            NormalAllocator.SetTraceOptions(options);
             IdentityAllocator.SetTraceOptions(options);
         }
 
         public static void DumpStats()
         {
-            Allocator.DumpStats();
+            NormalAllocator.DumpStats();
             IdentityAllocator.DumpStats();
         }
 
