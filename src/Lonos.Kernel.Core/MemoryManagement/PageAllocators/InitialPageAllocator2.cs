@@ -62,7 +62,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
             KernelMessage.WriteLine("Page Frame Array allocated {0} pages, beginning with page {1} at {2:X8}", selfPages, firstSelfPageNum, (uint)PageArray);
 
-            PageTableExtensions.SetWritable(PageTable.KernelTable, kmap.Start, kmap.Size);
+            PageTable.KernelTable.SetWritable(kmap.Start, kmap.Size);
             kmap.Clear();
 
             var addr = FistPageNum * 4096;
@@ -79,13 +79,20 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             SetupFreeMemory();
             KernelMessage.WriteLine("Build linked lists");
             BuildLinkedLists();
+            KernelMessage.WriteLine("Build linked lists done");
 
             _FreePages = 0;
             for (uint i = 0; i < _TotalPages; i++)
                 if (PageArray[i].Status == PageStatus.Free)
                     _FreePages++;
 
-            Assert.True(list_head.list_count(FreeList) == _FreePages, "list_head.list_count(FreeList) == _FreePages");
+            //Assert.True(list_head.list_count(FreeList) == _FreePages, "list_head.list_count(FreeList) == _FreePages");
+            var debugCheckCount = list_head.list_count(FreeList);
+            if (debugCheckCount != _FreePages)
+            {
+                KernelMessage.WriteLine("debugCheckCount {0} != {1}", debugCheckCount, _FreePages);
+                Debug.Break();
+            }
 
             KernelMessage.Path(DebugName, "Pages Free: {0}", FreePages);
         }
