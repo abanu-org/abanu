@@ -65,10 +65,14 @@ namespace Lonos.Kernel.Core.Processes
             return null;
         }
 
-        public static unsafe Process StartProcessFromBuffer(uint addr, uint argumentBufferSize = 0)
+        public static unsafe Process StartProcessFromBuffer(MemoryRegion region, uint argumentBufferSize = 0)
         {
+            KernelMessage.WriteLine("StartProcessFromBuffer at {0:X8} size {1:X8}", region.Start, region.Size);
+            var cs = region.Checksum();
+            KernelMessage.WriteLine("CheckSum: {0:X8}", cs);
+
             // TODO: Copy Buffer!!
-            var elf = KernelElf.FromAddress(addr);
+            var elf = KernelElf.FromAddress(region.Start);
             return StartProcessFromElf(elf, "memory", argumentBufferSize);
         }
 

@@ -185,7 +185,9 @@ namespace Lonos.Kernel.Core.SysCalls
 
         private static uint Cmd_CreateMemoryProcess(SysCallContext* context, SystemMessage* args)
         {
-            ProcessManager.StartProcessFromBuffer(args->Arg1);
+            var addr = args->Arg1;
+            var size = args->Arg2;
+            ProcessManager.StartProcessFromBuffer(new MemoryRegion(addr, size));
             //ProcessManager.StartProcess("App.Shell");
 
             return 0;

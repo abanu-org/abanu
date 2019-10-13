@@ -62,6 +62,9 @@ namespace Lonos.Kernel
             }
             SysCalls.SetThreadPriority(0);
             RuntimeMemory.Free(buf);
+            var cs = fileBuf.Checksum();
+            Console.WriteLine(cs.ToString("x"));
+            Console.WriteLine("Starting process ...");
             SysCalls.CreateMemoryProcess(fileBuf, fileSize);
         }
 

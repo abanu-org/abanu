@@ -67,6 +67,8 @@
     <Compile Include="Allocator.cs" />
     <Compile Include="BitConversion.cs" />
     <Compile Include="KMath.cs" />
+    <Compile Include="MemoryOperation.cs" />
+    <Compile Include="MemoryRegionExtensions.cs" />
     <Compile Include="MessageManager.cs" />
     <Compile Include="Serial.cs" />
     <Compile Include="SysCalls.cs" />

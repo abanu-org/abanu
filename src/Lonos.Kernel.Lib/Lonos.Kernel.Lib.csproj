@@ -90,7 +90,6 @@
     <Compile Include="KernelMessage.cs" />
     <Compile Include="IKernelMessageHandler.cs" />
     <Compile Include="Screen.cs" />
-    <Compile Include="MemoryOperation.cs" />
     <Compile Include="ScreenColor.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="PageTable\PageTable.cs" />

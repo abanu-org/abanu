@@ -7,6 +7,9 @@ source external/gdb-dashboard/.gdbinit
 
 set history remove-duplicates unlimited
 set disassembly-flavor intel
+set breakpoint pending on
+
+set confirm off
 
 define hook-quit
 	#kill
@@ -34,6 +37,22 @@ end
 
 define stack
 	x/20xw *(void**)($esp)
+end
+
+define load-app-shell
+	file os/App.Shell.bin
+end
+
+define load-app-hellokernel
+	file os/App.HelloKernel.bin
+end
+
+define load-app-helloservice
+	file os/App.HelloService.bin
+end
+
+define load-kernel
+	file os/Lonos.OS.Core.x86.bin
 end
 
 define q

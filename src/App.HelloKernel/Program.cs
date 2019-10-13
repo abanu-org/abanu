@@ -59,9 +59,9 @@ namespace Lonos.Kernel
                 case SysCallTarget.TmpDebug:
                     if (msg->Arg1 == 1)
                     {
-                        Console.Write("try load proc");
+                        Console.WriteLine("try load proc");
                         HostCommunicator.StartProcess("os/App.Shell.bin");
-                        Console.Write("debug");
+                        Console.WriteLine("Process Started");
                         MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
                     }
                     break;

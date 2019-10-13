@@ -173,7 +173,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                     {
                         // Compact
                         //KernelMessage.Path(DebugName, "Compacting Linked List");
-                        this.DumpPages();
+                        //this.DumpPages();
                         BuildLinkedLists();
                         if (!MoveToFreeContinuous(pages))
                         {
@@ -233,7 +233,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         private void CheckAllocation(Page* page, uint pages)
         {
-            return;
+            //return;
             var count = list_head.list_count((list_head*)page);
             //Assert.True(count == pages);
 

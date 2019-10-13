@@ -25,7 +25,7 @@ namespace Lonos.Kernel
             //var result = MessageManager.Send(SysCallTarget.ServiceFunc1, 55);
 
             SysCalls.WriteDebugChar('#');
-            SysCalls.WriteDebugChar('#');
+            SysCalls.WriteDebugChar('/');
             SysCalls.WriteDebugChar('#');
 
             var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
@@ -52,6 +52,11 @@ namespace Lonos.Kernel
                 }
                 //SysCalls.WriteDebugChar('?');
             }
+        }
+
+        public static unsafe void OnDispatchError(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
         }
 
     }

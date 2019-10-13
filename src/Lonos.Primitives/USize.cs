@@ -112,6 +112,20 @@ namespace Lonos
 
         [NonVersionable]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe explicit operator int(USize value)
+        {
+            return (int)(uint)value._value;
+        }
+
+        [NonVersionable]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe explicit operator long(USize value)
+        {
+            return (long)(ulong)value._value;
+        }
+
+        [NonVersionable]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe USize operator -(USize pointer, int offset)
         {
             return new USize((ulong)((long)pointer._value - offset));

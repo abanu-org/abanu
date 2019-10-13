@@ -249,6 +249,9 @@ namespace Lonos.Kernel.Core.Interrupts
                 case 0x07:
                     Key6();
                     break;
+                case 0x44:
+                    KeyF10();
+                    break;
                 case 0x57:
                     KeyF11();
                     break;
@@ -286,6 +289,13 @@ namespace Lonos.Kernel.Core.Interrupts
 
         private static void Key6()
         {
+        }
+
+        private static void KeyF10()
+        {
+            //PhysicalPageManager.DumpPages();
+            PhysicalPageManager.DumpStats();
+            VirtualPageManager.DumpStats();
         }
 
         private static void KeyF11()

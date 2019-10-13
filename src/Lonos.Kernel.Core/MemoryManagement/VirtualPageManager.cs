@@ -43,10 +43,20 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private static IPageFrameAllocator CreateAllocator()
         {
-            //var allocator = new VirtualInitialPageAllocator(true) { DebugName = "VirtInitial" };
-            var allocator = new VirtualBuddyPageAllocator() { DebugName = "VirtInitial" };
+            var allocator = new VirtualInitialPageAllocator(true) { DebugName = "VirtInitial" };
             allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             return allocator;
+
+            //var allocator = new VirtualBuddyPageAllocator() { DebugName = "VirtBuddy" };
+            //allocator.Setup(new MemoryRegion(Address.VirtMapStart, 32 * 1024 * 1024), AddressSpaceKind.Virtual);
+            //return allocator;
+
+            //var allocator2 = new VirtualInitialPageAllocator(false) { DebugName = "VirtInitial" };
+            //allocator2.Setup(new MemoryRegion(Address.VirtMapStart + (32 * 1024 * 1024), 28 * 1024 * 1024), AddressSpaceKind.Virtual);
+
+            //var multi = new MultiAllocator();
+            //multi.Initialize(new IPageFrameAllocator[] { allocator, allocator2 });
+            //return multi;
         }
 
         private const bool SelfTestDump = false;
