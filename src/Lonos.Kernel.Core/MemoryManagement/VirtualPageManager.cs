@@ -241,9 +241,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         public static MemoryRegion AllocateRegion(USize size, AllocatePageOptions options = default)
         {
-            size = KMath.DivCeil(size, 4096);
-            var start = AllocatePages(size, options);
-            return new MemoryRegion(start, size);
+            var pages = KMath.DivCeil(size, 4096);
+            var start = AllocatePages(pages, options);
+            return new MemoryRegion(start, pages * 4096);
         }
 
         public static void SetTraceOptions(PageFrameAllocatorTraceOptions options)

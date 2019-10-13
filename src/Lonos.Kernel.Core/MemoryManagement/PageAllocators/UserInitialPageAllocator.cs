@@ -16,7 +16,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
     public unsafe class UserInitialPageAllocator : InitialPageAllocator2
     {
 
-        public UserInitialPageAllocator(bool allocRawSelfMemoryPhysical)
+        public UserInitialPageAllocator()
         {
         }
 
@@ -34,43 +34,6 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         {
             for (uint i = 0; i < _TotalPages; i++)
                 PageArray[i].Status = PageStatus.Free;
-
-            //SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
-            SetInitialPageStatus(&KernelMemoryMapManager.Header->Used, PageStatus.Used);
-            SetInitialPageStatus(&KernelMemoryMapManager.Header->KernelReserved, PageStatus.Used);
-        }
-
-        private void SetInitialPageStatus(KernelMemoryMapArray* maps, PageStatus status)
-        {
-            for (var i = 0; i < maps->Count; i++)
-            {
-                var map = maps->Items[i];
-                if (map.Start >= BootInfo.Header->InstalledPhysicalMemory)
-                    continue;
-
-                if ((map.AddressSpaceKind & AddressSpaceKind.Virtual) == 0)
-                    continue;
-
-                var mapPages = KMath.DivCeil(map.Size, 4096);
-                var fistPageNum = KMath.DivFloor(map.Start, 4096);
-                KernelMessage.WriteLine("Mark Pages from {0:X8}, Size {1:X8}, Type {2}, FirstPage {3}, Pages {4}, Status {5}", map.Start, map.Size, (uint)map.Type, (uint)fistPageNum, mapPages, (uint)status);
-
-                for (var p = fistPageNum; p < fistPageNum + mapPages; p++)
-                {
-                    var addr = p * 4096;
-                    if (!Region.Contains(addr))
-                        continue;
-
-                    if (addr >= BootInfo.Header->InstalledPhysicalMemory)
-                    {
-                        KernelMessage.WriteLine("addr >= BootInfo.Header->InstalledPhysicalMemory");
-                        break;
-                    }
-                    var page = GetPageByNum(p);
-                    Assert.IsSet(page, "page == null");
-                    page->Status = status;
-                }
-            }
         }
 
     }
