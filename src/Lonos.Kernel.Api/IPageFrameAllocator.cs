@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using Lonos.Kernel.Core.PageManagement;
 
 namespace Lonos.Kernel.Core
 {
@@ -59,6 +60,8 @@ namespace Lonos.Kernel.Core
         public bool Continuous;
         public string DebugName;
         public PageAllocationPool Pool;
+        //public IPageTable Target1;
+        //public IPageTable Target2;
 
         public static AllocatePageOptions Default;
 

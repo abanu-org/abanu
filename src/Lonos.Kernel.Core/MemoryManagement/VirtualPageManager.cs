@@ -13,7 +13,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
 
         private static IPageFrameAllocator NormalAllocator;
         private static IPageFrameAllocator IdentityAllocator;
-        //private static IPageFrameAllocator GlobalAllocator;
+        private static IPageFrameAllocator GlobalAllocator;
 
         //private static Addr _startVirtAddr;
         //private static Addr _nextVirtAddr;
@@ -38,9 +38,9 @@ namespace Lonos.Kernel.Core.MemoryManagement
             allocator2.Setup(new MemoryRegion(Address.IdentityMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
             IdentityAllocator = allocator2;
 
-            //var allocator3 = new VirtualInitialPageAllocator(false) { DebugName = "GlobalInitial" };
-            //allocator3.Setup(new MemoryRegion(600 * 1024 * 1024, 30 * 1024 * 1024), AddressSpaceKind.Virtual);
-            //GlobalAllocator = allocator3;
+            var allocator3 = new VirtualInitialPageAllocator(false) { DebugName = "GlobalInitial" };
+            allocator3.Setup(new MemoryRegion(600 * 1024 * 1024, 30 * 1024 * 1024), AddressSpaceKind.Virtual);
+            GlobalAllocator = allocator3;
 
             PhysicalPageManager.SelfTest();
             SelfTest(NormalAllocator);
@@ -167,8 +167,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
                 case PageAllocationPool.Identity:
                     return AllocateIdentityMappedPages(pages, options);
                 case PageAllocationPool.Global:
-                    Panic.Error("Not impl");
-                    break;
+                    return AllocateGlobalPages(pages, options);
                 default:
                     Panic.Error("invalid pool");
                     break;
@@ -244,11 +243,54 @@ namespace Lonos.Kernel.Core.MemoryManagement
             return IdentityAllocator.GetAddress(virtHead);
         }
 
+        private static unsafe Addr AllocateGlobalPages(uint pages, AllocatePageOptions options = default)
+        {
+            if (AddProtectedRegions)
+                pages += 2;
+
+            //lock (lockObj)
+            //{
+            //    LockCount++;
+            var physHead = PhysicalPageManager.AllocatePages(pages, options);
+            if (physHead == null)
+                return Addr.Zero;
+            var virtHead = GlobalAllocator.AllocatePages(pages, options);
+
+            var p = physHead;
+            var v = virtHead;
+            for (var i = 0; i < pages; i++)
+            {
+                var map = true;
+                if (AddProtectedRegions && (i == 0 || i == pages - 1))
+                    map = false;
+
+                if (map)
+                    PageTable.KernelTable.Map(GlobalAllocator.GetAddress(v), PhysicalPageManager.GetAddress(p));
+
+                p = PhysicalPageManager.NextCompoundPage(p);
+                v = GlobalAllocator.NextCompoundPage(v);
+            }
+            PageTable.KernelTable.Flush();
+
+            if (AddProtectedRegions)
+                virtHead = GlobalAllocator.NextCompoundPage(virtHead);
+
+            //LockCount--;
+            return GlobalAllocator.GetAddress(virtHead);
+            //}
+        }
+
         internal static unsafe void FreeAddr(Addr addr)
         {
             if (IdentityAllocator.Region.Contains(addr))
             {
                 FreeAddrIdentity(addr);
+                return;
+            }
+
+            if (GlobalAllocator.Region.Contains(addr))
+            {
+                FreeAddrGlobal(addr);
                 return;
             }
 
@@ -271,6 +313,17 @@ namespace Lonos.Kernel.Core.MemoryManagement
             if (AddProtectedRegions)
                 addr -= 4096;
             IdentityAllocator.FreeAddr(addr);
+            PageTable.KernelTable.UnMap(addr);
+        }
+
+        private static unsafe void FreeAddrGlobal(Addr addr)
+        {
+            var physAddr = PageTable.KernelTable.GetPhysicalAddressFromVirtual(addr);
+            if (AddProtectedRegions)
+                addr -= 4096;
+            GlobalAllocator.FreeAddr(addr);
+            PhysicalPageManager.FreeAddr(physAddr);
+
             PageTable.KernelTable.UnMap(addr);
         }
 

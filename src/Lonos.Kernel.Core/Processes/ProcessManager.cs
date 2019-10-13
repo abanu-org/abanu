@@ -89,7 +89,8 @@ namespace Lonos.Kernel.Core.Processes
             KernelMessage.WriteLine("Create proc: {0}, PID: {1}", path, proc.ProcessID);
             proc.Path = path;
             proc.PageTable = PageTable.CreateInstance();
-            var allocator = new UserInitialPageAllocator();
+
+            var allocator = new UserInitialPageAllocator() { DebugName = "UserInitial" };
             allocator.Setup(new MemoryRegion(500 * 1024 * 1024, 20 * 1024 * 1014), AddressSpaceKind.Virtual);
             proc.UserPageAllocator = allocator;
 

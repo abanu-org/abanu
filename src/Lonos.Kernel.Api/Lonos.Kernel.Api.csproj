@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IBufferReader.cs" />
+    <Compile Include="IPageTable.cs" />
+    <Compile Include="PageTableType.cs" />
     <Compile Include="ServiceStatus.cs" />
     <Compile Include="SysCallTarget.cs" />
     <Compile Include="Structs\FileHandle.cs" />

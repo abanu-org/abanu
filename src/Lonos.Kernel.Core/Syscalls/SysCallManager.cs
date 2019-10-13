@@ -154,18 +154,39 @@ namespace Lonos.Kernel.Core.SysCalls
             var size = args->Arg1;
             var targetProcessID = args->Arg2;
             var pages = KMath.DivCeil(size, 4096);
-            var page = PhysicalPageManager.AllocatePages(pages);
-            var virtAddr = nextVirtPage;
-            nextVirtPage += pages * 4096;
-            Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, PhysicalPageManager.GetAddress(page), pages * 4096);
+
+            var tableCurrent = Scheduler.GetCurrentThread().Process.PageTable;
+
             var targetProc = ProcessManager.System;
             if (targetProcessID > 0)
                 targetProc = ProcessManager.GetProcess(targetProcessID);
-            targetProc.PageTable.Map(virtAddr, PhysicalPageManager.GetAddress(page), pages * 4096);
+            var tableTarget = targetProc.PageTable;
+
+            var virtHead = VirtualPageManager.AllocatePages(
+                pages,
+                new AllocatePageOptions
+                {
+                    Pool = PageAllocationPool.Global,
+                });
+
+            var virtAddr = virtHead;
+
+            for (var pageIdx = 0; pageIdx < pages; pageIdx++)
+            {
+                var physAddr = PageTable.KernelTable.GetPhysicalAddressFromVirtual(virtAddr);
+
+                if (tableCurrent != PageTable.KernelTable)
+                    tableCurrent.Map(virtAddr, physAddr, flush: true);
+
+                if (tableTarget != PageTable.KernelTable)
+                    tableTarget.Map(virtAddr, physAddr, flush: true);
+
+                virtAddr += 4096;
+            }
 
             // TODO: implement TargetProcess.RegisterMessageBuffer, because of individual VirtAddr
 
-            return virtAddr;
+            return virtHead;
         }
 
         private static uint Cmd_WriteDebugMessage(SysCallContext* context, SystemMessage* args)

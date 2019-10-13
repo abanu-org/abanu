@@ -68,9 +68,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PageTable\IPageTable.cs" />
     <Compile Include="PageTable\PageTableExtensions.cs" />
-    <Compile Include="PageTable\PageTableType.cs" />
     <Compile Include="PerformanceCounter.cs" />
     <Compile Include="X86_EFlags.cs" />
     <Compile Include="Elf\ElfHeader.cs" />
