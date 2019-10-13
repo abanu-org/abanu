@@ -21,6 +21,7 @@ namespace Lonos.Kernel.Core.Processes
         public Service Service;
         //public FifoQueue<byte> StdIn;
         internal Addr PageTableAllocAddr;
+        public IPageFrameAllocator PageAllocator;
 
         public bool IsKernelProcess => PageTable == PageManagement.PageTable.KernelTable;
 
@@ -29,7 +30,6 @@ namespace Lonos.Kernel.Core.Processes
             Threads = new KList<Thread>(1);
             //StdIn = new FifoQueue<byte>(256);
         }
-
         public void Dispose()
         {
             //Memory.FreeObject(StdIn);

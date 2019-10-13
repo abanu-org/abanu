@@ -47,7 +47,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             KernelMessage.WriteLine("Page Frame Array allocated {0} pages, beginning with page {1}", selfPages, firstSelfPageNum);
 
             PageTableExtensions.SetWritable(PageTable.KernelTable, kmap.Start, kmap.Size);
-            MemoryOperation.Clear4(kmap.Start, kmap.Size);
+            kmap.Clear();
 
             var addr = FistPageNum * 4096;
             for (uint i = 0; i < _TotalPages; i++)

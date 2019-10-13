@@ -13,19 +13,18 @@ using Mosa.Runtime;
 namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 {
 
-    public unsafe class PhysicalInitialPageAllocator : InitialPageAllocator2
+    public unsafe class UserInitialPageAllocator : InitialPageAllocator2
     {
+
+        public UserInitialPageAllocator(bool allocRawSelfMemoryPhysical)
+        {
+        }
 
         protected override MemoryRegion AllocRawMemory(uint size)
         {
-            var kmap = KernelMemoryMapManager.Allocate(size, BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Both);
-            KernelMessage.Path(DebugName, "AllocRawMemory: Done. Current maps:");
-            KernelMemoryMapManager.PrintMapArrays();
-            PageTable.KernelTable.Map(kmap.Start, kmap.Start, kmap.Size, flush: true);
-            PageTable.KernelTable.SetWritable(kmap.Start, kmap.Size);
-            var region = new MemoryRegion(kmap.Start, kmap.Size);
-            region.Clear();
-            return region;
+            var kmap = VirtualPageManager.AllocateRegion(size);
+            kmap.Clear();
+            return kmap;
         }
 
         /// <summary>
@@ -33,13 +32,10 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         /// </summary>
         protected override unsafe void SetupFreeMemory()
         {
-            if (!BootInfo.Present)
-                return;
-
             for (uint i = 0; i < _TotalPages; i++)
-                PageArray[i].Status = PageStatus.Reserved;
+                PageArray[i].Status = PageStatus.Free;
 
-            SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
+            //SetInitialPageStatus(&KernelMemoryMapManager.Header->SystemUsable, PageStatus.Free);
             SetInitialPageStatus(&KernelMemoryMapManager.Header->Used, PageStatus.Used);
             SetInitialPageStatus(&KernelMemoryMapManager.Header->KernelReserved, PageStatus.Used);
         }
@@ -52,7 +48,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
                 if (map.Start >= BootInfo.Header->InstalledPhysicalMemory)
                     continue;
 
-                if ((map.AddressSpaceKind & AddressSpaceKind.Physical) == 0)
+                if ((map.AddressSpaceKind & AddressSpaceKind.Virtual) == 0)
                     continue;
 
                 var mapPages = KMath.DivCeil(map.Size, 4096);

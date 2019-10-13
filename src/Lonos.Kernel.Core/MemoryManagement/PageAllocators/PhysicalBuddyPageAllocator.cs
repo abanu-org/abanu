@@ -17,8 +17,9 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators.PageAllocators
             var kmap = KernelMemoryMapManager.Allocate(size, BootInfoMemoryType.PageFrameAllocator, AddressSpaceKind.Both);
             PageTable.KernelTable.Map(kmap.Start, kmap.Start, kmap.Size, flush: true);
             PageTable.KernelTable.SetWritable(kmap.Start, kmap.Size);
-            MemoryOperation.Clear4(kmap.Start, kmap.Size);
-            return new MemoryRegion(kmap.Start, kmap.Size);
+            var region = new MemoryRegion(kmap.Start, kmap.Size);
+            region.Clear();
+            return region;
         }
 
     }

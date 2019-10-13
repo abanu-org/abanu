@@ -44,8 +44,8 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
         protected static MemoryRegion AllocRawMemoryVirt(uint size)
         {
             var kmap = VirtualPageManager.AllocateRegion(size);
-            MemoryOperation.Clear4(kmap.Start, kmap.Size);
-            return new MemoryRegion(kmap.Start, kmap.Size);
+            kmap.Clear();
+            return kmap;
         }
 
         /// <summary>
