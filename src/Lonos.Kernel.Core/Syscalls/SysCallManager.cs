@@ -14,6 +14,7 @@ using Lonos.Kernel.Core.MemoryManagement;
 using Lonos.Kernel.Core.PageManagement;
 using Lonos.Kernel.Core.Processes;
 using Lonos.Kernel.Core.Scheduling;
+using static Lonos.Kernel.Core.Processes.Process;
 
 namespace Lonos.Kernel.Core.SysCalls
 {
@@ -60,6 +61,8 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.RegisterInterrupt, Cmd_RegisterInterrupt);
             //SetCommand(SysCallTarget.ServiceFunc1, Cmd_CallServiceFunc1);
             SetCommand(SysCallTarget.GetProcessIDForCommand, Cmd_GetProcessIDForCommand);
+            SetCommand(SysCallTarget.GetProcessByName, Cmd_GetProcessByName);
+            SetCommand(SysCallTarget.KillProcess, Cmd_KillProcess);
             SetCommand(SysCallTarget.ServiceReturn, Cmd_ServiceReturn);
             SetCommand(SysCallTarget.GetPhysicalMemory, Cmd_GetPhysicalMemory);
             SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, Cmd_TranslateVirtualToPhysicalAddress);
@@ -153,10 +156,11 @@ namespace Lonos.Kernel.Core.SysCalls
         private static uint Cmd_RequestMessageBuffer(SysCallContext* context, SystemMessage* args)
         {
             var size = args->Arg1;
-            var targetProcessID = args->Arg2;
+            var targetProcessID = (int)args->Arg2;
             var pages = KMath.DivCeil(size, 4096);
 
-            var tableCurrent = Scheduler.GetCurrentThread().Process.PageTable;
+            var currentProc = Scheduler.GetCurrentThread().Process;
+            var tableCurrent = currentProc.PageTable;
 
             var targetProc = ProcessManager.System;
             if (targetProcessID > 0)
@@ -187,6 +191,8 @@ namespace Lonos.Kernel.Core.SysCalls
 
             // TODO: implement TargetProcess.RegisterMessageBuffer, because of individual VirtAddr
 
+            currentProc.GlobalAllocations.Add(new GlobalAllocation { Addr = virtHead, TargetProcID = targetProcessID });
+
             return virtHead;
         }
 
@@ -212,6 +218,28 @@ namespace Lonos.Kernel.Core.SysCalls
             ProcessManager.StartProcessFromBuffer(new MemoryRegion(addr, size));
             //ProcessManager.StartProcess("App.Shell");
 
+            return 0;
+        }
+
+        private static uint Cmd_GetProcessByName(SysCallContext* context, SystemMessage* args)
+        {
+            var name = (NullTerminatedString*)args->Arg1;
+
+            var proc = ProcessManager.GetProcessByName(name);
+            if (proc != null)
+                return (uint)proc.ProcessID;
+
+            return unchecked((uint)-1);
+        }
+
+        private static uint Cmd_KillProcess(SysCallContext* context, SystemMessage* args)
+        {
+            var procId = (int)args->Arg1;
+            var currentProcId = Scheduler.GetCurrentThread().Process.ProcessID;
+            ProcessManager.KillProcess(procId);
+
+            if (procId == currentProcId)
+                Scheduler.ScheduleNextThread();
             return 0;
         }
 
@@ -266,7 +294,7 @@ namespace Lonos.Kernel.Core.SysCalls
             if (proc == null)
                 proc = ProcessManager.System;
             KernelMessage.WriteLine("Return ProcessID {0} for Command {1}", proc.ProcessID, cmdNum);
-            return proc.ProcessID;
+            return (uint)proc.ProcessID;
         }
 
         private static uint Cmd_ServiceReturn(SysCallContext* context, SystemMessage* args)

@@ -46,7 +46,7 @@ namespace Lonos.Kernel.Core.Processes
         public static Process CreateEmptyProcess(ProcessCreateOptions options)
         {
             var proc = new Process();
-            proc.ProcessID = (uint)Interlocked.Increment(ref NextCreateProcessID);
+            proc.ProcessID = Interlocked.Increment(ref NextCreateProcessID);
             lock (ProcessList)
                 ProcessList.Add(proc);
             proc.User = options.User;
@@ -57,7 +57,7 @@ namespace Lonos.Kernel.Core.Processes
 
         public static KList<Process> ProcessList;
 
-        public static Process GetProcess(uint processID)
+        public static Process GetProcess(int processID)
         {
             lock (ProcessList)
                 for (var i = 0; i < ProcessList.Count; i++)
@@ -155,6 +155,21 @@ namespace Lonos.Kernel.Core.Processes
             return proc;
         }
 
+        public static void KillProcess(int processID)
+        {
+            var proc = GetProcess(processID);
+            if (proc == null)
+                return;
+
+            for (var i = 0; i < proc.Threads.Count; i++)
+            {
+                var th = proc.Threads[i];
+                th.Status = ThreadStatus.Terminated;
+            }
+
+            proc.RunState = Process.ProcessRunState.Terminated;
+        }
+
         private static unsafe Addr GetEntryPointFromElf(ElfHelper elf)
         {
             var symName = "Lonos.Kernel.Program::Main()"; // TODO
@@ -164,6 +179,17 @@ namespace Lonos.Kernel.Core.Processes
             return sym->Value;
         }
 
+        public static unsafe Process GetProcessByName(NullTerminatedString* name)
+        {
+            for (var i = 0; i < ProcessList.Count; i++)
+            {
+                var proc = ProcessList[i];
+                if (name->Equals(proc.Path))
+                    if (proc.RunState == Process.ProcessRunState.Running)
+                        return proc;
+            }
+            return null;
+        }
     }
 
 }

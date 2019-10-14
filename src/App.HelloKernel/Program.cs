@@ -25,11 +25,16 @@ namespace Lonos.Kernel
     public static class Program
     {
 
+        private static MemoryRegion GetProcessByNameBuffer;
+
         public static unsafe void Main()
         {
             ApplicationRuntime.Init();
 
             MessageManager.OnMessageReceived = MessageReceived;
+
+            var targetProcID = SysCalls.GetProcessIDForCommand(SysCallTarget.GetProcessByName);
+            GetProcessByNameBuffer = SysCalls.RequestMessageBuffer(4096, targetProcID);
 
             SysCalls.RegisterService(SysCallTarget.HostCommunication_CreateProcess);
             SysCalls.RegisterService(SysCallTarget.TmpDebug);
@@ -59,6 +64,16 @@ namespace Lonos.Kernel
                 case SysCallTarget.TmpDebug:
                     if (msg->Arg1 == 1)
                     {
+                        var procID = SysCalls.GetProcessByName(GetProcessByNameBuffer, "App.Shell");
+                        Console.WriteLine("Current ProcID: ");
+                        Console.WriteLine(procID.ToString());
+
+                        if (procID == -1)
+                            procID = SysCalls.GetProcessByName(GetProcessByNameBuffer, "memory"); // temp name
+
+                        if (procID > 0)
+                            SysCalls.KillProcess(procID);
+
                         Console.WriteLine("try load proc");
                         HostCommunicator.StartProcess("os/App.Shell.bin");
                         Console.WriteLine("Process Started");

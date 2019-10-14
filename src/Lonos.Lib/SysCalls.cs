@@ -72,7 +72,18 @@ namespace Lonos.Runtime
         public static void WriteDebugMessage(MemoryRegion buf, string message)
         {
             NullTerminatedString.Set((byte*)buf.Start, message);
-            MessageManager.Send(SysCallTarget.WriteDebugMessage, buf.Start, (uint)message.Length);
+            MessageManager.Send(SysCallTarget.WriteDebugMessage, buf.Start);
+        }
+
+        public static int GetProcessByName(MemoryRegion buf, string processName)
+        {
+            NullTerminatedString.Set((byte*)buf.Start, processName);
+            return (int)MessageManager.Send(SysCallTarget.GetProcessByName, buf.Start);
+        }
+
+        public static void KillProcess(int processID)
+        {
+            MessageManager.Send(SysCallTarget.KillProcess, (uint)processID);
         }
 
         public static FileHandle OpenFile(MemoryRegion buf, string path)

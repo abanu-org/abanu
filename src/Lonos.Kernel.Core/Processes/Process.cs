@@ -13,8 +13,10 @@ namespace Lonos.Kernel.Core.Processes
     public class Process : IDisposable
     {
 
-        public uint ProcessID;
+        public int ProcessID;
+        public ProcessRunState RunState;
         public KList<Thread> Threads;
+        public KList<GlobalAllocation> GlobalAllocations;
         public bool User;
         public string Path;
         public IPageTable PageTable;
@@ -28,6 +30,7 @@ namespace Lonos.Kernel.Core.Processes
         public Process()
         {
             Threads = new KList<Thread>(1);
+            GlobalAllocations = new KList<GlobalAllocation>();
             //StdIn = new FifoQueue<byte>(256);
         }
         public void Dispose()
@@ -35,6 +38,7 @@ namespace Lonos.Kernel.Core.Processes
             //Memory.FreeObject(StdIn);
             VirtualPageManager.FreeAddr(PageTableAllocAddr);
             Threads.Dispose();
+            GlobalAllocations.Dispose();
         }
 
         public void Start()
@@ -51,6 +55,19 @@ namespace Lonos.Kernel.Core.Processes
                 UninterruptableMonitor.Exit(Threads);
             }
 
+        }
+
+        public struct GlobalAllocation
+        {
+            public Addr Addr;
+            public int TargetProcID;
+        }
+
+        public enum ProcessRunState
+        {
+            Creating,
+            Running,
+            Terminated,
         }
 
     }

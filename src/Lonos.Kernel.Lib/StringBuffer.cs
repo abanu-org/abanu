@@ -259,6 +259,9 @@ namespace Lonos.Kernel.Core
                 case ArgumentType.UInt:
                     Append(value.UInt, format);
                     break;
+                case ArgumentType.Int:
+                    Append(value.UInt, format); // TODO
+                    break;
                 case ArgumentType.String:
                     Append(value.String);
                     break;
@@ -478,9 +481,35 @@ namespace Lonos.Kernel.Core
                 new Argument());
         }
 
+        public unsafe void Append(string format, string arg0, int arg1)
+        {
+            Append(
+                format,
+                new Argument { String = arg0, Type = ArgumentType.String },
+                new Argument { UInt = unchecked((uint)arg1), Type = ArgumentType.Int },
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument());
+        }
+
         public unsafe void Append(string format, uint arg0, uint arg1)
         {
             Append(format, arg0, arg1, 0);
+        }
+
+        public unsafe void Append(string format, int arg0, uint arg1)
+        {
+            Append(
+                format,
+                new Argument { UInt = (uint)arg0, Type = ArgumentType.Int },
+                new Argument { UInt = arg1, Type = ArgumentType.UInt },
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument(),
+                new Argument());
         }
 
         public unsafe void Append(string format, uint arg0, uint arg1, uint arg2)
@@ -612,6 +641,7 @@ namespace Lonos.Kernel.Core
             None = 0,
             UInt = 1,
             String = 2,
+            Int = 3,
         }
 
         private unsafe void Append(string format, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4, Argument arg5, Argument arg6)
