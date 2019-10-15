@@ -24,7 +24,7 @@ namespace Lonos.Kernel
 
             //var result = MessageManager.Send(SysCallTarget.ServiceFunc1, 55);
 
-            SysCalls.WriteDebugChar('#');
+            SysCalls.WriteDebugChar('=');
             SysCalls.WriteDebugChar('/');
             SysCalls.WriteDebugChar('#');
 

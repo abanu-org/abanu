@@ -272,8 +272,9 @@ function debug {
 			#trap '' SIGINT
 			#./lonosctl debug qemu-kernel-run &
 			#debug qemu-kernel-run
-			#bin/Lonos.Tools.HostCommunication.exe &
-			#HostCommunication_PID=$!
+			#$LONOS_PROJDIR/bin/Lonos.Tools.HostCommunication.exe &
+			#sleep 1
+			HostCommunication_PID=$!
 			gdb -x conf/gdb-load-symbols -nx -x conf/gdbinit -x conf/gdb-attach-unix -x conf/gdb-workspace
 			#kill -9 $HostCommunication_PID
 			#gdb -x conf/gdb-load-symbols -x conf/gdb-attach-mswin -x conf/gdb-workspace

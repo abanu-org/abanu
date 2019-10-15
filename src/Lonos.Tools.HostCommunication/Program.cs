@@ -206,10 +206,13 @@ namespace Lonos.Tools.HostCommunication
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (!IsConnecting)
+                    {
+                        Console.WriteLine(ex.ToString());
                         Restart();
+                    }
                 }
             }
         }
@@ -247,6 +250,7 @@ namespace Lonos.Tools.HostCommunication
 
         public static void MessageReceived(int msgId, int command, byte[][] args, byte[] data)
         {
+            Console.WriteLine($"Got message {msgId}, command {command}");
             switch (command)
             {
                 case 240:
@@ -259,6 +263,7 @@ namespace Lonos.Tools.HostCommunication
                     CmdGetFileLength(msgId, args, data);
                     break;
             }
+            Console.WriteLine($"Message {msgId} handled");
         }
 
         private static Dictionary<int, Stream> OpenFiles = new Dictionary<int, Stream>();
@@ -267,10 +272,11 @@ namespace Lonos.Tools.HostCommunication
         public static void CmdOpenFile(int msgId, byte[][] args, byte[] data)
         {
             var fileName = Encoding.ASCII.GetString(args[0]);
-            Console.WriteLine(fileName);
+            Console.WriteLine("Requested file:" + fileName);
             var rootDir = Env.Get("LONOS_PROJDIR");
             var absFileName = Path.Combine(rootDir, fileName);
-            var s = File.Open(absFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            Console.WriteLine("Absolute Path:" + absFileName);
+            var s = new MemoryStream(File.ReadAllBytes(absFileName));
             var handle = ++LastHandle;
             OpenFiles.Add(handle, s);
             WriteResult(msgId, handle);
@@ -291,8 +297,10 @@ namespace Lonos.Tools.HostCommunication
             var fileName = Encoding.ASCII.GetString(args[0]);
             Console.WriteLine(fileName);
             var rootDir = Env.Get("LONOS_PROJDIR");
+            Console.WriteLine("rootdir: " + rootDir);
             var absFileName = Path.Combine(rootDir, fileName);
             var len = (int)new FileInfo(absFileName).Length;
+            Console.WriteLine("Length: " + len);
             WriteResult(msgId, len);
         }
 
