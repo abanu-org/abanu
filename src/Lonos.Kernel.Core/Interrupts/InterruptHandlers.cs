@@ -4,6 +4,7 @@
 using System;
 using Lonos.Kernel.Core.Diagnostics;
 using Lonos.Kernel.Core.MemoryManagement;
+using Lonos.Kernel.Core.Processes;
 using Lonos.Kernel.Core.Scheduling;
 using Lonos.Kernel.Core.SysCalls;
 using Mosa.Runtime;
@@ -249,6 +250,33 @@ namespace Lonos.Kernel.Core.Interrupts
                 case 0x07:
                     Key6();
                     break;
+                case 0x3B:
+                    KeyF1();
+                    break;
+                case 0x3C:
+                    KeyF2();
+                    break;
+                case 0x3D:
+                    KeyF3();
+                    break;
+                case 0x3E:
+                    KeyF4();
+                    break;
+                case 0x3F:
+                    KeyF5();
+                    break;
+                case 0x40:
+                    KeyF6();
+                    break;
+                case 0x41:
+                    KeyF7();
+                    break;
+                case 0x42:
+                    KeyF8();
+                    break;
+                case 0x43:
+                    KeyF9();
+                    break;
                 case 0x44:
                     KeyF10();
                     break;
@@ -268,7 +296,6 @@ namespace Lonos.Kernel.Core.Interrupts
 
         private static void Key1()
         {
-            Screen.Clear();
         }
 
         private static void Key2()
@@ -291,11 +318,50 @@ namespace Lonos.Kernel.Core.Interrupts
         {
         }
 
-        private static void KeyF10()
+        private static void KeyF1()
+        {
+            Scheduler.DumpStats();
+        }
+
+        private static void KeyF2()
+        {
+            ProcessManager.DumpStats();
+        }
+
+        private static void KeyF3()
         {
             //PhysicalPageManager.DumpPages();
             PhysicalPageManager.DumpStats();
             VirtualPageManager.DumpStats();
+        }
+
+        private static void KeyF4()
+        {
+        }
+
+        private static void KeyF5()
+        {
+            Screen.Clear();
+        }
+
+        private static void KeyF6()
+        {
+        }
+
+        private static void KeyF7()
+        {
+        }
+
+        private static void KeyF8()
+        {
+        }
+
+        private static void KeyF9()
+        {
+        }
+
+        private static void KeyF10()
+        {
         }
 
         private static void KeyF11()
@@ -304,7 +370,6 @@ namespace Lonos.Kernel.Core.Interrupts
 
         private static void KeyF12()
         {
-            Scheduler.Dump();
         }
 
     }

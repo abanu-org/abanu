@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using Lonos.Kernel.Core.Devices;
+using Lonos.Kernel.Core.MemoryManagement.PageAllocators;
 
 namespace Lonos.Kernel.Core.MemoryManagement
 {
@@ -40,6 +41,12 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             KernelMessage.WriteLine("Stats for {0}", allocator.DebugName);
             KernelMessage.WriteLine("TotalPages {0}, FreePages {1}, Requests {2}, Releases {3}, Allocations {4}", allocator.TotalPages, allocator.FreePages, (uint)allocator.Requests, (uint)allocator.Releases, (uint)(allocator.Requests - allocator.Releases));
+            if (allocator is MultiAllocator)
+            {
+                var multi = (MultiAllocator)allocator;
+                for (var i = 0; i < multi.Allocators.Length; i++)
+                    multi.Allocators[i].DumpStats();
+            }
         }
 
         public static void FreeAddr(this IPageFrameAllocator allocator, Addr addr)

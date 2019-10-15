@@ -65,11 +65,12 @@ namespace Lonos.Kernel
                     if (msg->Arg1 == 1)
                     {
                         var procID = SysCalls.GetProcessByName(GetProcessByNameBuffer, "App.Shell");
-                        Console.WriteLine("Current ProcID: ");
-                        Console.WriteLine(procID.ToString());
 
                         if (procID == -1)
                             procID = SysCalls.GetProcessByName(GetProcessByNameBuffer, "memory"); // temp name
+
+                        Console.WriteLine("Current ProcID: ");
+                        Console.WriteLine(procID.ToString());
 
                         if (procID > 0)
                             SysCalls.KillProcess(procID);

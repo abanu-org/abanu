@@ -8,7 +8,7 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
     public unsafe class MultiAllocator : IPageFrameAllocator
     {
 
-        private IPageFrameAllocator[] Allocators;
+        public IPageFrameAllocator[] Allocators;
 
         public void Initialize(IPageFrameAllocator[] allocators)
         {

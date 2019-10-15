@@ -202,8 +202,8 @@ namespace Lonos.Kernel
             //SysCalls.WriteDebugChar((char)(byte)code);
             //SysCalls.WriteDebugChar('*');
 
-            // F11
-            if (code == 0x57)
+            // F12
+            if (code == 0x58)
             {
                 MessageManager.Send(new SystemMessage(SysCallTarget.TmpDebug, 1));
             }

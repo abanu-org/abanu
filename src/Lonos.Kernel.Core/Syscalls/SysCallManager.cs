@@ -43,9 +43,6 @@ namespace Lonos.Kernel.Core.SysCalls
 
             Commands = new SysCallInfo[256];
             SetCommands();
-
-            // hack!!
-            nextVirtPage = 300 * 1024 * 1024;
         }
 
         private static void SetCommands()
@@ -113,8 +110,6 @@ namespace Lonos.Kernel.Core.SysCalls
 
         private static SysCallInfo[] Commands;
 
-        private static uint nextVirtPage;
-
         private static uint Cmd_RegisteredService(SysCallContext* context, SystemMessage* args)
         {
             var commandNum = GetCommandNum(args->Target);
@@ -130,9 +125,9 @@ namespace Lonos.Kernel.Core.SysCalls
         {
             var size = args->Arg1;
             size = KMath.AlignValueCeil(size, 4096);
+            var proc = Scheduler.GetCurrentThread().Process;
             var map = PhysicalPageManager.AllocateRegion(size);
-            var virtAddr = nextVirtPage;
-            nextVirtPage += size;
+            var virtAddr = proc.UserPageAllocator.AllocatePagesAddr(size / 4096);
             Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, map.Start, PhysicalPageManager.GetAllocatorByAddr(map.Start));
             return virtAddr;
         }
@@ -141,9 +136,9 @@ namespace Lonos.Kernel.Core.SysCalls
         {
             var physAddr = args->Arg1;
             var pages = KMath.DivCeil(args->Arg2, 4096);
-            var virtAddr = nextVirtPage;
-            nextVirtPage += pages * 4096;
-            Scheduler.GetCurrentThread().Process.PageTable.Map(virtAddr, physAddr, pages * 4096);
+            var proc = Scheduler.GetCurrentThread().Process;
+            var virtAddr = proc.UserPageAllocator.AllocatePagesAddr(pages);
+            proc.PageTable.Map(virtAddr, physAddr, pages * 4096);
             return virtAddr;
         }
 

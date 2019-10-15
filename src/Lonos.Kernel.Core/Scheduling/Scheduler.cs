@@ -410,7 +410,7 @@ namespace Lonos.Kernel.Core.Scheduling
                 if (KConfig.Log.Threads >= KLogLevel.Trace)
                     KernelMessage.WriteLine("Threads Max Allocated: {0}. Allocated {0} Active: {1}", ThreadsMaxAllocated, ThreadsAllocated, GetActiveThreadCount());
                 if (KConfig.Log.Threads >= KLogLevel.Trace)
-                    Dump();
+                    DumpStats();
             }
             else if (KConfig.Log.Threads >= KLogLevel.Debug)
             {
@@ -419,7 +419,7 @@ namespace Lonos.Kernel.Core.Scheduling
             return thread;
         }
 
-        public static void Dump()
+        public static void DumpStats()
         {
             KernelMessage.WriteLine("Threads, Can scheduled:");
             Dump(true);
@@ -525,7 +525,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
             if (thread.StackState == null)
             {
-                Dump();
+                DumpStats();
                 KernelMessage.WriteLine("threadID: {0}", threadID);
                 Debug.Break();
             }

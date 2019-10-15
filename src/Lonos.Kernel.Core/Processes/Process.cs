@@ -47,6 +47,7 @@ namespace Lonos.Kernel.Core.Processes
             UninterruptableMonitor.Enter(Threads);
             try
             {
+                RunState = ProcessRunState.Running;
                 for (var i = 0; i < Threads.Count; i++)
                     Threads[i].Start();
             }
@@ -63,13 +64,13 @@ namespace Lonos.Kernel.Core.Processes
             public int TargetProcID;
         }
 
-        public enum ProcessRunState
-        {
-            Creating,
-            Running,
-            Terminated,
-        }
+    }
 
+    public enum ProcessRunState
+    {
+        Creating,
+        Running,
+        Terminated,
     }
 
 }

@@ -33,9 +33,11 @@ namespace Lonos.Kernel.Core.Processes
 
             Idle = CreateEmptyProcess(new ProcessCreateOptions());
             Idle.Path = "/system/idle";
+            Idle.RunState = ProcessRunState.Running;
 
             System = CreateEmptyProcess(new ProcessCreateOptions());
             System.Path = "/system/main";
+            System.RunState = ProcessRunState.Running;
 
             Scheduler.Setup(followupTask);
             Scheduler.Start();
@@ -91,7 +93,7 @@ namespace Lonos.Kernel.Core.Processes
             proc.PageTable = PageTable.CreateInstance();
 
             var allocator = new UserInitialPageAllocator() { DebugName = "UserInitial" };
-            allocator.Setup(new MemoryRegion(500 * 1024 * 1024, 20 * 1024 * 1014), AddressSpaceKind.Virtual);
+            allocator.Setup(new MemoryRegion(500 * 1024 * 1024, 60 * 1024 * 1014), AddressSpaceKind.Virtual);
             proc.UserPageAllocator = allocator;
 
             // Setup User PageTable
@@ -157,6 +159,7 @@ namespace Lonos.Kernel.Core.Processes
 
         public static void KillProcess(int processID)
         {
+            KernelMessage.WriteLine("Killing process ID {0}", processID);
             var proc = GetProcess(processID);
             if (proc == null)
                 return;
@@ -167,7 +170,7 @@ namespace Lonos.Kernel.Core.Processes
                 th.Status = ThreadStatus.Terminated;
             }
 
-            proc.RunState = Process.ProcessRunState.Terminated;
+            proc.RunState = ProcessRunState.Terminated;
         }
 
         private static unsafe Addr GetEntryPointFromElf(ElfHelper elf)
@@ -185,11 +188,21 @@ namespace Lonos.Kernel.Core.Processes
             {
                 var proc = ProcessList[i];
                 if (name->Equals(proc.Path))
-                    if (proc.RunState == Process.ProcessRunState.Running)
+                    if (proc.RunState == ProcessRunState.Running)
                         return proc;
             }
             return null;
         }
+
+        public static unsafe void DumpStats()
+        {
+            for (var i = 0; i < ProcessList.Count; i++)
+            {
+                var proc = ProcessList[i];
+                KernelMessage.WriteLine("PID {1} Name {0} State {2}", proc.Path, (uint)proc.ProcessID, (uint)proc.RunState);
+            }
+        }
+
     }
 
 }
