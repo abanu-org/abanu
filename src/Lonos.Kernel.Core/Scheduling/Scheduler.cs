@@ -604,8 +604,10 @@ namespace Lonos.Kernel.Core.Scheduling
                         for (var i = 0; i < proc.Threads.Count; i++)
                         {
                             if (proc.Threads[i] == thread)
+                            {
                                 proc.Threads.RemoveAt(i);
-                            break;
+                                break;
+                            }
                         }
                     }
                     finally
