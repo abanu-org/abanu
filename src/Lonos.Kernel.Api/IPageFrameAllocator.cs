@@ -35,6 +35,8 @@ namespace Lonos.Kernel.Core
         uint FreePages { get; }
         ulong Requests { get; }
         ulong Releases { get; }
+        uint MaxPagesPerAllocation { get; }
+        uint CriticalLowPages { get; }
         MemoryRegion Region { get; }
 
         Page* NextPage(Page* page);

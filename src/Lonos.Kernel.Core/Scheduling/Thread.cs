@@ -73,6 +73,18 @@ namespace Lonos.Kernel.Core.Scheduling
         {
             Status = ThreadStatus.ScheduleForStart;
         }
+
+        public void Terminate()
+        {
+            Status = ThreadStatus.Terminated;
+            if (ChildThread != null)
+            {
+                ChildThread.Terminate();
+                ChildThread = null;
+            }
+            ParentThread = null;
+        }
+
     }
 
     public class KernelThread : Thread

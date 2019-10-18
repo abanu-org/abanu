@@ -89,7 +89,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var ptrListMapped = (Addr*)0x3000;
             PageTable.KernelTable.Map(ptrListMapped, ptrList, ptrPages * 4096, true, true);
             var checkPageCount = Default.FreePages;
-            checkPageCount -= 1000;
+            checkPageCount -= Default.CriticalLowPages;
             //checkPageCount = 32;
             var mapAddr = 0x2000u;
             for (var i = 0; i < checkPageCount; i++)

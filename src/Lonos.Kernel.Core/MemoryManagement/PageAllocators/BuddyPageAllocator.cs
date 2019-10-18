@@ -188,6 +188,9 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public AddressSpaceKind AddressSpaceKind { get; private set; }
 
+        public uint MaxPagesPerAllocation => 512;
+        public uint CriticalLowPages => 1000;
+
         public Page* NextCompoundPage(Page* page)
         {
             if (page == null)

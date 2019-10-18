@@ -29,7 +29,8 @@ namespace Lonos.Kernel.Core.MemoryManagement
             //lockObj = new object();
             //LockCount = 0;
 
-            NormalAllocator = CreateAllocator();
+            NormalAllocator = CreateAllocatorStage1();
+            NormalAllocator = CreateAllocatorStage2();
 
             //_identityStartVirtAddr = Address.IdentityMapStart;
             //_identityNextVirtAddr = _identityStartVirtAddr;
@@ -47,21 +48,30 @@ namespace Lonos.Kernel.Core.MemoryManagement
             SelfTest(IdentityAllocator);
         }
 
-        private static IPageFrameAllocator CreateAllocator()
+        private static IPageFrameAllocator CreateAllocatorStage1()
         {
-            //var allocator = new VirtualInitialPageAllocator(true) { DebugName = "VirtInitial" };
-            //allocator.Setup(new MemoryRegion(Address.VirtMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
-            //return allocator;
-
-            var allocator = new VirtualBuddyPageAllocator() { DebugName = "VirtBuddy" };
+            var allocator = new VirtualInitialPageAllocator(true) { DebugName = "VirtInitial" };
             allocator.Setup(new MemoryRegion(Address.VirtMapStart, 32 * 1024 * 1024), AddressSpaceKind.Virtual);
             return allocator;
 
-            var allocator2 = new VirtualInitialPageAllocator(false) { DebugName = "VirtInitial" };
-            allocator2.Setup(new MemoryRegion(Address.VirtMapStart + (32 * 1024 * 1024), 28 * 1024 * 1024), AddressSpaceKind.Virtual);
+            //var allocator = new VirtualBuddyPageAllocator() { DebugName = "VirtBuddy" };
+            //allocator.Setup(new MemoryRegion(Address.VirtMapStart, 32 * 1024 * 1024), AddressSpaceKind.Virtual);
 
-            var multi = new MultiAllocator();
-            multi.Initialize(new IPageFrameAllocator[] { allocator, allocator2 });
+            //var allocator2 = new VirtualInitialPageAllocator(false) { DebugName = "VirtInitial" };
+            //allocator2.Setup(new MemoryRegion(Address.VirtMapStart + (32 * 1024 * 1024), 28 * 1024 * 1024), AddressSpaceKind.Virtual);
+
+            //var multi = new MultiAllocator() { DebugName = "VirtMulti" };
+            //multi.Initialize(new IPageFrameAllocator[] { allocator, allocator2 });
+            //return multi;
+        }
+
+        public static IPageFrameAllocator CreateAllocatorStage2()
+        {
+            var allocator = new VirtualBuddyPageAllocator() { DebugName = "VirtBuddy" };
+            allocator.Setup(new MemoryRegion(Address.VirtMapStart + (32 * 1024 * 1024), 32 * 1024 * 1024), AddressSpaceKind.Virtual);
+
+            var multi = new MultiAllocator() { DebugName = "VirtMulti" };
+            multi.Initialize(new IPageFrameAllocator[] { allocator, NormalAllocator });
             return multi;
         }
 
@@ -78,7 +88,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             var ptrListAddr = AllocatePages(ptrPages); // pointers for 4GB of pages
             var ptrList = (Addr*)ptrListAddr;
             var checkPageCount = allocator.FreePages;
-            checkPageCount -= 1000;
+            checkPageCount -= allocator.CriticalLowPages;
             uint checkPagesEach = 4;
             checkPageCount /= checkPagesEach;
             //checkPageCount = 32;
@@ -344,6 +354,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
         {
             NormalAllocator.DumpStats();
             IdentityAllocator.DumpStats();
+            GlobalAllocator.DumpStats();
         }
 
     }

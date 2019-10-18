@@ -433,6 +433,9 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public uint FreePages => _FreePages;
 
+        public uint MaxPagesPerAllocation => uint.MaxValue / 4096;
+        public uint CriticalLowPages => 1000;
+
         public void SetTraceOptions(PageFrameAllocatorTraceOptions options)
         {
             TraceOptions = options;

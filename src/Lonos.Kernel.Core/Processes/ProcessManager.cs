@@ -167,7 +167,7 @@ namespace Lonos.Kernel.Core.Processes
             for (var i = 0; i < proc.Threads.Count; i++)
             {
                 var th = proc.Threads[i];
-                th.Status = ThreadStatus.Terminated;
+                th.Terminate();
             }
 
             proc.RunState = ProcessRunState.Terminated;

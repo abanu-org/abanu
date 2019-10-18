@@ -51,7 +51,7 @@ namespace Lonos.Kernel
             var buf = (byte*)RuntimeMemory.Allocate(bufSize);
             var gotBytes = (uint)ReadFile(handle, buf, bufSize);
             var fileBufPos = 0u;
-            SysCalls.SetThreadPriority(30);
+            //SysCalls.SetThreadPriority(30);
             while (gotBytes > 0)
             {
                 //Console.WriteLine("got data");
@@ -60,7 +60,7 @@ namespace Lonos.Kernel
                 fileBufPos += gotBytes;
                 gotBytes = (uint)ReadFile(handle, buf, bufSize);
             }
-            SysCalls.SetThreadPriority(0);
+            //SysCalls.SetThreadPriority(0);
             RuntimeMemory.Free(buf);
             var cs = fileBuf.Checksum();
             Console.WriteLine(cs.ToString("x"));

@@ -60,6 +60,9 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public AddressSpaceKind AddressSpaceKind { get; private set; }
 
+        public uint MaxPagesPerAllocation => uint.MaxValue / 4096;
+        public uint CriticalLowPages => 1000;
+
         public unsafe Page* AllocatePage(AllocatePageOptions options = default)
         {
             return AllocatePages(1, options);

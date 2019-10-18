@@ -86,7 +86,9 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
 
         public Page* AllocatePages(uint pages, AllocatePageOptions options = default)
         {
-            if (pages <= 512)
+            var configuredMaxPagesPerAllocation = 64;
+            var maxAllocation = Math.Min(configuredMaxPagesPerAllocation, Allocators[0].MaxPagesPerAllocation);
+            if (pages <= maxAllocation && Allocators[0].FreePages > Allocators[0].CriticalLowPages)
                 return Allocators[0].AllocatePages(pages, options);
             else
                 return Allocators[1].AllocatePages(pages, options);
@@ -186,6 +188,27 @@ namespace Lonos.Kernel.Core.MemoryManagement.PageAllocators
             set { _DebugName = value; }
         }
 
+        public uint MaxPagesPerAllocation
+        {
+            get
+            {
+                uint n = 0;
+                for (var i = 0; i < Allocators.Length; i++)
+                    n += Math.Max(n, Allocators[i].MaxPagesPerAllocation);
+                return n;
+            }
+        }
+
+        public uint CriticalLowPages
+        {
+            get
+            {
+                uint n = 0;
+                for (var i = 0; i < Allocators.Length; i++)
+                    n += Allocators[i].CriticalLowPages;
+                return n;
+            }
+        }
     }
 
 }

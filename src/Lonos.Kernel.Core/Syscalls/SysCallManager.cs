@@ -309,10 +309,7 @@ namespace Lonos.Kernel.Core.SysCalls
 
                 Scheduler.SwitchToThread(parent.ThreadID);
             }
-            else
-            {
-                Scheduler.ScheduleNextThread();
-            }
+            Scheduler.ScheduleNextThread();
             return 0;
         }
 
