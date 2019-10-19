@@ -301,10 +301,10 @@ function debug {
 			;;
 
 		qemu-grub-hybrid-run)
+			loadenv unix
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
-			qemu_app=qemu-system-x86_64
-			#qemu_app=qemu-system-i386
+			qemu_app=$QEMU_X86
 
 			bios="-L /usr/share/seabios"
 

@@ -16,24 +16,19 @@ end
 ########################
 # specific configuration
 
-set arch i386:x86-64:intel
+#set arch i386:x86-64:intel
 file os/Lonos.OS.Core.x86.bin
 #file os/Lonos.OS.Loader.x86.bin
 target remote | ./lonosctl debug qemu-grub-hybrid-run
-b *0x0
-#b *0xc010609f
+#b *0x0
+# Invalid TSS
+b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ10()
 
-#hbreak System.Void Lonos.Kernel.Core.Start::Main()
-#hbreak System.Void Lonos.Kernel.Core.IDTManager::SetTableEntries()
-#hbreak src/Lonos.Kernel.Core/Start.cs:63
-#hbreak src/Lonos.Kernel.Core/KList.cs:45
-#b PageTableX64.cs:75
-#b PageTableX64.cs:109
-#b LoaderStart.cs:61
-b IDTManager.cs:471
-#b *0xc010f128
-#watch *0x4506010
-#watch *0x4506014
+# General Protection Exception
+b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ13()
+
+# Page Fault
+b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ14()
 
 ####################
 # continue debugging

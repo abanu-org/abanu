@@ -185,7 +185,8 @@ namespace Lonos.Kernel
                 Console.WriteLine();
             }
 
-            HostCommunicator.Init(disks[1].DeviceDriver as IDiskDevice);
+            if (disks.Count >= 2 && disks[1].DeviceDriver != null && disks[1].DeviceDriver is IDiskDevice)
+                HostCommunicator.Init(disks[1].DeviceDriver as IDiskDevice);
 
             partitionService.CreatePartitionDevices();
 
