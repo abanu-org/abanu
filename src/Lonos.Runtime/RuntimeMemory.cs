@@ -49,6 +49,16 @@ namespace Lonos.Runtime
             return retAddr;
         }
 
+        public static unsafe uint AllocateCleared(int size)
+        {
+            return AllocateCleared((uint)size);
+        }
+
+        public static unsafe uint AllocateCleared(long size)
+        {
+            return AllocateCleared((uint)size);
+        }
+
         public static unsafe uint AllocateCleared(uint size)
         {
             var ptr = Allocate(size);

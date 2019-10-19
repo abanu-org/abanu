@@ -2,8 +2,9 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using Lonos.Kernel.Core;
 
-namespace Lonos.Kernel.Core
+namespace Lonos
 {
     public static class BufferExtensions
     {

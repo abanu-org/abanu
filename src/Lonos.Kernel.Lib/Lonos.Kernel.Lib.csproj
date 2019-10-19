@@ -76,7 +76,6 @@
     <Compile Include="Elf\ElfSymbol.cs" />
     <Compile Include="StringBuffer.cs" />
     <Compile Include="ApiContext.cs" />
-    <Compile Include="BufferExtensions.cs" />
     <Compile Include="ConsoleFonts\PSF2Header.cs" />
     <Compile Include="ConsoleFonts\PSF1Header.cs" />
     <Compile Include="Elf\ElfHelper.cs" />

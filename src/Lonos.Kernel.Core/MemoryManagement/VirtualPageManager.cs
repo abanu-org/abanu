@@ -40,7 +40,7 @@ namespace Lonos.Kernel.Core.MemoryManagement
             IdentityAllocator = allocator2;
 
             var allocator3 = new VirtualInitialPageAllocator(false) { DebugName = "GlobalInitial" };
-            allocator3.Setup(new MemoryRegion(600 * 1024 * 1024, 30 * 1024 * 1024), AddressSpaceKind.Virtual);
+            allocator3.Setup(new MemoryRegion(600 * 1024 * 1024, 100 * 1024 * 1024), AddressSpaceKind.Virtual);
             GlobalAllocator = allocator3;
 
             PhysicalPageManager.SelfTest();

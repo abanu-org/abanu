@@ -66,6 +66,8 @@
   <ItemGroup>
     <Compile Include="Allocator.cs" />
     <Compile Include="BitConversion.cs" />
+    <Compile Include="BufferExtensions.cs" />
+    <Compile Include="CharExtensions.cs" />
     <Compile Include="KMath.cs" />
     <Compile Include="MemoryOperation.cs" />
     <Compile Include="MemoryRegionExtensions.cs" />

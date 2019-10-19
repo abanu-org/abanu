@@ -126,6 +126,15 @@ namespace Lonos
 
         [NonVersionable]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable CA2225 // Operator overloads have named alternates
+        public static unsafe explicit operator SSize(USize value)
+#pragma warning restore CA2225 // Operator overloads have named alternates
+        {
+            return new SSize((uint)value);
+        }
+
+        [NonVersionable]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe USize operator -(USize pointer, int offset)
         {
             return new USize((ulong)((long)pointer._value - offset));
