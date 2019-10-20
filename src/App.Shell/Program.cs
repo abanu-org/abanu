@@ -58,9 +58,12 @@ namespace Lonos.Kernel
                         var bufPtr = (byte*)buf.Start;
                         var key = bufPtr[byteIdx];
                         var s = key.ToString("x");
+                        //for (var i = 0; i < s.Length; i++)
+                        //    SysCalls.WriteDebugChar(s[i]);
+                        //SysCalls.WriteDebugChar(' ');
                         for (var i = 0; i < s.Length; i++)
-                            SysCalls.WriteDebugChar(s[i]);
-                        SysCalls.WriteDebugChar(' ');
+                            con.Write(s[i]);
+                        con.Write(' ');
                     }
                 }
                 //SysCalls.WriteDebugChar('?');
