@@ -3,12 +3,10 @@
 
 using System;
 
-#pragma warning disable CA1822 // Mark members as static
-
 namespace Lonos.Kernel
 {
     [Flags]
-    public enum TerminalCharAttributes
+    public enum ConsoleCharAttributes
     {
         None = 0,
         Bold = 1,

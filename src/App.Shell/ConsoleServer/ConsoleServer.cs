@@ -11,8 +11,6 @@ using Lonos;
 using Lonos.Kernel.Core;
 using Lonos.Runtime;
 
-#pragma warning disable CA1822 // Mark members as static
-
 // https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html
 // http://www.termsys.demon.co.uk/vtansi.htm
 // http://man7.org/linux/man-pages/man4/console_codes.4.html
@@ -23,16 +21,16 @@ namespace Lonos.Kernel
     public class ConsoleServer : IBuffer
     {
 
-        internal static TerminalDevice Dev;
+        internal static ConsoleDevice Dev;
 
         public ConsoleServer()
         {
             Sequence = new List<char>();
 
-            var biosScreen = new BiosScreenDevice();
+            var biosScreen = new BiosTextConsoleDevice();
             biosScreen.Initialize();
 
-            Dev = new TerminalDevice();
+            Dev = new ConsoleDevice();
             Dev.Initialize(biosScreen);
         }
 
@@ -44,9 +42,8 @@ namespace Lonos.Kernel
         public unsafe SSize Write(byte* buf, USize count)
         {
             for (var i = 0; i < count; i++)
-            {
                 ProcessChar((char)buf[i]);
-            }
+
             Flush();
             return (SSize)count;
         }
@@ -251,7 +248,7 @@ namespace Lonos.Kernel
 
         private const byte SystemDefaultForeColor = 4;
         private const byte SystemDefaultBackColor = 5;
-        private TerminalCharAttributes Attributes;
+        private ConsoleCharAttributes Attributes;
 
         private byte ForeColor;
         private byte BackColor;
@@ -278,13 +275,11 @@ namespace Lonos.Kernel
         {
             ForeColor = DefaultForeColor;
             BackColor = DefaultBackColor;
-            Attributes = TerminalCharAttributes.None;
+            Attributes = ConsoleCharAttributes.None;
         }
 
         private void StoreDefaultColor()
         {
-            SysCalls.WriteDebugChar('!');
-            SysCalls.WriteDebugChar('D');
             DefaultForeColor = ForeColor;
             DefaultBackColor = BackColor;
         }
@@ -294,10 +289,7 @@ namespace Lonos.Kernel
 
         private void Clear()
         {
-            SysCalls.WriteDebugChar('!');
-            SysCalls.WriteDebugChar('C');
-
-            Dev.Clear(new TerminalChar
+            Dev.Clear(new ConsoleChar
             {
                 Char = ' ',
                 ForegroundColor = DefaultForeColor,
@@ -327,7 +319,7 @@ namespace Lonos.Kernel
             if (Row >= Dev.Rows - 1)
             {
                 Dev.ShiftUp();
-                var blankChar = new TerminalChar
+                var blankChar = new ConsoleChar
                 {
                     Char = ' ',
                     ForegroundColor = DefaultForeColor,
@@ -356,7 +348,7 @@ namespace Lonos.Kernel
                 return;
             }
 
-            Dev.SetChar(Row, Column, new TerminalChar
+            Dev.SetChar(Row, Column, new ConsoleChar
             {
                 Char = b,
                 ForegroundColor = ForeColor,

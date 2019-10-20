@@ -12,30 +12,31 @@ using Lonos.Kernel.Core;
 using Lonos.Runtime;
 using Mosa.Runtime.x86;
 
-#pragma warning disable CA1822 // Mark members as static
-
 namespace Lonos.Kernel
 {
 
-    public class BiosScreenDevice
+    public class BiosTextConsoleDevice : ITextConsoleDevice
     {
-        public int Rows;
-        public int Columns;
+        private int _Rows;
+        public int Rows => _Rows;
+        private int _Columns;
+        public int Columns => _Columns;
 
         private Addr BaseAddr;
 
         public void Initialize()
         {
-            Rows = 25;
-            Columns = 80;
-            BaseAddr = SysCalls.GetPhysicalMemory(0x0B8000, (uint)(Rows * Columns * 2));
+            _Rows = 25;
+            _Columns = 80;
+            BaseAddr = SysCalls.GetPhysicalMemory(0x0B8000, (uint)(_Rows * _Columns * 2));
         }
 
-        public void SetChar(int row, int column, TerminalChar c)
+        public void SetChar(int row, int column, ConsoleChar c)
         {
+            SetChar((row * _Columns) + column, c);
         }
 
-        public unsafe void SetChar(int offset, TerminalChar c)
+        public unsafe void SetChar(int offset, ConsoleChar c)
         {
             var s = (byte*)(BaseAddr + (offset * 2));
             *s = (byte)c.Char;
@@ -45,7 +46,7 @@ namespace Lonos.Kernel
 
         public void SetCursor(int row, int col)
         {
-            int location = (row * Columns) + col;
+            int location = (row * _Columns) + col;
 
             Native.Out8(0x3D4, 0x0F);
             Native.Out8(0x3D5, (byte)(location & 0xFF));

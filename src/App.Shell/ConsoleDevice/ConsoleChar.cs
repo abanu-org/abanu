@@ -3,24 +3,22 @@
 
 using System.Runtime.InteropServices;
 
-#pragma warning disable CA1822 // Mark members as static
-
 namespace Lonos.Kernel
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct TerminalChar
+    public struct ConsoleChar
     {
         public char Char;
         public byte ForegroundColor;
         public byte BackgroundColor;
-        public TerminalCharAttributes Attributes;
+        public ConsoleCharAttributes Attributes;
 
-        public static unsafe bool Equals(TerminalChar c1, TerminalChar c2)
+        public static unsafe bool Equals(ConsoleChar c1, ConsoleChar c2)
         {
             return Equals(&c1, &c2);
         }
 
-        public static unsafe bool Equals(TerminalChar* c1, TerminalChar* c2)
+        public static unsafe bool Equals(ConsoleChar* c1, ConsoleChar* c2)
         {
             return c1->Char == c2->Char
               && c1->ForegroundColor == c2->ForegroundColor

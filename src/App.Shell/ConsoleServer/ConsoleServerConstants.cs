@@ -11,8 +11,6 @@ using Lonos;
 using Lonos.Kernel.Core;
 using Lonos.Runtime;
 
-#pragma warning disable CA1822 // Mark members as static
-
 namespace Lonos.Kernel
 {
 
