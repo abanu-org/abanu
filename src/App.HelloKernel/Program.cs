@@ -22,10 +22,6 @@ using Mosa.Runtime.x86;
 namespace Lonos.Kernel
 {
 
-    // https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html
-    // http://www.termsys.demon.co.uk/vtansi.htm
-    // http://man7.org/linux/man-pages/man4/console_codes.4.html
-
     public static class Program
     {
 

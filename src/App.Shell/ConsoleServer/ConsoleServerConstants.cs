@@ -20,7 +20,7 @@ using Lonos.Runtime;
 namespace Lonos.Kernel
 {
 
-    public static class SysConsoleConstants
+    public static class ConsoleServerConstants
     {
         public const char ESC = (char)27;
         public static readonly string Reset = "c";

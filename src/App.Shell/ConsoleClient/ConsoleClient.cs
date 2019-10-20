@@ -19,7 +19,7 @@ using Lonos.Runtime;
 namespace Lonos.Kernel
 {
 
-    public class SysConsole
+    public class ConsoleClient
     {
 
         private IBuffer file;
@@ -36,7 +36,7 @@ namespace Lonos.Kernel
 
         private void SendCommand(string command)
         {
-            SendByte(SysConsoleConstants.ESC);
+            SendByte(ConsoleServerConstants.ESC);
             SendByte('[');
             SendBytes(command);
         }

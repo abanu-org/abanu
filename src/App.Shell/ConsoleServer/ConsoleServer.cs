@@ -28,8 +28,12 @@ namespace Lonos.Kernel
         public ConsoleServer()
         {
             Sequence = new List<char>();
+
+            var biosScreen = new BiosScreenDevice();
+            biosScreen.Initialize();
+
             Dev = new TerminalDevice();
-            Dev.Initialize();
+            Dev.Initialize(biosScreen);
         }
 
         public unsafe SSize Read(byte* buf, USize count)
@@ -48,7 +52,7 @@ namespace Lonos.Kernel
 
         private void ProcessChar(char b)
         {
-            if (b == SysConsoleConstants.ESC)
+            if (b == ConsoleServerConstants.ESC)
             {
                 SequenceBegin();
                 return;
@@ -105,7 +109,7 @@ namespace Lonos.Kernel
 
         private bool TryClear()
         {
-            if (HasChars(SysConsoleConstants.ClarScreen))
+            if (HasChars(ConsoleServerConstants.ClarScreen))
             {
                 Clear();
                 SequenceEnd();
@@ -116,7 +120,7 @@ namespace Lonos.Kernel
 
         private bool TryReset()
         {
-            if (HasChars(SysConsoleConstants.Reset))
+            if (HasChars(ConsoleServerConstants.Reset))
             {
                 Reset();
                 SequenceEnd();
@@ -319,19 +323,17 @@ namespace Lonos.Kernel
         private void NextLine()
         {
             Column = 0;
-            if (Row >= TerminalDevice.Rows - 1)
+            if (Row >= Dev.Rows - 1)
             {
-                Dev.ScrollUp();
+                Dev.ShiftUp();
                 var blankChar = new TerminalChar
                 {
                     Char = ' ',
-                    BackgroundColor = 0,
-                    ForegroundColor = 0,
+                    ForegroundColor = DefaultForeColor,
+                    BackgroundColor = DefaultBackColor,
                 };
 
-                //Blank last line
-                for (int c = 0; c < TerminalDevice.Columns; c++)
-                    Dev.SetChar(Row, c, blankChar);
+                Dev.ClearRow(Row, blankChar);
             }
             else
             {
@@ -355,15 +357,21 @@ namespace Lonos.Kernel
                 BackgroundColor = BackColor,
                 Attributes = Attributes,
             });
-            Dev.Update();
             Next();
+            Update();
+        }
+
+        private void Update()
+        {
+            Dev.Update();
+            Dev.SetCursor(Row, Column);
         }
 
         private void Next()
         {
             Column++;
 
-            if (Column >= TerminalDevice.Columns)
+            if (Column >= Dev.Columns)
                 NextLine();
         }
 
