@@ -47,6 +47,7 @@ namespace Lonos.Kernel
             {
                 ProcessChar((char)buf[i]);
             }
+            Flush();
             return (SSize)count;
         }
 
@@ -339,7 +340,12 @@ namespace Lonos.Kernel
             {
                 Row++;
             }
-            //UpdateCursor();
+            UpdateCursor();
+        }
+
+        private void UpdateCursor()
+        {
+            Dev.SetCursor(Row, Column);
         }
 
         private void WriteText(char b)
@@ -358,13 +364,12 @@ namespace Lonos.Kernel
                 Attributes = Attributes,
             });
             Next();
-            Update();
+            UpdateCursor();
         }
 
-        private void Update()
+        private void Flush()
         {
-            Dev.Update();
-            Dev.SetCursor(Row, Column);
+            Dev.Flush();
         }
 
         private void Next()
