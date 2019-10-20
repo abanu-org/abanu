@@ -12,7 +12,11 @@
 
 ## Build instructions
 
-Quick start: http://docs.lonos.io/en/latest/build.html
+#### Quick Start (recommended)
+
+Visit [http://docs.lonos.io/en/latest/build.html](http://docs.lonos.io/en/latest/build.html)
+
+#### Manually
 
 Prerequisites:
 - .NET Framework 4.7.2 or latest Mono
