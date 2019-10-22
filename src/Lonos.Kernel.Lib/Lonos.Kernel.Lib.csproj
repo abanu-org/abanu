@@ -71,14 +71,8 @@
     <Compile Include="PageTable\PageTableExtensions.cs" />
     <Compile Include="PerformanceCounter.cs" />
     <Compile Include="X86_EFlags.cs" />
-    <Compile Include="Elf\ElfHeader.cs" />
-    <Compile Include="Elf\ElfSectionHeader.cs" />
-    <Compile Include="Elf\ElfSymbol.cs" />
     <Compile Include="StringBuffer.cs" />
     <Compile Include="ApiContext.cs" />
-    <Compile Include="ConsoleFonts\PSF2Header.cs" />
-    <Compile Include="ConsoleFonts\PSF1Header.cs" />
-    <Compile Include="Elf\ElfHelper.cs" />
     <Compile Include="Boot\BootInfoHeader.cs" />
     <Compile Include="Boot\BootInfoMemory.cs" />
     <Compile Include="Boot\BootInfoMemoryType.cs" />

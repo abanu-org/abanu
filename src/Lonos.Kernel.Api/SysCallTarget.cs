@@ -28,6 +28,7 @@ namespace Lonos.Kernel
         ThreadSleep = 42,
         GetProcessByName = 43,
         KillProcess = 44,
+        GetElfSectionsAddress = 45,
 
         SetServiceStatus = 50,
         RegisterService = 51,

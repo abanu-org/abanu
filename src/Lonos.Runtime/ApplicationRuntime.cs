@@ -2,6 +2,7 @@
 // Licensed under the GNU 2.0 license. See LICENSE.txt file in the project root for full license information.
 
 using Lonos.Kernel.Core;
+using Lonos.Kernel.Core.Elf;
 
 namespace Lonos.Runtime
 {
@@ -16,12 +17,15 @@ namespace Lonos.Runtime
             var t3 = typeof(Mosa.Runtime.x86.Internal);
         }
 
-        public static void Init()
+        public static unsafe void Init()
         {
             RuntimeMemory.SetupEarlyStartup();
             InitializAssembly();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
             RuntimeMemory.SetupAllocator();
+
+            ElfSections = *((ElfSections*)SysCalls.GetElfSectionsAddress());
+            ElfSections.Init();
         }
 
         #region InitAssembly
@@ -40,6 +44,8 @@ namespace Lonos.Runtime
         }
 
         #endregion
+
+        public static ElfSections ElfSections;
 
         private static void Dummy()
         {

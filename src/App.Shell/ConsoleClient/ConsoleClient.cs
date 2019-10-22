@@ -65,6 +65,20 @@ namespace Lonos.Kernel
             SendBytes(msg);
         }
 
+        public unsafe void WriteLine(NullTerminatedString* str)
+        {
+            Write(str);
+            Write('\n');
+        }
+
+        public unsafe void Write(NullTerminatedString* str)
+        {
+            var len = str->GetLength();
+            var data = str->Bytes;
+            for (var i = 0; i < len; i++)
+                SendByte((char)data[i]);
+        }
+
         public void Write(char c)
         {
             SendByte(c);

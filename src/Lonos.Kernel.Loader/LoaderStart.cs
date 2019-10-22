@@ -152,13 +152,13 @@ namespace Lonos.Kernel.Loader
             Native.Call(addr);
         }
 
-        public static ElfHelper OriginalKernelElf;
+        public static ElfSections OriginalKernelElf;
 
         private static void SetupOriginalKernelElf()
         {
             uint kernelElfHeaderAddr = Address.OriginalKernelElfSection;
             var kernelElfHeader = (ElfHeader*)kernelElfHeaderAddr;
-            OriginalKernelElf = new ElfHelper
+            OriginalKernelElf = new ElfSections
             {
                 PhyOffset = kernelElfHeaderAddr,
                 SectionHeaderArray = (ElfSectionHeader*)(kernelElfHeaderAddr + kernelElfHeader->ShOff),

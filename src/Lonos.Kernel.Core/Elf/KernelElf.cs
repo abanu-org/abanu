@@ -11,8 +11,8 @@ namespace Lonos.Kernel.Core.Elf
 
     public static unsafe class KernelElf
     {
-        public static ElfHelper Main;
-        public static ElfHelper Native;
+        public static ElfSections Main;
+        public static ElfSections Native;
 
         public static void Setup()
         {
@@ -24,7 +24,7 @@ namespace Lonos.Kernel.Core.Elf
             Native = FromSectionName("native");
         }
 
-        public static unsafe ElfHelper FromAddress(Addr elfStart)
+        public static unsafe ElfSections FromAddress(Addr elfStart)
         {
             var elfHeader = (ElfHeader*)elfStart;
 
@@ -37,18 +37,10 @@ namespace Lonos.Kernel.Core.Elf
             if (KConfig.Log.ELF)
                 KernelMessage.WriteLine("Found ELF at {0:X8}", elfStart);
 
-            var helper = new ElfHelper
-            {
-                PhyOffset = elfStart,
-                SectionHeaderArray = (ElfSectionHeader*)(elfStart + elfHeader->ShOff),
-                SectionHeaderCount = elfHeader->ShNum,
-                StringTableSectionHeaderIndex = elfHeader->ShStrNdx,
-            };
-            helper.Init();
-            return helper;
+            return ElfSections.FromAddress(elfStart);
         }
 
-        public static unsafe ElfHelper FromSectionName(string name)
+        public static unsafe ElfSections FromSectionName(string name)
         {
 
             bool success;
@@ -58,13 +50,13 @@ namespace Lonos.Kernel.Core.Elf
             return elf;
         }
 
-        public static unsafe ElfHelper FromSectionName(string name, out bool success)
+        public static unsafe ElfSections FromSectionName(string name, out bool success)
         {
             var sec = Main.GetSectionHeader(name);
             if (sec == null)
             {
                 success = false;
-                return new ElfHelper();
+                return new ElfSections();
             }
             success = true;
             var addr = Main.GetSectionPhysAddr(sec);

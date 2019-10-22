@@ -68,6 +68,12 @@
     <Compile Include="BitConversion.cs" />
     <Compile Include="BufferExtensions.cs" />
     <Compile Include="CharExtensions.cs" />
+    <Compile Include="ConsoleFonts\PSF1Header.cs" />
+    <Compile Include="ConsoleFonts\PSF2Header.cs" />
+    <Compile Include="Elf\ElfHeader.cs" />
+    <Compile Include="Elf\ElfSections.cs" />
+    <Compile Include="Elf\ElfSectionHeader.cs" />
+    <Compile Include="Elf\ElfSymbol.cs" />
     <Compile Include="KMath.cs" />
     <Compile Include="MemoryOperation.cs" />
     <Compile Include="MemoryRegionExtensions.cs" />

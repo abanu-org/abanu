@@ -54,6 +54,11 @@ namespace Lonos.Runtime
             throw new NotImplementedException();
         }
 
+        public static Addr GetElfSectionsAddress()
+        {
+            return MessageManager.Send(SysCallTarget.GetElfSectionsAddress);
+        }
+
         public static void SetServiceStatus(ServiceStatus status)
         {
             MessageManager.Send(SysCallTarget.SetServiceStatus, (uint)status);

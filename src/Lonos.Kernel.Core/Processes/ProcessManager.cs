@@ -85,7 +85,7 @@ namespace Lonos.Kernel.Core.Processes
             return StartProcessFromElf(elf, path, argumentBufferSize);
         }
 
-        private static unsafe Process StartProcessFromElf(ElfHelper elf, string path, uint argumentBufferSize = 0)
+        private static unsafe Process StartProcessFromElf(ElfSections elf, string path, uint argumentBufferSize = 0)
         {
             var proc = CreateEmptyProcess(new ProcessCreateOptions() { User = true });
             KernelMessage.WriteLine("Create proc: {0}, PID: {1}", path, proc.ProcessID);
@@ -111,6 +111,8 @@ namespace Lonos.Kernel.Core.Processes
             proc.PageTable.MapCopy(PageTable.KernelTable, KernelMemoryMapManager.Header->Used.GetMap(BootInfoMemoryType.IDT));
             proc.PageTable.MapCopy(PageTable.KernelTable, KernelMemoryMapManager.Header->Used.GetMap(BootInfoMemoryType.TSS));
 
+            var tmpKernelElfHeaders = SetupElfHeader(proc, elf);
+
             // Setup ELF Sections
             for (uint i = 0; i < elf.SectionHeaderCount; i++)
             {
@@ -123,8 +125,13 @@ namespace Lonos.Kernel.Core.Processes
 
                 if (size == 0)
                     continue;
+
                 if (virtAddr == Addr.Zero)
-                    continue;
+                {
+                    var mem = allocator.AllocatePagesAddr(KMath.DivCeil(size, 4096));
+                    tmpKernelElfHeaders[i].Addr = mem;
+                    virtAddr = mem;
+                }
 
                 var sb = new StringBuffer();
                 sb.Append("Map section ");
@@ -157,6 +164,26 @@ namespace Lonos.Kernel.Core.Processes
             return proc;
         }
 
+        /// <summary>
+        /// Used for app, so it can access it's own sections
+        /// </summary>
+        private static unsafe ElfSectionHeader* SetupElfHeader(Process proc, ElfSections elf)
+        {
+            var kernelAddr = VirtualPageManager.AllocatePages(1);
+            var userAddr = proc.UserPageAllocator.AllocatePagesAddr(1);
+            KernelMessage.WriteLine("Store User KernelSectionsInfo at {0:X8}", userAddr);
+            proc.PageTable.MapCopy(PageTable.KernelTable, kernelAddr, userAddr, 4096);
+            var kernelHelper = (ElfSections*)kernelAddr;
+            *kernelHelper = elf;
+            kernelHelper->PhyOffset = 0;
+            var kernelSectionHeaderArray = (ElfSectionHeader*)(kernelAddr + sizeof(ElfSections));
+            for (var i = 0; i < elf.SectionHeaderCount; i++)
+                kernelSectionHeaderArray[i] = elf.SectionHeaderArray[i];
+            kernelHelper->SectionHeaderArray = (ElfSectionHeader*)(userAddr + sizeof(ElfSections));
+            proc.UserElfSectionsAddr = userAddr;
+            return kernelSectionHeaderArray;
+        }
+
         public static void KillProcess(int processID)
         {
             KernelMessage.WriteLine("Killing process ID {0}", processID);
@@ -173,7 +200,7 @@ namespace Lonos.Kernel.Core.Processes
             proc.RunState = ProcessRunState.Terminated;
         }
 
-        private static unsafe Addr GetEntryPointFromElf(ElfHelper elf)
+        private static unsafe Addr GetEntryPointFromElf(ElfSections elf)
         {
             var symName = "Lonos.Kernel.Program::Main()"; // TODO
             var sym = elf.GetSymbol(symName);

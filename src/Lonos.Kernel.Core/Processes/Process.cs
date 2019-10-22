@@ -24,6 +24,7 @@ namespace Lonos.Kernel.Core.Processes
         //public FifoQueue<byte> StdIn;
         internal Addr PageTableAllocAddr;
         public IPageFrameAllocator UserPageAllocator;
+        public Addr UserElfSectionsAddr;
 
         public bool IsKernelProcess => PageTable == PageManagement.PageTable.KernelTable;
 

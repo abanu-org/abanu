@@ -63,6 +63,7 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.ServiceReturn, Cmd_ServiceReturn);
             SetCommand(SysCallTarget.GetPhysicalMemory, Cmd_GetPhysicalMemory);
             SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, Cmd_TranslateVirtualToPhysicalAddress);
+            SetCommand(SysCallTarget.GetElfSectionsAddress, Cmd_GetElfSectionsAddress);
             SetCommand(SysCallTarget.CreateMemoryProcess, Cmd_CreateMemoryProcess);
         }
 
@@ -146,6 +147,12 @@ namespace Lonos.Kernel.Core.SysCalls
         {
             var virtAddr = args->Arg1;
             return Scheduler.GetCurrentThread().Process.PageTable.GetPhysicalAddressFromVirtual(virtAddr);
+        }
+
+        private static uint Cmd_GetElfSectionsAddress(SysCallContext* context, SystemMessage* args)
+        {
+            var proc = Scheduler.GetCurrentThread().Process;
+            return proc.UserElfSectionsAddr;
         }
 
         private static uint Cmd_RequestMessageBuffer(SysCallContext* context, SystemMessage* args)

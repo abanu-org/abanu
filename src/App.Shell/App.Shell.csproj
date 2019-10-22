@@ -72,6 +72,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="ConsoleDevice\Hardware\FrameBufferTextScreenDevice.cs" />
+    <Compile Include="ConsoleDevice\Hardware\Framebuffer.cs" />
     <Compile Include="ConsoleDevice\Hardware\ITextConsoleDevice.cs" />
     <Compile Include="ConsoleServer\ConsoleServer.cs" />
     <Compile Include="Program.cs" />

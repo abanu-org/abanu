@@ -69,7 +69,7 @@ namespace Lonos.Kernel.Core.Scheduling
 
         private static string DispatchMessageSymbol = "Lonos.Runtime.MessageManager::Dispatch(Lonos.Kernel.SystemMessage)";
 
-        private static unsafe Addr GetEntryPointFromElf(ElfHelper elf)
+        private static unsafe Addr GetEntryPointFromElf(ElfSections elf)
         {
             var sym = elf.GetSymbol(DispatchMessageSymbol);
             if (sym == (ElfSymbol*)0)

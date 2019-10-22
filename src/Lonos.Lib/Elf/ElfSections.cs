@@ -8,7 +8,7 @@ using Mosa.Runtime.x86;
 namespace Lonos.Kernel.Core.Elf
 {
 
-    public unsafe struct ElfHelper
+    public unsafe struct ElfSections
     {
 
         public ElfSectionHeader* SectionHeaderArray;
@@ -25,6 +25,21 @@ namespace Lonos.Kernel.Core.Elf
             SymTab = GetSectionHeader(".symtab");
             StrTab = GetSectionHeader(".strtab");
             Text = GetSectionHeader(".text");
+        }
+
+        public static unsafe ElfSections FromAddress(Addr elfStart)
+        {
+            var elfHeader = (ElfHeader*)elfStart;
+
+            var helper = new ElfSections
+            {
+                PhyOffset = elfStart,
+                SectionHeaderArray = (ElfSectionHeader*)(elfStart + elfHeader->ShOff),
+                SectionHeaderCount = elfHeader->ShNum,
+                StringTableSectionHeaderIndex = elfHeader->ShStrNdx,
+            };
+            helper.Init();
+            return helper;
         }
 
         public uint GetPhysAddrOfSymbol(string name)
@@ -125,7 +140,7 @@ namespace Lonos.Kernel.Core.Elf
             if (PhyOffset > 0)
                 return section->Offset + PhyOffset;
             else
-                return section->Addr + PhyOffset;
+                return section->Addr;
         }
 
         public uint TotalFileSize

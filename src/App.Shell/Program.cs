@@ -43,7 +43,14 @@ namespace Lonos.Kernel
             con.ApplyDefaultColor();
             con.Clear();
             con.SetCursor(15, 30);
-            con.Write("kl");
+            con.Write("kl\n");
+
+            for (uint i = 0; i < ApplicationRuntime.ElfSections.SectionHeaderCount; i++)
+            {
+                var section = ApplicationRuntime.ElfSections.GetSectionHeader(i);
+                var name = ApplicationRuntime.ElfSections.GeSectionName(section);
+                con.WriteLine(name);
+            }
 
             while (true)
             {
