@@ -68,12 +68,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boot\BootInfoHeader.cs" />
     <Compile Include="PageTable\PageTableExtensions.cs" />
     <Compile Include="PerformanceCounter.cs" />
     <Compile Include="X86_EFlags.cs" />
     <Compile Include="StringBuffer.cs" />
     <Compile Include="ApiContext.cs" />
-    <Compile Include="Boot\BootInfoHeader.cs" />
     <Compile Include="Boot\BootInfoMemory.cs" />
     <Compile Include="Boot\BootInfoMemoryType.cs" />
     <Compile Include="Boot\BiosMemoryType.cs" />

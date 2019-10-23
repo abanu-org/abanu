@@ -64,6 +64,7 @@ namespace Lonos.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.GetPhysicalMemory, Cmd_GetPhysicalMemory);
             SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, Cmd_TranslateVirtualToPhysicalAddress);
             SetCommand(SysCallTarget.GetElfSectionsAddress, Cmd_GetElfSectionsAddress);
+            SetCommand(SysCallTarget.GetFramebufferInfo, Cmd_GetFramebufferInfo);
             SetCommand(SysCallTarget.CreateMemoryProcess, Cmd_CreateMemoryProcess);
         }
 
@@ -137,6 +138,7 @@ namespace Lonos.Kernel.Core.SysCalls
         {
             var physAddr = args->Arg1;
             var pages = KMath.DivCeil(args->Arg2, 4096);
+            KernelMessage.WriteLine("Got Request for {0:X8} pages at Physical Addr {1:X8}", pages, physAddr);
             var proc = Scheduler.GetCurrentThread().Process;
             var virtAddr = proc.UserPageAllocator.AllocatePagesAddr(pages);
             proc.PageTable.Map(virtAddr, physAddr, pages * 4096);
@@ -153,6 +155,16 @@ namespace Lonos.Kernel.Core.SysCalls
         {
             var proc = Scheduler.GetCurrentThread().Process;
             return proc.UserElfSectionsAddr;
+        }
+
+        private static uint Cmd_GetFramebufferInfo(SysCallContext* context, SystemMessage* args)
+        {
+            var virtAddr = args->Arg1;
+            var virtPresent = (int*)virtAddr;
+            *virtPresent = Boot.BootInfo.Header->FBPresent ? 1 : 0;
+            var virtInfo = (BootInfoFramebufferInfo*)(virtAddr + 4);
+            *virtInfo = Boot.BootInfo.Header->FbInfo;
+            return 0;
         }
 
         private static uint Cmd_RequestMessageBuffer(SysCallContext* context, SystemMessage* args)

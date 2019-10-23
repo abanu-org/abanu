@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Allocator.cs" />
     <Compile Include="BitConversion.cs" />
+    <Compile Include="BootInfoFramebufferInfo.cs" />
     <Compile Include="BufferExtensions.cs" />
     <Compile Include="CharExtensions.cs" />
     <Compile Include="ConsoleFonts\PSF1Header.cs" />

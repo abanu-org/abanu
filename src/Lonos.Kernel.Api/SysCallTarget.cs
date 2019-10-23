@@ -29,6 +29,7 @@ namespace Lonos.Kernel
         GetProcessByName = 43,
         KillProcess = 44,
         GetElfSectionsAddress = 45,
+        GetFramebufferInfo = 46,
 
         SetServiceStatus = 50,
         RegisterService = 51,

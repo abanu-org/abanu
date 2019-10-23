@@ -27,11 +27,23 @@ namespace Lonos.Kernel
         {
             Sequence = new List<char>();
 
-            var biosScreen = new BiosTextConsoleDevice();
-            biosScreen.Initialize();
+            ITextConsoleDevice txtDev;
+
+            var fb = FrameBuffer.Create();
+            if (fb != null)
+            {
+                var fbTxt = new FrameBufferTextScreenDevice(fb);
+                txtDev = fbTxt;
+            }
+            else
+            {
+                var biosScreen = new BiosTextConsoleDevice();
+                biosScreen.Initialize();
+                txtDev = biosScreen;
+            }
 
             Dev = new ConsoleDevice();
-            Dev.Initialize(biosScreen);
+            Dev.Initialize(txtDev);
         }
 
         public unsafe SSize Read(byte* buf, USize count)

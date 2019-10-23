@@ -59,6 +59,11 @@ namespace Lonos.Runtime
             return MessageManager.Send(SysCallTarget.GetElfSectionsAddress);
         }
 
+        public static void GetFramebufferInfo(MemoryRegion buf)
+        {
+            MessageManager.Send(SysCallTarget.GetFramebufferInfo, buf.Start);
+        }
+
         public static void SetServiceStatus(ServiceStatus status)
         {
             MessageManager.Send(SysCallTarget.SetServiceStatus, (uint)status);

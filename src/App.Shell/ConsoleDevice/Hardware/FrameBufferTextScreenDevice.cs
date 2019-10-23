@@ -12,7 +12,7 @@ using Lonos.Runtime;
 
 namespace Lonos.Kernel
 {
-    public class FrameBufferTextScreenDevice : IBuffer
+    public class FrameBufferTextScreenDevice : IBuffer, ITextConsoleDevice
     {
 
         private FrameBuffer dev;
@@ -38,12 +38,12 @@ namespace Lonos.Kernel
             return (uint)count;
         }
 
-        private uint _row;
-        private uint _col;
+        private int _row;
+        private int _col;
 
-        public uint Columns { get; private set; }
+        public int Columns { get; private set; }
 
-        public uint Rows { get; private set; }
+        public int Rows { get; private set; }
 
         private void Write(char c)
         {
@@ -52,7 +52,7 @@ namespace Lonos.Kernel
                 NextLine();
                 return;
             }
-            DrawChar(dev, _col, _row, (byte)c);
+            DrawChar(_col, _row, (byte)c);
             Next();
         }
 
@@ -82,14 +82,14 @@ namespace Lonos.Kernel
             dev.FillRectangle(0, 0, 0, dev.Width, dev.Height);
         }
 
-        private uint CharHeight = 14;
-        private uint CharWidth = 8;
+        private int CharHeight = 14;
+        private int CharWidth = 8;
 
         // important Note: Do not cause Console Output while drawing
         // otherwise, a stack overflow will occur!
-        internal unsafe void DrawChar(FrameBuffer fb, uint screenX, uint screenY, uint charIdx)
+        internal unsafe void DrawChar(int row, int column, int charIdx)
         {
-            if (screenX >= Columns || screenY >= Rows)
+            if (column >= Columns || row >= Rows)
                 return;
 
             var fontSec = ApplicationRuntime.ElfSections.GetSectionHeader("consolefont.regular");
@@ -101,21 +101,27 @@ namespace Lonos.Kernel
 
             var rows = fontHeader->Charsize;
             var bytesPerRow = 1; //14 bits --> 2 bytes + 2fill bits
-            uint columns = 8;
+            int columns = 8;
 
             var charSize = bytesPerRow * rows;
 
             var charMem = (byte*)(fontSecAddr + sizeof(PSF1Header));
             //KernelMemory.DumpToConsole((uint)charMem, 20);
 
-            for (uint y = 0; y < rows; y++)
+            for (int y = 0; y < rows; y++)
             {
-                for (uint x = 0; x < columns; x++)
+                for (int x = 0; x < columns; x++)
                 {
+                    var pixelX = (column * columns) + x;
+                    var pixelY = (row * rows) + y;
                     var bt = BitHelper.IsBitSet(charMem[(charSize * charIdx) + (y * bytesPerRow) + (x / 8)], (byte)(7 - (x % 8)));
                     if (bt)
                     {
-                        fb.SetPixel(int.MaxValue / 2, (screenX * columns) + x, (screenY * rows) + y);
+                        dev.SetPixel(int.MaxValue / 2, pixelX, pixelY);
+                    }
+                    else
+                    {
+                        dev.SetPixel(0, pixelX, pixelY);
                     }
                 }
             }
@@ -125,6 +131,22 @@ namespace Lonos.Kernel
         public unsafe SSize Read(byte* buf, USize count)
         {
             return 0;
+        }
+
+        public void SetChar(int row, int column, ConsoleChar c)
+        {
+            DrawChar(row, column, (byte)c.Char);
+        }
+
+        public void SetChar(int offset, ConsoleChar c)
+        {
+            var row = offset / Columns;
+            var col = offset % Columns;
+            DrawChar(row, col, (byte)c.Char);
+        }
+
+        public void SetCursor(int row, int col)
+        {
         }
     }
 }

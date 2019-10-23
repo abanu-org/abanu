@@ -10,53 +10,76 @@ using Lonos.Runtime;
 
 namespace Lonos.Kernel
 {
+
     public class FrameBuffer
     {
 
-        private Addr addr;
-        public uint Width;
-        public uint Height;
-        private uint pitch;
-        private uint depth;
+        private Addr Addr;
+        public int Width;
+        public int Height;
+        private int Pitch;
+        private int Depth;
 
-        public FrameBuffer(Addr addr, uint width, uint height, uint pitch, uint depth)
+        public static unsafe FrameBuffer Create()
         {
-            this.addr = addr;
+            var targetProcId = SysCalls.GetProcessIDForCommand(SysCallTarget.GetFramebufferInfo);
+            var fbInfoMem = SysCalls.RequestMessageBuffer(4096, targetProcId);
+            SysCalls.GetFramebufferInfo(fbInfoMem);
+            var fbPresent = (int*)fbInfoMem.Start;
+            if (*fbPresent == 0)
+                return null;
+
+            var fbInfo = (BootInfoFramebufferInfo*)(fbInfoMem.Start + 4);
+            var fb = new FrameBuffer(fbInfo->FbAddr, (int)fbInfo->FbWidth, (int)fbInfo->FbHeight, (int)fbInfo->FbPitch, (int)fbInfo->FbBpp);
+            fb.RequestMemory();
+            return fb;
+        }
+
+        private void RequestMemory()
+        {
+            var size = Height * Pitch;
+            // TODO: Don't replace Addr field
+            Addr = SysCalls.GetPhysicalMemory(Addr, (uint)size);
+        }
+
+        public FrameBuffer(Addr addr, int width, int height, int pitch, int depth)
+        {
+            this.Addr = addr;
             this.Width = width;
             this.Height = height;
-            this.pitch = pitch;
-            this.depth = depth;
+            this.Pitch = pitch;
+            this.Depth = depth;
         }
 
         public void Init()
         {
-            uint memorySize = (uint)(pitch * Height * 4);
-            addr = SysCalls.GetPhysicalMemory(addr, memorySize);
+            var memorySize = (uint)(Pitch * Height * 4);
+            Addr = SysCalls.GetPhysicalMemory(Addr, memorySize);
         }
 
-        protected uint GetOffset(uint x, uint y)
+        protected int GetOffset(int x, int y)
         {
-            return (y * pitch / 4) + x; //4 -> 32bpp
+            return (y * Pitch / 4) + x; //4 -> 32bpp
         }
 
-        protected uint GetByteOffset(uint x, uint y)
+        protected int GetByteOffset(int x, int y)
         {
-            return (y * pitch) + (x * 4); //4 -> 32bpp
+            return (y * Pitch) + (x * 4); //4 -> 32bpp
         }
 
-        public unsafe uint GetPixel(uint x, uint y)
+        public unsafe uint GetPixel(int x, int y)
         {
             //return memory.Read8(GetOffset(x, y));
-            return ((uint*)addr)[GetOffset(x, y)];
+            return ((uint*)Addr)[GetOffset(x, y)];
         }
 
-        public unsafe void SetPixel(uint color, uint x, uint y)
+        public unsafe void SetPixel(int color, int x, int y)
         {
             if (x >= Width || y >= Height)
                 return;
 
             //memory.Write8(GetOffset(x, y), (byte)color);
-            ((uint*)addr)[GetOffset(x, y)] = (uint)color;
+            ((uint*)Addr)[GetOffset(x, y)] = (uint)color;
 
             /*KernelMessage.WriteLine("DEBUG: {0:X9}", GetOffset(x, y));
             KernelMessage.WriteLine("DEBUG: {0:X9}", GetByteOffset(x, y));
@@ -65,15 +88,15 @@ namespace Lonos.Kernel
 */
         }
 
-        public unsafe void FillRectangle(uint color, uint x, uint y, uint w, uint h)
+        public unsafe void FillRectangle(int color, int x, int y, int w, int h)
         {
-            for (uint offsetY = 0; offsetY < h; offsetY++)
+            for (int offsetY = 0; offsetY < h; offsetY++)
             {
-                uint startAddress = GetOffset(x, offsetY + y);
-                for (uint offsetX = 0; offsetX < w; offsetX++)
+                int startOffset = GetOffset(x, offsetY + y);
+                for (int offsetX = 0; offsetX < w; offsetX++)
                 {
                     //memory.Write8(startAddress + offsetX, (byte)color);
-                    ((uint*)addr)[startAddress + offsetX] = (uint)color;
+                    ((uint*)Addr)[startOffset + offsetX] = (uint)color;
                 }
             }
         }

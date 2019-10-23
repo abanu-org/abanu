@@ -33,15 +33,4 @@ namespace Lonos.Kernel.Core.Boot
         public bool FBPresent;
         public BootInfoFramebufferInfo FbInfo;
     }
-
-    public struct BootInfoFramebufferInfo
-    {
-        public Addr FbAddr;
-        public uint FbPitch;
-        public uint FbWidth;
-        public uint FbHeight;
-        public byte FbBpp;
-        public byte FbType;
-        public uint ColorInfo;
-    }
 }
