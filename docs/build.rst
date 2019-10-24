@@ -2,7 +2,7 @@
 Building Lonos on Windows
 #########################
 
-Lonos can be build plattform indepentent. However, we support
+Lonos can be build platform independent. However, we support
 primary an unix build environment. For Windows Users, we offer a 
 Step by Step guide.
 
@@ -43,7 +43,7 @@ Enabling Graphical Unix Applications
 
 To launch graphical applications like Geany or Qalculate, you need XLaunch / VcXsrv Windows X Server. We can do this all via command line:
 
-In Windows, install the packetmanager `chocolatey <https://chocolatey.org>`__. Open a PowerShell with Administrator rights and run:
+In Windows, install the packet manager `chocolatey <https://chocolatey.org>`__. Open a PowerShell with Administrator rights and run:
 
 .. code-block:: powershell
 
@@ -57,7 +57,7 @@ Install the package VcXsrv:
 
 You can launch now `XLaunch` from Start menu. Simply follow the wizard without making changes.
 
-Open the Debian app and finish the install instructions. Whem command prompt is ready, start a dedicated Terminal:
+Open the Debian app and finish the install instructions. When command prompt is ready, start a dedicated Terminal:
 
 .. code-block:: sh
 

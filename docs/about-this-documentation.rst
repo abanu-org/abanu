@@ -8,11 +8,11 @@ It is not about documentation content.
 
 .. list-table:: Links to Documentation
 
-  * - Html, Online
+  * - HTML, Online
     - http://docs.lonos-project.org/en/latest
   * - PDF
     - http://readthedocs.org/projects/lonos/downloads/pdf/latest
-  * - Html, as Zip
+  * - HTML, as Zip
     - http://readthedocs.org/projects/lonos/downloads/htmlzip/latest
 
 ***************************************
@@ -158,7 +158,7 @@ Text boxes:
      Note (blue box). possible values: attention, caution, danger, error, hint, important, note, tip, warning, admonition.
      Every type has its own color.
 
-will loook like:
+will look like:
 
 .. note::
 
@@ -208,10 +208,10 @@ Table as CSV
   .. csv-table:: Title of CSV table
     :header: "Column 1", "Column 2", "Column 3"
 
-    "Sampel Row 1", Cell, Cell
-    "Sampel Row 2", Cell, "Cell with multiple Words"
+    "Sample Row 1", Cell, Cell
+    "Sample Row 2", Cell, "Cell with multiple Words"
 
-You can skip quotes, of cell content conains only a single word
+You can skip quotes, of cell content contains only a single word
 
 Table as flat list
 
@@ -241,7 +241,7 @@ Troubleshooting
 - put the filename into index.rst. Omit the ``.rst`` extension.
 - The document requires at least one section. Section names are the label that are used for the table of content.
 
-.. rubric:: After commiting, the documentation will not update
+.. rubric:: After committing, the documentation will not update
 
 - The build process of the documentation takes round about 1-2 minutes.
 - You can check the status here: `Builds <http://readthedocs.org/projects/lonos/builds>`__

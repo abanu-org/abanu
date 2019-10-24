@@ -35,8 +35,8 @@ Run it with `./lonosctl run qemu x86` or `./lonosctl run bochs x86`
 
 ## The technology behind this project
 
-- The most important part of the Lonos project is the [Mosa-Compiler](https://github.com/mosa/MOSA-Project), wich is written in pure C#. The Mosa-Compiler converts an already compiled Assembly (build via msbuild or xbuild, default compiler from .NET/Mono) into native Code.
-- build some requied Assembler-Code  and append it to the native binary. The Assembler code ist mostly used for early initalization.
+- The most important part of the Lonos project is the [Mosa-Compiler](https://github.com/mosa/MOSA-Project), which is written in pure C#. The Mosa-Compiler converts an already compiled Assembly (build via msbuild or xbuild, default compiler from .NET/Mono) into native Code.
+- build some required Assembler-Code  and append it to the native binary. The Assembler code is mostly used for early initialization.
 - Building the Operating System Disk Image, with Grub2 as Bootloader
 
 ## Status of the OS
