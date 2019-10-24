@@ -1,5 +1,7 @@
 Addr
 Alloc
+app
+apps
 Arakis
 Bochs
 bool
@@ -38,8 +40,10 @@ Metadata
 mmap
 msg
 Multiboot
+mutex
 namespace
 nasm
+newlib
 Nullable
 num
 Offscreen
@@ -49,6 +53,7 @@ prev
 proc
 ptr
 qemu
+readline
 Readonly
 sbrk
 scancode
@@ -59,6 +64,7 @@ src
 stackoverflow
 str
 struct
+structs
 Syscall
 testproc
 tgiphil
@@ -68,6 +74,7 @@ typeof
 uint
 ulong
 Unhandled
+unix
 Unmap
 Unprotect
 virt

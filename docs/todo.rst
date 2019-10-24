@@ -4,15 +4,15 @@ TODO
 Compiler:
   | - STACK_TOP configurable
   | - Patch for ProgramHeader [DONE]
-  | - Insert Comment for explaination why needing Running InitializeAssembly() manually [DONE]
+  | - Insert Comment for explanation why needing Running InitializeAssembly() manually [DONE]
   | - Adding more DWARF sections to debug local variables.
 
 Kernel:
-  | - Check Permission of all SysCalls, like GetPhysicalMemroy
+  | - Check Permission of all SysCalls, like GetPhysicalMemory
   | - Don't run all apps with full IOCPL permissions
-  | - Add interprocess syncronization mechanisms like mutex and semaphore.
+  | - Add interprocess synchronization mechanisms like mutex and semaphore.
   | - no kernel panic if user apps is crashing
-  | - Switch vom Text Mode to Graphics Mode without boot loader, if booted in text mode.
+  | - Switch from Text Mode to Graphics Mode without boot loader, if booted in text mode.
   | - Add x64 support
 
 Services:
@@ -32,10 +32,10 @@ Libs:
 
 Apps:
   | Simple Command Line Interpreter
-  | Porting true, false, cat, readline and echo, as native c apps for proofe of concept unix app tests, based on newlib.
+  | Porting true, false, cat, readline and echo, as native c apps for proof of concept unix app tests, based on newlib.
 
 Tools:
   | Adding automated tests
   | Optimize Argument parsing of lonosctl to allow optional parameters (--name value) and bulk actions (build a,b,c)
   | Attaching "Networkdisk" to all kinds of qemu runs.
-  | Att helper function to lonosctl to start/stop HostCommunication.exe
+  | Add helper function to lonosctl to start/stop HostCommunication.exe
