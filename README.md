@@ -10,11 +10,15 @@
 [github-license-link]: https://raw.githubusercontent.com/lonos-project/lonos/master/LICENSE.txt
 [![Join the chat at https://gitter.im/lonos-project/lonos](https://badges.gitter.im/lonos-project/lonos.svg)](https://gitter.im/lonos-project/lonos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## Getting the Sources
+
+Visit the official repository [https://github.com/lonos-project/lonos](https://github.com/lonos-project/lonos)
+
 ## Build instructions
 
 #### Quick Start (recommended)
 
-Visit [http://docs.lonos.io/en/latest/build.html](http://docs.lonos.io/en/latest/build.html)
+Follow these instructions: [http://docs.lonos.io/en/latest/build.html](http://docs.lonos.io/en/latest/build.html)
 
 #### Manually
 
