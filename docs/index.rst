@@ -5,5 +5,5 @@ Contents
    :maxdepth: 2
 
    build
-	todo
+   todo
    about-this-documentation
