@@ -38,11 +38,11 @@ namespace Lonos.Kernel
             //con.Write("abc\x001B[2Jgh\x001B[37;42mjk");
 
             con.Reset();
-            con.SetForegroundColor(3);
-            con.SetBackgroundColor(6);
+            con.SetForegroundColor(7);
+            con.SetBackgroundColor(0);
             con.ApplyDefaultColor();
             con.Clear();
-            con.SetCursor(15, 30);
+            con.SetCursor(0, 0);
             con.Write("kl\n");
 
             for (uint i = 0; i < ApplicationRuntime.ElfSections.SectionHeaderCount; i++)

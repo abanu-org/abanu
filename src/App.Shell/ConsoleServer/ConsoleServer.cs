@@ -143,9 +143,19 @@ namespace Lonos.Kernel
         {
             if (Sequence.Count > 1 && char.IsDigit(Sequence[1]) && Sequence[Sequence.Count - 1] == 'm')
             {
+                Console.WriteLine("TryMode: " + new string(Sequence.ToArray()));
+
                 if (Sequence.Count == 2)
                 {
                     // [m
+                    AllModesOff();
+                    SequenceEnd();
+                    return true;
+                }
+
+                if (Sequence.Count == 3 && Sequence[1] == '0')
+                {
+                    // [0m
                     AllModesOff();
                     SequenceEnd();
                     return true;
@@ -157,18 +167,7 @@ namespace Lonos.Kernel
                     if (Sequence[i] == ';')
                         continue;
 
-                    if (!char.IsDigit(Sequence[i + 1]))
-                    {
-                        // single digit
-                        switch (Sequence[i])
-                        {
-                            case '0':
-                                // [0m
-                                AllModesOff();
-                                break;
-                        }
-                    }
-                    else
+                    if (char.IsDigit(Sequence[i + 1]))
                     {
                         // set color mode
                         var colorChar = Sequence[i + 1];
@@ -275,7 +274,13 @@ namespace Lonos.Kernel
 
         private void SetForeColor(byte color)
         {
+            Console.WriteLine("$FG_A$");
+            Console.WriteLine(color.ToString());
+
             ForeColor = color;
+
+            Console.WriteLine("$FG_B$");
+            Console.WriteLine(color.ToString());
         }
 
         private void SetBackColor(byte color)
@@ -285,7 +290,9 @@ namespace Lonos.Kernel
 
         private void AllModesOff()
         {
+            Console.WriteLine("$AllModesOff: " + ForeColor + "-->" + DefaultForeColor);
             ForeColor = DefaultForeColor;
+
             BackColor = DefaultBackColor;
             Attributes = ConsoleCharAttributes.None;
         }

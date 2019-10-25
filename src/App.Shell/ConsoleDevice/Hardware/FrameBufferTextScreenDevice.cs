@@ -12,7 +12,7 @@ using Lonos.Runtime;
 
 namespace Lonos.Kernel
 {
-    public class FrameBufferTextScreenDevice : IBuffer, ITextConsoleDevice
+    public class FrameBufferTextScreenDevice : ITextConsoleDevice
     {
 
         private FrameBuffer dev;
@@ -22,72 +22,19 @@ namespace Lonos.Kernel
             this.dev = dev;
             Columns = dev.Width / CharWidth;
             Rows = dev.Height / CharHeight;
+            SetupColors();
         }
-
-        //public void Init()
-        //{
-        //}
-
-        public unsafe SSize Write(byte* buf, USize count)
-        {
-            for (var i = 0; i < count; i++)
-            {
-                Write((char)buf[i]);
-            }
-
-            return (uint)count;
-        }
-
-        private int _row;
-        private int _col;
 
         public int Columns { get; private set; }
 
         public int Rows { get; private set; }
-
-        private void Write(char c)
-        {
-            if (c == '\n')
-            {
-                NextLine();
-                return;
-            }
-            DrawChar(_col, _row, (byte)c);
-            Next();
-        }
-
-        private void Next()
-        {
-            _col++;
-
-            if (_col >= Columns)
-            {
-                NextLine();
-            }
-        }
-
-        private void NextLine()
-        {
-            _col = 0;
-            if (_row >= Rows - 1)
-                Scroll();
-            else
-                _row++;
-        }
-
-        private void Scroll()
-        {
-            // TODO: Scroll
-            _row = 0;
-            dev.FillRectangle(0, 0, 0, dev.Width, dev.Height);
-        }
 
         private int CharHeight = 14;
         private int CharWidth = 8;
 
         // important Note: Do not cause Console Output while drawing
         // otherwise, a stack overflow will occur!
-        internal unsafe void DrawChar(int row, int column, int charIdx)
+        internal unsafe void DrawChar(int row, int column, int charIdx, byte foregroundColor, byte backgroundColor)
         {
             if (column >= Columns || row >= Rows)
                 return;
@@ -108,6 +55,9 @@ namespace Lonos.Kernel
             var charMem = (byte*)(fontSecAddr + sizeof(PSF1Header));
             //KernelMemory.DumpToConsole((uint)charMem, 20);
 
+            var foreColor = GetColor(foregroundColor);
+            var backColor = GetColor(backgroundColor);
+
             for (int y = 0; y < rows; y++)
             {
                 for (int x = 0; x < columns; x++)
@@ -117,32 +67,72 @@ namespace Lonos.Kernel
                     var bt = BitHelper.IsBitSet(charMem[(charSize * charIdx) + (y * bytesPerRow) + (x / 8)], (byte)(7 - (x % 8)));
                     if (bt)
                     {
-                        dev.SetPixel(int.MaxValue / 2, pixelX, pixelY);
+                        dev.SetPixel(foreColor, pixelX, pixelY);
                     }
                     else
                     {
-                        dev.SetPixel(0, pixelX, pixelY);
+                        dev.SetPixel(backColor, pixelX, pixelY);
                     }
                 }
             }
 
         }
 
-        public unsafe SSize Read(byte* buf, USize count)
+        private static int[] Colors;
+
+        private static void SetupColors()
         {
-            return 0;
+            Colors = new int[]
+            {
+                0x00000000, // black
+                0x000000AA, // blue
+                0x0000AA00, // green
+                0x0000AAAA, // cyan
+                0x00AA0000, // red
+                0x00AA00AA, // magenta
+                0x00AA5500, // Brown / Yellow
+                0x00AAAAAA, // light gray
+
+                0x00555555, // Dark gray
+                0x005555FF, // light blue
+                0x0055FF55, // light green
+                0x0055FFFF, // light cyan
+                0x00FF5555, // light red
+                0x00FF55FF, // light magenta
+                0x00FFFF55, // Yellow
+                0x00FFFFFF, // white
+            };
         }
+
+        private static int GetColor(byte consoleColor)
+        {
+            return Colors[consoleColor];
+        }
+
+        //private static int GetColor(byte consoleColor)
+        //{
+        //    // ARGB
+        //    uint a = 0;
+        //    uint r = 0xFF;
+        //    uint g = 0;
+        //    uint b = 0;
+        //    uint value = a;
+        //    value = (value << 8) | r;
+        //    value = (value << 8) | g;
+        //    value = (value << 8) | b;
+        //    return (int)value;
+        //}
 
         public void SetChar(int row, int column, ConsoleChar c)
         {
-            DrawChar(row, column, (byte)c.Char);
+            DrawChar(row, column, (byte)c.Char, c.ForegroundColor, c.BackgroundColor);
         }
 
         public void SetChar(int offset, ConsoleChar c)
         {
             var row = offset / Columns;
             var col = offset % Columns;
-            DrawChar(row, col, (byte)c.Char);
+            DrawChar(row, col, (byte)c.Char, c.ForegroundColor, c.BackgroundColor);
         }
 
         public void SetCursor(int row, int col)

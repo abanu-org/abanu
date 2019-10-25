@@ -73,13 +73,13 @@ namespace Lonos.Kernel
             return ((uint*)Addr)[GetOffset(x, y)];
         }
 
-        public unsafe void SetPixel(int color, int x, int y)
+        public unsafe void SetPixel(int nativeColor, int x, int y)
         {
             if (x >= Width || y >= Height)
                 return;
 
             //memory.Write8(GetOffset(x, y), (byte)color);
-            ((uint*)Addr)[GetOffset(x, y)] = (uint)color;
+            ((uint*)Addr)[GetOffset(x, y)] = (uint)nativeColor;
 
             /*KernelMessage.WriteLine("DEBUG: {0:X9}", GetOffset(x, y));
             KernelMessage.WriteLine("DEBUG: {0:X9}", GetByteOffset(x, y));
