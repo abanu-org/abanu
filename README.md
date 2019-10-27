@@ -9,6 +9,7 @@
 [github-license]: https://img.shields.io/badge/license-GPL-blue.svg
 [github-license-link]: https://raw.githubusercontent.com/abanu-org/abanu/master/LICENSE.txt
 [![Join the chat at https://gitter.im/abanu-org/abanu](https://badges.gitter.im/abanu-org/abanu.svg)](https://gitter.im/abanu-org/abanu?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join Discord https://discord.gg/YX4bPBY](https://img.shields.io/discord/638041194408181770?logo=discord)](https://discord.gg/YX4bPBY)
 
 ## Getting the Sources
 
