@@ -2,4 +2,4 @@
 
 git clone --recursive --depth 1 https://github.com/abanu-org/abanu.git 
 cd abanu
-./abanuctl test cloud
+./abctl test cloud

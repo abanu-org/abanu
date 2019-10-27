@@ -100,11 +100,11 @@ Download and build Abanu
 
   git clone --recursive https://github.com/abanu-org/abanu.git
   cd abanu 
-  ./abanuctl configure packages
-  ./abanuctl build all
+  ./abctl configure packages
+  ./abctl build all
 
 Now you can run abanu in qemu:
 
 .. code-block:: sh
 
-   ./abanuctl debug qemu-kernel
+  ./abctl debug qemu-kernel

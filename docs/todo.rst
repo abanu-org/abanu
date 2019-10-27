@@ -36,6 +36,6 @@ Apps:
 
 Tools:
   | Adding automated tests
-  | Optimize Argument parsing of abanuctl to allow optional parameters (--name value) and bulk actions (build a,b,c)
+  | Optimize Argument parsing of abctl to allow optional parameters (--name value) and bulk actions (build a,b,c)
   | Attaching "Networkdisk" to all kinds of qemu runs.
-  | Add helper function to abanuctl to start/stop HostCommunication.exe
+  | Add helper function to abctl to start/stop HostCommunication.exe

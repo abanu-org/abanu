@@ -32,10 +32,10 @@ Prerequisites:
 ```
 git clone --recursive https://github.com/abanu-org/abanu.git
 cd abanu 
-./abanuctl configure mosa        # Build the Mosa-Compiler
-./abanuctl build all             # Builds the abanu kernel and creates a disk image
+./abctl configure mosa        # Build the Mosa-Compiler
+./abctl build all             # Builds the abanu kernel and creates a disk image
 ```
-Run it with `./abanuctl run qemu x86` or `./abanuctl run bochs x86`
+Run it with `./abctl run qemu x86` or `./abanuctl run bochs x86`
 
 ## The technology behind this project
 

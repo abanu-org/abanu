@@ -100,4 +100,4 @@ for:
 
     build_script:
     - sh: echo UID "$UID"
-    - sh: docker run --name MOSA -v $APPVEYOR_BUILD_FOLDER:/home/appveyor abanuproject/abanu-build /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x abanuctl && ./mosctl test && ./abanuctl unittest'"
+    - sh: docker run --name MOSA -v $APPVEYOR_BUILD_FOLDER:/home/appveyor abanuproject/abanu-build /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x abctl && ./abctl test && ./abctl unittest'"
