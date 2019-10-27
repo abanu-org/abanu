@@ -9,7 +9,7 @@ It is not about documentation content.
 .. list-table:: Links to Documentation
 
   * - HTML, Online
-    - http://docs.abanu-project.org/en/latest
+    - http://docs.abanu-org.org/en/latest
   * - PDF
     - http://readthedocs.org/projects/abanu/downloads/pdf/latest
   * - HTML, as Zip

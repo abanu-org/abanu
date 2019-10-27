@@ -1,5 +1,5 @@
 #!/bin/bash
 
-git clone --recursive --depth 1 https://github.com/abanu-project/abanu.git 
+git clone --recursive --depth 1 https://github.com/abanu-org/abanu.git 
 cd abanu
 ./abanuctl test cloud

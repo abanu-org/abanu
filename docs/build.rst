@@ -34,7 +34,7 @@ Populate the Debian System with Packages:
 
   # run as root
   apt-get update && apt-get install -y wget
-  wget -qO- https://raw.githubusercontent.com/abanu-project/abanu/master/build/debian/install | bash -s
+  wget -qO- https://raw.githubusercontent.com/abanu-org/abanu/master/build/debian/install | bash -s
 
 This will take a while. After that, you have a fully featured build environment.
 
@@ -81,7 +81,7 @@ Run this commands in a WSL/Debian bash shell:
 .. code-block:: sh
 
 	# specify root folder for projects.
-	WINPROJDIR=$(cmd.exe /C "echo|set /p=%USERPROFILE%")/Documents/abanu-project
+	WINPROJDIR=$(cmd.exe /C "echo|set /p=%USERPROFILE%")/Documents/abanu-org
 	# normalize windows path
 	WINPROJDIR=$(wslpath -w $(wslpath -u $WINPROJDIR))
 	# create the windows project root
@@ -89,16 +89,16 @@ Run this commands in a WSL/Debian bash shell:
 	# create symbolic link
 	ln -s $(wslpath -u $WINPROJDIR) ~/
 	# Switch to new directory
-	cd ~/abanu-project
+	cd ~/abanu-org
 
-Now ``/home/<user>/abanu-project`` and ``C:\Users\<user>\Documents\abanu-projects`` points to the same directory.
+Now ``/home/<user>/abanu-org`` and ``C:\Users\<user>\Documents\abanu-orgs`` points to the same directory.
 
 Download and build Abanu
 ------------------------
 
 .. code-block:: sh
 
-  git clone --recursive https://github.com/abanu-project/abanu.git
+  git clone --recursive https://github.com/abanu-org/abanu.git
   cd abanu 
   ./abanuctl configure packages
   ./abanuctl build all

@@ -3,7 +3,7 @@
 	url = https://github.com/Arakis/MOSA-Project.git
 [submodule "tools"]
 	path = tools
-	url = https://github.com/lonos-project/lonos-tools.git
+	url = https://github.com/abanu-org/abanu-tools.git
 [submodule "external/gdb-dashboard"]
 	path = external/gdb-dashboard
 	url = https://github.com/cyrus-and/gdb-dashboard.git

@@ -29,11 +29,11 @@ function configure {
 			;;
 
 		external)
-			git clone --recursive git@github.com:abanu-project/abanu-tools.git tools
+			git clone --recursive git@github.com:abanu-org/abanu-tools.git tools
 			;;
 
 		git)
-			git remote set-url origin git@github.com:abanu-project/abanu.git
+			git remote set-url origin git@github.com:abanu-org/abanu.git
 
 			cd external/MOSA-Project
 			git remote set-url origin git@github.com:arakis/MOSA-Project.git
