@@ -1,18 +1,18 @@
 [![Documentation Status](https://readthedocs.org/projects/abanu/badge/?version=latest)](http://docs.abanu.io/en/latest/?badge=latest) [![License][github-license]][github-license-link]  [![Issues][github-issues]][github-issues-link]  [![Stars][github-stars]][github-stars-link]  [![Forks][github-forks]][github-forks-link]
 
 [github-forks]: https://img.shields.io/github/forks/abanu-project/abanu.svg
-[github-forks-link]: https://github.com/abanu-project/abanu/network
+[github-forks-link]: https://github.com/abanu-org/abanu/network
 [github-stars]: https://img.shields.io/github/stars/abanu-project/abanu.svg
-[github-stars-link]: https://github.com/abanu-project/abanu/stargazers
+[github-stars-link]: https://github.com/abanu-org/abanu/stargazers
 [github-issues]: https://img.shields.io/github/issues/abanu-project/abanu.svg
-[github-issues-link]: https://github.com/abanu-project/abanu/issues
+[github-issues-link]: https://github.com/abanu-org/abanu/issues
 [github-license]: https://img.shields.io/badge/license-GPL-blue.svg
 [github-license-link]: https://raw.githubusercontent.com/abanu-project/abanu/master/LICENSE.txt
 [![Join the chat at https://gitter.im/abanu-project/abanu](https://badges.gitter.im/abanu-project/abanu.svg)](https://gitter.im/abanu-project/abanu?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Getting the Sources
 
-Visit the official repository [https://github.com/abanu-project/abanu](https://github.com/abanu-project/abanu)
+Visit the official repository [https://github.com/abanu-org/abanu](https://github.com/abanu-org/abanu)
 
 ## Build instructions
 
@@ -30,7 +30,7 @@ Prerequisites:
 - Optional: qemu or bochs for emulation.
 
 ```
-git clone --recursive https://github.com/abanu-project/abanu.git
+git clone --recursive https://github.com/abanu-org/abanu.git
 cd abanu 
 ./abanuctl configure mosa        # Build the Mosa-Compiler
 ./abanuctl build all             # Builds the abanu kernel and creates a disk image
