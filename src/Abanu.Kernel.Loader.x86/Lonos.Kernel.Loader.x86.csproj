@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Abanu.Kernel</RootNamespace>
+    <AssemblyName>Abanu.Kernel.Loader.x86</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ProjectGuid>{81D82425-CEC0-442F-BC5F-B07C606C2516}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <NoStdLib>true</NoStdLib>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>..\..\bin\Abanu.Kernel.Loader.x86.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <NoStdLib>true</NoStdLib>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
+      <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
+      <Name>Mosa.Korlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x86\Mosa.Plug.Korlib.x86.csproj">
+      <Project>{028bc31c-2edc-492e-90a3-3714e38ce2cf}</Project>
+      <Name>Mosa.Plug.Korlib.x86</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
+      <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
+      <Name>Mosa.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Kernel.Loader\Abanu.Kernel.Loader.csproj">
+      <Project>{67727c0f-a566-4ce2-96dc-dd27a2e0cb30}</Project>
+      <Name>Abanu.Kernel.Loader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Primitives\Abanu.Primitives.csproj">
+      <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
+      <Name>Abanu.Primitives</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="DummyClass.cs" />
+  </ItemGroup>
+  <Import Project="..\ressources\SharedProjectSettings.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

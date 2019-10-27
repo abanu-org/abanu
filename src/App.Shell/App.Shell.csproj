@@ -53,21 +53,21 @@
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lonos.Kernel.Api\Lonos.Kernel.Api.csproj">
+    <ProjectReference Include="..\Abanu.Kernel.Api\Abanu.Kernel.Api.csproj">
       <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
-      <Name>Lonos.Kernel.Api</Name>
+      <Name>Abanu.Kernel.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lonos.Lib\Lonos.Lib.csproj">
+    <ProjectReference Include="..\Abanu.Lib\Abanu.Lib.csproj">
       <Project>{966282D0-FC83-45B1-A523-17343F7E63B6}</Project>
-      <Name>Lonos.Lib</Name>
+      <Name>Abanu.Lib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lonos.Primitives\Lonos.Primitives.csproj">
+    <ProjectReference Include="..\Abanu.Primitives\Abanu.Primitives.csproj">
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
-      <Name>Lonos.Primitives</Name>
+      <Name>Abanu.Primitives</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lonos.Runtime\Lonos.Runtime.csproj">
+    <ProjectReference Include="..\Abanu.Runtime\Abanu.Runtime.csproj">
       <Project>{4d9c0633-1433-4a92-a148-80e8e91155fd}</Project>
-      <Name>Lonos.Runtime</Name>
+      <Name>Abanu.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Abanu.Kernel.Core</RootNamespace>
+    <AssemblyName>Abanu.Kernel.Loader</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <ProjectGuid>{67727C0F-A566-4CE2-96DC-DD27A2E0CB30}</ProjectGuid>
+    <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <NoStdLib>true</NoStdLib>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>..\..\bin\Abanu.Kernel.Loader.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <NoStdLib>true</NoStdLib>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DummyClass.cs" />
+    <Compile Include="LoaderStart.cs" />
+    <Compile Include="MultiBoot.cs" />
+    <Compile Include="BootMemory.cs" />
+    <Compile Include="KernelMessage_.cs" />
+    <Compile Include="KernelMessageWriter.cs" />
+    <Compile Include="BootInfo_.cs" />
+    <Compile Include="SSE.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
+      <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
+      <Name>Mosa.Korlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime\Mosa.Runtime.csproj">
+      <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
+      <Name>Mosa.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
+      <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
+      <Name>Mosa.Runtime.x86</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Kernel.Api\Abanu.Kernel.Api.csproj">
+      <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
+      <Name>Abanu.Kernel.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Kernel.Config\Abanu.Kernel.Config.csproj">
+      <Project>{317e8c4b-089b-469b-8789-d76eb2f87504}</Project>
+      <Name>Abanu.Kernel.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Kernel.Lib\Abanu.Kernel.Lib.csproj">
+      <Project>{2d21af60-8366-430a-9579-1b0ccd31910f}</Project>
+      <Name>Abanu.Kernel.Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Lib\Abanu.Lib.csproj">
+      <Project>{966282d0-fc83-45b1-a523-17343f7e63b6}</Project>
+      <Name>Abanu.Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Primitives\Abanu.Primitives.csproj">
+      <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
+      <Name>Abanu.Primitives</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\ressources\SharedProjectSettings.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

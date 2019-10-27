@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{67A6A46D-DBF4-4013-89DB-3E6457D139F3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Abanu.Test.console</RootNamespace>
+    <AssemblyName>Abanu.Test.Console</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;BITS_64</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Alloc6Test.cs" />
+    <Compile Include="Alloc5.cs" />
+    <Compile Include="Alloc6.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AllocTest.cs" />
+    <Compile Include="..\Abanu.Kernel.Core\Tests\buddy-malloc.cs">
+      <Link>buddy-malloc.cs</Link>
+    </Compile>
+    <Compile Include="alloc2\EmptyClass.cs" />
+    <Compile Include="Alloc3\Alloc3.cs" />
+    <Compile Include="alloc4.cs" />
+    <Compile Include="alloc4Test.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Abanu.Core.ClassLib\Abanu.Core.ClassLib.csproj">
+      <Project>{fa6e1560-c2d5-41bb-9e7c-d54d0f711918}</Project>
+      <Name>Abanu.Core.ClassLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Kernel.Api\Abanu.Kernel.Api.csproj">
+      <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
+      <Name>Abanu.Kernel.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Kernel.Lib\Abanu.Kernel.Lib.csproj">
+      <Project>{2d21af60-8366-430a-9579-1b0ccd31910f}</Project>
+      <Name>Abanu.Kernel.Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Primitives\Abanu.Primitives.csproj">
+      <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
+      <Name>Abanu.Primitives</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\ressources\SharedProjectSettings.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
