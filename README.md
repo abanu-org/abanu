@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/abanu/badge/?version=latest)](http://docs.abanu.io/en/latest/?badge=latest) [![License][github-license]][github-license-link]  [![Issues][github-issues]][github-issues-link]  [![Stars][github-stars]][github-stars-link]  [![Forks][github-forks]][github-forks-link]
+[![Documentation Status](https://readthedocs.org/projects/abanu/badge/?version=latest)](http://docs.abanu.org/en/latest/?badge=latest) [![License][github-license]][github-license-link]  [![Issues][github-issues]][github-issues-link]  [![Stars][github-stars]][github-stars-link]  [![Forks][github-forks]][github-forks-link]
 
 [github-forks]: https://img.shields.io/github/forks/abanu-org/abanu.svg
 [github-forks-link]: https://github.com/abanu-org/abanu/network
@@ -18,7 +18,7 @@ Visit the official repository [https://github.com/abanu-org/abanu](https://githu
 
 #### Quick Start (recommended)
 
-Follow these instructions: [http://docs.abanu.io/en/latest/build.html](http://docs.abanu.io/en/latest/build.html)
+Follow these instructions: [http://docs.abanu.org/en/latest/build.html](http://docs.abanu.org/en/latest/build.html)
 
 #### Manually
 
