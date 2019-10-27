@@ -1,16 +1,16 @@
 #########################
-Building Lonos on Windows
+Building Abanu on Windows
 #########################
 
-Lonos can be build platform independent. However, we support
+Abanu can be build platform independent. However, we support
 primary an unix build environment. For Windows Users, we offer a 
 Step by Step guide.
 
 The Quick way
 -------------
 
-If you want only start run Lonos, just get the sources, open Lonos.sln in Visual Studio launch the default project. However, this is
-only a shortcut. If you want debug Lonos, you may need the following steps.
+If you want only start run Abanu, just get the sources, open Abanu.sln in Visual Studio launch the default project. However, this is
+only a shortcut. If you want debug Abanu, you may need the following steps.
 
 
 Install the Windows Subsystem for Linux
@@ -34,7 +34,7 @@ Populate the Debian System with Packages:
 
   # run as root
   apt-get update && apt-get install -y wget
-  wget -qO- https://raw.githubusercontent.com/lonos-project/lonos/master/build/debian/install | bash -s
+  wget -qO- https://raw.githubusercontent.com/abanu-project/abanu/master/build/debian/install | bash -s
 
 This will take a while. After that, you have a fully featured build environment.
 
@@ -81,7 +81,7 @@ Run this commands in a WSL/Debian bash shell:
 .. code-block:: sh
 
 	# specify root folder for projects.
-	WINPROJDIR=$(cmd.exe /C "echo|set /p=%USERPROFILE%")/Documents/lonos-project
+	WINPROJDIR=$(cmd.exe /C "echo|set /p=%USERPROFILE%")/Documents/abanu-project
 	# normalize windows path
 	WINPROJDIR=$(wslpath -w $(wslpath -u $WINPROJDIR))
 	# create the windows project root
@@ -89,22 +89,22 @@ Run this commands in a WSL/Debian bash shell:
 	# create symbolic link
 	ln -s $(wslpath -u $WINPROJDIR) ~/
 	# Switch to new directory
-	cd ~/lonos-project
+	cd ~/abanu-project
 
-Now ``/home/<user>/lonos-project`` and ``C:\Users\<user>\Documents\lonos-projects`` points to the same directory.
+Now ``/home/<user>/abanu-project`` and ``C:\Users\<user>\Documents\abanu-projects`` points to the same directory.
 
-Download and build Lonos
+Download and build Abanu
 ------------------------
 
 .. code-block:: sh
 
-  git clone --recursive https://github.com/lonos-project/lonos.git
-  cd lonos 
-  ./lonosctl configure packages
-  ./lonosctl build all
+  git clone --recursive https://github.com/abanu-project/abanu.git
+  cd abanu 
+  ./abanuctl configure packages
+  ./abanuctl build all
 
-Now you can run lonos in qemu:
+Now you can run abanu in qemu:
 
 .. code-block:: sh
 
-   ./lonosctl debug qemu-kernel
+   ./abanuctl debug qemu-kernel

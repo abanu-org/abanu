@@ -1,14 +1,14 @@
 #!/bin/bash
 
-export LONOS_PROJDIR=$(
+export ABANU_PROJDIR=$(
 cd $(dirname "$BASH_SOURCE")
 cd .. 
 pwd
 )
 
-nuget="mono ${LONOS_PROJDIR}/external/MOSA-Project/Tools/nuget/nuget.exe"
+nuget="mono ${ABANU_PROJDIR}/external/MOSA-Project/Tools/nuget/nuget.exe"
 msbuild=msbuild
-LONOS_BUILD="mono -O=all lonos.tools.build.exe"
+ABANU_BUILD="mono -O=all abanu.tools.build.exe"
 QEMU_X86=qemu-system-i386
 QEMU_X64=qemu-system-x86_64
 

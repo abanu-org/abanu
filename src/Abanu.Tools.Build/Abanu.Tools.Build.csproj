@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-    <StartupObject>lonos.build.Program</StartupObject>
+    <StartupObject>abanu.build.Program</StartupObject>
     <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

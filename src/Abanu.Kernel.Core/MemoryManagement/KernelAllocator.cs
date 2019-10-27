@@ -3,7 +3,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
-//using pmeta = lonos.test.malloc4.malloc_meta*; //not possible
+//using pmeta = abanu.test.malloc4.malloc_meta*; //not possible
 using System.Runtime.InteropServices;
 using Abanu.Kernel.Core.Diagnostics;
 

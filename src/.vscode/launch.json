@@ -5,10 +5,10 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Lonos.Loader",
+			"name": "Abanu.Loader",
 			"type": "mono",
 			"request": "launch",
-			"program": "${workspaceRoot}/../bin/lonos.build.exe",
+			"program": "${workspaceRoot}/../bin/abanu.build.exe",
 			"args": [
 				"--image=loader",
 			],
@@ -16,10 +16,10 @@
 			"internalConsoleOptions": "openOnSessionStart"
 		},
 		{
-			"name": "Lonos.Kernel",
+			"name": "Abanu.Kernel",
 			"type": "mono",
 			"request": "launch",
-			"program": "${workspaceRoot}/../bin/lonos.build.exe",
+			"program": "${workspaceRoot}/../bin/abanu.build.exe",
 			"args": [
 				"--image=kernel",
 			],

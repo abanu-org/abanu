@@ -14,7 +14,7 @@ using malloc_meta = System.UInt32;
 using size_t = System.UInt32;
 #endif
 
-//using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
+//using pmeta = abanu.test.malloc4.malloc_meta*; //not possibe
 using System.Runtime.InteropServices;
 
 namespace Abanu.Test.malloc4

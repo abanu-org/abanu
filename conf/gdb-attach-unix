@@ -1,2 +1,2 @@
-target remote | ./lonosctl debug qemu-kernel-run
+target remote | ./abctl debug qemu-kernel-run
 #target remote :1234

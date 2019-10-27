@@ -2,10 +2,10 @@ megs: 128
 ata0: enabled=1,ioaddr1=0x1f0,ioaddr2=0x3f0,irq=14
 cpu: model=p4_prescott_celeron_336
 boot: cdrom,disk
-log: "$LONOS_LOGDIR/emulator.log"
+log: "$ABANU_LOGDIR/emulator.log"
 romimage: file="/usr/share/bochs/BIOS-bochs-latest"
 vgaromimage: file="/usr/share/bochs/VGABIOS-lgpl-latest"
 display_library: x, options="gui_debug"
-ata0-master: type=disk,path="$LONOS_OSDIR/Lonos.OS.Core.x64.img",biosdetect=none,cylinders=0,heads=0,spt=0
-com1: enabled=1, mode=file, dev=$LONOS_LOGDIR/kernel.log
+ata0-master: type=disk,path="$ABANU_OSDIR/Abanu.OS.Core.x64.img",biosdetect=none,cylinders=0,heads=0,spt=0
+com1: enabled=1, mode=file, dev=$ABANU_LOGDIR/kernel.log
 magic_break: enabled=1

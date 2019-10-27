@@ -52,7 +52,7 @@ define load-app-helloservice
 end
 
 define load-kernel
-	file os/Lonos.OS.Core.x86.bin
+	file os/Abanu.OS.Core.x86.bin
 end
 
 define q

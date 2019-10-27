@@ -91,7 +91,7 @@ for:
         - image: Ubuntu1804
 
     install:
-    - sh: docker pull lonosproject/lonos-build || docker pull lonosproject/lonos-build # with retry, if failed
+    - sh: docker pull abanuproject/abanu-build || docker pull abanuproject/abanu-build # with retry, if failed
 
     before_build:
     - echo test
@@ -100,4 +100,4 @@ for:
 
     build_script:
     - sh: echo UID "$UID"
-    - sh: docker run --name MOSA -v $APPVEYOR_BUILD_FOLDER:/home/appveyor lonosproject/lonos-build /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x lonosctl && ./mosctl test && ./lonosctl unittest'"
+    - sh: docker run --name MOSA -v $APPVEYOR_BUILD_FOLDER:/home/appveyor abanuproject/abanu-build /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x abanuctl && ./mosctl test && ./abanuctl unittest'"

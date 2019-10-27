@@ -9,11 +9,11 @@ It is not about documentation content.
 .. list-table:: Links to Documentation
 
   * - HTML, Online
-    - http://docs.lonos-project.org/en/latest
+    - http://docs.abanu-project.org/en/latest
   * - PDF
-    - http://readthedocs.org/projects/lonos/downloads/pdf/latest
+    - http://readthedocs.org/projects/abanu/downloads/pdf/latest
   * - HTML, as Zip
-    - http://readthedocs.org/projects/lonos/downloads/htmlzip/latest
+    - http://readthedocs.org/projects/abanu/downloads/htmlzip/latest
 
 ***************************************
 RestructuredText with Sphinx directives
@@ -244,13 +244,13 @@ Troubleshooting
 .. rubric:: After committing, the documentation will not update
 
 - The build process of the documentation takes round about 1-2 minutes.
-- You can check the status here: `Builds <http://readthedocs.org/projects/lonos/builds>`__
+- You can check the status here: `Builds <http://readthedocs.org/projects/abanu/builds>`__
 - Check the status if the build fails
 
 .. rubric:: Documentation is updating, but some content is missing or malformed
 
 - There might be some parsing errors or warnings.
-  Go to `Builds <http://readthedocs.org/projects/lonos/builds>`__ and click on ``Raw view``.
+  Go to `Builds <http://readthedocs.org/projects/abanu/builds>`__ and click on ``Raw view``.
   Check the build output for warnings and fix them.
 
 **********

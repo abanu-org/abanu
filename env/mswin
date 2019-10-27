@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export LONOS_PROJDIR=$(
+export ABANU_PROJDIR=$(
 cd $(dirname "$BASH_SOURCE")
 cd .. 
 echo $(cmd.exe /C "echo|set /p=%CD%")
@@ -13,10 +13,10 @@ PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Professional/
 PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Community/MSBuild/Current/Bin:$PATH
 PATH=/mnt/d/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin:$PATH
 msbuild=MSBuild.exe
-LONOS_BUILD="cmd.exe /C lonos.tools.build.exe"
+ABANU_BUILD="cmd.exe /C abanu.tools.build.exe"
 
-QEMU_X86="cmd.exe /C ${LONOS_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-i386.exe"
-QEMU_X64="cmd.exe /C ${LONOS_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-x86_64.exe"
+QEMU_X86="cmd.exe /C ${ABANU_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-i386.exe"
+QEMU_X64="cmd.exe /C ${ABANU_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-x86_64.exe"
 #QEMU_X86=$QEMU_X64
 
 source $(dirname "$BASH_SOURCE")/shared 

@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
+//using pmeta = abanu.test.malloc4.malloc_meta*; //not possibe
 using System.Runtime.InteropServices;
 using malloc_meta = System.UInt32;
 using size_t = System.UInt32;

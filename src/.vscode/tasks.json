@@ -4,13 +4,13 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build lonos.build.sln",
+            "label": "build abanu.build.sln",
             "type": "shell",
             "command": "msbuild",
             "args": [
                 "/property:GenerateFullPaths=true",
                 "/t:build",
-                "lonos.build.sln"
+                "abanu.build.sln"
             ],
             "group": "build",
             "presentation": {
@@ -19,13 +19,13 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build lonos.kernel.sln",
+            "label": "build abanu.kernel.sln",
             "type": "shell",
             "command": "msbuild",
             "args": [
                 "/property:GenerateFullPaths=true",
                 "/t:build",
-                "lonos.kernel.sln"
+                "abanu.kernel.sln"
             ],
             "group": {
                 "kind": "build",
@@ -37,13 +37,13 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build lonos.build.csproj",
+            "label": "build abanu.build.csproj",
             "type": "shell",
             "command": "msbuild",
             "args": [
                 "/property:GenerateFullPaths=true",
                 "/t:build",
-                "lonos.build/lonos.build.csproj"
+                "abanu.build/abanu.build.csproj"
             ],
             "group": "build",
             "presentation": {

@@ -23,4 +23,4 @@ RUN apt-get install -y qemu-system-x86 git curl mono-complete mtools xorriso nas
 #grub2-common grub-efi-ia32 grub-efi-amd64 grub-pc grub-rescue-pc
 RUN apt-get install -y  dotnet-sdk-2.2
 
-RUN mkdir /lonos
+RUN mkdir /abanu

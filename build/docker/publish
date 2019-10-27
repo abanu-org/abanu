@@ -1,12 +1,12 @@
 #!/bin/bash
 
-NAME=lonos-build
-IMAGE=lonosproject/lonos-build
+NAME=abanu-build
+IMAGE=abanuproject/abanu-build
 
-#docker build . -t lonos/$NAME
+#docker build . -t abanu/$NAME
 
 docker rm -f $NAME
 
-docker run -it --name $NAME -v ${PWD}/start:/home/lonos/start $IMAGE /bin/bash -c /home/lonos/start
+docker run -it --name $NAME -v ${PWD}/start:/home/abanu/start $IMAGE /bin/bash -c /home/abanu/start
 
 

@@ -28,23 +28,23 @@ source_parsers = {
 }
 
 master_doc = 'index'
-project = u'Lonos Documentation'
-copyright = '2008-{}, Lonos Project & contributors'.format(
+project = u'Abanu Documentation'
+copyright = '2008-{}, Abanu Project & contributors'.format(
     2019
 )
 
 exclude_patterns = ['_build']
 default_role = 'obj'
 intersphinx_mapping = {
-    'lonos': ('http://docs.lonos.io/en/latest/', None),
+    'abanu': ('http://docs.abanu.io/en/latest/', None),
 }
-htmlhelp_basename = 'LonosDoc'
+htmlhelp_basename = 'AbanuDoc'
 latex_documents = [
-    ('index', 'lonos.tex', u'Lonos Project Documentation',
+    ('index', 'abanu.tex', u'Abanu Project Documentation',
      u'', 'manual'),
 ]
 man_pages = [
-    ('index', 'lonos', u'Lonos Project Documentation',
+    ('index', 'abanu', u'Abanu Project Documentation',
      [u''], 1)
 ]
 

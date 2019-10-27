@@ -1,4 +1,6 @@
 Abanu
+abanuctl
+abctl
 Addr
 Alloc
 app
@@ -43,8 +45,6 @@ ln
 localhost
 loglevel
 Loncar
-Lonos
-lonosctl
 malloc
 Metadata
 mkdir

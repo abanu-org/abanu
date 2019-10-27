@@ -7,14 +7,14 @@ function loadenv {
 }
 
 loadenv unix
-mkdir -p $LONOS_OSDIR
-mkdir -p $LONOS_LOGDIR
-mkdir -p $LONOS_TMPDIR
-mkdir -p $LONOS_ISODIR
+mkdir -p $ABANU_OSDIR
+mkdir -p $ABANU_LOGDIR
+mkdir -p $ABANU_TMPDIR
+mkdir -p $ABANU_ISODIR
 #dd if=/dev/zero of=/tmp/network-disk.img bs=10M count=1
 #touch tmp/network-disk.img
-if [ ! -f $LONOS_TMPDIR/network-disk.img ]; then
-	dd if=/dev/zero of=$LONOS_TMPDIR/network-disk.img bs=10M count=1
+if [ ! -f $ABANU_TMPDIR/network-disk.img ]; then
+	dd if=/dev/zero of=$ABANU_TMPDIR/network-disk.img bs=10M count=1
 fi
 loadenv auto
 
@@ -29,11 +29,11 @@ function configure {
 			;;
 
 		external)
-			git clone --recursive git@github.com:lonos-project/lonos-tools.git tools
+			git clone --recursive git@github.com:abanu-project/abanu-tools.git tools
 			;;
 
 		git)
-			git remote set-url origin git@github.com:lonos-project/lonos.git
+			git remote set-url origin git@github.com:abanu-project/abanu.git
 
 			cd external/MOSA-Project
 			git remote set-url origin git@github.com:arakis/MOSA-Project.git
@@ -59,12 +59,12 @@ function configure {
 			${nuget} restore Mosa.Tool.Mosactl.sln
 			${nuget} restore Mosa.sln
 			cd ../../..
-			${nuget} restore src/Lonos.Tools.sln
-			${nuget} restore src/Lonos.Kernel.sln
+			${nuget} restore src/Abanu.Tools.sln
+			${nuget} restore src/Abanu.Kernel.sln
 			;;
 
 		*)
-			echo $"Usage: lonosctl configure {all|patch|mosa|packages|git}"
+			echo $"Usage: abctl configure {all|patch|mosa|packages|git}"
 			exit 1
 	esac
 }
@@ -102,7 +102,7 @@ function clean {
 			;;
 
 		*)
-			echo $"Usage: lonosctl clean {all|bin|os||logs|packages}"
+			echo $"Usage: abctl clean {all|bin|os||logs|packages}"
 			exit 1
 	esac
 	loadenv auto
@@ -126,7 +126,7 @@ function reset {
 			;;
 
 		*)
-			echo $"Usage: lonosctl reset {all|git}"
+			echo $"Usage: abctl reset {all|git}"
 			exit 1
 	esac
 }
@@ -146,7 +146,7 @@ function update {
 			;;
 
 		*)
-			echo $"Usage: lonosctl reset {all|git}"
+			echo $"Usage: abctl reset {all|git}"
 			exit 1
 	esac
 }
@@ -162,7 +162,7 @@ function patch {
 			;;
 
 		*)
-			echo $"Usage: lonosctl configure patch {apply|revert}"
+			echo $"Usage: abctl configure patch {apply|revert}"
 			exit 1
 	esac
 }
@@ -185,7 +185,7 @@ function build {
 			;;
 
 		builder)
-			(cd src && ${msbuild} Lonos.Tools.sln /p:Configuration=Release -verbosity:minimal -m)
+			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release -verbosity:minimal -m)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x64.dll bin
@@ -194,38 +194,38 @@ function build {
 			;;
 
 		assembly)
-			(cd src && ${msbuild} Lonos.Kernel.sln /p:Configuration=Debug -verbosity:minimal -m)
+			(cd src && ${msbuild} Abanu.Kernel.sln /p:Configuration=Debug -verbosity:minimal -m)
 			;;
 
 		native)
-			src/Lonos.Native.${LONOS_ARCH}/build
+			src/Abanu.Native.${ABANU_ARCH}/build
 			;;
 
 		app)
-			(cd bin && $LONOS_BUILD build --bin=app)
+			(cd bin && $ABANU_BUILD build --bin=app)
 			;;
 		app2)
-			(cd bin && $LONOS_BUILD build --bin=app2)
+			(cd bin && $ABANU_BUILD build --bin=app2)
 			;;
 
 		app.shell)
-			(cd bin && $LONOS_BUILD build --bin=app.shell)
+			(cd bin && $ABANU_BUILD build --bin=app.shell)
 			;;
 
 		service.basic)
-			(cd bin && $LONOS_BUILD build --bin=service.basic)
+			(cd bin && $ABANU_BUILD build --bin=service.basic)
 			;;
 
 		service.hostcommunication)
-			(cd bin && $LONOS_BUILD build --bin=service.hostcommunication)
+			(cd bin && $ABANU_BUILD build --bin=service.hostcommunication)
 			;;
 
 		loader)
-			(cd bin && $LONOS_BUILD build --bin=loader)
+			(cd bin && $ABANU_BUILD build --bin=loader)
 			;;
 
 		kernel)
-			(cd bin && $LONOS_BUILD build --bin=kernel)
+			(cd bin && $ABANU_BUILD build --bin=kernel)
 			;;
 
 		loader,kernel)
@@ -242,7 +242,7 @@ function build {
 			;;
 
 		*)
-			echo $"Usage: lonosctl build {all|builder|assembly|native|app|app2|image|disk}"
+			echo $"Usage: abctl build {all|builder|assembly|native|app|app2|image|disk}"
 			exit 1
 	esac
 }
@@ -258,7 +258,7 @@ function run {
 			;;
 
 		*)
-			echo $"Usage: lonosctl run {qemu|bochs}"
+			echo $"Usage: abctl run {qemu|bochs}"
 			exit 1
 	esac
 }
@@ -270,9 +270,9 @@ function debug {
 			# TODO: Maybe this will never the case, but we should check if this is really our instance
 			pkill gdb
 			#trap '' SIGINT
-			#./lonosctl debug qemu-kernel-run &
+			#./abctl debug qemu-kernel-run &
 			#debug qemu-kernel-run
-			#$LONOS_PROJDIR/bin/Lonos.Tools.HostCommunication.exe &
+			#$ABANU_PROJDIR/bin/Abanu.Tools.HostCommunication.exe &
 			#sleep 1
 			HostCommunication_PID=$!
 			gdb -x conf/gdb-load-symbols -nx -x conf/gdbinit -x conf/gdb-attach-unix -x conf/gdb-workspace
@@ -291,9 +291,9 @@ function debug {
 			#echo $qemu_app
 			#-gdb stdio
 			$qemu_app \
-				-drive file=${LONOS_OSDIR}/Lonos.OS.Core.${LONOS_ARCH}.img,index=0,media=disk,format=raw \
-				-drive file=${LONOS_TMPDIR}/network-disk.img,index=1,media=disk,format=raw,copy-on-read=off,cache=none \
-				-kernel os/Lonos.OS.image.${LONOS_ARCH}.bin -serial file:${LONOS_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256
+				-drive file=${ABANU_OSDIR}/Abanu.OS.Core.${ABANU_ARCH}.img,index=0,media=disk,format=raw \
+				-drive file=${ABANU_TMPDIR}/network-disk.img,index=1,media=disk,format=raw,copy-on-read=off,cache=none \
+				-kernel os/Abanu.OS.image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
 			;;
 
 		qemu-grub-hybrid)
@@ -308,27 +308,27 @@ function debug {
 
 			bios="-L /usr/share/seabios"
 
-			disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-grub-hybrid.disk.img
+			disk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-grub-hybrid.disk.img
 
-			$qemu_app ${bios} -hda $disk -serial file:${LONOS_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${LONOS_LOGDIR}/emulator.log -m 256
+			$qemu_app ${bios} -hda $disk -serial file:${ABANU_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
 
 			;;
 
 		*)
-			echo $"Usage: lonosctl run {qemu-kernel|qemu-grub-hybrid}"
+			echo $"Usage: abctl run {qemu-kernel|qemu-grub-hybrid}"
 			exit 1
 	esac
 	loadenv auto
 }
 
 function _image {
-	(cd bin && ${LONOS_BUILD} build --image)
+	(cd bin && ${ABANU_BUILD} build --image)
 }
 
 function _disk {
-	#image=$LONOS_OSDIR/lonos.kernel.image.bin
-	#loader=$LONOS_PROJDIR/os/Lonos.Kernel.Loader.bin
-	#kernel=$LONOS_PROJDIR/os/Lonos.Kernel.Core.bin
+	#image=$ABANU_OSDIR/abanu.kernel.image.bin
+	#loader=$ABANU_PROJDIR/os/Abanu.Kernel.Loader.bin
+	#kernel=$ABANU_PROJDIR/os/Abanu.Kernel.Core.bin
 	#rm -f $image
 	#cat $loader $kernel > $image
 	#printf '\x31\xc0\xc3' | dd of=$image bs=1 seek=3 count=3 conv=notrunc
@@ -352,17 +352,17 @@ function _bochs {
 			;;
 
 		*)
-			echo $"Usage: lonosctl run bochs {x86|x86-grub-vbe|x64|host}"
+			echo $"Usage: abctl run bochs {x86|x86-grub-vbe|x64|host}"
 			exit 1
 	esac
 
-	bochsrc="${LONOS_PROJDIR}/conf/bochs-${arch}.bxrc"
-	bochs -f ${bochsrc} -rc "${LONOS_PROJDIR}/conf/bochs.rc"
+	bochsrc="${ABANU_PROJDIR}/conf/bochs-${arch}.bxrc"
+	bochs -f ${bochsrc} -rc "${ABANU_PROJDIR}/conf/bochs.rc"
 }
 
 function _qemu {
 	loadenv unix
-	disk=${LONOS_OSDIR}/Lonos.OS.Core.x86.img
+	disk=${ABANU_OSDIR}/Abanu.OS.Core.x86.img
 
 	case $1 in
 		x86)
@@ -378,16 +378,16 @@ function _qemu {
 			cpu=qemu32,+sse4.1
 			bios="-L /usr/share/seabios"
 
-			disk=${LONOS_OSDIR}/Lonos.OS.Core.x86-grub-hybrid.disk.img
+			disk=${ABANU_OSDIR}/Abanu.OS.Core.x86-grub-hybrid.disk.img
 			;;
 
 		x86-efi)
 			arch=x86
 			qemubin=qemu-system-i386
 			cpu=qemu32,+sse4.1
-			bios="-bios ${LONOS_PROJDIR}/tools/ovmf-ia32/OVMF-pure-efi.fd"
+			bios="-bios ${ABANU_PROJDIR}/tools/ovmf-ia32/OVMF-pure-efi.fd"
 
-			disk=${LONOS_OSDIR}/Lonos.OS.Core.x86-efi.disk.img
+			disk=${ABANU_OSDIR}/Abanu.OS.Core.x86-efi.disk.img
 			;;
 
 		x64)
@@ -406,12 +406,12 @@ function _qemu {
 			;;
 
 		*)
-			echo $"Usage: lonosctl run qemu {x86|x86-efi|x86-grub-vbe|x64|host}"
+			echo $"Usage: abctl run qemu {x86|x86-efi|x86-grub-vbe|x64|host}"
 			exit 1
 	esac
 
-	echo ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
-	     ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${LONOS_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${LONOS_PROJDIR}/logs/emulator.log
+	echo ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${ABANU_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${ABANU_PROJDIR}/logs/emulator.log
+	     ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${ABANU_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${ABANU_PROJDIR}/logs/emulator.log
 
 	loadenv auto
 }
@@ -427,29 +427,29 @@ function _qemu {
 
 function create_efi_disk {
 	loadenv unix
-	disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-efi.disk.img
+	disk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-efi.disk.img
 	size=40880 #kb
 	let "block=((size * 1024) / (512 * 16 * 16)) - 1"
 	echo $block
 	dd if=/dev/zero of=$disk bs=1k count=$size
 	mformat -i $disk -h 16 -t 16 -s $block ::
 
-	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/efi ::/
-	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/boot ::/
-	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/NvVars ::/
-	mcopy -i $disk -s $LONOS_TOOLSDIR/grub-efi-x86/.disk ::/
-	mcopy -i $disk -s $LONOS_OSDIR/Lonos.OS.image.${LONOS_ARCH}.bin ::/lonos.bin
+	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/efi ::/
+	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/boot ::/
+	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/NvVars ::/
+	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/.disk ::/
+	mcopy -i $disk -s $ABANU_OSDIR/Abanu.OS.image.${ABANU_ARCH}.bin ::/abanu.bin
 	loadenv auto
 }
 
 function create_grub_hybrid_disk {
 	loadenv unix
-	disk=${LONOS_OSDIR}/Lonos.Kernel.Core.x86-grub-hybrid.disk.img
-	isodir=$LONOS_PROJDIR/tmp/iso-grub-hybrid
+	disk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-grub-hybrid.disk.img
+	isodir=$ABANU_PROJDIR/tmp/iso-grub-hybrid
 	mkdir -p $isodir;
-	cp $LONOS_OSDIR/lonos.os.image.${LONOS_ARCH}.bin $isodir/lonos.bin
+	cp $ABANU_OSDIR/abanu.os.image.${ABANU_ARCH}.bin $isodir/abanu.bin
 	mkdir -p $isodir/boot/grub
-	cp $LONOS_TOOLSDIR/grub-efi-x86/boot/grub/grub.cfg $isodir/boot/grub
+	cp $ABANU_TOOLSDIR/grub-efi-x86/boot/grub/grub.cfg $isodir/boot/grub
 	grub-mkrescue -o $disk $isodir
 	loadenv auto
 }
@@ -457,15 +457,15 @@ function create_grub_hybrid_disk {
 function logs {
 	case $1 in
 		kernel)
-			less +F "${LONOS_PROJDIR}/logs/kernel.log"
+			less +F "${ABANU_PROJDIR}/logs/kernel.log"
 			;;
 
 		emulator)
-			less +F "${LONOS_PROJDIR}/logs/emulator.log"
+			less +F "${ABANU_PROJDIR}/logs/emulator.log"
 			;;
 
 		*)
-			echo $"Usage: lonosctl logs {kernel|emulator}"
+			echo $"Usage: abctl logs {kernel|emulator}"
 			exit 1
 	esac
 }
@@ -477,7 +477,7 @@ function _test {
 			;;
 
 		*)
-			echo $"Usage: lonosctl test {cloud}"
+			echo $"Usage: abctl test {cloud}"
 			exit 1
 	esac
 }
@@ -525,7 +525,7 @@ case $1 in
 		;;
 
 	*)
-		echo $"Usage: lonosctl {configure|build|run|debug|clean|reset|logs|update}"
+		echo $"Usage: abctl {configure|build|run|debug|clean|reset|logs|update}"
 		exit 1
 esac
 

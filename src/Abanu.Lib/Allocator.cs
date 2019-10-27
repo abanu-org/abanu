@@ -3,7 +3,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
-//using pmeta = lonos.test.malloc4.malloc_meta*; //not possibe
+//using pmeta = abanu.test.malloc4.malloc_meta*; //not possibe
 using System.Runtime.InteropServices;
 
 #pragma warning disable SA1649 // File name should match first type name

@@ -17,18 +17,18 @@ end
 # specific configuration
 
 #set arch i386:x86-64:intel
-file os/Lonos.OS.Core.x86.bin
-#file os/Lonos.OS.Loader.x86.bin
-target remote | ./lonosctl debug qemu-grub-hybrid-run
+file os/Abanu.OS.Core.x86.bin
+#file os/Abanu.OS.Loader.x86.bin
+target remote | ./abctl debug qemu-grub-hybrid-run
 #b *0x0
 # Invalid TSS
-b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ10()
+b Abanu.Kernel.Core.Interrupts.IDTManager::IRQ10()
 
 # General Protection Exception
-b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ13()
+b Abanu.Kernel.Core.Interrupts.IDTManager::IRQ13()
 
 # Page Fault
-b Lonos.Kernel.Core.Interrupts.IDTManager::IRQ14()
+b Abanu.Kernel.Core.Interrupts.IDTManager::IRQ14()
 
 ####################
 # continue debugging

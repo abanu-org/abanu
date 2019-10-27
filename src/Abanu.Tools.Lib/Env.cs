@@ -32,13 +32,13 @@ namespace Abanu.Tools
                 {
                     case "ABANU_PROJDIR":
                         value = Path.GetDirectoryName(Path.GetDirectoryName(new Uri(typeof(Env).Assembly.Location).AbsolutePath));
-                        if (!File.Exists(Path.Combine(value, "lonosctl")))
+                        if (!File.Exists(Path.Combine(value, "abctl")))
                             value = Path.GetDirectoryName(value);
-                        if (!File.Exists(Path.Combine(value, "lonosctl")))
+                        if (!File.Exists(Path.Combine(value, "abctl")))
                             value = Path.GetDirectoryName(value);
-                        if (!File.Exists(Path.Combine(value, "lonosctl")))
+                        if (!File.Exists(Path.Combine(value, "abctl")))
                             value = Path.GetDirectoryName(value);
-                        if (!File.Exists(Path.Combine(value, "lonosctl")))
+                        if (!File.Exists(Path.Combine(value, "abctl")))
                             value = null;
                         break;
                     case "ABANU_ARCH":
