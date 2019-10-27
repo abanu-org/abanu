@@ -15,13 +15,13 @@ namespace Lonos.Kernel
     public class FrameBufferTextScreenDevice : ITextConsoleDevice
     {
 
-        private FrameBuffer dev;
+        private IGraphicsAdapter dev;
 
-        public FrameBufferTextScreenDevice(FrameBuffer dev)
+        public FrameBufferTextScreenDevice(IGraphicsAdapter dev)
         {
             this.dev = dev;
-            Columns = dev.Width / CharWidth;
-            Rows = dev.Height / CharHeight;
+            Columns = dev.Target.Width / CharWidth;
+            Rows = dev.Target.Height / CharHeight;
             SetupColors();
         }
 
@@ -55,8 +55,8 @@ namespace Lonos.Kernel
             var charMem = (byte*)(fontSecAddr + sizeof(PSF1Header));
             //KernelMemory.DumpToConsole((uint)charMem, 20);
 
-            var foreColor = GetColor(foregroundColor);
-            var backColor = GetColor(backgroundColor);
+            var foreColor = GetNativeColor(foregroundColor);
+            var backColor = GetNativeColor(backgroundColor);
 
             for (int y = 0; y < rows; y++)
             {
@@ -67,22 +67,22 @@ namespace Lonos.Kernel
                     var bt = BitHelper.IsBitSet(charMem[(charSize * charIdx) + (y * bytesPerRow) + (x / 8)], (byte)(7 - (x % 8)));
                     if (bt)
                     {
-                        dev.SetPixel(foreColor, pixelX, pixelY);
+                        dev.SetPixel(pixelX, pixelY, foreColor);
                     }
                     else
                     {
-                        dev.SetPixel(backColor, pixelX, pixelY);
+                        dev.SetPixel(pixelX, pixelY, backColor);
                     }
                 }
             }
 
         }
 
-        private static int[] Colors;
+        private static uint[] Colors;
 
         private static void SetupColors()
         {
-            Colors = new int[]
+            Colors = new uint[]
             {
                 0x00000000, // black
                 0x000000AA, // blue
@@ -104,7 +104,7 @@ namespace Lonos.Kernel
             };
         }
 
-        private static int GetColor(byte consoleColor)
+        private static uint GetNativeColor(byte consoleColor)
         {
             return Colors[consoleColor];
         }

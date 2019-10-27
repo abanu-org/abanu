@@ -74,7 +74,11 @@
   <ItemGroup>
     <Compile Include="ConsoleDevice\Hardware\FrameBufferTextScreenDevice.cs" />
     <Compile Include="ConsoleDevice\Hardware\Framebuffer.cs" />
+    <Compile Include="ConsoleDevice\Hardware\GraphicsAdapter.cs" />
+    <Compile Include="ConsoleDevice\Hardware\IFrameBuffer.cs" />
+    <Compile Include="ConsoleDevice\Hardware\ISurface.cs" />
     <Compile Include="ConsoleDevice\Hardware\ITextConsoleDevice.cs" />
+    <Compile Include="ConsoleDevice\Hardware\SurfaceDeviceType.cs" />
     <Compile Include="ConsoleServer\ConsoleServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ConsoleClient\ConsoleClient.cs" />

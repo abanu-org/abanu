@@ -24,10 +24,9 @@ namespace Lonos.Runtime
             Allocator = new RuntimeAllocator();
             var ptr = (byte*)SysCalls.RequestMemory(KMath.AlignValueCeil(Allocator.headSize, 4096));
             for (var i = 0; i < Allocator.headSize; i++)
-                *(ptr + i) = 0;
+                *(ptr + i) = 0; // TODO: Optimize
             Allocator.List_heads = (malloc_meta**)ptr;
             AllocatorInitialized = true;
-
         }
 
         private static uint initialMemoryNextAddr;

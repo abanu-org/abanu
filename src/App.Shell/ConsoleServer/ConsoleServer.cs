@@ -32,7 +32,9 @@ namespace Lonos.Kernel
             var fb = FrameBuffer.Create();
             if (fb != null)
             {
-                var fbTxt = new FrameBufferTextScreenDevice(fb);
+                var surface = new FramebufferSurface(fb);
+                var gfx = new GraphicsAdapter(surface);
+                var fbTxt = new FrameBufferTextScreenDevice(gfx);
                 txtDev = fbTxt;
             }
             else

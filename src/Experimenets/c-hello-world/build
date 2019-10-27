@@ -1,0 +1,3 @@
+#!/bin/sh
+
+gcc -gdwarf -Og -nostdlib -ffreestanding main.c

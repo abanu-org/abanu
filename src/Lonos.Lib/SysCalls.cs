@@ -9,8 +9,9 @@ namespace Lonos.Runtime
 {
 
     /// <summary>
-    /// Pure calls. This is no Framework. No helpers!
+    /// The API to the Kernel
     /// </summary>
+    // Pure calls. This is no Framework. No helpers!
     public static unsafe class SysCalls
     {
         public static uint RequestMemory(uint size)

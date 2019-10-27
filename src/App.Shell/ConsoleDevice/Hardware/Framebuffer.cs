@@ -11,14 +11,20 @@ using Lonos.Runtime;
 namespace Lonos.Kernel
 {
 
-    public class FrameBuffer
+    public class FrameBuffer : IFrameBuffer
     {
 
-        private Addr Addr;
-        public int Width;
-        public int Height;
-        private int Pitch;
-        private int Depth;
+        private Addr _Addr;
+        private int _Width;
+        private int _Height;
+        private int _Pitch;
+        private int _Depth;
+
+        public Addr Addr => _Addr;
+        public int Width => _Width;
+        public int Height => _Height;
+        public int Pitch => _Pitch;
+        public int Depth => _Depth;
 
         public static unsafe FrameBuffer Create()
         {
@@ -37,68 +43,55 @@ namespace Lonos.Kernel
 
         private void RequestMemory()
         {
-            var size = Height * Pitch;
+            var size = _Height * _Pitch;
             // TODO: Don't replace Addr field
-            Addr = SysCalls.GetPhysicalMemory(Addr, (uint)size);
+            _Addr = SysCalls.GetPhysicalMemory(_Addr, (uint)size);
         }
 
         public FrameBuffer(Addr addr, int width, int height, int pitch, int depth)
         {
-            this.Addr = addr;
-            this.Width = width;
-            this.Height = height;
-            this.Pitch = pitch;
-            this.Depth = depth;
+            this._Addr = addr;
+            this._Width = width;
+            this._Height = height;
+            this._Pitch = pitch;
+            this._Depth = depth;
         }
 
         public void Init()
         {
-            var memorySize = (uint)(Pitch * Height * 4);
-            Addr = SysCalls.GetPhysicalMemory(Addr, memorySize);
+            var memorySize = (uint)(_Pitch * _Height * 4);
+            _Addr = SysCalls.GetPhysicalMemory(_Addr, memorySize);
         }
 
-        protected int GetOffset(int x, int y)
+        public int GetOffset(int x, int y)
         {
-            return (y * Pitch / 4) + x; //4 -> 32bpp
+            return (y * _Pitch / 4) + x; //4 -> 32bpp
         }
 
         protected int GetByteOffset(int x, int y)
         {
-            return (y * Pitch) + (x * 4); //4 -> 32bpp
+            return (y * _Pitch) + (x * 4); //4 -> 32bpp
         }
 
         public unsafe uint GetPixel(int x, int y)
         {
             //return memory.Read8(GetOffset(x, y));
-            return ((uint*)Addr)[GetOffset(x, y)];
+            return ((uint*)_Addr)[GetOffset(x, y)];
         }
 
-        public unsafe void SetPixel(int nativeColor, int x, int y)
+        public unsafe void SetPixel(int x, int y, uint nativeColor)
         {
-            if (x >= Width || y >= Height)
+            if (x >= _Width || y >= _Height)
                 return;
 
             //memory.Write8(GetOffset(x, y), (byte)color);
-            ((uint*)Addr)[GetOffset(x, y)] = (uint)nativeColor;
+            ((uint*)_Addr)[GetOffset(x, y)] = nativeColor;
 
             /*KernelMessage.WriteLine("DEBUG: {0:X9}", GetOffset(x, y));
             KernelMessage.WriteLine("DEBUG: {0:X9}", GetByteOffset(x, y));
             KernelMessage.WriteLine("DEBUG2: {0:D}", color);
             KernelMessage.WriteLine("DEBUG3: {0:X9}", (uint)addr);
 */
-        }
-
-        public unsafe void FillRectangle(int color, int x, int y, int w, int h)
-        {
-            for (int offsetY = 0; offsetY < h; offsetY++)
-            {
-                int startOffset = GetOffset(x, offsetY + y);
-                for (int offsetX = 0; offsetX < w; offsetX++)
-                {
-                    //memory.Write8(startAddress + offsetX, (byte)color);
-                    ((uint*)Addr)[startOffset + offsetX] = (uint)color;
-                }
-            }
         }
 
     }

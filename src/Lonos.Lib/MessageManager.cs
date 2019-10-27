@@ -44,7 +44,7 @@ namespace Lonos.Runtime
         //        OnInterruptReceived(&msg);
         //}
 
-        [DllImport("x86/App.HelloKernel.o", EntryPoint = "SysCallInt")]
+        [DllImport("x86/Lonos.SysCall.o", EntryPoint = "SysCallInt")]
         private static extern uint SysCallInt(SystemMessage msg);
 
         [MethodImpl(MethodImplOptions.NoInlining)]

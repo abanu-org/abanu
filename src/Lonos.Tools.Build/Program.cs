@@ -70,7 +70,7 @@ namespace Lonos.Tools.Build
                 Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/InterruptReturn.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.InterruptReturn.o");
                 Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/LoadTaskRegister.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.LoadTaskRegister.o");
                 Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/DebugFunction1.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.DebugFunction1.o");
-                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/App.HelloKernel.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/App.HelloKernel.o");
+                Exec("${nasm} -f bin ${LONOS_PROJDIR}/src/Lonos.Native.${LONOS_ARCH}/SysCall.s -o ${LONOS_BINDIR}/${LONOS_ARCH}/Lonos.SysCall.o");
             }
             return null;
         }
