@@ -21,6 +21,7 @@ apt-get update \
 
 apt-get install -y qemu-system-x86 git curl mono-complete mtools xorriso nasm build-essential git git-lfs
 #grub2-common grub-efi-ia32 grub-efi-amd64 grub-pc grub-rescue-pc
+DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends grub-common grub-pc-bin grub-efi-amd64-bin grub-efi-ia32-bin
 apt-get install -y  dotnet-sdk-2.2
 
 # console addons:
