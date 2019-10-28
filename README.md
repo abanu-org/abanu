@@ -11,32 +11,17 @@
 [![Join the chat at https://gitter.im/abanu-org/abanu](https://badges.gitter.im/abanu-org/abanu.svg)](https://gitter.im/abanu-org/abanu?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Join Discord https://discord.gg/dZVMBnE](https://img.shields.io/discord/638041194408181770?logo=discord)](https://discord.gg/dZVMBnE)
 
+## About Abanu
+
+Abanu is a proof of concept Operating System written in C#.
+
 ## Getting the Sources
 
 Visit the official repository [https://github.com/abanu-org/abanu](https://github.com/abanu-org/abanu)
 
 ## Build instructions
 
-#### Quick Start (recommended)
-
-Follow these instructions: [http://docs.abanu.org/en/latest/build.html](http://docs.abanu.org/en/latest/build.html)
-
-#### Manually
-
-Prerequisites:
-- .NET Framework 4.7.2 or latest Mono
-- NASM Assembler (`sudo apt-get install nasm`)
-- mtools (`sudo apt-get install mtools`)
-- xorriso (`sudo apt-get install xorriso`)
-- Optional: qemu or bochs for emulation.
-
-```
-git clone --recursive https://github.com/abanu-org/abanu.git
-cd abanu 
-./abctl configure mosa        # Build the Mosa-Compiler
-./abctl build all             # Builds the abanu kernel and creates a disk image
-```
-Run it with `./abctl run qemu x86` or `./abanuctl run bochs x86`
+Visit: [http://docs.abanu.org/en/latest/build.html](http://docs.abanu.org/en/latest/build.html)
 
 ## The technology behind this project
 
@@ -61,7 +46,7 @@ This is a research project / proof of concept. So it isn't a fully functional OS
 
 ## Contributing
 
-Feel free to contact Arakis, open a Issue or a Pull Request.
+Feel free to contact us, open a Issue or a Pull Request.
 
 ## License
 Abanu is published under the GNU General Public License (Version 2, only). This software includes third party open source software components. Each of these software components have their own license. All sourcecode is open source.
