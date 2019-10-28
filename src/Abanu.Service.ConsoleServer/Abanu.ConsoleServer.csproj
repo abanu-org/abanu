@@ -4,10 +4,10 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Exe</OutputType>
-    <RootNamespace>App.Shell</RootNamespace>
-    <AssemblyName>App.Shell</AssemblyName>
+    <RootNamespace>Abanu.Service.ConsoleServer</RootNamespace>
+    <AssemblyName>Abanu.Service.ConsoleServer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <ProjectGuid>{C905EA31-3072-4523-A6FC-C154489FD2F4}</ProjectGuid>
+    <ProjectGuid>{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}</ProjectGuid>
     <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -22,7 +22,7 @@
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\bin\App.Shell.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Abanu.Service.ConsoleServer.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -76,8 +76,17 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="ConsoleDevice\Hardware\FramebufferSurface.cs" />
+    <Compile Include="ConsoleDevice\Hardware\FrameBufferTextScreenDevice.cs" />
+    <Compile Include="ConsoleDevice\Hardware\Framebuffer.cs" />
+    <Compile Include="ConsoleDevice\Hardware\IFrameBuffer.cs" />
+    <Compile Include="ConsoleDevice\Hardware\ITextConsoleDevice.cs" />
+    <Compile Include="ConsoleServer\ConsoleServer.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ConsoleClient\ConsoleClient.cs" />
+    <Compile Include="ConsoleDevice\Hardware\BiosTextConsoleDevice.cs" />
+    <Compile Include="ConsoleDevice\ConsoleChar.cs" />
+    <Compile Include="ConsoleDevice\ConsoleCharAttributes.cs" />
+    <Compile Include="ConsoleDevice\ConsoleDevice.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

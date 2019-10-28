@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>App.Shell</RootNamespace>
-    <AssemblyName>App.Shell</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Abanu.Drawing</RootNamespace>
+    <AssemblyName>Abanu.Drawing</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <ProjectGuid>{C905EA31-3072-4523-A6FC-C154489FD2F4}</ProjectGuid>
+    <ProjectGuid>{F1DAAA4E-EC76-472C-AA35-4EB0E2E16FF5}</ProjectGuid>
     <CodeAnalysisRuleSet>..\ressources\codeanalysis\default.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -22,7 +22,7 @@
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\bin\App.Shell.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Abanu.Drawing.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -33,17 +33,18 @@
     <NoStdLib>true</NoStdLib>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x86\Mosa.Plug.Korlib.x86.csproj">
-      <Project>{028BC31C-2EDC-492E-90A3-3714E38CE2CF}</Project>
+      <Project>{028bc31c-2edc-492e-90a3-3714e38ce2cf}</Project>
       <Name>Mosa.Plug.Korlib.x86</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Plug.Korlib\Mosa.Plug.Korlib.csproj">
+      <Project>{cbdeef3c-bbe7-4655-a096-1367de069e63}</Project>
+      <Name>Mosa.Plug.Korlib</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
       <Project>{a47b7998-4ee8-4af8-9373-c664fdeddc65}</Project>
@@ -53,31 +54,24 @@
       <Project>{77961864-DB33-4189-804F-D774022C96E2}</Project>
       <Name>Mosa.Runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Abanu.Drawing\Abanu.Drawing.csproj">
-      <Project>{f1daaa4e-ec76-472c-aa35-4eb0e2e16ff5}</Project>
-      <Name>Abanu.Drawing</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Abanu.Kernel.Api\Abanu.Kernel.Api.csproj">
       <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>
       <Name>Abanu.Kernel.Api</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abanu.Lib\Abanu.Lib.csproj">
-      <Project>{966282D0-FC83-45B1-A523-17343F7E63B6}</Project>
+      <Project>{966282d0-fc83-45b1-a523-17343f7e63b6}</Project>
       <Name>Abanu.Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abanu.Primitives\Abanu.Primitives.csproj">
       <Project>{d61ba40b-253d-445b-a6ac-1b080aac9b80}</Project>
       <Name>Abanu.Primitives</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Abanu.Runtime\Abanu.Runtime.csproj">
-      <Project>{4d9c0633-1433-4a92-a148-80e8e91155fd}</Project>
-      <Name>Abanu.Runtime</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="ConsoleClient\ConsoleClient.cs" />
+    <Compile Include="GraphicsAdapter.cs" />
+    <Compile Include="IGraphicsAdapter.cs" />
+    <Compile Include="ISurface.cs" />
+    <Compile Include="SurfaceDeviceType.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

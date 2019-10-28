@@ -118,8 +118,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{096347AA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{19E2F5E6-3F99-4DA6-A636-E776DF2923B0}"
 	ProjectSection(SolutionItems) = preProject
-		en-US_User.dic = en-US_User.dic
 		Abanu.sln.vsspell = Abanu.sln.vsspell
+		en-US_User.dic = en-US_User.dic
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abanu.Kernel.Core.x64", "Abanu.Kernel.Core.x64\Abanu.Kernel.Core.x64.csproj", "{A72C835A-BE3E-42F8-BB92-FE1580B8B364}"
@@ -133,6 +133,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Plug.Korlib.x64", "..\external\MOSA-Project\Source\Mosa.Plug.Korlib.x64\Mosa.Plug.Korlib.x64.csproj", "{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mosa.Runtime.x64", "..\external\MOSA-Project\Source\Mosa.Runtime.x64\Mosa.Runtime.x64.csproj", "{A47B7998-4EE8-4AF8-9373-C664FDEDDC61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abanu.Drawing", "Abanu.Drawing\Abanu.Drawing.csproj", "{F1DAAA4E-EC76-472C-AA35-4EB0E2E16FF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abanu.ConsoleServer", "Abanu.Service.ConsoleServer\Abanu.ConsoleServer.csproj", "{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -328,6 +332,14 @@ Global
 		{A47B7998-4EE8-4AF8-9373-C664FDEDDC61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A47B7998-4EE8-4AF8-9373-C664FDEDDC61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A47B7998-4EE8-4AF8-9373-C664FDEDDC61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1DAAA4E-EC76-472C-AA35-4EB0E2E16FF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1DAAA4E-EC76-472C-AA35-4EB0E2E16FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1DAAA4E-EC76-472C-AA35-4EB0E2E16FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1DAAA4E-EC76-472C-AA35-4EB0E2E16FF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -383,6 +395,8 @@ Global
 		{9221E5DB-48DE-4683-B591-09D2EDF94769} = {96E60B22-5A58-4822-83A9-C67A2EAC053F}
 		{A9DEEBF5-0E64-44A0-807B-C7B4D3A5480E} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{A47B7998-4EE8-4AF8-9373-C664FDEDDC61} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
+		{F1DAAA4E-EC76-472C-AA35-4EB0E2E16FF5} = {6E65583B-2752-4CD3-BA18-58BB97F822DC}
+		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75} = {23E1ACEA-F353-4B4B-A063-41B0F989B933}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {466F2218-2333-4818-8AF5-BE480C2139BC}

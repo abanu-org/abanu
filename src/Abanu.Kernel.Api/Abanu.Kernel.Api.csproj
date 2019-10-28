@@ -48,6 +48,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleServerConstants.cs" />
     <Compile Include="IBufferReader.cs" />
     <Compile Include="IPageTable.cs" />
     <Compile Include="PageTableType.cs" />

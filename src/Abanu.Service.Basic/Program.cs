@@ -31,7 +31,7 @@ namespace Abanu.Kernel
 
             KeyBoardFifo = new VfsFile { Path = "/dev/keyboard", Buffer = new FifoFile() };
             Files.Add(KeyBoardFifo);
-            Files.Add(new VfsFile { Path = "/dev/screen", Buffer = new FifoFile() });
+            Files.Add(new VfsFile { Path = "/dev/console", Buffer = new FifoFile() });
 
             MessageManager.OnMessageReceived = MessageReceived;
             MessageManager.OnDispatchError = OnDispatchError;

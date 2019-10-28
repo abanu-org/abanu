@@ -3,23 +3,6 @@
 
 namespace Abanu.Kernel
 {
-
-    public interface ISurface
-    {
-        Addr Addr { get; }
-        int Width { get; }
-        int Height { get; }
-        int Pitch { get; }
-        int Depth { get; }
-
-        SurfaceDeviceType DeviceType { get; }
-
-        uint GetPixel(int x, int y);
-        void SetPixel(int x, int y, uint nativeColor);
-
-        int GetOffset(int x, int y);
-    }
-
     public class FramebufferSurface : ISurface
     {
         private Addr _addr;
@@ -62,15 +45,5 @@ namespace Abanu.Kernel
         {
             return Dev.GetOffset(x, y);
         }
-    }
-
-    public interface IGraphicsAdapter
-    {
-        void SetPixel(int x, int y, uint nativeColor);
-        void FillRectangle(int x, int y, int w, int h, uint nativeColor);
-        void Flush();
-
-        ISurface Target { get; set; }
-
     }
 }

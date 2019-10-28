@@ -30,12 +30,12 @@ namespace Abanu.Kernel
 
             var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
             var buf = SysCalls.RequestMessageBuffer(4096, targetProcessId);
-            var kb = SysCalls.OpenFile(buf, "/dev/keyboard");
+            var keyboardHandle = SysCalls.OpenFile(buf, "/dev/keyboard");
 
-            var con = new ConsoleClient();
-            con.Init();
-            //con.Write("\x001B[37;42m\x001B[8]");
-            //con.Write("abc\x001B[2Jgh\x001B[37;42mjk");
+            var consoleHandle = SysCalls.OpenFile(buf, "/dev/console");
+
+            var consoleFile = new FileStream(consoleHandle);
+            var con = new ConsoleClient(consoleFile);
 
             con.Reset();
             con.SetForegroundColor(7);
@@ -57,7 +57,7 @@ namespace Abanu.Kernel
                 SysCalls.ThreadSleep(0);
 
                 //SysCalls.WriteDebugChar('~');
-                var gotBytes = SysCalls.ReadFile(kb, buf);
+                var gotBytes = SysCalls.ReadFile(keyboardHandle, buf);
                 if (gotBytes > 0)
                 {
                     for (var byteIdx = 0; byteIdx < gotBytes; byteIdx++)

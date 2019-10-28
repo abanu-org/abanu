@@ -16,12 +16,12 @@ namespace Abanu.Kernel
     public class ConsoleClient
     {
 
-        private IBuffer file;
-
-        public void Init()
+        public ConsoleClient(IBuffer file)
         {
-            file = new ConsoleServer();
+            File = file;
         }
+
+        private IBuffer File;
 
         private void SendCommand()
         {
@@ -42,12 +42,12 @@ namespace Abanu.Kernel
 
         private void SendByte(char data)
         {
-            file.Write(data);
+            File.Write(data);
         }
 
         private void SendBytes(string data)
         {
-            file.Write(data);
+            File.Write(data);
         }
 
         public void Clear()
