@@ -265,8 +265,10 @@ function run {
 
 function debug {
 	loadenv auto
+
 	case $1 in
 		qemu-kernel)
+			export ABANU_DEBUG_TARGET=$1;
 			# TODO: Maybe this will never the case, but we should check if this is really our instance
 			pkill gdb
 			#trap '' SIGINT
@@ -284,8 +286,10 @@ function debug {
 			#loadenv $QEMU_RUNTIME
 			loadenv unix
 			#trap '' SIGINT
+
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
+
 			#qemu_app=$QEMU_X64
 			qemu_app=$QEMU_X86
 			#echo $qemu_app
@@ -296,22 +300,47 @@ function debug {
 				-kernel os/Abanu.OS.image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
 			;;
 
+		qemu-attach-unix)
+			#echo "####################"
+			#echo /$ABANU_DEBUG_TARGET/
+			#echo ~~~~~~~~~~~~~
+			case $ABANU_DEBUG_TARGET in
+				qemu-kernel)
+					debug qemu-kernel-run
+					;;
+
+				qemu-grub-hybrid)
+					debug qemu-grub-hybrid-run
+					;;
+
+				*)
+					echo $"Unkown debug name"
+					exit 1
+			esac
+			;;
+
 		qemu-grub-hybrid)
-			gdb -x conf/gdb-qemu-grub-hybrid
+			export ABANU_DEBUG_TARGET=$1;
+			#gdb -x conf/gdb-qemu-grub-hybrid
+			gdb -x conf/gdb-load-symbols -nx -x conf/gdbinit -x conf/gdb-attach-unix -x conf/gdb-workspace
 			;;
 
 		qemu-grub-hybrid-run)
 			loadenv unix
+
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
+
 			qemu_app=$QEMU_X86
 
 			bios="-L /usr/share/seabios"
 
 			disk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-grub-hybrid.disk.img
 
-			$qemu_app ${bios} -hda $disk -serial file:${ABANU_LOGDIR}/kernel.log -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
-
+			$qemu_app ${bios} \
+				-drive file=${disk},index=0,media=disk,format=raw \
+				-drive file=${ABANU_TMPDIR}/network-disk.img,index=1,media=disk,format=raw,copy-on-read=off,cache=none \
+				-serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
 			;;
 
 		*)
