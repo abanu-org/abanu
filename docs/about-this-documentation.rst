@@ -9,11 +9,11 @@ It is not about documentation content.
 .. list-table:: Links to Documentation
 
   * - HTML, Online
-    - http://docs.abanu-org.org/en/latest
+    - https://docs.abanu.org/en/latest
   * - PDF
-    - http://readthedocs.org/projects/abanu/downloads/pdf/latest
+    - https://readthedocs.org/projects/abanu/downloads/pdf/latest
   * - HTML, as Zip
-    - http://readthedocs.org/projects/abanu/downloads/htmlzip/latest
+    - https://readthedocs.org/projects/abanu/downloads/htmlzip/latest
 
 ***************************************
 RestructuredText with Sphinx directives
