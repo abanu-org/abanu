@@ -21,7 +21,7 @@ Visit the official repository [https://github.com/abanu-org/abanu](https://githu
 
 ## Build instructions
 
-Visit: [http://docs.abanu.org/en/latest/build.html](http://docs.abanu.org/en/latest/build.html)
+Visit: [https://docs.abanu.org/en/latest/build.html](http://docs.abanu.org/en/latest/build.html)
 
 ## The technology behind this project
 
