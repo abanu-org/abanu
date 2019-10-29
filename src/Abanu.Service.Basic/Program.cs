@@ -41,6 +41,21 @@ namespace Abanu.Kernel
             SysCalls.RegisterService(SysCallTarget.ReadFile);
             SysCalls.RegisterService(SysCallTarget.WriteFile);
 
+            var targetProcID = SysCalls.GetProcessIDForCommand(SysCallTarget.GetProcessByName);
+            GetProcessByNameBuffer = SysCalls.RequestMessageBuffer(4096, targetProcID);
+
+            SysCalls.RegisterService(SysCallTarget.HostCommunication_CreateProcess); // TODO: Obsolete? Consider rename TmpDebug to HostCommunication_CreateProcess
+            SysCalls.RegisterService(SysCallTarget.TmpDebug);
+
+            try
+            {
+                InitHAL.SetupDrivers();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
             SysCalls.RegisterInterrupt(33);
 
             SysCalls.SetServiceStatus(ServiceStatus.Ready);
@@ -56,6 +71,7 @@ namespace Abanu.Kernel
             Console.WriteLine(ex.Message);
         }
 
+        private static MemoryRegion GetProcessByNameBuffer;
         public static unsafe void MessageReceived(SystemMessage* msg)
         {
             switch (msg->Target)
@@ -74,6 +90,26 @@ namespace Abanu.Kernel
                     break;
                 case SysCallTarget.Interrupt:
                     Cmd_Interrupt(msg);
+                    break;
+                case SysCallTarget.TmpDebug:
+                    if (msg->Arg1 == 1)
+                    {
+                        var procID = SysCalls.GetProcessByName(GetProcessByNameBuffer, "App.Shell");
+
+                        if (procID == -1)
+                            procID = SysCalls.GetProcessByName(GetProcessByNameBuffer, "memory"); // temp name
+
+                        Console.WriteLine("Current ProcID: ");
+                        Console.WriteLine(procID.ToString());
+
+                        if (procID > 0)
+                            SysCalls.KillProcess(procID);
+
+                        Console.WriteLine("try load proc");
+                        HostCommunicator.StartProcess("os/App.Shell.bin");
+                        Console.WriteLine("Process Started");
+                        MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
+                    }
                     break;
                 default:
                     MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));

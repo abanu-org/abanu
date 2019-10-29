@@ -37,6 +37,18 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.DeviceDriver\Mosa.DeviceDriver.csproj">
+      <Project>{4DBD4C50-BEC5-48D9-B471-9FB0A7F69999}</Project>
+      <Name>Mosa.DeviceDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.DeviceSystem\Mosa.DeviceSystem.csproj">
+      <Project>{6509477A-7360-4937-A1B9-26FED0A75CDA}</Project>
+      <Name>Mosa.DeviceSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.FileSystem\Mosa.FileSystem.csproj">
+      <Project>{D89972FD-A930-4D0C-B393-1895E78FAFAB}</Project>
+      <Name>Mosa.FileSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Korlib\Mosa.Korlib.csproj">
       <Project>{631BC4F3-E2D8-4319-814C-13904CAA17CE}</Project>
       <Name>Mosa.Korlib</Name>
@@ -72,6 +84,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="InitHAL.cs" />
+    <Compile Include="HAL\Hardware.cs" />
+    <Compile Include="HAL\X86IOPortRead.cs" />
+    <Compile Include="HAL\X86IOPortReadWrite.cs" />
+    <Compile Include="HAL\X86IOPortWrite.cs" />
+    <Compile Include="HostCommunicator.cs" />
+    <Compile Include="IOPort.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
