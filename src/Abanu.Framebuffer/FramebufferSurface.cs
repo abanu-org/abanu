@@ -45,5 +45,9 @@ namespace Abanu.Kernel
         {
             return Dev.GetOffset(x, y);
         }
+
+        public void Flush()
+        {
+        }
     }
 }

@@ -138,6 +138,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abanu.Drawing", "Abanu.Draw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abanu.ConsoleServer", "Abanu.Service.ConsoleServer\Abanu.ConsoleServer.csproj", "{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abanu.Framebuffer", "Abanu.Framebuffer\Abanu.Framebuffer.csproj", "{1836DD47-6E4C-40B8-9628-FEBFCBF9EE5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -340,6 +342,10 @@ Global
 		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1836DD47-6E4C-40B8-9628-FEBFCBF9EE5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1836DD47-6E4C-40B8-9628-FEBFCBF9EE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1836DD47-6E4C-40B8-9628-FEBFCBF9EE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1836DD47-6E4C-40B8-9628-FEBFCBF9EE5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -397,6 +403,7 @@ Global
 		{A47B7998-4EE8-4AF8-9373-C664FDEDDC61} = {2882F639-9F47-48B6-A8A6-D6F8BBDD70E5}
 		{F1DAAA4E-EC76-472C-AA35-4EB0E2E16FF5} = {6E65583B-2752-4CD3-BA18-58BB97F822DC}
 		{5DBE94F2-FA5B-4133-96E1-D26C40C00F75} = {23E1ACEA-F353-4B4B-A063-41B0F989B933}
+		{1836DD47-6E4C-40B8-9628-FEBFCBF9EE5A} = {6E65583B-2752-4CD3-BA18-58BB97F822DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {466F2218-2333-4818-8AF5-BE480C2139BC}

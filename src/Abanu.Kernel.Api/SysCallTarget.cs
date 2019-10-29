@@ -47,6 +47,10 @@ namespace Abanu.Kernel
 
         TmpDebug = 120,
 
+        // TODO: No hardcoded values
+        Tmp_DisplayServer_CreateWindow = 131,
+        Tmp_DisplayServer_FlushWindow = 132,
+
     }
 
 }

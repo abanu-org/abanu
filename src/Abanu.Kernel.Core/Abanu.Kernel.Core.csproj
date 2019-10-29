@@ -87,7 +87,6 @@
     <Compile Include="Diagnostics\KernelMessageDevice.cs" />
     <Compile Include="Api\ApiHost.cs" />
     <Compile Include="Devices\Console\ConsoleDevice.cs" />
-    <Compile Include="Devices\FrameBuffer.cs" />
     <Compile Include="Devices\Console\FrameBufferTextScreenDevice.cs" />
     <Compile Include="Boot\BootInfo.cs" />
     <Compile Include="MemoryManagement\PageAllocators\PhysicalInitialPageAllocator.cs" />
@@ -107,6 +106,10 @@
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
       <Project>{A47B7998-4EE8-4AF8-9373-C664FDEDDC65}</Project>
       <Name>Mosa.Runtime.x86</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abanu.Framebuffer\Abanu.Framebuffer.csproj">
+      <Project>{1836dd47-6e4c-40b8-9628-febfcbf9ee5a}</Project>
+      <Name>Abanu.Framebuffer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Abanu.Kernel.Api\Abanu.Kernel.Api.csproj">
       <Project>{ed52e867-98f0-4fbf-ab06-4812ae5ffb43}</Project>

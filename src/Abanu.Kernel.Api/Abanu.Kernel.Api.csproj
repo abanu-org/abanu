@@ -49,10 +49,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleServerConstants.cs" />
+    <Compile Include="Drawing\CreateWindowResult.cs" />
+    <Compile Include="Drawing\IFrameBuffer.cs" />
+    <Compile Include="Drawing\IGraphicsAdapter.cs" />
     <Compile Include="IBufferReader.cs" />
     <Compile Include="IPageTable.cs" />
+    <Compile Include="Drawing\ISurface.cs" />
     <Compile Include="PageTableType.cs" />
     <Compile Include="ServiceStatus.cs" />
+    <Compile Include="Drawing\SurfaceDeviceType.cs" />
     <Compile Include="SysCallTarget.cs" />
     <Compile Include="Structs\FileHandle.cs" />
     <Compile Include="Structs\MemoryRegion.cs" />

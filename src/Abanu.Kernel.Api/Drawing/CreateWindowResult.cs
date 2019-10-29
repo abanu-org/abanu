@@ -3,13 +3,12 @@
 
 namespace Abanu.Kernel
 {
-    public interface IGraphicsAdapter
+    public struct CreateWindowResult
     {
-        void SetPixel(int x, int y, uint nativeColor);
-        void FillRectangle(int x, int y, int w, int h, uint nativeColor);
-        void Flush();
-
-        ISurface Target { get; set; }
-
+        public Addr Addr;
+        public int Pitch;
+        public int Width;
+        public int Height;
+        public int Depth;
     }
 }

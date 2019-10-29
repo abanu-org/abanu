@@ -27,9 +27,9 @@ namespace Abanu.Kernel
             }
         }
 
-        public GraphicsAdapter(ISurface dev)
+        public GraphicsAdapter(ISurface target)
         {
-            Target = dev;
+            Target = target;
         }
 
         public void SetPixel(int x, int y, uint nativeColor)
@@ -37,7 +37,7 @@ namespace Abanu.Kernel
             _Target.SetPixel(x, y, nativeColor);
         }
 
-        public unsafe void FillRectangle(int x, int y, int w, int h, uint nativeColor)
+        private unsafe void FillRectangle(int x, int y, int w, int h, uint nativeColor)
         {
             uint addr = _Target.Addr;
             for (int offsetY = 0; offsetY < h; offsetY++)
@@ -50,9 +50,76 @@ namespace Abanu.Kernel
             }
         }
 
-        public void Flush()
+        private unsafe void FillRectangle(int x, int y, int w, int h, ISurface source, int sourceX, int sourceY)
         {
+            // TODO: Range check / correction
+
+            uint addr = _Target.Addr;
+            for (int offsetY = 0; offsetY < h; offsetY++)
+            {
+                int startOffset = _Target.GetOffset(x, offsetY + y);
+                for (int offsetX = 0; offsetX < w; offsetX++)
+                {
+                    var color = source.GetPixel(offsetX + sourceX, offsetY + sourceY);
+
+                    ((uint*)addr)[startOffset + offsetX] = color;
+                }
+            }
         }
 
+        public void Flush()
+        {
+            Target.Flush();
+        }
+
+        private ISurface _SourceSurface;
+        // TODO: Struct
+        private int _SourceSurfaceX;
+        private int _SourceSurfaceY;
+        private uint _SourceColor;
+
+        private void ResetSource()
+        {
+            _SourceSurface = null;
+            _SourceColor = 0;
+            _SourceSurfaceX = 0;
+            _SourceSurfaceY = 0;
+        }
+
+        public void SetSource(uint nativeColor)
+        {
+            ResetSource();
+            _SourceColor = nativeColor;
+        }
+
+        public void SetSource(ISurface sourceSurface, int sourceX, int sourceY)
+        {
+            ResetSource();
+            _SourceSurface = sourceSurface;
+            _SourceSurfaceX = sourceX;
+            _SourceSurfaceY = sourceY;
+        }
+
+        // TODO: Struct
+        private int RectX;
+        private int RectY;
+        private int RectW;
+        private int RectH;
+
+        public void Rectangle(int x, int y, int w, int h)
+        {
+            RectX = x;
+            RectY = y;
+            RectW = w;
+            RectH = h;
+        }
+
+        public void Fill()
+        {
+            if (_SourceSurface != null)
+                FillRectangle(RectX, RectY, RectW, RectH, _SourceSurface, _SourceSurfaceX, _SourceSurfaceY);
+            else
+                FillRectangle(RectX, RectY, RectW, RectH, _SourceColor);
+        }
     }
 }

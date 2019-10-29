@@ -16,5 +16,6 @@ namespace Abanu.Kernel
         void SetPixel(int x, int y, uint nativeColor);
 
         int GetOffset(int x, int y);
+        void FillRectangle(int x, int y, int w, int h, uint color);
     }
 }

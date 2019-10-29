@@ -18,5 +18,6 @@ namespace Abanu.Kernel
         void SetPixel(int x, int y, uint nativeColor);
 
         int GetOffset(int x, int y);
+        void Flush();
     }
 }
