@@ -175,6 +175,7 @@ function build {
 			build native
 			build app
 			build app2
+			build service.consoleserver
 			build service.basic
 			build service.hostcommunication
 			build app.shell
@@ -214,6 +215,10 @@ function build {
 
 		service.basic)
 			(cd bin && $ABANU_BUILD build --bin=service.basic)
+			;;
+
+		service.consoleserver)
+			(cd bin && $ABANU_BUILD build --bin=service.consoleserver)
 			;;
 
 		service.hostcommunication)
@@ -285,6 +290,7 @@ function debug {
 		qemu-kernel-run)
 			#loadenv $QEMU_RUNTIME
 			loadenv unix
+			_renameLogs
 			#trap '' SIGINT
 
 			# Uncomment if not required!
@@ -327,6 +333,7 @@ function debug {
 
 		qemu-grub-hybrid-run)
 			loadenv unix
+			_renameLogs
 
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
@@ -348,6 +355,21 @@ function debug {
 			exit 1
 	esac
 	loadenv auto
+}
+
+function _renameLogs {
+	current=${ABANU_LOGDIR}/kernel.log
+	prev1=${ABANU_LOGDIR}/kernel.1.log
+	prev2=${ABANU_LOGDIR}/kernel.2.log
+	if [ -f $prev2 ]; then
+		rm $prev2
+	fi
+	if [ -f $prev1 ]; then
+		mv $prev1 $prev2
+	fi
+	if [ -f $current ]; then
+		mv $current $prev1
+	fi
 }
 
 function _image {

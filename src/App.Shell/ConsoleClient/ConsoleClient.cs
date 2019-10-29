@@ -16,12 +16,15 @@ namespace Abanu.Kernel
     public class ConsoleClient
     {
 
-        public ConsoleClient(IBuffer file)
+        public unsafe ConsoleClient(IBuffer file)
         {
+            var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
+            buf = SysCalls.RequestMessageBuffer(4096, targetProcessId); // TODO: Wrap this in Stream!
             File = file;
         }
 
         private IBuffer File;
+        private MemoryRegion buf;
 
         private void SendCommand()
         {
@@ -40,14 +43,25 @@ namespace Abanu.Kernel
 
         }
 
-        private void SendByte(char data)
+        private unsafe void SendByte(char data)
         {
-            File.Write(data);
+            // FUTURE: File.Write(data);
+
+            // TODO: wrap in stream
+            var b = (byte*)buf.Start;
+            *b = (byte)data;
+            File.Write(b, 1);
         }
 
         private void SendBytes(string data)
         {
-            File.Write(data);
+            // FUTURE: File.Write(data);
+
+            // TODO: wrap in stream
+            for (var i = 0; i < data.Length; i++)
+            {
+                SendByte(data[i]);
+            }
         }
 
         public void Clear()

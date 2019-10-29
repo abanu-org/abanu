@@ -24,15 +24,19 @@ namespace Abanu.Kernel
 
             var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
             var buf = SysCalls.RequestMessageBuffer(4096, targetProcessId);
-            var kb = SysCalls.OpenFile(buf, "/dev/console");
+            var conHandle = SysCalls.OpenFile(buf, "/dev/console");
 
             var con = new ConsoleServer();
+            con.Write("ConsoleServer Started");
+
+            // TODO: Create dev /dev/console, other processes can check their existence
+            SysCalls.SetServiceStatus(ServiceStatus.Ready);
 
             while (true)
             {
                 SysCalls.ThreadSleep(0); // TODO: Signal
 
-                var gotBytes = SysCalls.ReadFile(kb, buf);
+                var gotBytes = SysCalls.ReadFile(conHandle, buf);
                 if (gotBytes > 0)
                 {
                     for (var byteIdx = 0; byteIdx < gotBytes; byteIdx++)

@@ -50,7 +50,7 @@ namespace Abanu.Kernel.Core
         /// <summary>
         /// Size of Abanu.OS.Core.x86.bin
         /// </summary>
-        public const uint OriginalKernelElfSize = 30 * 1024 * 1024;
+        public const uint OriginalKernelElfSize = 35 * 1024 * 1024;
 
         /// <summary>
         /// Base physical address where the kernel .text section begins (first instruction).

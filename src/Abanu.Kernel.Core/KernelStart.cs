@@ -146,6 +146,15 @@ namespace Abanu.Kernel.Core
                     }
                     KernelMessage.WriteLine("Service Ready");
 
+                    var conProc = ProcessManager.StartProcess("Service.ConsoleServer");
+                    var conServ = conProc.Service;
+                    KernelMessage.WriteLine("Waiting for ConsoleServer");
+                    while (conServ.Status != ServiceStatus.Ready)
+                    {
+                        Scheduler.Sleep(0);
+                    }
+                    KernelMessage.WriteLine("ConsoleServer Ready");
+
                     //var buf = Abanu.Runtime.SysCalls.RequestMessageBuffer(4096, FileServ.Process.ProcessID);
                     //var kb = Abanu.Runtime.SysCalls.OpenFile(buf, "/dev/keyboard");
                     //KernelMessage.Write("kb Handle: {0:X8}", kb);

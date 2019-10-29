@@ -201,6 +201,19 @@ namespace Abanu.Tools.Build
                     },
                     new Section
                     {
+                        Name = "Service.ConsoleServer",
+                        Type = SectionType.ProgBits,
+                        AddressAlignment = 0x1000,
+
+                        EmitMethod = (section, writer) =>
+                        {
+                            var data = File.ReadAllBytes(Path.Combine(Env.Get("ABANU_PROJDIR"), "os", "Abanu.Service.ConsoleServer.bin"));
+                            writer.Write(data);
+                            section.Size = (uint)data.Length;
+                        },
+                    },
+                    new Section
+                    {
                         Name = "elf.header",
                         Type = SectionType.ProgBits,
                         AddressAlignment = 0x1000,

@@ -77,7 +77,7 @@ namespace Abanu.Tools.Build
 
         private static CommandResult TryBuildBin(CommandArgs args)
         {
-            var possibleImages = new string[] { "all", "app", "app2", "service.hostcommunication", "service.basic", "app.shell", "loader", "kernel" };
+            var possibleImages = new string[] { "all", "app", "app2", "service.hostcommunication", "service.basic", "service.consoleserver", "app.shell", "loader", "kernel" };
             var image = args.GetFlag("bin", possibleImages);
             var images = image.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             if (image == "all")
@@ -231,6 +231,13 @@ namespace Abanu.Tools.Build
             else if (args[0] == "app2")
             {
                 file = Env.Get("${ABANU_PROJDIR}/bin/App.HelloService.exe");
+
+                var builder = new AbanuBuilder_App(file);
+                builder.Build();
+            }
+            else if (args[0] == "service.consoleserver")
+            {
+                file = Env.Get("${ABANU_PROJDIR}/bin/Abanu.Service.ConsoleServer.exe");
 
                 var builder = new AbanuBuilder_App(file);
                 builder.Build();

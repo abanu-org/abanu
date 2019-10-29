@@ -317,7 +317,17 @@ namespace Abanu.Kernel
 
         public static unsafe void Cmd_WriteFile(SystemMessage* msg)
         {
+            if (TraceFileIO)
+                Console.WriteLine("Write Handle: " + msg->Arg1.ToString("X"));
+
             var openFile = FindOpenFile((int)msg->Arg1);
+            if (openFile == null)
+            {
+                Console.WriteLine("Handle not found");
+                MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
+                return;
+            }
+
             var data = (byte*)msg->Arg2;
             var length = msg->Arg3;
             var gotBytes = openFile.Buffer.Write(data, length);
