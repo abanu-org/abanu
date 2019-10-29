@@ -91,7 +91,7 @@ Run this commands in a WSL/Debian bash shell:
 	# Switch to new directory
 	cd ~/abanu-org
 
-Now ``/home/<user>/abanu-org`` and ``C:\Users\<user>\Documents\abanu-orgs`` points to the same directory.
+Now ``/home/<user>/abanu-org`` and ``C:\Users\<user>\Documents\abanu-org`` points to the same directory.
 
 Download and build Abanu
 ------------------------
