@@ -1,6 +1,9 @@
 #!/bin/bash
 
-cd $(dirname $0)
+ORIGIN_DIR=$(pwd)
+THIS_DIR=$(dirname $0)
+
+cd $THIS_DIR
 
 function loadenv {
 	source env/$1
@@ -216,6 +219,9 @@ function build {
 		service.basic)
 			(cd bin && $ABANU_BUILD build --bin=service.basic)
 			;;
+		external)
+			(cd bin && $ABANU_BUILD build --bin=external $2)
+			;;
 
 		service.consoleserver)
 			(cd bin && $ABANU_BUILD build --bin=service.consoleserver)
@@ -293,6 +299,8 @@ function debug {
 			_renameLogs
 			#trap '' SIGINT
 
+			rootdisk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-efi.disk.img
+
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
 
@@ -302,7 +310,8 @@ function debug {
 			#-gdb stdio
 			$qemu_app \
 				-drive file=${ABANU_OSDIR}/Abanu.OS.Core.${ABANU_ARCH}.img,index=0,media=disk,format=raw \
-				-drive file=${ABANU_TMPDIR}/network-disk.img,index=1,media=disk,format=raw,copy-on-read=off,cache=none \
+				-drive file=${rootdisk},index=1,media=disk,format=raw,copy-on-read=off,cache=none \
+				-drive file=${ABANU_TMPDIR}/network-disk.img,index=2,media=disk,format=raw,copy-on-read=off,cache=none \
 				-kernel os/Abanu.OS.image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
 			;;
 
@@ -335,6 +344,8 @@ function debug {
 			loadenv unix
 			_renameLogs
 
+			rootdisk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-efi.disk.img
+
 			# Uncomment if not required!
 			DEBUG_INTERRUPTS=,int
 
@@ -346,7 +357,8 @@ function debug {
 
 			$qemu_app ${bios} \
 				-drive file=${disk},index=0,media=disk,format=raw \
-				-drive file=${ABANU_TMPDIR}/network-disk.img,index=1,media=disk,format=raw,copy-on-read=off,cache=none \
+				-drive file=${rootdisk},index=1,media=disk,format=raw,copy-on-read=off,cache=none \
+				-drive file=${ABANU_TMPDIR}/network-disk.img,index=2,media=disk,format=raw,copy-on-read=off,cache=none \
 				-serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
 			;;
 
@@ -429,7 +441,7 @@ function _qemu {
 			cpu=qemu32,+sse4.1
 			bios="-L /usr/share/seabios"
 
-			disk=${ABANU_OSDIR}/Abanu.OS.Core.x86-grub-hybrid.disk.img
+			disk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-grub-hybrid.disk.img
 			;;
 
 		x86-efi)
@@ -438,7 +450,7 @@ function _qemu {
 			cpu=qemu32,+sse4.1
 			bios="-bios ${ABANU_PROJDIR}/tools/ovmf-ia32/OVMF-pure-efi.fd"
 
-			disk=${ABANU_OSDIR}/Abanu.OS.Core.x86-efi.disk.img
+			disk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-efi.disk.img
 			;;
 
 		x64)
@@ -461,8 +473,8 @@ function _qemu {
 			exit 1
 	esac
 
-	echo ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${ABANU_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${ABANU_PROJDIR}/logs/emulator.log
-	     ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${ABANU_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${ABANU_PROJDIR}/logs/emulator.log
+	echo ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${ABANU_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${ABANU_PROJDIR}/logs/emulator.log -m 256
+	     ${qemubin} ${bios} ${kvmargs} -cpu ${cpu} -hda $disk -serial file:${ABANU_PROJDIR}/logs/kernel.log -d pcall,cpu_reset,guest_errors -D ${ABANU_PROJDIR}/logs/emulator.log -m 256
 
 	loadenv auto
 }
@@ -485,11 +497,21 @@ function create_efi_disk {
 	dd if=/dev/zero of=$disk bs=1k count=$size
 	mformat -i $disk -h 16 -t 16 -s $block ::
 
+	# TODO: avoid code duplication
+	isodir=$ABANU_PROJDIR/tmp/iso-efi-disk
+	mkdir -p $isodir
+	rm $isodir/TEST.TXT 2>/dev/null
+	echo "This is a test file V2" > $isodir/TEST.TXT
+
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/efi ::/
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/boot ::/
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/NvVars ::/
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/.disk ::/
 	mcopy -i $disk -s $ABANU_OSDIR/Abanu.OS.image.${ABANU_ARCH}.bin ::/abanu.bin
+	mcopy -i $disk -s  $ABANU_OSDIR/Abanu.DisplayServer.bin ::/DSPSRV.BIN
+	mcopy -i $disk -s $isodir/TEST.TXT ::/TEST.TXT
+
+	echo $disk created
 	loadenv auto
 }
 
@@ -499,9 +521,16 @@ function create_grub_hybrid_disk {
 	isodir=$ABANU_PROJDIR/tmp/iso-grub-hybrid
 	mkdir -p $isodir;
 	cp $ABANU_OSDIR/abanu.os.image.${ABANU_ARCH}.bin $isodir/abanu.bin
+
+	# additional files
+	cp $ABANU_OSDIR/Abanu.DisplayServer.bin $isodir/DSPSRV.BIN 2>/dev/null
+	rm $isodir/TEST.TXT 2>/dev/null
+	echo "This is a test file V2" > $isodir/TEST.TXT
+
 	mkdir -p $isodir/boot/grub
 	cp $ABANU_TOOLSDIR/grub-efi-x86/boot/grub/grub.cfg $isodir/boot/grub
 	grub-mkrescue -o $disk $isodir
+	echo $disk created
 	loadenv auto
 }
 
@@ -531,6 +560,13 @@ function _test {
 			echo $"Usage: abctl test {cloud}"
 			exit 1
 	esac
+}
+
+function _abspath {
+	loadenv auto
+	cd $ORIGIN_DIR;
+	echo $(__platform_abspath $1)
+	cd $THIS_DIR;
 }
 
 case $1 in
@@ -574,6 +610,11 @@ case $1 in
 	test)
 		_test ${@:2}
 		;;
+
+	abspath)
+		_abspath ${@:2}
+		;;
+
 
 	*)
 		echo $"Usage: abctl {configure|build|run|debug|clean|reset|logs|update}"

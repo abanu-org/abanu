@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+#pragma warning disable CA1307 // Specify StringComparison
+
 namespace Abanu.Tools.Build
 {
 
@@ -115,6 +117,23 @@ namespace Abanu.Tools.Build
             if (Contains($"--{name}"))
                 Console.WriteLine($"Warning: Unknown value for attribute '{name}'");
             return "";
+        }
+        public CommandArgs RemoveFlag(string name)
+        {
+            CommandArgs newArgs = Copy();
+            for (var i = 0; i >= 0; i--)
+                if (newArgs[i].Value == $"--{name}" || newArgs[i].Value.StartsWith($"--{name}="))
+                    newArgs.Values.RemoveAt(i);
+            return newArgs;
+        }
+
+        public CommandArgs RemoveFlag(string name, string value)
+        {
+            CommandArgs newArgs = Copy();
+            for (var i = 0; i >= 0; i--)
+                if (newArgs[i].Value == $"--{name}" || newArgs[i].Value == $"--{name}={value}")
+                    newArgs.Values.RemoveAt(i);
+            return newArgs;
         }
 
         public string RequireFlag(string name, params string[] values)

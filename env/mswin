@@ -19,4 +19,8 @@ QEMU_X86="cmd.exe /C ${ABANU_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu
 QEMU_X64="cmd.exe /C ${ABANU_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-x86_64.exe"
 #QEMU_X86=$QEMU_X64
 
-source $(dirname "$BASH_SOURCE")/shared 
+source $(dirname "$BASH_SOURCE")/shared
+
+function __platform_abspath {
+	echo $(wslpath -m $(realpath $1))
+}

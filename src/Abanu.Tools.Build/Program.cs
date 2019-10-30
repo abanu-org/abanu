@@ -40,6 +40,7 @@ namespace Abanu.Tools.Build
 
         private static CommandResult Verb(CommandArgs args)
         {
+            Console.WriteLine("Command: " + args.ToString());
             switch (args[0])
             {
                 case "build":
@@ -77,13 +78,16 @@ namespace Abanu.Tools.Build
 
         private static CommandResult TryBuildBin(CommandArgs args)
         {
-            var possibleImages = new string[] { "all", "app", "app2", "service.hostcommunication", "service.basic", "service.consoleserver", "app.shell", "loader", "kernel" };
+            var possibleImages = new string[] { "all", "app", "app2", "service.hostcommunication", "service.basic", "service.consoleserver", "app.shell", "loader", "kernel", "external" };
             var image = args.GetFlag("bin", possibleImages);
             var images = image.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             if (image == "all")
                 images = possibleImages;
+
+            var newArgs = args.RemoveFlag("bin");
+
             foreach (var img in images.Where(s => s != "all"))
-                BuildImage(img);
+                BuildImage(img + " " + newArgs);
             return null;
         }
 
@@ -245,6 +249,13 @@ namespace Abanu.Tools.Build
             else if (args[0] == "service.basic")
             {
                 file = Env.Get("${ABANU_PROJDIR}/bin/Abanu.Service.Basic.exe");
+
+                var builder = new AbanuBuilder_App(file);
+                builder.Build();
+            }
+            else if (args[0] == "external")
+            {
+                file = args[1];
 
                 var builder = new AbanuBuilder_App(file);
                 builder.Build();
