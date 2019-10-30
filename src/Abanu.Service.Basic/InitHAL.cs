@@ -125,8 +125,8 @@ namespace Abanu.Kernel
                 Console.WriteLine();
             }
 
-            if (disks.Count >= 2 && disks[1].DeviceDriver != null && disks[1].DeviceDriver is IDiskDevice)
-                HostCommunicator.Init(disks[1].DeviceDriver as IDiskDevice);
+            if (disks.Count >= 3 && disks[2].DeviceDriver != null && disks[2].DeviceDriver is IDiskDevice)
+                HostCommunicator.Init(disks[2].DeviceDriver as IDiskDevice);
 
             partitionService.CreatePartitionDevices();
 
