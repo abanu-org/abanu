@@ -1,7 +1,7 @@
 version: '0.0.1.{build}'
 
-configuration: Release
-platform: Any CPU
+configuration: Debug
+platform: AnyCPU
 image:
 - Ubuntu1804
 - Visual Studio 2019
