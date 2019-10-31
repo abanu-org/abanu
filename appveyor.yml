@@ -91,13 +91,14 @@ for:
         - image: Ubuntu1804
 
     install:
-    - sh: docker pull abanuproject/abanu-build || docker pull abanuproject/abanu-build # with retry, if failed
+    - sh: sudo apt-get -y -o Acquire::Check-Valid-Until=false update
+    - sh: sudo apt-get -y upgrade
+    - sh: sudo apt-get install -y git wget qemu qemu-system qemu-system-x86
 
     before_build:
-    - echo test
+    - sh: $APPVEYOR_BUILD_FOLDER/abctl configure packages
 
     build: off
 
     build_script:
-    - sh: echo UID "$UID"
-    - sh: docker run --name MOSA -v $APPVEYOR_BUILD_FOLDER:/home/appveyor abanuproject/abanu-build /bin/bash -c "useradd -m -u $UID appveyor && su appveyor -- -c 'cd /home/appveyor && chmod +x abctl && ./abctl test && ./abctl unittest'"
+    - sh: $APPVEYOR_BUILD_FOLDER/abctl test cloud

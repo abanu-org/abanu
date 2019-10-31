@@ -553,7 +553,7 @@ function logs {
 function _test {
 	case $1 in
 		cloud)
-			
+			echo Test finished
 			;;
 
 		*)
