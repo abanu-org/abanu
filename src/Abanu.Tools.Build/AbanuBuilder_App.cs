@@ -79,10 +79,10 @@ namespace Abanu.Tools.Build
             Options.EmitAllSymbols = true;
 
             Options.EnableSSA = false;
-            Options.EnableIROptimizations = false;
+            Options.EnableIROptimizations = true;
             Options.EnableSparseConditionalConstantPropagation = false;
-            Options.EnableInlinedMethods = true;
-            Options.InlineOnlyExplicit = true;
+            Options.EnableInlinedMethods = false;
+            Options.InlineOnlyExplicit = false;
             Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
