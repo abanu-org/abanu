@@ -57,6 +57,10 @@
       <Project>{028BC31C-2EDC-492E-90A3-3714E38CE2CF}</Project>
       <Name>Mosa.Plug.Korlib.x86</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Plug.Korlib\Mosa.Plug.Korlib.csproj">
+      <Project>{cbdeef3c-bbe7-4655-a096-1367de069e63}</Project>
+      <Name>Mosa.Plug.Korlib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\external\MOSA-Project\Source\Mosa.Runtime.x86\Mosa.Runtime.x86.csproj">
       <Project>{a47b7998-4ee8-4af8-9373-c664fdeddc65}</Project>
       <Name>Mosa.Runtime.x86</Name>
@@ -84,6 +88,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="Vfs\FifoFile.cs" />
+    <Compile Include="Vfs\FifoStream.cs" />
     <Compile Include="InitHAL.cs" />
     <Compile Include="HAL\Hardware.cs" />
     <Compile Include="HAL\X86IOPortRead.cs" />
@@ -91,7 +97,9 @@
     <Compile Include="HAL\X86IOPortWrite.cs" />
     <Compile Include="HostCommunicator.cs" />
     <Compile Include="IOPort.cs" />
+    <Compile Include="Vfs\OpenFile.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Vfs\VfsFile.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

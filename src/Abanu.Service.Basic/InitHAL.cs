@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -154,15 +155,15 @@ namespace Abanu.Kernel
                 {
                     Console.WriteLine("Found a FAT file system!");
 
+                    var fs = fat.CreateVFSMount();
                     const string filename = "TEST.TXT";
-
-                    var location = fat.FindEntry(filename);
-
-                    if (location.IsValid)
+                    var f = fs.Root.Lookup(filename);
+                    if (f != null)
                     {
+
                         Console.Write("Found: " + filename);
 
-                        using (var fatFileStream = new FatFileStream(fat, location))
+                        using (var fatFileStream = (Stream)f.Open(FileAccess.Read, FileShare.Read))
                         {
 
                             uint len = (uint)fatFileStream.Length;

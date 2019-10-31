@@ -117,89 +117,6 @@ namespace Abanu.Kernel
             }
         }
 
-        /// <summary>
-        /// General purpose Fifo
-        /// </summary>
-        internal class FifoStream : IBuffer, IDisposable
-        {
-            private byte[] Data;
-            private int WritePosition;
-            private int ReadPosition;
-            public int Length;
-
-            public FifoStream(int capacity)
-            {
-                Data = new byte[capacity];
-            }
-
-            public unsafe SSize Read(byte* buf, USize count)
-            {
-                if (Length == 0)
-                    return 0;
-
-                var cnt = Math.Min(count, Length);
-                for (var i = 0; i < cnt; i++)
-                {
-                    buf[i] = Data[ReadPosition++];
-                    if (ReadPosition >= Data.Length)
-                        ReadPosition = 0;
-                    Length--;
-                }
-
-                return cnt;
-            }
-
-            public unsafe SSize Write(byte* buf, USize count)
-            {
-                for (var i = 0; i < count; i++)
-                {
-                    Data[WritePosition++] = buf[i];
-                    if (WritePosition >= Data.Length)
-                        WritePosition = 0;
-                    Length++;
-                }
-                return (uint)count;
-            }
-
-            public void Dispose()
-            {
-                RuntimeMemory.FreeObject(Data);
-            }
-        }
-
-        internal class FifoFile : IBuffer, IDisposable
-        {
-            private IBuffer Data;
-
-            public FifoFile()
-            {
-                Data = new FifoStream(256);
-            }
-
-            public void Dispose()
-            {
-                RuntimeMemory.FreeObject(Data);
-            }
-
-            public unsafe SSize Read(byte* buf, USize count)
-            {
-                return Data.Read(buf, count);
-            }
-
-            public unsafe SSize Write(byte* buf, USize count)
-            {
-                return Data.Write(buf, count);
-            }
-        }
-
-        internal class OpenFile
-        {
-            public FileHandle Handle;
-            public string Path;
-            public int ProcessId;
-            public IBuffer Buffer;
-        }
-
         private static List<OpenFile> OpenFiles;
 
         private static OpenFile FindOpenFile(FileHandle handle)
@@ -212,12 +129,6 @@ namespace Abanu.Kernel
         }
 
         private static int lastHandle = 0x33776655;
-
-        internal class VfsFile
-        {
-            public IBuffer Buffer;
-            public string Path;
-        }
 
         private static List<VfsFile> Files;
 
