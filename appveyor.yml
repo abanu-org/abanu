@@ -3,9 +3,8 @@ version: '0.0.1.{build}'
 configuration: Release
 platform: Any CPU
 image:
-- Visual Studio 2019
-- Visual Studio 2017
 - Ubuntu1804
+- Visual Studio 2019
 
 shallow_clone: true
 
@@ -50,39 +49,6 @@ for:
     artifacts:
 
     deploy:
-
-# Windows Build - Visual Studio 2017:
-  -
-    matrix:
-      only:
-        - image: Visual Studio 2017
-
-    install:
-
-    before_build:
-
-    build:
-
-    after_build:
-
-    build_script:
-
-    test_script:
-
-    after_test:
-
-    #nuget:
-
-    #test: off
-
-    assembly_info:
-      patch: true
-      file: AssemblyInfo.*
-      assembly_version: "{version}"
-      assembly_file_version: "{version}"
-      assembly_informational_version: "{version}"
-
-    artifacts:
 
 # Linux Build:
   -
