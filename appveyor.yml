@@ -6,7 +6,7 @@ image:
 - Ubuntu1804
 - Visual Studio 2019
 
-shallow_clone: true
+shallow_clone: false
 
 build: off
 skip_tags: true
