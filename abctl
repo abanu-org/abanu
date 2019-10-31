@@ -67,8 +67,7 @@ function configure {
 			;;
 
 		cloud-test)
-			git submodule init
-			git submodule update --recursive --depth 1
+			git submodule update --recursive --init --depth 1
 			./abctl configure packages
 			;;
 
