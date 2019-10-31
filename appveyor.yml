@@ -60,7 +60,7 @@ for:
     install:
     - sh: sudo apt-get -y -o Acquire::Check-Valid-Until=false update
     #- sh: sudo apt-get -y upgrade
-    - sh: sudo apt-get install -y --no-install-recommends git wget qemu-system-x86 mtools xorriso grub-common grub-pc-bin grub-efi-amd64-bin grub-efi-ia32-bin
+    - sh: sudo apt-get install -y --no-install-recommends git wget nasm qemu-system-x86 mtools xorriso grub-common grub-pc-bin grub-efi-amd64-bin grub-efi-ia32-bin
 
     before_build:
     - sh: chmod +x $APPVEYOR_BUILD_FOLDER/abctl
