@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# abort on error
+set -eE -o functrace
+failure() {
+  local lineno=$1
+  local msg=$2
+  echo "Failed at $lineno: $msg"
+}
+trap 'failure ${LINENO} "$BASH_COMMAND"' ERR
+
 ORIGIN_DIR=$(pwd)
 THIS_DIR=$(dirname $0)
 
@@ -57,13 +66,10 @@ function configure {
 			;;
 
 		packages)
-			cd external/MOSA-Project/Source;
-			rm -rf packages
-			${nuget} restore Mosa.Tool.Mosactl.sln
-			${nuget} restore Mosa.sln
-			cd ../../..
-			${nuget} restore src/Abanu.Tools.sln
-			${nuget} restore src/Abanu.Kernel.sln
+			rm -rf external/MOSA-Project/Source/packages;
+			
+			${nuget} restore external/MOSA-Project/Source/Mosa.sln
+			${nuget} restore src/Abanu.sln
 			;;
 
 		cloud-test)
@@ -206,7 +212,8 @@ function build {
 			;;
 
 		assembly)
-			(cd src && ${msbuild} Abanu.Kernel.sln /p:Configuration=Debug -verbosity:minimal -m)
+			#(cd src && ${msbuild} Abanu.Kernel.sln /p:Configuration=Debug -verbosity:minimal -m)
+			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug -verbosity:minimal -m)
 			;;
 
 		native)
@@ -508,7 +515,7 @@ function create_efi_disk {
 	# TODO: avoid code duplication
 	isodir=$ABANU_PROJDIR/tmp/iso-efi-disk
 	mkdir -p $isodir
-	rm $isodir/TEST.TXT 2>/dev/null
+	rm -f $isodir/TEST.TXT
 	echo "This is a test file V2" > $isodir/TEST.TXT
 
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/efi ::/
@@ -516,7 +523,9 @@ function create_efi_disk {
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/NvVars ::/
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/.disk ::/
 	mcopy -i $disk -s $ABANU_OSDIR/Abanu.OS.image.${ABANU_ARCH}.bin ::/abanu.bin
-	mcopy -i $disk -s  $ABANU_OSDIR/Abanu.DisplayServer.bin ::/DSPSRV.BIN
+	if [ -f $ABANU_OSDIR/Abanu.DisplayServer.bin ]; then
+		mcopy -i $disk -s  $ABANU_OSDIR/Abanu.DisplayServer.bin ::/DSPSRV.BIN
+	fi
 	mcopy -i $disk -s $isodir/TEST.TXT ::/TEST.TXT
 
 	echo $disk created
@@ -531,8 +540,10 @@ function create_grub_hybrid_disk {
 	cp $ABANU_OSDIR/abanu.os.image.${ABANU_ARCH}.bin $isodir/abanu.bin
 
 	# additional files
-	cp $ABANU_OSDIR/Abanu.DisplayServer.bin $isodir/DSPSRV.BIN 2>/dev/null
-	rm $isodir/TEST.TXT 2>/dev/null
+	if [ -f $ABANU_OSDIR/Abanu.DisplayServer.bin ]; then
+		cp $ABANU_OSDIR/Abanu.DisplayServer.bin $isodir/DSPSRV.BIN 2>/dev/null
+	fi
+	rm -f $isodir/TEST.TXT
 	echo "This is a test file V2" > $isodir/TEST.TXT
 
 	mkdir -p $isodir/boot/grub
