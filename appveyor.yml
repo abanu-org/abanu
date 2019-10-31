@@ -70,3 +70,7 @@ for:
     build_script:
     - sh: $APPVEYOR_BUILD_FOLDER/abctl build all
     - sh: $APPVEYOR_BUILD_FOLDER/abctl test cloud
+
+on_finish:
+  - sh: export APPVEYOR_SSH_BLOCK=true
+  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -    
