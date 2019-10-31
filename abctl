@@ -119,10 +119,12 @@ function reset {
 			;;
 
 		git)
-			cd external/MOSA-Project
-			git clean -xfd
-			git reset --hard
-			cd ../../
+			if [ -d external/MOSA-Project ]; then
+				cd external/MOSA-Project
+				git clean -xfd
+				git reset --hard
+				cd ../../
+			fi
 			git clean -xfd
 			git reset --hard
 			git submodule update --recursive
