@@ -547,7 +547,7 @@ function create_grub_hybrid_disk {
 	disk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-grub-hybrid.disk.img
 	isodir=$ABANU_PROJDIR/tmp/iso-grub-hybrid
 	mkdir -p $isodir;
-	cp $ABANU_OSDIR/abanu.os.image.${ABANU_ARCH}.bin $isodir/abanu.bin
+	cp $ABANU_OSDIR/Abanu.OS.Image.${ABANU_ARCH}.bin $isodir/abanu.bin
 
 	# additional files
 	if [ -f $ABANU_OSDIR/Abanu.DisplayServer.bin ]; then
