@@ -187,6 +187,15 @@ function patch {
 function build {
 	case $1 in
 		all)
+
+			if [ ! -d external/MOSA-Project/Source/packages ]; then
+				./abctl configure packages
+			fi
+
+			if [ ! -d external/MOSA-Project/bin ]; then
+				./abctl configure mosa
+			fi
+
 			build builder
 			build assembly
 			build native
