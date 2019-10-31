@@ -212,7 +212,7 @@ function build {
 			;;
 
 		builder)
-			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release -verbosity:minimal -m)
+			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release -verbosity:minimal /verbosity:minimal -m)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x64.dll bin
@@ -223,7 +223,7 @@ function build {
 		assembly)
 			#(cd src && ${msbuild} Abanu.Kernel.sln /p:Configuration=Debug -verbosity:minimal -m)
 			set -x
-			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug -verbosity:minimal -m)
+			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug -verbosity:minimal /verbosity:minimal -m)
 			;;
 
 		native)
@@ -337,7 +337,7 @@ function debug {
 				-drive file=${ABANU_OSDIR}/Abanu.OS.Core.${ABANU_ARCH}.img,index=0,media=disk,format=raw \
 				-drive file=${rootdisk},index=1,media=disk,format=raw,copy-on-read=off,cache=none \
 				-drive file=${ABANU_TMPDIR}/network-disk.img,index=2,media=disk,format=raw,copy-on-read=off,cache=none \
-				-kernel os/Abanu.OS.image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
+				-kernel os/Abanu.OS.Image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
 			;;
 
 		qemu-attach-unix)
@@ -532,7 +532,7 @@ function create_efi_disk {
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/boot ::/
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/NvVars ::/
 	mcopy -i $disk -s $ABANU_TOOLSDIR/grub-efi-x86/.disk ::/
-	mcopy -i $disk -s $ABANU_OSDIR/Abanu.OS.image.${ABANU_ARCH}.bin ::/abanu.bin
+	mcopy -i $disk -s $ABANU_OSDIR/Abanu.OS.Image.${ABANU_ARCH}.bin ::/abanu.bin
 	if [ -f $ABANU_OSDIR/Abanu.DisplayServer.bin ]; then
 		mcopy -i $disk -s  $ABANU_OSDIR/Abanu.DisplayServer.bin ::/DSPSRV.BIN
 	fi
