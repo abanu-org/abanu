@@ -63,8 +63,7 @@ for:
 
     before_build:
     - sh: chmod +x $APPVEYOR_BUILD_FOLDER/abctl
-    - sh: $APPVEYOR_BUILD_FOLDER/abctl reset git
-    - sh: $APPVEYOR_BUILD_FOLDER/abctl configure packages
+    - sh: $APPVEYOR_BUILD_FOLDER/abctl cloud-test
 
     build: off
 

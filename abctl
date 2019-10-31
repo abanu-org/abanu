@@ -66,6 +66,12 @@ function configure {
 			${nuget} restore src/Abanu.Kernel.sln
 			;;
 
+		cloud-test)
+			git submodule init
+			git submodule update --recursive --depth 1
+			./abctl configure packages
+			;;
+
 		*)
 			echo $"Usage: abctl configure {all|patch|mosa|packages|git}"
 			exit 1
