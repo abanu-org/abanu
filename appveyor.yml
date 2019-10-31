@@ -58,7 +58,7 @@ for:
 
     install:
     - sh: sudo apt-get -y -o Acquire::Check-Valid-Until=false update
-    - sh: sudo apt-get -y upgrade
+    #- sh: sudo apt-get -y upgrade
     - sh: sudo apt-get install -y git wget qemu qemu-system qemu-system-x86
 
     before_build:
@@ -67,4 +67,4 @@ for:
     build: off
 
     build_script:
-    - sh: $APPVEYOR_BUILD_FOLDER/abctl test cloud
+    - sh: chmod +x $APPVEYOR_BUILD_FOLDER/abctl && $APPVEYOR_BUILD_FOLDER/abctl test cloud
