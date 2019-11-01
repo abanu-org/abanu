@@ -132,7 +132,7 @@ namespace Abanu.Tools.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    using (var qemu = ExecAsync("${qemu} -kernel ${ABANU_OSDIR}/Abanu.OS.image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -s -S -m 256"))
+                    using (var qemu = ExecAsync("${qemu} -kernel ${ABANU_OSDIR}/Abanu.OS.Image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -s -S -m 256"))
                     {
                         Thread.Sleep(500);
                         using (var gdb = ExecAsync("${gdb}", false))
@@ -151,7 +151,7 @@ namespace Abanu.Tools.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    Exec("${qemu} -kernel ${ABANU_OSDIR}/Abanu.OS.image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256");
+                    Exec("${qemu} -kernel ${ABANU_OSDIR}/Abanu.OS.Image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256");
                     break;
             }
             return null;
@@ -333,7 +333,7 @@ namespace Abanu.Tools.Build
                     writer.Write(memSize);
 
                     var bytes = ms.ToArray();
-                    var outFile = Env.Get("${ABANU_OSDIR}/Abanu.OS.image.${ABANU_ARCH}.bin");
+                    var outFile = Env.Get("${ABANU_OSDIR}/Abanu.OS.Image.${ABANU_ARCH}.bin");
                     File.WriteAllBytes(outFile, bytes);
                 }
             }

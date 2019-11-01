@@ -212,7 +212,7 @@ function build {
 			;;
 
 		builder)
-			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release -verbosity:minimal /verbosity:minimal -m)
+			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release /verbosity:minimal -m)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x64.dll bin
@@ -223,7 +223,8 @@ function build {
 		assembly)
 			#(cd src && ${msbuild} Abanu.Kernel.sln /p:Configuration=Debug -verbosity:minimal -m)
 			set -x
-			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug -verbosity:minimal /verbosity:minimal -m)
+
+			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug /verbosity:minimal -m)
 			;;
 
 		native)
