@@ -77,6 +77,9 @@ namespace Abanu.Kernel.Core
         /// </summary>
         public const uint DefaultStackSize = 0x4000;
 
+        public const string SelfTestPassedMarker = "<SELFTEST:PASSED>";
+        public const string SelfTestFailedMarker = "<SELFTEST:FAILED>";
+
         public static class Log
         {
 

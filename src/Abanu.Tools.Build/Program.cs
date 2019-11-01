@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Abanu.Kernel.Core;
 using Mosa.Compiler.MosaTypeSystem;
 
 namespace Abanu.Tools.Build
@@ -22,9 +23,10 @@ namespace Abanu.Tools.Build
             if (args.Length == 0 && Debugger.IsAttached)
             {
                 //Verb("build assembly");
-                Verb("build --native --bin=all");
-                Verb("build --image");
-                Verb("run --emulator=qemu --boot=direct");
+                //Verb("build --native --bin=all");
+                //Verb("build --image");
+                //Verb("run --emulator=qemu --boot=direct");
+                Verb("run --emulator=qemu --boot=direct --test");
             }
             else
             {
@@ -151,15 +153,35 @@ namespace Abanu.Tools.Build
             switch (args.RequireFlag("boot", "direct"))
             {
                 case "direct":
-                    Exec("${qemu} -kernel ${ABANU_OSDIR}/Abanu.OS.Image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256");
+                    if (args.ContainsFlag("test"))
+                    {
+                        Exec(
+                            "${qemu} -kernel ${ABANU_OSDIR}/Abanu.OS.Image.${ABANU_ARCH}.bin -serial stdio -m 256 -display none",
+                            (line, proc) =>
+                            {
+                                if (line.Contains(KConfig.SelfTestPassedMarker))
+                                {
+                                    proc.Kill();
+                                    Console.WriteLine("TEST PASSED");
+                                    Environment.Exit(0);
+                                }
+                            });
+
+                        Console.WriteLine("Test FAILED");
+                        Environment.Exit(1);
+                    }
+                    else
+                    {
+                        Exec("${qemu} -kernel ${ABANU_OSDIR}/Abanu.OS.Image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256");
+                    }
                     break;
             }
             return null;
         }
 
-        private static ProcessResult Exec(CommandArgs args)
+        private static ProcessResult Exec(CommandArgs args, Action<string, Process> onNewLine = null)
         {
-            using (var result = ExecAsync(args, true))
+            using (var result = ExecAsync(args, true, onNewLine))
             {
                 result.WaitForExit();
                 result?.Dispose();
@@ -172,7 +194,7 @@ namespace Abanu.Tools.Build
             return ExecAsync(args, false);
         }
 
-        private static ProcessResult ExecAsync(CommandArgs args, bool redirect)
+        private static ProcessResult ExecAsync(CommandArgs args, bool redirect, Action<string, Process> onNewLine = null)
         {
             if (!args.IsSet())
                 return null;
@@ -197,9 +219,35 @@ namespace Abanu.Tools.Build
             var proc = Process.Start(start);
             if (redirect)
             {
-                var data = proc.StandardOutput.ReadToEnd();
+
+                var th = new Thread(() =>
+                {
+                    var buf = new char[1];
+                    var sb = new StringBuilder();
+                    while (true)
+                    {
+                        var count = proc.StandardOutput.Read(buf, 0, 1);
+                        if (count == 0)
+                            break;
+                        Console.Write(buf[0]);
+                        if (buf[0] == '\n')
+                        {
+                            var line = sb.ToString();
+                            onNewLine?.Invoke(line, proc);
+                            sb.Clear();
+                        }
+                        else
+                        {
+                            if (buf[0] != '\r')
+                                sb.Append(buf[0]);
+                        }
+                    }
+                });
+                th.Start();
+
+                //var data = proc.StandardOutput.ReadToEnd();
                 var error = proc.StandardError.ReadToEnd();
-                Console.WriteLine(data);
+                //Console.WriteLine(data);
                 Console.WriteLine(error);
             }
 

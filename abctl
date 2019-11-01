@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # abort on error
 set -eE -o functrace
 failure() {
@@ -212,7 +214,8 @@ function build {
 			;;
 
 		builder)
-			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release /verbosity:minimal -m)
+			# mono: /verbosity:minimal
+			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release -verbosity:minimal -m)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x64.dll bin
@@ -224,7 +227,8 @@ function build {
 			#(cd src && ${msbuild} Abanu.Kernel.sln /p:Configuration=Debug -verbosity:minimal -m)
 			set -x
 
-			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug /verbosity:minimal -m)
+			# mono: /verbosity:minimal
+			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug -verbosity:minimal -m)
 			;;
 
 		native)
@@ -583,6 +587,7 @@ function logs {
 function _test {
 	case $1 in
 		cloud)
+			(cd bin && ${ABANU_BUILD} run --emulator=qemu --boot=direct --test)
 			echo Test finished
 			;;
 

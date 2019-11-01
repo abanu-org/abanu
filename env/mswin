@@ -13,7 +13,7 @@ PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Professional/
 PATH=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Community/MSBuild/Current/Bin:$PATH
 PATH=/mnt/d/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Enterprise/MSBuild/Current/Bin:$PATH
 msbuild=MSBuild.exe
-ABANU_BUILD="cmd.exe /C abanu.tools.build.exe"
+ABANU_BUILD="cmd.exe /C Abanu.Tools.Build.exe"
 
 QEMU_X86="cmd.exe /C ${ABANU_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-i386.exe"
 QEMU_X64="cmd.exe /C ${ABANU_PROJDIR}\\external\\MOSA-Project\\Tools\\qemu\\qemu-system-x86_64.exe"
