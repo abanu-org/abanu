@@ -173,6 +173,8 @@ namespace Abanu.Kernel.Core.SysCalls
             var targetProcessID = (int)args->Arg2;
             var pages = KMath.DivCeil(size, 4096);
 
+            ProcessManager.DumpStats();
+
             var currentProc = Scheduler.GetCurrentThread().Process;
             var tableCurrent = currentProc.PageTable;
 
