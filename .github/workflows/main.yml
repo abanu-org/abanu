@@ -38,4 +38,4 @@ jobs:
       - name: Build Binaries
         run: bin/Abanu.Tools.Build.exe build --native --bin=all --image
       - name: Test
-        run: bin/Abanu.Tools.Build.exe build --emulator=qemu --boot=direct --test
+        run: bin/Abanu.Tools.Build.exe run --emulator=qemu --boot=direct --test
