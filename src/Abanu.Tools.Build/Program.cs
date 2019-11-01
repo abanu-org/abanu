@@ -222,6 +222,8 @@ namespace Abanu.Tools.Build
             Console.WriteLine(fileName + " " + arguments);
 
             var proc = Process.Start(start);
+            var result = new ProcessResult(proc, timeout);
+
             if (redirect)
             {
 
@@ -256,7 +258,7 @@ namespace Abanu.Tools.Build
                 Console.WriteLine(error);
             }
 
-            return new ProcessResult(proc, timeout);
+            return result;
         }
 
         private static CommandResult BuildImage(CommandArgs args)
