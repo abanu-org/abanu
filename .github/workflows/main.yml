@@ -29,6 +29,6 @@ jobs:
           submodules: recursive      
       #- uses: crazy-max/ghaction-chocolatey@v1
       - name: Configure
-        run: "{{ GITHUB_WORKSPACE }}/external/MOSA-Project/Source/Compile.bat"
+        run: ${{ GITHUB_WORKSPACE }}/external/MOSA-Project/Source/Compile.bat
       - name: Build
         run: msbuild $GITHUB_WORKSPACE/src/Abanu.sln /p:Configuration=Debug -Verbosity:minimal
