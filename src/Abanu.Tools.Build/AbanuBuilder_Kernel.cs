@@ -45,7 +45,7 @@ namespace Abanu.Tools.Build
                 //UseMultiThreadingCompiler = false,
                 EnableMultiThreading = false,
 
-                InlinedIRMaximum = 12,
+                InlineMaximum = 12,
                 BootLoader = BootLoader.Syslinux_3_72,
                 VBEVideo = false,
                 Width = 640,
@@ -81,9 +81,9 @@ namespace Abanu.Tools.Build
             Options.EmitAllSymbols = true;
 
             Options.EnableSSA = false;
-            Options.EnableIROptimizations = false;
+            Options.EnableBasicOptimizations = false;
             Options.EnableSparseConditionalConstantPropagation = false;
-            Options.EnableInlinedMethods = true;
+            Options.EnableInlineMethods = true;
             Options.InlineOnlyExplicit = true;
             Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = false;

@@ -136,5 +136,10 @@ namespace Abanu.Kernel
         {
             //Panic.Error(message);
         }
+
+        public override void Pause()
+        {
+        }
+
     }
 }
