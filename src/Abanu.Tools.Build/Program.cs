@@ -25,10 +25,10 @@ namespace Abanu.Tools.Build
             if (args.Length == 0 && Debugger.IsAttached)
             {
                 //Verb("build assembly");
-                //Verb("build --native --bin=all");
+                Verb("build --native --bin=all");
                 //Verb("build --image");
                 //Verb("run --emulator=qemu --boot=direct");
-                Verb("run --emulator=qemu --boot=direct --test");
+                //Verb("run --emulator=qemu --boot=direct --test");
             }
             else
             {
