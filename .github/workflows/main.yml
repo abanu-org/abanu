@@ -36,4 +36,4 @@ jobs:
       - name: Build Assemblies
         run: "./build.bat"
       - name: Build Binaries
-        run: bin/Abanu.Tools.Build.exe build all
+        run: bin/Abanu.Tools.Build.exe build --native --bin=all --image
