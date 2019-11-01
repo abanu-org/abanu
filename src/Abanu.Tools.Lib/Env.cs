@@ -72,10 +72,13 @@ namespace Abanu.Tools
                         value = "${ABANU_PROJDIR}/external/MOSA-Project";
                         break;
                     case "MOSA_TOOLSDIR":
-                        value = "${MOSA_PROJDIR}/tools";
+                        value = "${MOSA_PROJDIR}/Tools";
                         break;
                     case "qemu":
-                        value = "${MOSA_TOOLSDIR}/qemu/qemu-system-x86_64.exe";
+                        if (Environment.OSVersion.Platform == PlatformID.Unix)
+                            value = "qemu-system-x86_64";
+                        else
+                            value = "${MOSA_TOOLSDIR}/qemu/qemu-system-x86_64.exe";
                         break;
                     case "gdb":
                         value = @"gdb.exe";
