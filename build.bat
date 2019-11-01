@@ -13,10 +13,14 @@ if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Professional\MSBuild\
 if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" set MSBUILD="%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe"
 if exist "D:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" set MSBUILD="D:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe"
 
+IF EXIST external\MOSA-Project\bin\Mosa.Plug.Korlib.dll GOTO BUILD
+
 REM TODO: Change dir in bat file
 cd external\MOSA-Project\Source
 call Compile.bat
 cd ..\..\..
+
+:BUILD
 
 mkdir bin
 copy external\MOSA-Project\bin\Mosa.Plug.Korlib.dll bin
