@@ -28,15 +28,12 @@ jobs:
         with:
           submodules: recursive      
       #- uses: crazy-max/ghaction-chocolatey@v1
-      - name: Debug
-        run: "ls"
       - name: Configure
         # TODO: change dir in bat file
         #run: "external/MOSA-Project/Source/Compile.bat"
         run: "./Compile.bat"
         working-directory: external/MOSA-Project/Source
-      - name: Build
+      - name: Build Assemblies
         run: "./build.bat"
-      - name: Build
-        run: msbuild src/Abanu.sln /p:Configuration=Debug -Verbosity:minimal
-        
+      - name: Build Binaries
+        run: bin/Abanu.Tools.Build.exe build all
