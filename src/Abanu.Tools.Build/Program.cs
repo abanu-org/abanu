@@ -10,6 +10,8 @@ using System.Threading;
 using Abanu.Kernel.Core;
 using Mosa.Compiler.MosaTypeSystem;
 
+#pragma warning disable CA1307 // Specify StringComparison
+
 namespace Abanu.Tools.Build
 {
 
@@ -74,6 +76,8 @@ namespace Abanu.Tools.Build
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/LoadTaskRegister.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.LoadTaskRegister.o");
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/DebugFunction1.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.DebugFunction1.o");
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/SysCall.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.SysCall.o");
+                Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/ReadFlags.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.ReadFlags.o");
+                Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/CpuCyclesSinceBoot.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.CpuCyclesSinceBoot.o");
             }
             return null;
         }
@@ -88,7 +92,7 @@ namespace Abanu.Tools.Build
 
             var newArgs = args.RemoveFlag("bin");
 
-            foreach (var img in images.Where(s => s != "all"))
+            foreach (var img in images.Where(s => s != "all" && !s.StartsWith("--")))
                 BuildImage(img + " " + newArgs);
             return null;
         }
