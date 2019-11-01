@@ -1,4 +1,4 @@
-name: Greet Everyone2
+name: Abanu Testing
 # This workflow is triggered on pushes to the repository.
 on: [push]
 
@@ -18,3 +18,5 @@ jobs:
       # This step prints an output (time) from the previous step's action.
       - name: Echo the greeting's time
         run: echo 'The time was ${{ steps.hello.outputs.time }}.'
+      - name: Install packages
+        run: apt-get install -y nasm
