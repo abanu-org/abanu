@@ -21,6 +21,7 @@ namespace Abanu.Tools.Build
                 {
                     Timer = new Timer(((TimeSpan)timeout).TotalMilliseconds);
                     Timer.Elapsed += ElapsedEventHandler;
+                    Timer.Start();
                 }
             }
         }
