@@ -1,4 +1,4 @@
-name: Abanu Testing
+name: Tests
 # This workflow is triggered on pushes to the repository.
 on: [push]
 
