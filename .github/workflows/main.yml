@@ -37,3 +37,5 @@ jobs:
         run: "./build.bat"
       - name: Build Binaries
         run: bin/Abanu.Tools.Build.exe build --native --bin=all --image
+      - name: Test
+        run: bin/Abanu.Tools.Build.exe build --emulator=qemu --boot=direct --test
