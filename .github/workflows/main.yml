@@ -31,9 +31,6 @@ jobs:
       - name: Debug
         run: "ls"
       - name: Configure
-        # TODO: change dir in bat file
-        #run: "external/MOSA-Project/Source/Compile.bat"
-        run: "./Compile.bat"
-        working-directory: external/MOSA-Project/Source
+        run: "./build.bat"
       - name: Build
         run: msbuild src/Abanu.sln /p:Configuration=Debug -Verbosity:minimal
