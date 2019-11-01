@@ -10,6 +10,8 @@ using System.Threading;
 using Abanu.Kernel.Core;
 using Mosa.Compiler.MosaTypeSystem;
 
+#pragma warning disable CA1307 // Specify StringComparison
+
 namespace Abanu.Tools.Build
 {
 
@@ -74,6 +76,8 @@ namespace Abanu.Tools.Build
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/LoadTaskRegister.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.LoadTaskRegister.o");
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/DebugFunction1.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.DebugFunction1.o");
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/SysCall.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.SysCall.o");
+                Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/ReadFlags.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.ReadFlags.o");
+                Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/CpuCyclesSinceBoot.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.CpuCyclesSinceBoot.o");
             }
             return null;
         }
@@ -88,7 +92,7 @@ namespace Abanu.Tools.Build
 
             var newArgs = args.RemoveFlag("bin");
 
-            foreach (var img in images.Where(s => s != "all"))
+            foreach (var img in images.Where(s => s != "all" && !s.StartsWith("--")))
                 BuildImage(img + " " + newArgs);
             return null;
         }
@@ -165,7 +169,7 @@ namespace Abanu.Tools.Build
                                     Console.WriteLine("TEST PASSED");
                                     Environment.Exit(0);
                                 }
-                            });
+                            }, TimeSpan.FromSeconds(60));
 
                         Console.WriteLine("Test FAILED");
                         Environment.Exit(1);
@@ -179,9 +183,9 @@ namespace Abanu.Tools.Build
             return null;
         }
 
-        private static ProcessResult Exec(CommandArgs args, Action<string, Process> onNewLine = null)
+        private static ProcessResult Exec(CommandArgs args, Action<string, Process> onNewLine = null, TimeSpan? timeout = null)
         {
-            using (var result = ExecAsync(args, true, onNewLine))
+            using (var result = ExecAsync(args, true, onNewLine, timeout))
             {
                 result.WaitForExit();
                 result?.Dispose();
@@ -194,7 +198,7 @@ namespace Abanu.Tools.Build
             return ExecAsync(args, false);
         }
 
-        private static ProcessResult ExecAsync(CommandArgs args, bool redirect, Action<string, Process> onNewLine = null)
+        private static ProcessResult ExecAsync(CommandArgs args, bool redirect, Action<string, Process> onNewLine = null, TimeSpan? timeout = null)
         {
             if (!args.IsSet())
                 return null;
@@ -211,12 +215,15 @@ namespace Abanu.Tools.Build
             {
                 start.RedirectStandardOutput = true;
                 start.RedirectStandardError = true;
+                start.RedirectStandardError = true;
                 start.UseShellExecute = false;
             }
 
             Console.WriteLine(fileName + " " + arguments);
 
             var proc = Process.Start(start);
+            var result = new ProcessResult(proc, timeout);
+
             if (redirect)
             {
 
@@ -251,7 +258,7 @@ namespace Abanu.Tools.Build
                 Console.WriteLine(error);
             }
 
-            return new ProcessResult(proc);
+            return result;
         }
 
         private static CommandResult BuildImage(CommandArgs args)

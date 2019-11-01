@@ -136,8 +136,6 @@ namespace Abanu.Kernel.Core
                     Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2", Priority = -5 });
                     userProc.Start();
 
-                    KernelMessage.WriteLine(KConfig.SelfTestPassedMarker);
-
                     var fileProc = ProcessManager.StartProcess("Service.Basic");
                     FileServ = fileProc.Service;
 
@@ -404,6 +402,8 @@ namespace Abanu.Kernel.Core
         public static void AppMain()
         {
             KernelMessage.WriteLine("Kernel ready");
+
+            KernelMessage.WriteLine(KConfig.SelfTestPassedMarker);
 
             // We have nothing to do (yet). So let's stop.
             Debug.Break();

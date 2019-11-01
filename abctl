@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+#set -x
 
 # abort on error
 set -eE -o functrace
@@ -215,7 +215,7 @@ function build {
 
 		builder)
 			# mono: /verbosity:minimal
-			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release -verbosity:minimal -m)
+			(cd src && ${msbuild} Abanu.Tools.sln /p:Configuration=Release /verbosity:minimal /p:RunCodeAnalysis=false -m)
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x86.dll bin
 			cp external/MOSA-Project/bin/Mosa.Plug.Korlib.x64.dll bin
@@ -225,10 +225,10 @@ function build {
 
 		assembly)
 			#(cd src && ${msbuild} Abanu.Kernel.sln /p:Configuration=Debug -verbosity:minimal -m)
-			set -x
+			#set -x
 
 			# mono: /verbosity:minimal
-			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug -verbosity:minimal -m)
+			(cd src && ${msbuild} Abanu.sln /p:Configuration=Debug /verbosity:minimal /p:RunCodeAnalysis=false -m)
 			;;
 
 		native)

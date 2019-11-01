@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Timers;
 
 namespace Abanu.Tools.Build
 {
@@ -10,16 +11,45 @@ namespace Abanu.Tools.Build
     {
         public Process Process;
 
-        public ProcessResult(Process proc)
+        public ProcessResult(Process proc, TimeSpan? timeout = null)
         {
             Process = proc;
+            if (timeout != null)
+            {
+                var ts = (TimeSpan)timeout;
+                if (ts != TimeSpan.Zero)
+                {
+                    Timer = new Timer(((TimeSpan)timeout).TotalMilliseconds);
+                    Timer.Elapsed += ElapsedEventHandler;
+                    Timer.Start();
+                }
+            }
+        }
+
+        private Timer Timer;
+
+        private void ElapsedEventHandler(object sender, ElapsedEventArgs e)
+        {
+            Timer.Stop();
+            Console.WriteLine("Timeout");
+            Environment.Exit(1);
         }
 
         public void Dispose()
         {
             try
             {
+                if (Timer != null)
+                    Timer.Stop();
+
                 Process?.Dispose();
+
+                if (Timer != null)
+                {
+                    var t = Timer;
+                    Timer = null;
+                    t.Dispose();
+                }
             }
             catch (Exception ex)
             {
