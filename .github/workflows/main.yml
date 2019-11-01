@@ -3,10 +3,8 @@ name: Abanu Testing
 on: [push]
 
 jobs:
-  build:
-    # Job name is Greeting
-    name: Greeting
-    # This job runs on Linux
+  build-unix:
+    name: Linux Test
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
@@ -14,8 +12,6 @@ jobs:
         run: sudo apt-get -y -o Acquire::Check-Valid-Until=false update
       - name: Install Packages
         run: sudo apt-get install -y --no-install-recommends git wget nasm qemu-system-x86 mtools xorriso grub-common grub-pc-bin grub-efi-amd64-bin grub-efi-ia32-bin
-      - name: debug
-        run: ls $GITHUB_WORKSPACE
       - name: Set Permissions
         run: chmod +x $GITHUB_WORKSPACE/abctl
       - name: Configure
@@ -24,3 +20,13 @@ jobs:
         run: $GITHUB_WORKSPACE/abctl build all
       - name: Test
         run: $GITHUB_WORKSPACE/abctl test cloud
+  build-mswin:
+    name: Windows Test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      #- uses: crazy-max/ghaction-chocolatey@v1
+      - name: Configure
+        run: $GITHUB_WORKSPACE/external/MOSA-Project/Source/Compile.bat
+      - name: Build
+        run: msbuild $GITHUB_WORKSPACE/src/Abanu.sln /p:Configuration=Debug -Verbosity:minimal
