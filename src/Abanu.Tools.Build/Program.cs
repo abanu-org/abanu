@@ -211,6 +211,7 @@ namespace Abanu.Tools.Build
             {
                 start.RedirectStandardOutput = true;
                 start.RedirectStandardError = true;
+                start.RedirectStandardError = true;
                 start.UseShellExecute = false;
             }
 
