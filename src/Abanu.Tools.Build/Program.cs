@@ -169,7 +169,7 @@ namespace Abanu.Tools.Build
                                     Console.WriteLine("TEST PASSED");
                                     Environment.Exit(0);
                                 }
-                            });
+                            }, TimeSpan.FromSeconds(60));
 
                         Console.WriteLine("Test FAILED");
                         Environment.Exit(1);
@@ -183,9 +183,9 @@ namespace Abanu.Tools.Build
             return null;
         }
 
-        private static ProcessResult Exec(CommandArgs args, Action<string, Process> onNewLine = null)
+        private static ProcessResult Exec(CommandArgs args, Action<string, Process> onNewLine = null, TimeSpan? timeout = null)
         {
-            using (var result = ExecAsync(args, true, onNewLine))
+            using (var result = ExecAsync(args, true, onNewLine, timeout))
             {
                 result.WaitForExit();
                 result?.Dispose();
@@ -198,7 +198,7 @@ namespace Abanu.Tools.Build
             return ExecAsync(args, false);
         }
 
-        private static ProcessResult ExecAsync(CommandArgs args, bool redirect, Action<string, Process> onNewLine = null)
+        private static ProcessResult ExecAsync(CommandArgs args, bool redirect, Action<string, Process> onNewLine = null, TimeSpan? timeout = null)
         {
             if (!args.IsSet())
                 return null;
@@ -256,7 +256,7 @@ namespace Abanu.Tools.Build
                 Console.WriteLine(error);
             }
 
-            return new ProcessResult(proc);
+            return new ProcessResult(proc, timeout);
         }
 
         private static CommandResult BuildImage(CommandArgs args)
