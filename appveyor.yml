@@ -58,6 +58,8 @@ for:
         - image: Ubuntu1804
 
     install:
+    - sh: export APPVEYOR_SSH_BLOCK=true
+    - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -    
     - sh: sudo apt-get -y -o Acquire::Check-Valid-Until=false update
     #- sh: sudo apt-get -y upgrade
     - sh: sudo apt-get install -y --no-install-recommends git wget nasm qemu-system-x86 mtools xorriso grub-common grub-pc-bin grub-efi-amd64-bin grub-efi-ia32-bin
@@ -72,6 +74,6 @@ for:
     - sh: $APPVEYOR_BUILD_FOLDER/abctl build all
     - sh: $APPVEYOR_BUILD_FOLDER/abctl test cloud
 
-on_finish:
-  - sh: export APPVEYOR_SSH_BLOCK=true
-  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -    
+#on_finish:
+#  - sh: export APPVEYOR_SSH_BLOCK=true
+#  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -    
