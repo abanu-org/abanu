@@ -11,6 +11,8 @@
 [![Join the chat at https://gitter.im/abanu-org/abanu](https://badges.gitter.im/abanu-org/abanu.svg)](https://gitter.im/abanu-org/abanu?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Join Discord https://discord.gg/dZVMBnE](https://img.shields.io/discord/638041194408181770?logo=discord)](https://discord.gg/dZVMBnE)
 
+[![Actions Status](https://github.com/abanu-org/abanu/workflows/Abanu%20Testing/badge.svg)](https://github.com/abanu-org/abanu/actions)
+
 ## About Abanu
 
 Abanu is a proof of concept Operating System written in C#.
