@@ -587,7 +587,7 @@ function logs {
 function _test {
 	case $1 in
 		cloud)
-			(cd bin && ${ABANU_BUILD} run --emulator=qemu --boot=direct --test)
+			(cd bin && ${ABANU_BUILD} run --emulator=qemu --boot=direct --test </dev/null)
 			echo Test finished
 			;;
 
