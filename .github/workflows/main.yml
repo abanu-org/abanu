@@ -16,3 +16,11 @@ jobs:
         run: sudo apt-get install -y --no-install-recommends git wget nasm qemu-system-x86 mtools xorriso grub-common grub-pc-bin grub-efi-amd64-bin grub-efi-ia32-bin
       - name: debug
         run: ls $GITHUB_WORKSPACE
+      - name: Set Permissions
+        run: chmod +x $GITHUB_WORKSPACE/abctl
+      - name: Configure
+        run: $GITHUB_WORKSPACE/abctl configure cloud-test
+      - name: Build
+        run: $GITHUB_WORKSPACE/abctl build all
+      - name: Test
+        run: $GITHUB_WORKSPACE/abctl test cloud
