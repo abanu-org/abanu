@@ -65,9 +65,18 @@ namespace Abanu.Kernel
                         var bufPtr = (byte*)buf.Start;
                         var key = bufPtr[byteIdx];
 
+                        // F9
                         if (key == 0x43)
                         {
                             StartProc("DSPSRV.BIN");
+                            continue;
+                        }
+
+                        // F10
+                        if (key == 0x44)
+                        {
+                            StartProc("GUIDEMO.BIN");
+                            continue;
                         }
 
                         var s = key.ToString("x");

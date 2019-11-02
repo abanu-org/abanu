@@ -18,7 +18,7 @@ namespace Abanu.Runtime
         }
 
         private static int _CurrentProcessID;
-        private static int CurrentProcessID
+        public static int CurrentProcessID
         {
             get
             {

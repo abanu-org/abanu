@@ -140,6 +140,17 @@ namespace Abanu.Runtime
             MessageManager.Send(SysCallTarget.WriteDebugChar, (byte)c);
         }
 
+        public static void Tmp_DisplayServer_CreateWindow(int sourceProcessID, CreateWindowResult* result, int width, int height)
+        {
+            MessageManager.Send(SysCallTarget.Tmp_DisplayServer_CreateWindow, (uint)sourceProcessID, (uint)result, (uint)width, (uint)height);
+        }
+
+        public static void Tmp_DisplayServer_FlushWindow()
+        {
+            // TODO: Window Handle
+            MessageManager.Send(SysCallTarget.Tmp_DisplayServer_FlushWindow);
+        }
+
     }
 
 }
