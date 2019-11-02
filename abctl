@@ -542,6 +542,9 @@ function create_efi_disk {
 	if [ -f $ABANU_OSDIR/Abanu.DisplayServer.bin ]; then
 		mcopy -i $disk -s  $ABANU_OSDIR/Abanu.DisplayServer.bin ::/DSPSRV.BIN
 	fi
+	if [ -f $ABANU_OSDIR/App.GuiDemo.bin ]; then
+		mcopy -i $disk -s  $ABANU_OSDIR/App.GuiDemo.bin ::/GUIDEMO.BIN
+	fi
 	mcopy -i $disk -s $isodir/TEST.TXT ::/TEST.TXT
 
 	echo $disk created
@@ -558,6 +561,9 @@ function create_grub_hybrid_disk {
 	# additional files
 	if [ -f $ABANU_OSDIR/Abanu.DisplayServer.bin ]; then
 		cp $ABANU_OSDIR/Abanu.DisplayServer.bin $isodir/DSPSRV.BIN 2>/dev/null
+	fi
+	if [ -f $ABANU_OSDIR/App.GuiDemo.bin ]; then
+		cp $ABANU_OSDIR/App.GuiDemo.bin $isodir/GUIDEMO.BIN 2>/dev/null
 	fi
 	rm -f $isodir/TEST.TXT
 	echo "This is a test file V2" > $isodir/TEST.TXT
