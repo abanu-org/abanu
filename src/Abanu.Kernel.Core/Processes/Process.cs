@@ -44,7 +44,7 @@ namespace Abanu.Kernel.Core.Processes
 
         public void Start()
         {
-            Service.Init();
+            //Service.Init();
             UninterruptableMonitor.Enter(Threads);
             try
             {

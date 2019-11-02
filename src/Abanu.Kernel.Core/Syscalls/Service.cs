@@ -13,7 +13,7 @@ namespace Abanu.Kernel.Core.Scheduling
         public Process Process;
         public ServiceStatus Status;
 
-        private Addr MethodAddr;
+        private Addr DefaultDispatchEntryPoint;
 
         public Service(Process proc)
         {
@@ -21,14 +21,9 @@ namespace Abanu.Kernel.Core.Scheduling
             Status = ServiceStatus.NotInizialized;
         }
 
-        internal void Init()
+        internal void Init(Addr defaultDispatchEntryPoint)
         {
-            bool success;
-            var elf = KernelElf.FromSectionName(Process.Path, out success);
-            if (success)
-            {
-                MethodAddr = GetEntryPointFromElf(elf);
-            }
+            DefaultDispatchEntryPoint = defaultDispatchEntryPoint;
         }
 
         // Methods is always called within Interrupt with Interrupt disabled
@@ -37,7 +32,7 @@ namespace Abanu.Kernel.Core.Scheduling
 
         public unsafe void SwitchToThreadMethod(SysCallContext* context, SystemMessage* args)
         {
-            var th = CreateThread(MethodAddr, SystemMessage.Size);
+            var th = CreateThread(DefaultDispatchEntryPoint, SystemMessage.Size);
             th.DebugSystemMessage = *args;
             var argAddr = (SystemMessage*)th.GetArgumentAddr(0);
             argAddr[0] = *args;
@@ -65,16 +60,6 @@ namespace Abanu.Kernel.Core.Scheduling
 
             th.Start();
             Scheduler.SwitchToThread(th.ThreadID);
-        }
-
-        private static string DispatchMessageSymbol = "Abanu.Runtime.MessageManager::Dispatch(Abanu.Kernel.SystemMessage)";
-
-        private static unsafe Addr GetEntryPointFromElf(ElfSections elf)
-        {
-            var sym = elf.GetSymbol(DispatchMessageSymbol);
-            if (sym == (ElfSymbol*)0)
-                return Addr.Zero;
-            return sym->Value;
         }
 
     }

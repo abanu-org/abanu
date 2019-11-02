@@ -149,8 +149,14 @@ namespace Abanu.Kernel.Core.Processes
             KernelMessage.WriteLine("proc sections are ready");
 
             // Detect Thread-Main
-            var entryPoint = GetEntryPointFromElf(elf);
+            var entryPoint = GetMainEntryPointFromElf(elf);
             KernelMessage.WriteLine("EntryPoint: {0:X8}", entryPoint);
+            var defaultDispatchEntryPoint = GetDispatchEntryPointFromElf(elf);
+            if (defaultDispatchEntryPoint != Addr.Zero)
+            {
+                KernelMessage.WriteLine("DispatchEntryPoint: {0:X8}", defaultDispatchEntryPoint);
+                proc.Service.Init(defaultDispatchEntryPoint);
+            }
 
             var mainThread = Scheduler.CreateThread(proc, new ThreadStartOptions(entryPoint)
             {
@@ -200,10 +206,19 @@ namespace Abanu.Kernel.Core.Processes
             proc.RunState = ProcessRunState.Terminated;
         }
 
-        private static unsafe Addr GetEntryPointFromElf(ElfSections elf)
+        private static unsafe Addr GetMainEntryPointFromElf(ElfSections elf)
         {
-            var symName = "Abanu.Kernel.Program::Main()"; // TODO
-            var sym = elf.GetSymbol(symName);
+            return GetEntryPointFromElf(elf, "Abanu.Kernel.Program::Main()");
+        }
+
+        private static unsafe Addr GetDispatchEntryPointFromElf(ElfSections elf)
+        {
+            return GetEntryPointFromElf(elf, "Abanu.Runtime.MessageManager::Dispatch(Abanu.Kernel.SystemMessage)");
+        }
+
+        private static unsafe Addr GetEntryPointFromElf(ElfSections elf, string symbolName)
+        {
+            var sym = elf.GetSymbol(symbolName);
             if (sym == (ElfSymbol*)0)
                 return Addr.Zero;
             return sym->Value;
