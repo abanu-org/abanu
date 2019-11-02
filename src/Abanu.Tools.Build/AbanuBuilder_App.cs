@@ -82,7 +82,7 @@ namespace Abanu.Tools.Build
             Options.EnableBasicOptimizations = false;
             Options.EnableSparseConditionalConstantPropagation = false;
             Options.EnableInlineMethods = true;
-            Options.InlineOnlyExplicit = true;
+            Options.InlineExplicitOnly = true;
             Options.EnableLongExpansion = false;
             Options.EnableValueNumbering = false;
             Options.TwoPassOptimizations = false;
