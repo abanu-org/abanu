@@ -159,20 +159,30 @@ namespace Abanu.Tools.Build
                 case "direct":
                     if (args.ContainsFlag("test"))
                     {
+                        var success = false;
+
                         Exec(
                             "${qemu} -kernel ${ABANU_OSDIR}/Abanu.OS.Image.${ABANU_ARCH}.bin -serial stdio -m 256 -display none",
                             (line, proc) =>
                             {
                                 if (line.Contains(KConfig.SelfTestPassedMarker))
                                 {
+                                    success = true;
                                     proc.Kill();
                                     Console.WriteLine("TEST PASSED");
                                     Environment.Exit(0);
                                 }
                             }, TimeSpan.FromSeconds(60));
 
-                        Console.WriteLine("Test FAILED");
-                        Environment.Exit(1);
+                        if (success)
+                        {
+                            Environment.Exit(0);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Test FAILED");
+                            Environment.Exit(1);
+                        }
                     }
                     else
                     {
