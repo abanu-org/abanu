@@ -427,7 +427,7 @@ namespace Abanu.Kernel.Core.Scheduling
             Dump(false);
         }
 
-        public static void Dump(bool canScheduled)
+        private static void Dump(bool canScheduled)
         {
             for (var i = 0; i < ThreadCapacity; i++)
             {

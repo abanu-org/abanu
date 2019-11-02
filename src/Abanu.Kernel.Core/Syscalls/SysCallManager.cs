@@ -106,7 +106,14 @@ namespace Abanu.Kernel.Core.SysCalls
             var ctx = new SysCallContext
             {
                 CallingType = callingMethod,
+                Debug = info.Debug,
             };
+
+            if (info.Debug)
+            {
+                Panic.DumpStats();
+                Debug.Nop();
+            }
 
             stack->EAX = info.Handler(&ctx, &args);
         }
@@ -340,11 +347,18 @@ namespace Abanu.Kernel.Core.SysCalls
 
         public static void SetCommand(SysCallTarget command, DSysCallInfoHandler handler, Process proc = null)
         {
+            var debug = false;
+            if (command == SysCallTarget.Tmp_DisplayServer_CreateWindow)
+            {
+                debug = true;
+            }
+
             Commands[(uint)command] = new SysCallInfo
             {
                 CommandID = command,
                 Handler = handler,
                 Process = proc,
+                Debug = debug,
             };
         }
 
@@ -365,6 +379,7 @@ namespace Abanu.Kernel.Core.SysCalls
     public struct SysCallContext
     {
         public CallingType CallingType;
+        public bool Debug;
     }
 
     public unsafe delegate uint DSysCallInfoHandler(SysCallContext* context, SystemMessage* args);
@@ -376,6 +391,7 @@ namespace Abanu.Kernel.Core.SysCalls
         //public string Name;
         public DSysCallInfoHandler Handler;
         public Process Process;
+        public bool Debug;
     }
 
 }
