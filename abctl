@@ -21,6 +21,7 @@ function loadenv {
 }
 
 loadenv unix
+mkdir -p bin
 mkdir -p $ABANU_OSDIR
 mkdir -p $ABANU_LOGDIR
 mkdir -p $ABANU_TMPDIR
