@@ -30,10 +30,12 @@ KERNEL_HYBRID_DISK := os/Abanu.Kernel.Core.x86-grub-hybrid.disk.img
 all: out
 
 out:
-	./abctl build assembly
 	$(MAKE) $(NATIVE)
 	#$(MAKE) $(IMAGE_OUT)
 	$(MAKE) $(KERNEL_EFI_DISK)
+
+rebuild:
+	$(MAKE) -B
 
 native: $(NATIVE)
 
@@ -76,14 +78,14 @@ $(APP_SHELL_OUT): $(APP_SHELL_NET)
 
 #$(KERNEL_NET) $(LOADER_NET) $(HELLOKERNEL_NET) $(HELLOSERVICE_NET) $(CONSOLESERVER_NET) $(SERVICE_BASIC_NET) $(SERVICE_HOSTCOMMUNICATION_NET) $(APP_SHELL_NET): net
 
-$(KERNEL_NET):
-$(LOADER_NET):
-$(HELLOKERNEL_NET):
-$(HELLOSERVICE_NET):
-$(CONSOLESERVER_NET):
-$(SERVICE_BASIC_NET):
-$(SERVICE_HOSTCOMMUNICATION_NET):
-$(APP_SHELL_NET):
+external/MOSA-Project/bin: external/MOSA-Project/Source/packages
+	./abctl configure packages
+
+external/MOSA-Project/Source/packages:
+	./abctl configure packages
+
+$(KERNEL_NET) $(LOADER_NET) $(HELLOKERNEL_NET) $(HELLOSERVICE_NET) $(CONSOLESERVER_NET) $(SERVICE_BASIC_NET) $(SERVICE_HOSTCOMMUNICATION_NET) $(APP_SHELL_NET): external/MOSA-Project/bin
+	./abctl build assembly
 
 $(KERNEL_EFI_DISK) $(KERNEL_HYBRID_DISK): $(IMAGE_OUT)
 	./abctl build disk
