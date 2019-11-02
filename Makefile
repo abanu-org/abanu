@@ -27,7 +27,9 @@ KERNEL_HYBRID_DISK := os/Abanu.Kernel.Core.x86-grub-hybrid.disk.img
 # virtual targets
 
 # all: net out
-all: out
+all:
+	$(MAKE) NET
+	$(MAKE) out
 
 out: $(KERNEL_EFI_DISK)
 
@@ -82,8 +84,11 @@ external/MOSA-Project/Source/packages:
 	./abctl configure packages
 
 $(KERNEL_NET) $(LOADER_NET) $(HELLOKERNEL_NET) $(HELLOSERVICE_NET) $(CONSOLESERVER_NET) $(SERVICE_BASIC_NET) $(SERVICE_HOSTCOMMUNICATION_NET) $(APP_SHELL_NET):
-	$(MAKE) external/MOSA-Project/bin
-	./abctl build assembly
+	$(MAKE) NET
 
 $(KERNEL_EFI_DISK) $(KERNEL_HYBRID_DISK): $(IMAGE_OUT)
 	./abctl build disk
+
+NET:
+	$(MAKE) external/MOSA-Project/bin
+	./abctl build assembly

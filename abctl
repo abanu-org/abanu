@@ -522,7 +522,7 @@ function _qemu {
 function create_efi_disk {
 	loadenv unix
 	disk=${ABANU_OSDIR}/Abanu.Kernel.Core.x86-efi.disk.img
-	size=40880 #kb
+	size=51100 #kb
 	let "block=((size * 1024) / (512 * 16 * 16)) - 1"
 	echo $block
 	dd if=/dev/zero of=$disk bs=1k count=$size

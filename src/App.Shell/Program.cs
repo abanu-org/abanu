@@ -91,6 +91,7 @@ namespace Abanu.Kernel
             if (length < 0)
                 return;
 
+            Console.WriteLine("Loading App: " + name);
             Console.WriteLine("Length: " + length.ToString());
 
             var targetProcessStartProc = SysCalls.GetProcessIDForCommand(SysCallTarget.CreateMemoryProcess);
@@ -100,27 +101,31 @@ namespace Abanu.Kernel
 
             var handle = SysCalls.OpenFile(nameBuf, name);
             uint pos = 0;
+
+            var filePtr = (byte*)fileBuf.Start;
+            var transferPtr = (byte*)transferBuf.Start;
+            SysCalls.SetThreadPriority(30);
             while (true)
             {
                 var gotBytes = SysCalls.ReadFile(handle, transferBuf);
 
-                Console.Write(gotBytes.ToString());
+                //Console.Write(gotBytes.ToString());
 
-                if (gotBytes == 132)
-                {
-                    name.IndexOf("");
-                }
+                //if (gotBytes == 132)
+                //{
+                //    name.IndexOf("");
+                //}
 
                 if (gotBytes <= 0)
                     break;
 
                 for (var i = 0; i < gotBytes; i++)
                 {
-                    ((byte*)fileBuf.Start)[i + pos] = ((byte*)transferBuf.Start)[i];
+                    filePtr[pos++] = transferPtr[i];
                 }
-                pos += gotBytes;
                 //Console.Write(".");
             }
+            SysCalls.SetThreadPriority(0);
 
             Console.WriteLine("CreateProc...");
             SysCalls.CreateMemoryProcess(fileBuf, (uint)length);
