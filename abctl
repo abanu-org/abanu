@@ -597,6 +597,18 @@ function _test {
 	esac
 }
 
+function _tool {
+	case $1 in
+		msbuild)
+			(cd $ORIGIN_DIR && $msbuild ${@:2})
+			;;
+
+		*)
+			echo $"Usage: tool {msbuild}"
+			exit 1
+	esac
+}
+
 function _abspath {
 	loadenv auto
 	cd $ORIGIN_DIR;
@@ -650,6 +662,9 @@ case $1 in
 		_abspath ${@:2}
 		;;
 
+	tool)
+		_tool ${@:2}
+		;;
 
 	*)
 		echo $"Usage: abctl {configure|build|run|debug|clean|reset|logs|update}"
