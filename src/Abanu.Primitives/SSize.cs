@@ -18,7 +18,7 @@ namespace Abanu
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe SSize(uint value)
         {
-            _value = (void*)value;
+            _value = (void*)(int)value;
         }
 
         [NonVersionable]
@@ -32,7 +32,7 @@ namespace Abanu
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe SSize(ulong value)
         {
-            _value = (void*)(uint)value;
+            _value = (void*)(int)value;
         }
 
         [NonVersionable]
@@ -132,6 +132,13 @@ namespace Abanu
 
         [NonVersionable]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe implicit operator int(SSize value)
+        {
+            return (int)value._value;
+        }
+
+        [NonVersionable]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe implicit operator ulong(SSize value)
         {
             return (ulong)value._value;
@@ -198,7 +205,10 @@ namespace Abanu
 
         public unsafe override string ToString()
         {
-            return ((long)_value).ToString();
+            if (sizeof(void*) == 4)
+                return ((int)_value).ToString();
+            else
+                return ((long)_value).ToString();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

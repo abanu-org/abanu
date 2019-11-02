@@ -64,6 +64,12 @@ namespace Abanu.Kernel
                     {
                         var bufPtr = (byte*)buf.Start;
                         var key = bufPtr[byteIdx];
+
+                        if (key == 0x43)
+                        {
+                            StartProc("DSPSRV.BIN");
+                        }
+
                         var s = key.ToString("x");
                         //for (var i = 0; i < s.Length; i++)
                         //    SysCalls.WriteDebugChar(s[i]);
@@ -75,6 +81,49 @@ namespace Abanu.Kernel
                 }
                 //SysCalls.WriteDebugChar('?');
             }
+        }
+
+        private static unsafe void StartProc(string name)
+        {
+            var fileServiceProc = SysCalls.GetProcessIDForCommand(SysCallTarget.GetFileLength);
+            var nameBuf = SysCalls.RequestMessageBuffer(4096, fileServiceProc);
+            var length = SysCalls.GetFileLength(nameBuf, name);
+            if (length < 0)
+                return;
+
+            Console.WriteLine("Length: " + length.ToString());
+
+            var targetProcessStartProc = SysCalls.GetProcessIDForCommand(SysCallTarget.CreateMemoryProcess);
+            var fileBuf = SysCalls.RequestMessageBuffer((uint)length, targetProcessStartProc);
+
+            var transferBuf = SysCalls.RequestMessageBuffer(4096, fileServiceProc);
+
+            var handle = SysCalls.OpenFile(nameBuf, name);
+            uint pos = 0;
+            while (true)
+            {
+                var gotBytes = SysCalls.ReadFile(handle, transferBuf);
+
+                Console.Write(gotBytes.ToString());
+
+                if (gotBytes == 132)
+                {
+                    name.IndexOf("");
+                }
+
+                if (gotBytes <= 0)
+                    break;
+
+                for (var i = 0; i < gotBytes; i++)
+                {
+                    ((byte*)fileBuf.Start)[i + pos] = ((byte*)transferBuf.Start)[i];
+                }
+                pos += gotBytes;
+                //Console.Write(".");
+            }
+
+            Console.WriteLine("CreateProc...");
+            SysCalls.CreateMemoryProcess(fileBuf, (uint)length);
         }
 
         public static unsafe void OnDispatchError(Exception ex)

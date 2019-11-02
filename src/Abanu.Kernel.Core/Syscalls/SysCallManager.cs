@@ -59,6 +59,7 @@ namespace Abanu.Kernel.Core.SysCalls
             //SetCommand(SysCallTarget.ServiceFunc1, Cmd_CallServiceFunc1);
             SetCommand(SysCallTarget.GetProcessIDForCommand, Cmd_GetProcessIDForCommand);
             SetCommand(SysCallTarget.GetProcessByName, Cmd_GetProcessByName);
+            SetCommand(SysCallTarget.GetCurrentProcessID, Cmd_GetCurrentProcessID);
             SetCommand(SysCallTarget.KillProcess, Cmd_KillProcess);
             SetCommand(SysCallTarget.ServiceReturn, Cmd_ServiceReturn);
             SetCommand(SysCallTarget.GetPhysicalMemory, Cmd_GetPhysicalMemory);
@@ -244,6 +245,11 @@ namespace Abanu.Kernel.Core.SysCalls
                 return (uint)proc.ProcessID;
 
             return unchecked((uint)-1);
+        }
+
+        private static uint Cmd_GetCurrentProcessID(SysCallContext* context, SystemMessage* args)
+        {
+            return (uint)Scheduler.GetCurrentThread().Process.ProcessID;
         }
 
         private static uint Cmd_KillProcess(SysCallContext* context, SystemMessage* args)

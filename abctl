@@ -311,7 +311,7 @@ function debug {
 		qemu-kernel)
 			export ABANU_DEBUG_TARGET=$1;
 			# TODO: Maybe this will never the case, but we should check if this is really our instance
-			pkill gdb
+			pkill gdb || :
 			#trap '' SIGINT
 			#./abctl debug qemu-kernel-run &
 			#debug qemu-kernel-run

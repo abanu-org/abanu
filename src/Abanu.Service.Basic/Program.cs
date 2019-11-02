@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Abanu.Kernel.Core;
 using Abanu.Runtime;
+using Mosa.FileSystem.VFS;
 using Mosa.Runtime.x86;
 
 namespace Abanu.Kernel
@@ -40,6 +42,7 @@ namespace Abanu.Kernel
             SysCalls.RegisterService(SysCallTarget.CreateFifo);
             SysCalls.RegisterService(SysCallTarget.ReadFile);
             SysCalls.RegisterService(SysCallTarget.WriteFile);
+            SysCalls.RegisterService(SysCallTarget.GetFileLength);
 
             var targetProcID = SysCalls.GetProcessIDForCommand(SysCallTarget.GetProcessByName);
             GetProcessByNameBuffer = SysCalls.RequestMessageBuffer(4096, targetProcID);
@@ -78,6 +81,9 @@ namespace Abanu.Kernel
             {
                 case SysCallTarget.OpenFile:
                     Cmd_OpenFile(msg);
+                    break;
+                case SysCallTarget.GetFileLength:
+                    Cmd_GetFileLength(msg);
                     break;
                 case SysCallTarget.WriteFile:
                     Cmd_WriteFile(msg);
@@ -217,6 +223,41 @@ namespace Abanu.Kernel
         {
             public IBuffer Buffer;
             public string Path;
+            public int Length;
+        }
+
+        internal class StreamWrapper : IBuffer
+        {
+
+            private Stream Stream;
+            private byte[] tmpBuf;
+
+            public StreamWrapper(Stream stream)
+            {
+                Stream = stream;
+                tmpBuf = new byte[4096];
+            }
+
+            public unsafe SSize Read(byte* buf, USize count)
+            {
+                var bytes = Stream.Read(tmpBuf, 0, (int)count);
+                for (var i = 0; i < bytes; i++)
+                    buf[i] = tmpBuf[i];
+                return bytes;
+            }
+
+            public unsafe SSize Write(byte* buf, USize count)
+            {
+                if (count > tmpBuf.Length)
+                    throw new NotImplementedException();
+
+                for (var i = 0; i < count; i++)
+                    tmpBuf[i] = buf[i];
+
+                Stream.Write(tmpBuf, 0, (int)count);
+
+                return (SSize)count;
+            }
         }
 
         private static List<VfsFile> Files;
@@ -226,6 +267,24 @@ namespace Abanu.Kernel
             for (var i = 0; i < Files.Count; i++)
                 if (Files[i].Path == path)
                     return Files[i];
+
+            if (InitHAL.PrimaryFS != null)
+            {
+                var node = InitHAL.PrimaryFS.Root.Lookup(path);
+                if (node != null)
+                {
+                    var stream = (Stream)node.Open(FileAccess.Read, FileShare.Read);
+                    var buf = new StreamWrapper(stream);
+                    var file = new VfsFile
+                    {
+                        Path = path,
+                        Buffer = buf,
+                        Length = (int)stream.Length,
+                    };
+                    Files.Add(file);
+                    return file;
+                }
+            }
 
             return null;
         }
@@ -287,6 +346,34 @@ namespace Abanu.Kernel
             Files.Add(vfsFile);
 
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
+        }
+
+        public static unsafe void Cmd_GetFileLength(SystemMessage* msg)
+        {
+            var path = NullTerminatedString.ToString((byte*)msg->Arg1);
+
+            if (TraceFileIO)
+            {
+                Console.Write("Get File Length: ");
+                Console.WriteLine(path);
+            }
+
+            var file = FindFile(path);
+            if (file == null)
+            {
+                Console.Write("File not found: ");
+                //Console.WriteLine(length.ToString("X"));
+                Console.WriteLine(path.Length.ToString("X"));
+                Console.WriteLine(path);
+                Console.WriteLine(">>");
+                MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, unchecked((uint)-1)));
+                return;
+            }
+
+            if (TraceFileIO)
+                Console.WriteLine("File Size: " + ((uint)file.Length).ToString("X"));
+
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, (uint)file.Length));
         }
 
         public static unsafe void Cmd_OpenFile(SystemMessage* msg)

@@ -22,6 +22,7 @@ namespace Abanu.Kernel
         ReadFile = 31,
         WriteFile = 32,
         CreateFifo = 33,
+        GetFileLength = 34,
 
         CreateMemoryProcess = 40,
         SetThreadPriority = 41,
@@ -30,6 +31,7 @@ namespace Abanu.Kernel
         KillProcess = 44,
         GetElfSectionsAddress = 45,
         GetFramebufferInfo = 46,
+        GetCurrentProcessID = 47,
 
         SetServiceStatus = 50,
         RegisterService = 51,

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -17,6 +18,7 @@ using Mosa.DeviceDriver.ScanCodeMap;
 using Mosa.DeviceSystem;
 using Mosa.DeviceSystem.PCI;
 using Mosa.FileSystem.FAT;
+using Mosa.FileSystem.VFS;
 using Mosa.Runtime.x86;
 
 namespace Abanu.Kernel
@@ -25,8 +27,12 @@ namespace Abanu.Kernel
     public static class InitHAL
     {
 
+        public static IFileSystem PrimaryFS;
+
         public static void SetupDrivers()
         {
+            PrimaryFS = null;
+
             Console.WriteLine("> Initializing services...");
 
             // Create Service manager and basic services
@@ -153,19 +159,20 @@ namespace Abanu.Kernel
                 if (fat.IsValid)
                 {
                     Console.WriteLine("Found a FAT file system!");
+                    var fs = fat.CreateVFSMount();
+                    PrimaryFS = fs;
 
                     const string filename = "TEST.TXT";
 
-                    var location = fat.FindEntry(filename);
+                    var node = fs.Root.Lookup(filename);
 
-                    if (location.IsValid)
+                    if (node != null)
                     {
                         Console.Write("Found: " + filename);
 
-                        using (var fatFileStream = new FatFileStream(fat, location))
+                        using (var fileStream = (Stream)node.Open(FileAccess.Read, FileShare.Read))
                         {
-
-                            uint len = (uint)fatFileStream.Length;
+                            uint len = (uint)fileStream.Length;
 
                             Console.WriteLine(" - Length: " + len.ToString());
 
@@ -173,7 +180,7 @@ namespace Abanu.Kernel
 
                             while (true)
                             {
-                                int i = fatFileStream.ReadByte();
+                                int i = fileStream.ReadByte();
 
                                 if (i < 0)
                                     break;

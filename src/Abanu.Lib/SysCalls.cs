@@ -92,6 +92,11 @@ namespace Abanu.Runtime
             return (int)MessageManager.Send(SysCallTarget.GetProcessByName, buf.Start);
         }
 
+        public static int GetCurrentProcessID()
+        {
+            return (int)MessageManager.Send(SysCallTarget.GetCurrentProcessID);
+        }
+
         public static void KillProcess(int processID)
         {
             MessageManager.Send(SysCallTarget.KillProcess, (uint)processID);
@@ -101,6 +106,12 @@ namespace Abanu.Runtime
         {
             NullTerminatedString.Set((byte*)buf.Start, path);
             return (int)MessageManager.Send(SysCallTarget.OpenFile, buf.Start);
+        }
+
+        public static int GetFileLength(MemoryRegion buf, string path)
+        {
+            NullTerminatedString.Set((byte*)buf.Start, path);
+            return (int)MessageManager.Send(SysCallTarget.GetFileLength, buf.Start);
         }
 
         public static SSize ReadFile(FileHandle handle, MemoryRegion buf)

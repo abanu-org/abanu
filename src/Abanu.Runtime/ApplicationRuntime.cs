@@ -17,8 +17,21 @@ namespace Abanu.Runtime
             var t3 = typeof(Mosa.Runtime.x86.Internal);
         }
 
+        private static int _CurrentProcessID;
+        private static int CurrentProcessID
+        {
+            get
+            {
+                if (_CurrentProcessID == 0)
+                    _CurrentProcessID = SysCalls.GetCurrentProcessID();
+                return _CurrentProcessID;
+            }
+        }
+
         public static unsafe void Init()
         {
+            _CurrentProcessID = 0;
+
             RuntimeMemory.SetupEarlyStartup();
             InitializAssembly();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
@@ -26,6 +39,16 @@ namespace Abanu.Runtime
 
             ElfSections = *((ElfSections*)SysCalls.GetElfSectionsAddress());
             ElfSections.Init();
+        }
+
+        public static unsafe void Exit()
+        {
+            Exit(0);
+        }
+
+        public static unsafe void Exit(int exitCode)
+        {
+            SysCalls.KillProcess(CurrentProcessID);
         }
 
         #region InitAssembly
