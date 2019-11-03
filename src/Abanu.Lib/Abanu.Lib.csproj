@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Allocator.cs" />
     <Compile Include="BitConversion.cs" />
+    <Compile Include="BitReader.cs" />
     <Compile Include="BootInfoFramebufferInfo.cs" />
     <Compile Include="BufferExtensions.cs" />
     <Compile Include="CharExtensions.cs" />
@@ -80,7 +81,6 @@
     <Compile Include="MemoryRegionExtensions.cs" />
     <Compile Include="MessageManager.cs" />
     <Compile Include="Serial.cs" />
-    <Compile Include="SysCalls.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

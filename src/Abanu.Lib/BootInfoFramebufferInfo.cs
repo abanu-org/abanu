@@ -12,5 +12,8 @@ namespace Abanu.Kernel
         public byte FbBpp;
         public byte FbType;
         public uint ColorInfo;
+
+        public uint RequiredMemory => FbHeight * FbPitch;
+
     }
 }

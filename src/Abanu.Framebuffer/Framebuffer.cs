@@ -19,6 +19,7 @@ namespace Abanu.Kernel
         private int _Height;
         private int _Pitch;
         private int _Depth;
+        private int _MemorySize;
 
         public Addr Addr => _Addr;
         public int Width => _Width;
@@ -26,35 +27,16 @@ namespace Abanu.Kernel
         public int Pitch => _Pitch;
         public int Depth => _Depth;
 
-        public static unsafe FrameBuffer Create()
-        {
-            var targetProcId = SysCalls.GetProcessIDForCommand(SysCallTarget.GetFramebufferInfo);
-            var fbInfoMem = SysCalls.RequestMessageBuffer(4096, targetProcId);
-            SysCalls.GetFramebufferInfo(fbInfoMem);
-            var fbPresent = (int*)fbInfoMem.Start;
-            if (*fbPresent == 0)
-                return null;
-
-            var fbInfo = (BootInfoFramebufferInfo*)(fbInfoMem.Start + 4);
-            var fb = new FrameBuffer(fbInfo->FbAddr, (int)fbInfo->FbWidth, (int)fbInfo->FbHeight, (int)fbInfo->FbPitch, (int)fbInfo->FbBpp);
-            fb.RequestMemory();
-            return fb;
-        }
-
         public int MemorySize => _Height * _Pitch;
 
-        private void RequestMemory()
+        public FrameBuffer(ref BootInfoFramebufferInfo info)
         {
-            _Addr = SysCalls.GetPhysicalMemory(_Addr, (uint)MemorySize);
-        }
-
-        public FrameBuffer(Addr addr, int width, int height, int pitch, int depth)
-        {
-            this._Addr = addr;
-            this._Width = width;
-            this._Height = height;
-            this._Pitch = pitch;
-            this._Depth = depth;
+            this._Addr = info.FbAddr;
+            this._Width = (int)info.FbWidth;
+            this._Height = (int)info.FbHeight;
+            this._Pitch = (int)info.FbPitch;
+            this._Depth = info.FbBpp;
+            _MemorySize = (int)info.RequiredMemory;
         }
 
         public int GetOffset(int x, int y)
