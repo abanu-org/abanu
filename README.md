@@ -15,7 +15,7 @@
 
 ## About Abanu
 
-Abanu is a proof of concept Operating System written in C#.
+Abanu is an Operating System written in C#.
 
 ## Getting the Sources
 
