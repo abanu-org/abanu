@@ -63,7 +63,7 @@ namespace Abanu.Kernel.Core.Devices
 
             KernelMessage.WriteLine("InitFrameBuffer");
 
-            Fb = new FrameBuffer(BootInfo.Header->FbInfo.FbAddr, (int)BootInfo.Header->FbInfo.FbWidth, (int)BootInfo.Header->FbInfo.FbHeight, (int)BootInfo.Header->FbInfo.FbPitch, 8);
+            Fb = new FrameBuffer(ref BootInfo.Header->FbInfo);
             for (uint at = Fb.Addr; at < Fb.Addr + Fb.MemorySize; at += 4096)
                 PageTable.KernelTable.MapVirtualAddressToPhysical(at, at);
             PageTable.KernelTable.Flush();
