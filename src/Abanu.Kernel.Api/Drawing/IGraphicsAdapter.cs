@@ -15,5 +15,11 @@ namespace Abanu.Kernel
         void Rectangle(int x, int y, int w, int h);
         void Fill();
         void Flush();
+
+        void MoveTo(int x, int y);
+
+        void LineTo(int x, int y);
+        void Stroke();
+
     }
 }
