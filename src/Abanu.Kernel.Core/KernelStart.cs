@@ -414,7 +414,7 @@ namespace Abanu.Kernel.Core
         /// </summary>
         private static void TriggerTestPassed()
         {
-            Uninterruptable.Execute(() => KernelMessage.WriteLine(KConfig.SelfTestPassedMarker));
+            Uninterruptible.Execute(() => KernelMessage.WriteLine(KConfig.SelfTestPassedMarker));
         }
 
         private static void Dummy()

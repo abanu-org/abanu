@@ -19,15 +19,22 @@ namespace Abanu.Kernel.Core.Scheduling
     /// <summary>
     /// Ensure a non-interruptible code path
     /// </summary>
-    public static class Uninterruptable
+    public static class Uninterruptible
     {
 
         /// <summary>
         /// Disables Interrupts
         /// </summary>
-        /// <returns>returns true, if interrupts where disabled. Return false, if interrupts was already disabled.</returns>
+        /// <returns>Returns true, if interrupts where successful disabled. Return false, if interrupts was already disabled.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Enter()
         {
+
+            // This check is correct.
+            // If Interrupts are disabled: Nobody can change it's state. We have exclusive control.
+            // If Interrupts are enabled: This doesn't matter, because the other routine will re-enable it on ISR exit.
+            // So, InterrupsEnabled() is a check, if the current thread is an ISR or not.
+
             if (IDTManager.InterrupsEnabled())
             {
                 Native.Cli();
@@ -39,6 +46,7 @@ namespace Abanu.Kernel.Core.Scheduling
         /// <summary>
         /// Re-Enables Interrupts. Assuming prior <see cref="Enter"/> call returned true.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Exit()
         {
             Exit(true);
@@ -47,6 +55,7 @@ namespace Abanu.Kernel.Core.Scheduling
         /// <summary>
         /// Re-Enables Interrupts. Pass <see cref="Enter"/> from prior <see cref="Enter"/>
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Exit(bool enterStatus)
         {
             if (enterStatus)

@@ -392,7 +392,7 @@ namespace Abanu.Kernel.Core.Scheduling
 
             thread.DataSelector = thread.User ? 0x23u : 0x10u;
 
-            UninterruptableMonitor.Enter(proc.Threads);
+            UninterruptibleMonitor.Enter(proc.Threads);
             try
             {
                 thread.Process = proc;
@@ -400,7 +400,7 @@ namespace Abanu.Kernel.Core.Scheduling
             }
             finally
             {
-                UninterruptableMonitor.Exit(proc.Threads);
+                UninterruptibleMonitor.Exit(proc.Threads);
             }
 
             ThreadsAllocated++;
@@ -569,7 +569,7 @@ namespace Abanu.Kernel.Core.Scheduling
 
         public static void ResetTerminatedThreads()
         {
-            UninterruptableMonitor.Enter(Threads);
+            UninterruptibleMonitor.Enter(Threads);
             try
             {
                 for (uint i = 0; i < ThreadCapacity; i++)
@@ -582,14 +582,14 @@ namespace Abanu.Kernel.Core.Scheduling
             }
             finally
             {
-                UninterruptableMonitor.Exit(Threads);
+                UninterruptibleMonitor.Exit(Threads);
             }
         }
 
         private static unsafe void ResetThread(uint threadID)
         {
             var thread = Threads[threadID];
-            UninterruptableMonitor.Enter(thread);
+            UninterruptibleMonitor.Enter(thread);
             try
             {
                 if (thread.Status != ThreadStatus.Terminated)
@@ -598,7 +598,7 @@ namespace Abanu.Kernel.Core.Scheduling
                 if (thread.Process != null)
                 {
                     var proc = thread.Process;
-                    UninterruptableMonitor.Enter(proc.Threads);
+                    UninterruptibleMonitor.Enter(proc.Threads);
                     try
                     {
                         for (var i = 0; i < proc.Threads.Count; i++)
@@ -612,7 +612,7 @@ namespace Abanu.Kernel.Core.Scheduling
                     }
                     finally
                     {
-                        UninterruptableMonitor.Exit(proc.Threads);
+                        UninterruptibleMonitor.Exit(proc.Threads);
                     }
                 }
 
@@ -626,7 +626,7 @@ namespace Abanu.Kernel.Core.Scheduling
             }
             finally
             {
-                UninterruptableMonitor.Exit(thread);
+                UninterruptibleMonitor.Exit(thread);
             }
         }
 

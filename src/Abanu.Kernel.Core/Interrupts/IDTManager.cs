@@ -117,6 +117,7 @@ namespace Abanu.Kernel.Core.Interrupts
         [DllImport("x86/Abanu.ReadFlags.o", EntryPoint = "ReadFlags")]
         public static extern X86_EFlags ReadFlags();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool InterrupsEnabled()
         {
             return (ReadFlags() & X86_EFlags.InterruptEnableFlag) != 0;

@@ -170,7 +170,7 @@ namespace Abanu.Kernel.Core.MemoryManagement.PageAllocators
                 Debug.Nop();
             }
 
-            UninterruptableMonitor.Enter(this);
+            UninterruptibleMonitor.Enter(this);
             try
             {
                 SelfCheck("SC1");
@@ -234,7 +234,7 @@ namespace Abanu.Kernel.Core.MemoryManagement.PageAllocators
             }
             finally
             {
-                UninterruptableMonitor.Exit(this);
+                UninterruptibleMonitor.Exit(this);
             }
         }
 
@@ -319,7 +319,7 @@ namespace Abanu.Kernel.Core.MemoryManagement.PageAllocators
             if (page->DebugTag != null)
                 debugName = (string)Intrinsic.GetObjectFromAddress((Pointer)(uint)page->DebugTag);
 
-            UninterruptableMonitor.Enter(this);
+            UninterruptibleMonitor.Enter(this);
             try
             {
                 var debugCount = list_head.list_count((list_head*)page); // DEBUG
@@ -356,7 +356,7 @@ namespace Abanu.Kernel.Core.MemoryManagement.PageAllocators
             }
             finally
             {
-                UninterruptableMonitor.Exit(this);
+                UninterruptibleMonitor.Exit(this);
             }
             var freedPages = _FreePages - oldFree;
             if (KConfig.Log.PageAllocation && TraceOptions.Enabled && freedPages >= TraceOptions.MinPages)

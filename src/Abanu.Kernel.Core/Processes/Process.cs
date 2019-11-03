@@ -45,7 +45,7 @@ namespace Abanu.Kernel.Core.Processes
         public void Start()
         {
             //Service.Init();
-            UninterruptableMonitor.Enter(Threads);
+            UninterruptibleMonitor.Enter(Threads);
             try
             {
                 RunState = ProcessRunState.Running;
@@ -54,7 +54,7 @@ namespace Abanu.Kernel.Core.Processes
             }
             finally
             {
-                UninterruptableMonitor.Exit(Threads);
+                UninterruptibleMonitor.Exit(Threads);
             }
 
         }

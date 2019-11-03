@@ -15,43 +15,37 @@ using Mosa.Runtime.x86;
 
 namespace Abanu.Kernel.Core.Scheduling
 {
-    public static class UninterruptableMonitor
+    public static class UninterruptibleMonitor
     {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void Enter(object obj)
         {
-            var sync = Intrinsic.GetObjectAddress(obj) + IntPtr.Size;
+            var sync = (int)Intrinsic.GetObjectAddress(obj) + IntPtr.Size;
 
-            if (IDTManager.InterrupsEnabled())
+            if (Uninterruptible.Enter())
             {
-                // Thread
-                Native.Cli();
-
-                while (Native.CmpXChgLoad32(sync.ToInt32(), 2, 0) != 0)
+                while (Native.CmpXChgLoad32(sync, 2, 0) != 0)
                 {
                 }
-
             }
             else
             {
-                // ISR
-                while (Native.CmpXChgLoad32(sync.ToInt32(), 1, 0) != 0)
+                while (Native.CmpXChgLoad32(sync, 1, 0) != 0)
                 {
                 }
-
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void Exit(object obj)
         {
-            var sync = Intrinsic.GetObjectAddress(obj) + IntPtr.Size;
+            var sync = (uint)(Intrinsic.GetObjectAddress(obj) + IntPtr.Size);
 
-            var value = Native.Get32(sync.ToUInt32());
-            Native.Set32(sync.ToUInt32(), 0);
-            if (value == 2)
-                Native.Sti();
+            var value = Native.Get32(sync);
+            Native.Set32(sync, 0);
+
+            Uninterruptible.Exit(value == 2);
         }
 
     }
