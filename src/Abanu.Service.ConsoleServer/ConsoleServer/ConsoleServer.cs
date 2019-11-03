@@ -23,21 +23,6 @@ namespace Abanu.Kernel
 
         internal static ConsoleDevice Dev;
 
-        public static unsafe FrameBuffer CreateFrameBuffer()
-        {
-            var targetProcId = SysCalls.GetProcessIDForCommand(SysCallTarget.GetFramebufferInfo);
-            var fbInfoMem = SysCalls.RequestMessageBuffer(4096, targetProcId);
-            SysCalls.GetFramebufferInfo(fbInfoMem);
-            var fbPresent = (int*)fbInfoMem.Start;
-            if (*fbPresent == 0)
-                return null;
-
-            var fbInfo = *(BootInfoFramebufferInfo*)(fbInfoMem.Start + 4);
-            fbInfo.FbAddr = SysCalls.GetPhysicalMemory(fbInfo.FbAddr, fbInfo.RequiredMemory);
-            var fb = new FrameBuffer(ref fbInfo);
-            return fb;
-        }
-
         public ConsoleServer()
         {
             Sequence = new List<char>();
@@ -61,6 +46,20 @@ namespace Abanu.Kernel
 
             Dev = new ConsoleDevice();
             Dev.Initialize(txtDev);
+        }
+
+        public static unsafe FrameBuffer CreateFrameBuffer()
+        {
+            var targetProcId = SysCalls.GetProcessIDForCommand(SysCallTarget.GetFramebufferInfo);
+            var fbInfoMem = SysCalls.RequestMessageBuffer(4096, targetProcId);
+            SysCalls.GetFramebufferInfo(fbInfoMem);
+            var fbPresent = (int*)fbInfoMem.Start;
+            if (*fbPresent == 0)
+                return null;
+
+            var fbInfo = *(BootInfoFramebufferInfo*)(fbInfoMem.Start + 4);
+            fbInfo.FbAddr = SysCalls.GetPhysicalMemory(fbInfo.FbAddr, fbInfo.RequiredMemory);
+            return new FrameBuffer(ref fbInfo);
         }
 
         public unsafe SSize Read(byte* buf, USize count)
