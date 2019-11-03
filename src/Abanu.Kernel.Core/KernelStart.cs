@@ -403,10 +403,18 @@ namespace Abanu.Kernel.Core
         {
             KernelMessage.WriteLine("Kernel ready");
 
-            KernelMessage.WriteLine(KConfig.SelfTestPassedMarker);
+            TriggerTestPassed();
 
             // We have nothing to do (yet). So let's stop.
             Debug.Break();
+        }
+
+        /// <summary>
+        /// Signal the Integration tests, that Test was successful.
+        /// </summary>
+        private static void TriggerTestPassed()
+        {
+            Uninterruptable.Execute(() => KernelMessage.WriteLine(KConfig.SelfTestPassedMarker));
         }
 
         private static void Dummy()

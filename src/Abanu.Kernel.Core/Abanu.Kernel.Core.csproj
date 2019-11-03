@@ -61,6 +61,7 @@
     <Compile Include="Processes\Process.cs" />
     <Compile Include="Processes\ProcessCreateOptions.cs" />
     <Compile Include="Processes\ProcessManager.cs" />
+    <Compile Include="Scheduling\Uninterruptable.cs" />
     <Compile Include="Scheduling\UninterruptableMonitor.cs" />
     <Compile Include="Syscalls\Service.cs" />
     <Compile Include="Syscalls\SysCallManager.cs" />
