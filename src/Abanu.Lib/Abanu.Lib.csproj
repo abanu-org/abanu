@@ -80,7 +80,6 @@
     <Compile Include="MemoryRegionExtensions.cs" />
     <Compile Include="MessageManager.cs" />
     <Compile Include="Serial.cs" />
-    <Compile Include="SysCalls.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
