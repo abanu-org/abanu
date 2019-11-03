@@ -120,6 +120,7 @@ namespace Abanu.Kernel
 
         public Span(Pointer addr, int elements)
         {
+            Addr = addr;
             Elements = elements;
             ElementSize = Unsafe.SizeOf<T>();
         }
