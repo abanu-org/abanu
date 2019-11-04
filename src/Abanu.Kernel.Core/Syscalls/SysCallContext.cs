@@ -8,7 +8,11 @@ namespace Abanu.Kernel.Core.SysCalls
 
     public struct SysCallContext
     {
-        public CallingType CallingType;
+        public SysCallCallingType CallingType;
+
+        /// <summary>
+        /// If true, the current command will be debugged
+        /// </summary>
         public bool Debug;
     }
 

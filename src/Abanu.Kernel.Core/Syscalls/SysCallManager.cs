@@ -39,6 +39,9 @@ namespace Abanu.Kernel.Core.SysCalls
             SetCommands();
         }
 
+        /// <summary>
+        /// Assignment of kernel side commands
+        /// </summary>
         private static void SetCommands()
         {
             SetCommand(SysCallTarget.RequestMemory, SysCallHandlers.RequestMemory);
@@ -63,17 +66,26 @@ namespace Abanu.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.CreateMemoryProcess, SysCallHandlers.CreateMemoryProcess);
         }
 
+        /// <summary>
+        /// Syscall interrupt handler for synchronous calls.
+        /// </summary>
         private static void FunctionInterruptHandler(IDTStack* stack)
         {
-            InterruptHandler(stack, CallingType.Sync);
+            InterruptHandler(stack, SysCallCallingType.Sync);
         }
 
+        /// <summary>
+        /// Syscall interrupt handler for asynchronous calls.
+        /// </summary>
         private static void ActionInterruptHandler(IDTStack* stack)
         {
-            InterruptHandler(stack, CallingType.Async);
+            InterruptHandler(stack, SysCallCallingType.Async);
         }
 
-        private static void InterruptHandler(IDTStack* stack, CallingType callingMethod)
+        /// <summary>
+        /// Syscall interrupt handler. Dispatcher for every SysCall.
+        /// </summary>
+        private static void InterruptHandler(IDTStack* stack, SysCallCallingType callingMethod)
         {
             var args = new SystemMessage
             {

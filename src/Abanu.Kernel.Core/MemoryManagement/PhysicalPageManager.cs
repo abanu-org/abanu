@@ -7,6 +7,12 @@ using Abanu.Kernel.Core.PageManagement;
 
 namespace Abanu.Kernel.Core.MemoryManagement
 {
+
+    // PhysicalPageManagaer must never access VirtualPageManager.
+
+    /// <summary>
+    /// Manages physical memory pages.
+    /// </summary>
     public static unsafe class PhysicalPageManager
     {
 

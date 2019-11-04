@@ -15,6 +15,10 @@ using Mosa.Runtime.x86;
 
 namespace Abanu.Kernel.Core.Scheduling
 {
+
+    /// <summary>
+    /// Per-object spinlock. As long the lock is held, the current code path will never interrupted.
+    /// </summary>
     public static class UninterruptibleMonitor
     {
 

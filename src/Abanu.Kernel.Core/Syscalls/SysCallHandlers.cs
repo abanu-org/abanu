@@ -18,6 +18,10 @@ using static Abanu.Kernel.Core.Processes.Process;
 
 namespace Abanu.Kernel.Core.SysCalls
 {
+    /// <summary>
+    /// Implementation of Kernel side handlers.
+    /// User side handlers will be handled via <see cref="RegisteredService(SysCallContext*, SystemMessage*)"/>
+    /// </summary>
     internal static unsafe class SysCallHandlers
     {
 

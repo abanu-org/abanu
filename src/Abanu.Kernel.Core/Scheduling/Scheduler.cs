@@ -18,11 +18,19 @@ using Mosa.Runtime.x86;
 
 namespace Abanu.Kernel.Core.Scheduling
 {
+
+    /// <summary>
+    /// Thread Scheduler
+    /// </summary>
     public static class Scheduler
     {
         public const int ThreadCapacity = 256;
 
         public static bool Enabled;
+
+        /// <summary>
+        /// Return address of the first stackframe. Will called if the Thread Main method is returning.
+        /// </summary>
         private static Addr SignalThreadTerminationMethodAddress;
 
         private static Thread[] Threads;
@@ -69,6 +77,10 @@ namespace Abanu.Kernel.Core.Scheduling
             }
         }
 
+        /// <summary>
+        /// Enable Scheduling and starts the initialized threads.
+        /// This method will never return!
+        /// </summary>
         public static unsafe void Start()
         {
             SetThreadID(0);
@@ -84,6 +96,10 @@ namespace Abanu.Kernel.Core.Scheduling
             Panic.Error("Main-Thread still alive");
         }
 
+        /// <summary>
+        /// Transfer execution context to Scheduler.
+        /// This method will never return.
+        /// </summary>
         private static void TriggerScheduler()
         {
             Native.Int((int)KnownInterrupt.ClockTimer);
@@ -107,7 +123,8 @@ namespace Abanu.Kernel.Core.Scheduling
             if (!Enabled)
                 return;
 
-            var threadID = GetCurrentThreadID();
+            // check if current thread should get more time
+            var currentThreadID = GetCurrentThreadID();
             var th = GetCurrentThread();
             if (th != null)
             {
@@ -123,11 +140,14 @@ namespace Abanu.Kernel.Core.Scheduling
             }
 
             // Save current stack state
-            SaveThreadState(threadID, stackSate);
+            SaveThreadState(currentThreadID, stackSate);
 
-            ScheduleNextThread(threadID);
+            ScheduleNextThread(currentThreadID);
         }
 
+        /// <summary>
+        /// Pauses the current Thread and reschedules it after given time.
+        /// </summary>
         public static void Sleep(uint time)
         {
             // TODO: respect time. Change to TimeSpan.
@@ -152,6 +172,9 @@ namespace Abanu.Kernel.Core.Scheduling
             ScheduleNextThread(th.ThreadID);
         }
 
+        /// <summary>
+        /// Triggers a task switch
+        /// </summary>
         public static void ScheduleNextThread()
         {
             var currentThreadID = GetCurrentThreadID();
@@ -201,6 +224,9 @@ namespace Abanu.Kernel.Core.Scheduling
             SwitchToThread(nextThreadID);
         }
 
+        /// <summary>
+        /// Calculate what thread should be scheduled now.
+        /// </summary>
         private static uint GetNextThread(uint currentThreadID)
         {
             uint threadID = currentThreadID;
@@ -256,6 +282,10 @@ namespace Abanu.Kernel.Core.Scheduling
         public static uint ThreadsAllocated;
         public static uint ThreadsMaxAllocated;
 
+        /// <summary>
+        /// Create a new Thread.
+        /// The new thread will not started automatically.
+        /// </summary>
         public static unsafe Thread CreateThread(Process proc, ThreadStartOptions options)
         {
             Thread thread;
@@ -423,6 +453,9 @@ namespace Abanu.Kernel.Core.Scheduling
             return thread;
         }
 
+        /// <summary>
+        /// Print some statistics of interest
+        /// </summary>
         public static void DumpStats()
         {
             KernelMessage.WriteLine("Threads, Can scheduled:");
@@ -456,6 +489,9 @@ namespace Abanu.Kernel.Core.Scheduling
             }
         }
 
+        /// <summary>
+        /// Saves the current thread state, so we can switch to another thread.
+        /// </summary>
         public static unsafe void SaveThreadState(uint threadID, IntPtr stackState)
         {
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
@@ -509,6 +545,10 @@ namespace Abanu.Kernel.Core.Scheduling
             //Native.SetFS(threadID);
         }
 
+        /// <summary>
+        /// Switch to a specific thread.
+        /// This method will not return!
+        /// </summary>
         public static unsafe void SwitchToThread(uint threadID)
         {
             var thread = Threads[threadID];
@@ -634,6 +674,10 @@ namespace Abanu.Kernel.Core.Scheduling
             }
         }
 
+        /// <summary>
+        /// Sets the thread priority.
+        /// </summary>
+        /// <seealso cref="Thread.Priority"/>
         public static void SetThreadPriority(int priority)
         {
             var th = GetCurrentThread();

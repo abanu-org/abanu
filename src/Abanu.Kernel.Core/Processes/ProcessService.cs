@@ -47,7 +47,7 @@ namespace Abanu.Kernel.Core.Processes
 
         public static unsafe void SwitchToThread(SysCallContext* context, Thread th)
         {
-            if (context->CallingType == CallingType.Sync)
+            if (context->CallingType == SysCallCallingType.Sync)
             {
                 var cThread = Scheduler.GetCurrentThread();
 

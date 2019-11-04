@@ -57,7 +57,7 @@ namespace Abanu.Kernel.Core.Interrupts
 
             var ctx = new SysCallContext
             {
-                CallingType = CallingType.Async, // Important! Otherwise stack will corrupted
+                CallingType = SysCallCallingType.Async, // Important! Otherwise stack will corrupted
             };
 
             var msg = new SystemMessage(SysCallTarget.Interrupt)

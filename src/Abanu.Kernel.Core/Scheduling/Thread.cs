@@ -14,22 +14,64 @@ namespace Abanu.Kernel.Core.Scheduling
     public unsafe class Thread
     {
         public ThreadStatus Status = ThreadStatus.Empty;
-        public Addr StackBottom;
-        public Addr StackTop;
-        //public IntPtr StackStatePointer;
-        public IDTTaskStack* StackState;
-        public Addr KernelStack = null;
-        public Addr KernelStackBottom = null;
-        public USize KernelStackSize = null;
-        public uint Ticks;
-        public bool User;
+
+        /// <summary>
+        /// Upper Address of Stack
+        /// </summary>
+        internal Addr StackBottom;
+
+        /// <summary>
+        /// Lower Address of Stack
+        /// </summary>
+        internal Addr StackTop;
+
+        /// <summary>
+        /// Stores thread state on task switch
+        /// </summary>
+        internal IDTTaskStack* StackState;
+
+        // TODO: Documentation of Kernel Stack
+
+        internal Addr KernelStack = null;
+        internal Addr KernelStackBottom = null;
+        internal USize KernelStackSize = null;
+
+        /// <summary>
+        /// Consumed Interrupts
+        /// </summary>
+        internal uint Ticks;
+
+        /// <summary>
+        /// Determines of this Thread is running with user privileges or kernel privileges
+        /// </summary>
+        internal bool User;
+
+        /// <summary>
+        /// Process where this thread belongs to
+        /// </summary>
         public Process Process;
-        public uint DataSelector;
+
+        /// <summary>
+        /// Data Segment used for this Thread
+        /// </summary>
+        internal uint DataSelector;
+
+        /// <summary>
+        /// Unique Thread Identifier
+        /// </summary>
         public uint ThreadID;
+
+        /// <summary>
+        /// If true, this thread will be debugged.
+        /// </summary>
         public bool Debug;
-        public string DebugName;
-        public uint ArgumentBufferSize;
-        public SystemMessage DebugSystemMessage;
+        internal string DebugName;
+        internal SystemMessage DebugSystemMessage;
+
+        /// <summary>
+        /// Required bytes for entrypoint arguments. Used to build the initial stack correctly.
+        /// </summary>
+        internal uint ArgumentBufferSize;
 
         public bool CanScheduled
         {
@@ -41,17 +83,30 @@ namespace Abanu.Kernel.Core.Scheduling
 
         /// <summary>
         /// 0: Default
-        /// >0: Get Priority more interrupts
-        /// <0: Skipping Priority interrupts
+        /// >0: Get <see cref="Priority"/> more interrupts
+        /// <0: Skipping <see cref="Priority"/> interrupts
         /// </summary>
         public int Priority;
         internal int PriorityInterrupts;
 
+        /// <summary>
+        /// The up call thread. This Thread is waiting for the Child Thread.
+        /// </summary>
         public Thread ChildThread;
+
+        /// <summary>
+        /// The parent thread, thats waiting for this thread.
+        /// </summary>
         public Thread ParentThread;
 
+        /// <summary>
+        /// Writes arguments for the entrypoint on the initial stack
+        /// </summary>
         public void SetArgument(uint offsetBytes, uint value)
         {
+            if (Status != ThreadStatus.Creating)
+                throw new InvalidOperationException();
+
             var argAddr = (uint*)GetArgumentAddr(offsetBytes);
             argAddr[0] = value;
         }

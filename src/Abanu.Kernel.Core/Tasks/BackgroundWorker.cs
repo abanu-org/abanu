@@ -12,6 +12,11 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel.Core.Tasks
 {
 
+    /// <summary>
+    /// Kernel background worker.
+    /// By design, a kernel is a service and should not doing stuff at his own.
+    /// Use background task carefully. Don't waste CPU cycles.
+    /// </summary>
     public static class BackgroundWorker
     {
 

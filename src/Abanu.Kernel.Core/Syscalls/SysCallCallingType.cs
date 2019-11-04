@@ -3,7 +3,7 @@
 
 namespace Abanu.Kernel.Core.SysCalls
 {
-    public enum CallingType : byte
+    public enum SysCallCallingType : byte
     {
         Sync,
         Async,

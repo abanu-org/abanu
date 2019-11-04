@@ -8,6 +8,12 @@ using Abanu.Kernel.Core.PageManagement;
 
 namespace Abanu.Kernel.Core.MemoryManagement
 {
+
+    // VirtualPageManager depends on PhysicalPageManagaer
+
+    /// <summary>
+    /// Manages virtual Kernel Pages.
+    /// </summary>
     public static class VirtualPageManager
     {
 

@@ -22,10 +22,16 @@ namespace Abanu.Kernel.Core.SysCalls
     public class SysCallHandlerInfo
     {
         public SysCallTarget CommandID;
-        //public uint Arguments;
-        //public string Name;
         public DSysCallInfoHandler Handler;
+
+        /// <summary>
+        /// The process that should handle this command
+        /// </summary>
         public Process Process;
+
+        /// <summary>
+        /// if true, this command will be debugged
+        /// </summary>
         public bool Debug;
     }
 

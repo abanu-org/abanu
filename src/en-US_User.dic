@@ -5,6 +5,7 @@ Alloc
 app
 apps
 Arakis
+async
 Bochs
 bool
 bootinfo
@@ -25,6 +26,7 @@ Datetime
 Debian
 dev
 distros
+entrypoint
 foreach
 fputs
 framebuffer
@@ -81,7 +83,9 @@ Schedulable
 seg
 sizeof
 sourcecode
+spinlock
 src
+stackframe
 stackoverflow
 str
 struct
