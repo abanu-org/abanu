@@ -6,6 +6,9 @@ using System;
 namespace Abanu.Kernel.Core.Interrupts
 {
 
+    /// <summary>
+    /// IRQs of known interrupts
+    /// </summary>
     public enum KnownInterrupt : uint
     {
 

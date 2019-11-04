@@ -38,9 +38,16 @@ namespace Abanu.Kernel.Core.Interrupts
 
         public static bool Enabled = false;
 
+        /// <summary>
+        /// Holds 256 InterruptInfo entries
+        /// </summary>
         internal static InterruptInfo[] Handlers;
 
+        /// <summary>
+        /// Address of the Interrupt Descriptor Table
+        /// </summary>
         private static Addr IDTAddr;
+
         public static InterruptControlBlock* ControlBlock;
 
         public static void Setup()
@@ -50,7 +57,7 @@ namespace Abanu.Kernel.Core.Interrupts
 
             InitControlBlock();
 
-            //IDTAddr = PhysicalPageManager.AllocatePageAddr(AllocatePageOptions.Continuous);
+            // Allocate memory for the IDT
             IDTAddr = VirtualPageManager.AllocatePages(1);
             KernelMemoryMapManager.Header->Used.Add(new KernelMemoryMap(IDTAddr, 4096, BootInfoMemoryType.IDT, AddressSpaceKind.Virtual));
             PageTable.KernelTable.SetWritable(IDTAddr, 4096);
@@ -83,6 +90,7 @@ namespace Abanu.Kernel.Core.Interrupts
                 Handlers[i] = info;
             }
 
+            // Set basic Interrupt handlers
             SetInterruptHandler(KnownInterrupt.DivideError, InterruptHandlers.DivideError);
             SetInterruptHandler(KnownInterrupt.ArithmeticOverflowException, InterruptHandlers.ArithmeticOverflowException);
             SetInterruptHandler(KnownInterrupt.BoundCheckError, InterruptHandlers.BoundCheckError);
@@ -102,6 +110,7 @@ namespace Abanu.Kernel.Core.Interrupts
 
             SetInterruptPreHandler(KnownInterrupt.Keyboard, InterruptHandlers.Keyboard);
 
+            // apply IDT
             Start();
         }
 
@@ -123,6 +132,9 @@ namespace Abanu.Kernel.Core.Interrupts
             return (ReadFlags() & X86_EFlags.InterruptEnableFlag) != 0;
         }
 
+        /// <summary>
+        /// Enable the IDTManager
+        /// </summary>
         public static void Start()
         {
             KernelMessage.Write("Enabling interrupts...");
@@ -131,6 +143,9 @@ namespace Abanu.Kernel.Core.Interrupts
             KernelMessage.WriteLine("done");
         }
 
+        /// <summary>
+        /// Stop the IDTManager
+        /// </summary>
         public static void Stop()
         {
             KernelMessage.Write("Disable interrupts");
@@ -138,6 +153,9 @@ namespace Abanu.Kernel.Core.Interrupts
             Enabled = false;
         }
 
+        /// <summary>
+        /// Load the IDT
+        /// </summary>
         public static void Flush()
         {
             if (!Enabled)

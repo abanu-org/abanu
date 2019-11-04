@@ -9,6 +9,9 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel.Core.Elf
 {
 
+    /// <summary>
+    /// Holds a reference to the Kernel's ELF sections
+    /// </summary>
     public static unsafe class KernelElf
     {
         public static ElfSections Main;

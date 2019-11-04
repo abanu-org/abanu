@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 namespace Abanu.Kernel.Core.Interrupts
 {
 
+    /// <summary>
+    /// Holds informations of the interrupted process and the raised interrupt
+    /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     public struct IDTStack
     {

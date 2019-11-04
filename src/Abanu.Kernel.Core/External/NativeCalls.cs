@@ -9,6 +9,9 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel.Core.External
 {
 
+    /// <summary>
+    /// Provide access to embedded assembly code
+    /// </summary>
     public static class NativeCalls
     {
         private static uint prog1Addr;
@@ -38,6 +41,9 @@ namespace Abanu.Kernel.Core.External
             Native.Call(prog2Addr);
         }
 
+        /// <summary>
+        /// Magic Breakpoint for Bochs. If called, Bochs will break.
+        /// </summary>
         public static void BochsDebug()
         {
             Native.Call(bochsDebugAddr);

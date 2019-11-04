@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 namespace Abanu.Kernel.Core.Interrupts
 {
     /// <summary>
-    /// IDT Stack
+    /// If a user space process is interrupted, we have additional values on stack
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     public struct IDTTaskStack

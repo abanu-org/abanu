@@ -13,7 +13,7 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel.Core.Interrupts
 {
 
-    public static unsafe class InterruptHandlers
+    internal static unsafe class InterruptHandlers
     {
 
         private static void Error(IDTStack* stack, string message)
@@ -36,7 +36,7 @@ namespace Abanu.Kernel.Core.Interrupts
             Panic.Error(message);
         }
 
-        public static void Undefined(IDTStack* stack)
+        internal static void Undefined(IDTStack* stack)
         {
             var handler = IDTManager.Handlers[stack->Interrupt];
             if (handler.NotifyUnhandled)
@@ -46,7 +46,7 @@ namespace Abanu.Kernel.Core.Interrupts
             }
         }
 
-        public static void Service(IDTStack* stack)
+        internal static void Service(IDTStack* stack)
         {
             var handler = IDTManager.Handlers[stack->Interrupt];
             if (handler.Service == null)
@@ -72,7 +72,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 0
         /// </summary>
-        public static void DivideError(IDTStack* stack)
+        internal static void DivideError(IDTStack* stack)
         {
             Error(stack, "Divide Error");
         }
@@ -80,7 +80,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 4
         /// </summary>
-        public static void ArithmeticOverflowException(IDTStack* stack)
+        internal static void ArithmeticOverflowException(IDTStack* stack)
         {
             Error(stack, "Arithmetic Overflow Exception");
         }
@@ -88,7 +88,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 5
         /// </summary>
-        public static void BoundCheckError(IDTStack* stack)
+        internal static void BoundCheckError(IDTStack* stack)
         {
             Error(stack, "Bound Check Error");
         }
@@ -96,7 +96,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 6
         /// </summary>
-        public static void InvalidOpcode(IDTStack* stack)
+        internal static void InvalidOpcode(IDTStack* stack)
         {
             Error(stack, "Invalid Opcode");
         }
@@ -104,7 +104,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 7
         /// </summary>
-        public static void CoProcessorNotAvailable(IDTStack* stack)
+        internal static void CoProcessorNotAvailable(IDTStack* stack)
         {
             Error(stack, "Co-processor Not Available");
         }
@@ -112,7 +112,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 8
         /// </summary>
-        public static void DoubleFault(IDTStack* stack)
+        internal static void DoubleFault(IDTStack* stack)
         {
             //TODO: Analyze Double Fault
             Error(stack, "Double Fault");
@@ -121,7 +121,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 9
         /// </summary>
-        public static void CoProcessorSegmentOverrun(IDTStack* stack)
+        internal static void CoProcessorSegmentOverrun(IDTStack* stack)
         {
             Error(stack, "Co-processor Segment Overrun");
         }
@@ -129,7 +129,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 10
         /// </summary>
-        public static void InvalidTSS(IDTStack* stack)
+        internal static void InvalidTSS(IDTStack* stack)
         {
             Error(stack, "Invalid TSS");
         }
@@ -137,7 +137,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 11
         /// </summary>
-        public static void SegmentNotPresent(IDTStack* stack)
+        internal static void SegmentNotPresent(IDTStack* stack)
         {
             Error(stack, "Segment Not Present");
         }
@@ -145,7 +145,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 12
         /// </summary>
-        public static void StackException(IDTStack* stack)
+        internal static void StackException(IDTStack* stack)
         {
             Error(stack, "Stack Exception");
         }
@@ -153,7 +153,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 13
         /// </summary>
-        public static void GeneralProtectionException(IDTStack* stack)
+        internal static void GeneralProtectionException(IDTStack* stack)
         {
             Error(stack, "General Protection Exception");
         }
@@ -161,7 +161,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 14
         /// </summary>
-        public static void PageFault(IDTStack* stack)
+        internal static void PageFault(IDTStack* stack)
         {
             // Check if Null Pointer Exception
             // Otherwise handle as Page Fault
@@ -195,7 +195,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 16
         /// </summary>
-        public static void CoProcessorError(IDTStack* stack)
+        internal static void CoProcessorError(IDTStack* stack)
         {
             Error(stack, "Co-Processor Error");
         }
@@ -203,7 +203,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 19
         /// </summary>
-        public static void SIMDFloatinPointException(IDTStack* stack)
+        internal static void SIMDFloatinPointException(IDTStack* stack)
         {
             Error(stack, "SIMD Floating-Point Exception");
         }
@@ -211,7 +211,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 32
         /// </summary>
-        public static void ClockTimer(IDTStack* stack)
+        internal static void ClockTimer(IDTStack* stack)
         {
             //Screen.Goto(15, 5);
             //Screen.Write(IDTManager.RaisedCount);
@@ -222,7 +222,7 @@ namespace Abanu.Kernel.Core.Interrupts
             Scheduler.ClockInterrupt(new IntPtr(stack));
         }
 
-        public static void Keyboard(IDTStack* stack)
+        internal static void Keyboard(IDTStack* stack)
         {
             //Screen.Goto(15, 5);
             //Screen.Write(IDTManager.RaisedCount);
@@ -289,7 +289,7 @@ namespace Abanu.Kernel.Core.Interrupts
             }
         }
 
-        public static void TermindateCurrentThread(IDTStack* stack)
+        internal static void TermindateCurrentThread(IDTStack* stack)
         {
             Scheduler.TerminateCurrentThread();
         }

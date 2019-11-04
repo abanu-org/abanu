@@ -10,9 +10,15 @@ using System.Threading.Tasks;
 
 namespace Abanu.Kernel.Core.Interrupts
 {
+    /// <summary>
+    /// Holds informations for the ISR
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct InterruptControlBlock
     {
+        /// <summary>
+        /// Holds the address of the Kernel Page Table, so the ISR can switch the address space
+        /// </summary>
         public uint KernelPageTableAddr;
     }
 }
