@@ -53,7 +53,7 @@ This project is in active development. This is already implemented:
 
 ## Contributing
 
-Feel free to contact us, open a Issue or a Pull Request.
+Feel free to contact us, open an Issue or a Pull Request.
 
 ## License
 Abanu is published under the MIT License. This software includes third party open source software components. Each of these software components have their own license. All sourcecode is open source.
