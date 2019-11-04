@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Abanu.Kernel.Core.Boot;
 using Abanu.Kernel.Core.MemoryManagement;
 using Abanu.Kernel.Core.PageManagement;
+using Abanu.Kernel.Core.Processes;
 using Abanu.Kernel.Core.Scheduling;
 using Abanu.Kernel.Core.SysCalls;
 using Mosa.Runtime;
@@ -181,7 +182,7 @@ namespace Abanu.Kernel.Core.Interrupts
             SetInterruptHandler((uint)interrupt, interruptHandler);
         }
 
-        internal static void SetInterruptHandler(uint interrupt, InterruptHandler interruptHandler, Service service = null)
+        internal static void SetInterruptHandler(uint interrupt, InterruptHandler interruptHandler, ProcessService service = null)
         {
             if (interruptHandler == null)
                 interruptHandler = InterruptHandlers.Undefined;

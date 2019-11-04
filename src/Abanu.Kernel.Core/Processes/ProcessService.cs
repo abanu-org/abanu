@@ -3,11 +3,12 @@
 
 using Abanu.Kernel.Core.Elf;
 using Abanu.Kernel.Core.Processes;
+using Abanu.Kernel.Core.Scheduling;
 using Abanu.Kernel.Core.SysCalls;
 
-namespace Abanu.Kernel.Core.Scheduling
+namespace Abanu.Kernel.Core.Processes
 {
-    public class Service
+    public class ProcessService
     {
 
         public Process Process;
@@ -15,7 +16,7 @@ namespace Abanu.Kernel.Core.Scheduling
 
         private Addr DefaultDispatchEntryPoint;
 
-        public Service(Process proc)
+        public ProcessService(Process proc)
         {
             Process = proc;
             Status = ServiceStatus.NotInizialized;

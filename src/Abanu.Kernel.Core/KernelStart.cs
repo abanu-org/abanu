@@ -117,8 +117,8 @@ namespace Abanu.Kernel.Core
                 ProcessManager.Setup(StartupStage2);
         }
 
-        private static Service Serv;
-        private static Service FileServ;
+        private static ProcessService Serv;
+        private static ProcessService FileServ;
 
         private static unsafe void StartupStage2()
         {

@@ -41,6 +41,9 @@
     <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Interrupts\IDTTaskStack.cs" />
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
+    <Compile Include="SysCalls\SysCallContext.cs" />
+    <Compile Include="SysCalls\SysCallHandlers.cs" />
+    <Compile Include="SysCalls\SysCallHandlerInfo.cs" />
     <Compile Include="Tests\CodeTests.cs" />
     <Compile Include="Tests\ThreadTests.cs" />
     <Compile Include="Tests\NonThreadTests.cs" />
@@ -66,8 +69,8 @@
     <Compile Include="Processes\ProcessManager.cs" />
     <Compile Include="Scheduling\Uninterruptible.cs" />
     <Compile Include="Scheduling\UninterruptibleMonitor.cs" />
-    <Compile Include="Syscalls\Service.cs" />
-    <Compile Include="Syscalls\SysCallManager.cs" />
+    <Compile Include="Processes\ProcessService.cs" />
+    <Compile Include="SysCalls\SysCallManager.cs" />
     <Compile Include="Tasks\BackgroundWorker.cs" />
     <Compile Include="Diagnostics\AsmDebugFunction.cs" />
     <Compile Include="Scheduling\ThreadStartOptions.cs" />

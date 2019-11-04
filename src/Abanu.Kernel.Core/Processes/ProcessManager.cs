@@ -65,7 +65,7 @@ namespace Abanu.Kernel.Core.Processes
                 ProcessList.Add(proc);
             proc.User = options.User;
             proc.PageTable = PageTable.KernelTable;
-            proc.Service = new Service(proc);
+            proc.Service = new ProcessService(proc);
             return proc;
         }
 

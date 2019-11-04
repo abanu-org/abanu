@@ -46,6 +46,6 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Holds a reference to the dispatching service for this handler
         /// </summary>
-        public Service Service;
+        public ProcessService Service;
     }
 }

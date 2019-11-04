@@ -40,7 +40,7 @@ namespace Abanu.Kernel.Core.Processes
         public IPageTable PageTable;
         internal Addr PageTableAllocAddr;
 
-        public Service Service;
+        public ProcessService Service;
 
         public IPageFrameAllocator UserPageAllocator;
 
