@@ -58,9 +58,7 @@ namespace Abanu.Kernel.Core
                 KernelMessage.WriteLine("Apply PageTableType: {0}", (uint)BootInfo.Header->PageTableType);
                 KernelMessage.WriteLine("GCInitialMemory: {0:X8}-{1:X8}", Address.GCInitialMemory, Address.GCInitialMemory + Address.GCInitialMemorySize - 1);
 
-                Ulongtest1();
-                Ulongtest2();
-                InlineTest();
+                CodeTests.Run();
 
                 // Detect environment (Memory Maps, Video Mode, etc.)
                 BootInfo.SetupStage2();
@@ -104,7 +102,7 @@ namespace Abanu.Kernel.Core
                 StartUp.InitializeRuntimeMetadata();
 
                 KernelMessage.WriteLine("Performing some Non-Thread Tests");
-                Tests();
+                NonThreadTests.RunTests();
             }
             catch (Exception ex)
             {
@@ -128,13 +126,8 @@ namespace Abanu.Kernel.Core
                 if (!KConfig.SingleThread)
                 {
                     Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(BackgroundWorker.ThreadMain) { DebugName = "BackgroundWorker", Priority = -5 }).Start();
-                    Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(Thread0) { DebugName = "KernelThread0", Priority = -5 }).Start();
 
-                    var userProc = ProcessManager.CreateEmptyProcess(new ProcessCreateOptions { User = false });
-                    userProc.Path = "/buildin/testproc";
-                    Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread1) { AllowUserModeIOPort = true, DebugName = "UserThread1", Priority = -5 });
-                    Scheduler.CreateThread(userProc, new ThreadStartOptions(Thread2) { AllowUserModeIOPort = true, DebugName = "UserThread2", Priority = -5 });
-                    userProc.Start();
+                    ThreadTests.StartTestThreads();
 
                     var fileProc = ProcessManager.StartProcess("Service.Basic");
                     FileServ = fileProc.Service;
@@ -221,184 +214,6 @@ namespace Abanu.Kernel.Core
             IDTManager.Start();
         }
 
-        private static void Thread0()
-        {
-            KernelMessage.WriteLine("Thread0: Enter");
-            uint tsLast = 0;
-            //var chars = new char[] { '-', '/', '|', '\\' };
-            var chars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            var charIdx = 0;
-            while (true)
-            {
-                Scheduler.Sleep(0);
-                var ts = PerformanceCounter.GetReadableCounter();
-                if (ts - tsLast < 1000)
-                    continue;
-
-                Screen.SetChar(chars[charIdx], 0, 30, ConsoleColor.White, ConsoleColor.Red);
-                charIdx++;
-                if (charIdx >= chars.Length)
-                    charIdx = 0;
-                tsLast = ts;
-            }
-            KernelMessage.WriteLine("Thread0: Finished");
-        }
-
-        private static void Thread1()
-        {
-            KernelMessage.WriteLine("Thread1: Enter");
-            uint tsLast = 0;
-            //var chars = new char[] { '-', '/', '|', '\\' };
-            var chars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            var charIdx = 0;
-            while (true)
-            {
-                Scheduler.Sleep(0);
-                var ts = PerformanceCounter.GetReadableCounter();
-                if (ts - tsLast < 1000)
-                    continue;
-
-                Screen.SetChar(chars[charIdx], 0, 32, ConsoleColor.White, ConsoleColor.Green);
-                charIdx++;
-                if (charIdx >= chars.Length)
-                    charIdx = 0;
-
-                //PhysicalPageManager.DumpPages();
-                //PhysicalPageManager.DumpStats();
-                //VirtualPageManager.DumpStats();
-
-                tsLast = ts;
-            }
-            KernelMessage.WriteLine("Thread1: Finished");
-        }
-
-        private static void Thread2()
-        {
-            KernelMessage.WriteLine("Thread2: Enter");
-            uint tsLast = 0;
-            //var chars = new char[] { '-', '/', '|', '\\' };
-            var chars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            var charIdx = 0;
-            var i = 0;
-            while (true)
-            {
-                Scheduler.Sleep(0);
-                var ts = PerformanceCounter.GetReadableCounter();
-                if (ts - tsLast < 1000)
-                    continue;
-
-                Screen.SetChar(chars[charIdx], 0, 34, ConsoleColor.White, ConsoleColor.Red);
-                charIdx++;
-                if (charIdx >= chars.Length)
-                    charIdx = 0;
-                tsLast = ts;
-                if (i++ > 10)
-                    break;
-            }
-            KernelMessage.WriteLine("Thread2: Finished");
-            //while (true)
-            //    i++;
-        }
-
-        // public unsafe static void InitialKernelProtect()
-        // {
-        //     KernelMessage.WriteLine("Protecting Memory...");
-
-        //     // PageDirectoryEntry* pde = (PageDirectoryEntry*)AddrPageDirectory;
-        //     // for (int index = 0; index < 1024; index++)
-        //     // {
-        //     //   pde[index].Writable = false;
-        //     // }
-
-        //     // PageTable.PageTableEntry* pte = (PageTable.PageTableEntry*)PageTable.AddrPageTable;
-        //     // for (int index = 0; index < 1024 * 32; index++)
-        //     //   pte[index].Writable = false;
-
-        //     // InitialKernelProtect_MakeWritable_ByRegion(0, 90 * 1024 * 1024);
-
-        //     KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
-        //     Native.SetCR3(PageTable.AddrPageDirectory);
-        //     //Native.Invlpg();
-        //     KernelMessage.WriteLine("Protecting Memory done");
-        // }
-
-        // public unsafe static void InitialKernelProtect_MakeWritable_ByRegion(uint startVirtAddr, uint endVirtAddr)
-        // {
-        //     InitialKernelProtect_MakeWritable_BySize(startVirtAddr, endVirtAddr - startVirtAddr);
-        // }
-
-        // public unsafe static void InitialKernelProtect_MakeWritable_BySize(uint virtAddr, uint size)
-        // {
-        //     var pages = KMath.DivCeil(size, 4096);
-        //     for (var i = 0; i < pages; i++)
-        //     {
-        //         var entry = PageTable.GetTableEntry(virtAddr);
-        //         entry->Writable = true;
-        //     }
-        // }
-
-        private static void Ulongtest1()
-        {
-            uint mask = 0x00004000;
-            uint v1 = 0x00000007;
-            uint r1 = v1.SetBits(12, 52, mask, 12); //52 with uint makes no sense, but this doesn't matter in this case, the result just works as expected. It works correct with count<32, too, of course.
-                                                    // r1 =  00004007
-            ulong v2 = v1;
-            ulong r2 = v2.SetBits(12, 52, mask, 12);
-            uint r2Int = (uint)r2;
-            // r2Int = 00000007. This is wrong. It should be the same as r1.
-
-            KernelMessage.WriteLine("bla1: {0:X8}", r1);
-            KernelMessage.WriteLine("bla2: {0:X8}", r2Int);
-        }
-
-        private static unsafe void InlineTest()
-        {
-            Addr addr = 0x1000;
-            Addr addr2 = 0x1000u;
-            Addr addr3 = addr + addr3;
-        }
-
-        private static unsafe void Ulongtest2()
-        {
-            ulong addr = 0x0000000019ad000;
-            ulong data = 40004005;
-            ulong result = data.SetBits(12, 52, addr, 12);
-
-            var rAddr = (uint*)(void*)&result;
-            var r1 = rAddr[0];
-            var r2 = rAddr[1];
-
-            KernelMessage.WriteLine("r1: {0:X8}", r1);
-            KernelMessage.WriteLine("r2: {0:X8}", r2);
-        }
-
-        public static void Tests()
-        {
-            var ar = new KList<uint>();
-            ar.Add(44);
-            ar.Add(55);
-            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
-            foreach (var num in ar)
-            {
-                KernelMessage.WriteLine("VAL: {0}", num);
-            }
-            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
-            ar.Destroy();
-
-            KernelMessage.WriteLine("Phys Pages free: {0}", PhysicalPageManager.FreePages);
-
-            for (var i = 0; i < 10000; i++)
-            {
-                var s = new int[] { 1, 2, 3, 4, };
-                s[1] = 5;
-                Memory.FreeObject(s);
-            }
-            KernelMessage.WriteLine("Phys Pages free: {0}", PhysicalPageManager.FreePages);
-            //Memory.FreeObject(s);
-
-        }
-
         public static void AppMain()
         {
             KernelMessage.WriteLine("Kernel ready");
@@ -450,4 +265,5 @@ namespace Abanu.Kernel.Core
         }
 
     }
+
 }

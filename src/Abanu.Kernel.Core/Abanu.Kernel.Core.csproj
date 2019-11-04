@@ -41,6 +41,9 @@
     <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Interrupts\IDTTaskStack.cs" />
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
+    <Compile Include="Tests\CodeTests.cs" />
+    <Compile Include="Tests\ThreadTests.cs" />
+    <Compile Include="Tests\NonThreadTests.cs" />
     <Compile Include="MemoryManagement\KernelAllocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMapManager.cs" />
     <Compile Include="MemoryManagement\PageAllocators\BuddyPageAllocator.cs" />
@@ -92,7 +95,6 @@
     <Compile Include="Boot\BootInfo.cs" />
     <Compile Include="MemoryManagement\PageAllocators\PhysicalInitialPageAllocator.cs" />
     <Compile Include="MemoryManagement\KernelMemoryMap.cs" />
-    <Compile Include="Tests\buddy-malloc.cs" />
     <Compile Include="Collections\KList.cs" />
   </ItemGroup>
   <ItemGroup>
