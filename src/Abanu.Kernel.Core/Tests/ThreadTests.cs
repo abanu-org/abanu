@@ -8,6 +8,8 @@ using Abanu.Kernel.Core.Processes;
 using Abanu.Kernel.Core.Scheduling;
 using Abanu.Kernel.Core.Tasks;
 
+#pragma warning disable CA2000 // Dispose objects before losing scope
+
 namespace Abanu.Kernel.Core
 {
 
@@ -106,6 +108,14 @@ namespace Abanu.Kernel.Core
             KernelMessage.WriteLine("Thread2: Finished");
             //while (true)
             //    i++;
+        }
+
+        /// <summary>
+        /// Signal the Integration tests, that Test was successful.
+        /// </summary>
+        public static void TriggerTestPassed()
+        {
+            Uninterruptible.Execute(() => KernelMessage.WriteLine(KConfig.SelfTestPassedMarker));
         }
 
     }

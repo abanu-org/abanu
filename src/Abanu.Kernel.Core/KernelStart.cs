@@ -76,9 +76,8 @@ namespace Abanu.Kernel.Core
 
                 PhysicalPageManager.Setup();
 
-                KernelMessage.WriteLine("Phys free: {0}", PhysicalPageManager.FreePages);
-                PhysicalPageManager.AllocatePages(10);
-                KernelMessage.WriteLine("Phys free: {0}", PhysicalPageManager.FreePages);
+                NonThreadTests.TestPhysicalPageAllocation();
+
                 VirtualPageManager.Setup();
 
                 Memory.Setup();
@@ -115,11 +114,10 @@ namespace Abanu.Kernel.Core
                 ProcessManager.Setup(StartupStage2);
         }
 
-        public static Service Serv;
-        public static Service FileServ;
-        public static Service ServHostCommunication;
+        private static Service Serv;
+        private static Service FileServ;
 
-        public static unsafe void StartupStage2()
+        private static unsafe void StartupStage2()
         {
             try
             {
@@ -184,9 +182,9 @@ namespace Abanu.Kernel.Core
             }
         }
 
-        public static Addr TssAddr = null;
+        internal static Addr TssAddr = null;
 
-        public static unsafe void InitializeUserMode()
+        private static unsafe void InitializeUserMode()
         {
             if (!KConfig.UseUserMode)
                 return;
@@ -205,22 +203,14 @@ namespace Abanu.Kernel.Core
             });
         }
 
-        public static void AppMain()
+        private static void AppMain()
         {
             KernelMessage.WriteLine("Kernel ready");
 
-            TriggerTestPassed();
+            ThreadTests.TriggerTestPassed();
 
             // We have nothing to do (yet). So let's stop.
             Debug.Break();
-        }
-
-        /// <summary>
-        /// Signal the Integration tests, that Test was successful.
-        /// </summary>
-        private static void TriggerTestPassed()
-        {
-            Uninterruptible.Execute(() => KernelMessage.WriteLine(KConfig.SelfTestPassedMarker));
         }
 
         private static void Dummy()

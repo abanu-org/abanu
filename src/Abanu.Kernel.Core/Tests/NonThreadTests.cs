@@ -35,6 +35,14 @@ namespace Abanu.Kernel.Core
             //Memory.FreeObject(s);
 
         }
+
+        public static unsafe void TestPhysicalPageAllocation()
+        {
+            KernelMessage.WriteLine("Phys free: {0}", PhysicalPageManager.FreePages);
+            PhysicalPageManager.AllocatePages(10);
+            KernelMessage.WriteLine("Phys free: {0}", PhysicalPageManager.FreePages);
+        }
+
     }
 
 }
