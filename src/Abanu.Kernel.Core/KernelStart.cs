@@ -185,9 +185,6 @@ namespace Abanu.Kernel.Core
         }
 
         public static Addr TssAddr = null;
-        //public static Addr kernelStack = null;
-        //public static Addr kernelStackBottom = null;
-        //public static USize kernelStackSize = null;
 
         public static unsafe void InitializeUserMode()
         {
@@ -196,22 +193,16 @@ namespace Abanu.Kernel.Core
 
             if (KConfig.UseTaskStateSegment)
             {
-                //kernelStackSize = 256 * 4096;
                 TssAddr = VirtualPageManager.AllocatePages(1);
                 PageTable.KernelTable.SetWritable(TssAddr, 4096);
                 KernelMemoryMapManager.Header->Used.Add(new KernelMemoryMap(TssAddr, 4096, BootInfoMemoryType.TSS, AddressSpaceKind.Virtual));
-                //kernelStack = RawVirtualFrameAllocator.RequestRawVirtalMemoryPages(256); // TODO: Decrease Kernel Stack, because Stack have to be changed directly because of multi-threading.
-                //kernelStackBottom = kernelStack + kernelStackSize;
-
-                //KernelMessage.WriteLine("tssEntry: {0:X8}, tssKernelStack: {1:X8}-{2:X8}", tssAddr, kernelStack, kernelStackBottom - 1);
-
-                //MemoryManagement.PageTableExtensions.SetWritable(PageTable.KernelTable, kernelStack, 256 * 4096);
             }
 
             // Disabling Interrupts here is very important, otherwise we will get randomly an Invalid TSS Exception.
-            IDTManager.Stop();
-            GDT.SetupUserMode(TssAddr);
-            IDTManager.Start();
+            Uninterruptible.Execute(() =>
+            {
+                GDT.SetupUserMode(TssAddr);
+            });
         }
 
         public static void AppMain()
@@ -240,21 +231,6 @@ namespace Abanu.Kernel.Core
             // if its nowhere used. Than the Compiler doesn't know about that reference
             // and the Compilation will fail
             Mosa.Runtime.x86.Internal.ExceptionHandler();
-        }
-
-        public const uint Columns = 80;
-
-        /// <summary>
-        /// The rows
-        /// </summary>
-        public const uint Rows = 40;
-
-        public static void RawWrite(uint row, uint column, char chr, byte color)
-        {
-            Pointer address = new Pointer(0x0B8000 + (((row * Columns) + column) * 2));
-
-            Intrinsic.Store8(address, (byte)chr);
-            Intrinsic.Store8(address, 1, color);
         }
 
         private static void AssertError(string message, uint arg1 = 0, uint arg2 = 0, uint arg3 = 0)
