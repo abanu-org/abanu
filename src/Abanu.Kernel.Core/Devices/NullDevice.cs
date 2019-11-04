@@ -6,6 +6,9 @@ using System;
 namespace Abanu.Kernel.Core.Devices
 {
 
+    /// <summary>
+    /// This device will always return 0. Written bytes will written nowhere.
+    /// </summary>
     public class NullDevice : IBuffer
     {
 
@@ -13,11 +16,17 @@ namespace Abanu.Kernel.Core.Devices
         {
         }
 
+        /// <summary>
+        /// Returns always 0
+        /// </summary>
         public unsafe SSize Read(byte* buf, USize count)
         {
             return 0;
         }
 
+        /// <summary>
+        /// Written bytes will written nowhere
+        /// </summary>
         public unsafe SSize Write(byte* buf, USize count)
         {
             return (uint)count;

@@ -111,7 +111,7 @@ namespace Abanu.Kernel.Core.SysCalls
 
             if (info.Debug)
             {
-                Panic.DumpStats();
+                KDebug.DumpStats();
                 Debug.Nop();
             }
 

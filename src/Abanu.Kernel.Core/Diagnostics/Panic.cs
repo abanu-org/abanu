@@ -11,7 +11,7 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel.Core.Diagnostics
 {
     /// <summary>
-    /// Panic
+    /// Kernel Panic
     /// </summary>
     public static class Panic
     {
@@ -33,6 +33,9 @@ namespace Abanu.Kernel.Core.Diagnostics
         public static uint CR2 = 0;
         public static uint FS = 0;
 
+        /// <summary>
+        /// Prints the error and halts the system
+        /// </summary>
         public static void Error(string message)
         {
             Native.Cli();
@@ -83,14 +86,7 @@ namespace Abanu.Kernel.Core.Diagnostics
             }
         }
 
-        public static void DumpStats()
-        {
-            Scheduler.DumpStats();
-            ProcessManager.DumpStats();
-            VirtualPageManager.DumpStats();
-        }
-
-        public static void DumpRegisters()
+        private static void DumpRegisters()
         {
             Screen.Write("EIP: ");
             Screen.Write(EIP, 16, 8);
@@ -127,7 +123,7 @@ namespace Abanu.Kernel.Core.Diagnostics
             Screen.NextLine();
         }
 
-        public static void DumpStackTrace()
+        private static void DumpStackTrace()
         {
             DumpStackTrace(3);
         }

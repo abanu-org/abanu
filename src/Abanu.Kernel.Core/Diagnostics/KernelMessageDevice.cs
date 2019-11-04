@@ -7,6 +7,9 @@ using Abanu.Kernel.Core.Devices;
 namespace Abanu.Kernel.Core.Diagnostics
 {
 
+    /// <summary>
+    /// Target for Kernel messages. It will write the output to screen and to serial.
+    /// </summary>
     public class KernelMessageDevice : IBuffer
     {
 
@@ -14,9 +17,12 @@ namespace Abanu.Kernel.Core.Diagnostics
         {
         }
 
+        /// <summary>
+        /// Reading is not supported
+        /// </summary>
         public unsafe SSize Read(byte* buf, USize count)
         {
-            return 0;
+            throw new NotSupportedException();
         }
 
         public unsafe SSize Write(byte* buf, USize count)

@@ -4,18 +4,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Abanu.Kernel.Core.MemoryManagement;
+using Abanu.Kernel.Core.Processes;
+using Abanu.Kernel.Core.Scheduling;
 
 namespace Abanu.Kernel.Core.Diagnostics
 {
 
-    // Currently unused
-    internal static class AsmDebugFunction
+    public static class KDebug
     {
-        [DllImport("x86/Abanu.DebugFunction1.o", EntryPoint = "DebugFunction1")]
-        public static extern void DebugFunction1();
-
+        public static void DumpStats()
+        {
+            Scheduler.DumpStats();
+            ProcessManager.DumpStats();
+            VirtualPageManager.DumpStats();
+        }
     }
+
 }

@@ -9,6 +9,12 @@ using Abanu.Kernel.Core.MemoryManagement;
 namespace Abanu.Kernel.Core.Collections
 {
 
+    /// <summary>
+    /// A disposable list
+    /// </summary>
+    /// <remarks>
+    /// This is nearly a 1:1 copy of <see cref="List{T}"/>.
+    /// </remarks>
     public class KList<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable
     {
         private const int _defaultCapacity = 4;

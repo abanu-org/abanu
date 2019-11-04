@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Devices\DeviceManager.cs" />
-    <Compile Include="Devices\TerminalDevice.cs" />
+    <Compile Include="Diagnostics\KDebug.cs" />
     <Compile Include="DummyClass.cs" />
     <Compile Include="Interrupts\IDT.cs" />
     <Compile Include="Interrupts\IDTStack.cs" />

@@ -6,6 +6,9 @@ using System;
 namespace Abanu.Kernel.Core.Devices
 {
 
+    /// <summary>
+    /// Generic wrapper for console output
+    /// </summary>
     public class ConsoleDevice : IBuffer
     {
 
@@ -16,14 +19,20 @@ namespace Abanu.Kernel.Core.Devices
             Device = device;
         }
 
-        public unsafe SSize Read(byte* buf, USize count)
-        {
-            return Device.Read(buf, count);
-        }
-
+        /// <summary>
+        /// Sets a new output target
+        /// </summary>
         public void SetOutputDevice(IBuffer device)
         {
             Device = device;
+        }
+
+        /// <summary>
+        /// Writes text to the underlining target
+        /// </summary>
+        public unsafe SSize Read(byte* buf, USize count)
+        {
+            return Device.Read(buf, count);
         }
 
         public unsafe SSize Write(byte* buf, USize count)

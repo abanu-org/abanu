@@ -6,6 +6,9 @@ using System;
 namespace Abanu.Kernel.Core.Devices
 {
 
+    /// <summary>
+    /// Text stream for BIOS Text Screen
+    /// </summary>
     public class BiosTextScreenDevice : IBuffer
     {
 
@@ -13,11 +16,18 @@ namespace Abanu.Kernel.Core.Devices
         {
         }
 
+        /// <summary>
+        /// Reading is not supported
+        /// </summary>
         public unsafe SSize Read(byte* buf, USize count)
         {
-            return 0;
+            throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Writes Text to the BIOS Text Screen.
+        /// The underlining Device is responsible for wrapping and scrolling
+        /// </summary>
         public unsafe SSize Write(byte* buf, USize count)
         {
             for (var i = 0; i < count; i++)

@@ -6,6 +6,10 @@ using Abanu.Kernel.Core.MemoryManagement;
 
 namespace Abanu.Kernel.Core.Collections
 {
+
+    /// <summary>
+    /// A First-in-First-out queue
+    /// </summary>
     public class FifoQueue<T> : IDisposable
     {
 

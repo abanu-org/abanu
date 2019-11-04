@@ -9,6 +9,9 @@ namespace Abanu.Kernel.Core.Boot
     public static unsafe class BootInfo
     {
 
+        /// <summary>
+        /// BootInfo passed from the loader
+        /// </summary>
         public static unsafe BootInfoHeader* Header;
 
         public static bool Present;
@@ -40,26 +43,6 @@ namespace Abanu.Kernel.Core.Boot
             }
         }
 
-        // static void ApplyAddresses()
-        // {
-        //     GDT.KernelSetup(GetAddrOfMapType(BootInfoMemoryType.GDT));
-        //     PageTable.KernelSetup(
-        //         GetAddrOfMapType(BootInfoMemoryType.PageDirectory),
-        //         GetAddrOfMapType(BootInfoMemoryType.PageTable));
-        // }
-
-        // static Addr GetAddrOfMapType(BootInfoMemoryType type)
-        // {
-        //     var mapLen = Header->MemoryMapLength;
-        //     //KernelMessage.WriteLine("Maps: {0}", mapLen);
-        //     for (uint i = 0; i < mapLen; i++)
-        //     {
-        //         if (Header->MemoryMapArray[i].Type == type)
-        //             return Header->MemoryMapArray[i].Start;
-        //     }
-        //     return Addr.Zero;
-        // }
-
         private static void ApplyAddresses()
         {
             GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
@@ -67,10 +50,12 @@ namespace Abanu.Kernel.Core.Boot
             PageTable.KernelTable.KernelSetup(GetMap(BootInfoMemoryType.PageTable)->Start);
         }
 
+        /// <summary>
+        /// Gets a known memory region by type
+        /// </summary>
         public static BootInfoMemory* GetMap(BootInfoMemoryType type)
         {
             var mapLen = Header->MemoryMapLength;
-            //KernelMessage.WriteLine("Maps: {0}", mapLen);
             for (uint i = 0; i < mapLen; i++)
             {
                 if (Header->MemoryMapArray[i].Type == type)

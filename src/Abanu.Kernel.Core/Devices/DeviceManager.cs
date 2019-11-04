@@ -15,9 +15,11 @@ namespace Abanu.Kernel.Core.Devices
     {
 
         public static IBuffer Serial1;
+
         private static IBuffer BiosTextScreen;
         private static IBuffer FrameBufferTextScreen;
         public static ConsoleDevice Console;
+
         public static IBuffer Null;
         public static IBuffer KMsg;
 

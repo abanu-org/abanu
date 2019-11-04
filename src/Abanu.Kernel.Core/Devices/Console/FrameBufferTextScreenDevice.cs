@@ -9,6 +9,9 @@ using Abanu.Kernel.Core.Elf;
 namespace Abanu.Kernel.Core
 {
 
+    /// <summary>
+    /// Basic framebuffer text output.
+    /// </summary>
     public class FrameBufferTextScreenDevice : IBuffer
     {
 
@@ -80,17 +83,16 @@ namespace Abanu.Kernel.Core
 
         // important Note: Do not cause Console Output while drawing
         // otherwise, a stack overflow will occur!
-        internal unsafe void DrawChar(int screenX, int screenY, int charIdx)
+        private unsafe void DrawChar(int screenX, int screenY, int charIdx)
         {
             if (screenX >= Columns || screenY >= Rows)
                 return;
 
+            // TODO: Improve
             var fontSec = KernelElf.Main.GetSectionHeader("consolefont.regular");
             var fontSecAddr = KernelElf.Main.GetSectionPhysAddr(fontSec);
 
             var fontHeader = (PSF1Header*)fontSecAddr;
-
-            //KernelMemory.DumpToConsole(fontSecAddr, 20);
 
             var rows = (int)fontHeader->Charsize;
             var bytesPerRow = 1; //14 bits --> 2 bytes + 2fill bits
@@ -99,7 +101,6 @@ namespace Abanu.Kernel.Core
             var charSize = bytesPerRow * rows;
 
             var charMem = (byte*)(fontSecAddr + sizeof(PSF1Header));
-            //KernelMemory.DumpToConsole((uint)charMem, 20);
 
             for (int y = 0; y < rows; y++)
             {
@@ -115,10 +116,14 @@ namespace Abanu.Kernel.Core
 
         }
 
+        /// <summary>
+        /// Reading text from Framebuffer is not supported
+        /// </summary>
         public unsafe SSize Read(byte* buf, USize count)
         {
-            return 0;
+            throw new NotSupportedException();
         }
+
     }
 
 }

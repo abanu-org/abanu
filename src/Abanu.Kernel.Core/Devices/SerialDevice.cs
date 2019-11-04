@@ -6,6 +6,9 @@ using System;
 namespace Abanu.Kernel.Core.Devices
 {
 
+    /// <summary>
+    /// Wrapper for the Serial interface
+    /// </summary>
     public class SerialDevice : IBuffer
     {
 
