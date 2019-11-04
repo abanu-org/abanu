@@ -1,5 +1,6 @@
 ﻿// This file is part of Abanu, an Operating System written in C#. Web: https://www.abanu.org
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
+
 //#pragma warning disable SA1300 // Element should begin with upper-case letter
 //#pragma warning disable SA1307 // Accessible fields should begin with upper-case letter
 
