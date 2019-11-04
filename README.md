@@ -33,18 +33,23 @@ Visit: [https://docs.abanu.org/en/latest/build.html](http://docs.abanu.org/en/la
 
 ## Status of the OS
 
-This is a research project / proof of concept. So it isn't a fully functional OS. This is implemented:
+This project is in active development. This is already implemented:
 
 - Build tool chain
+- Automated Integration Tests
 - Reading Kernel-Embedded ELF-Files
 - Integration of assembler code within the kernel.
 - Output kernel log messages via serial interface to a text file on the host
 - Scrollable screen output
-- Setup GDT
-- Basic Interrupts
 - Basic Memory Protection
 - Task-Switching
 - User-Mode
+- Console-Server
+- Basic Display-Serer
+- Graphical Demo
+- Integrated [Mosa Drivers](https://github.com/mosa/MOSA-Project/tree/master/Source/Mosa.DeviceDriver)
+- Basic File Operations
+- Basic Interprocess Communication
 
 ## Contributing
 
