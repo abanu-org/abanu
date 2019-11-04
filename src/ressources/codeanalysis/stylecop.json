@@ -15,7 +15,7 @@
             "copyrightText": "This file is part of Abanu, an Operating System written in C#. Web: https://www.abanu.org\nLicensed under the {licenseName} license. See {licenseFile} file in the project root for full license information.",
             "xmlHeader": false,
             "variables": {
-                "licenseName": "GNU 2.0",
+                "licenseName": "MIT",
                 "licenseFile": "LICENSE.txt"
             }
         }
