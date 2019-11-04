@@ -135,8 +135,6 @@ namespace Abanu.Kernel.Core.MemoryManagement
             return Addr.Zero;
         }
 
-        // COMPILER BUG: The presence of the following Methods causes a "Page not mapped" error.
-
         public static unsafe void InitialKernelProtect()
         {
             SetInitialWriteProtection();

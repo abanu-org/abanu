@@ -31,12 +31,15 @@ namespace Abanu.Kernel.Core
             {
 
                 ManagedMemoy.InitializeGCMemory();
+
+                // Initialize static fields
                 StartUp.InitializeAssembly();
+
                 KMath.Init();
-                //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
 
                 BootInfo.SetupStage1();
 
+                // Write protect all possible pages and disallow execution on all non-code pages.
                 Memory.InitialKernelProtect();
 
                 ApiContext.Current = new ApiHost();
@@ -72,19 +75,19 @@ namespace Abanu.Kernel.Core
                 // Initialize the embedded code (actually only a little proof of concept code)
                 NativeCalls.Setup();
 
-                //InitialKernelProtect();
-
                 PhysicalPageManager.Setup();
 
                 NonThreadTests.TestPhysicalPageAllocation();
 
                 VirtualPageManager.Setup();
 
+                // Setup final Memory Allocator
                 Memory.Setup();
 
                 // Now Memory Sub System is working. At this point it's valid
                 // to allocate memory dynamically
 
+                // If we have a Framebuffer, lets try to initialize it.
                 DeviceManager.InitFrameBuffer();
 
                 // Setup Programmable Interrupt Table
@@ -126,6 +129,8 @@ namespace Abanu.Kernel.Core
                     Scheduler.CreateThread(ProcessManager.System, new ThreadStartOptions(BackgroundWorker.ThreadMain) { DebugName = "BackgroundWorker", Priority = -5 }).Start();
 
                     ThreadTests.StartTestThreads();
+
+                    // Start some applications
 
                     var fileProc = ProcessManager.StartProcess("Service.Basic");
                     FileServ = fileProc.Service;
