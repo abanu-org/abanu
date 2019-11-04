@@ -23,28 +23,40 @@ namespace Abanu.Kernel.Core.Processes
     public static class ProcessManager
     {
 
-        private static int NextCreateProcessID;
         public static Process Idle;
         public static Process System;
 
+        private static int NextCreateProcessID;
+
+        /// <summary>
+        /// Setup the <see cref="Scheduler"/> and <see cref="ProcessManager"/>
+        /// </summary>
+        /// <param name="followupTask">After enabling Scheduling, the Kernel will continue with this task.</param>
         public static void Setup(ThreadStart followupTask)
         {
             ProcessList = new KList<Process>();
 
+            // Create idle task
             Idle = CreateEmptyProcess(new ProcessCreateOptions());
             Idle.Path = "/system/idle";
             Idle.RunState = ProcessRunState.Running;
 
+            // Create system task
             System = CreateEmptyProcess(new ProcessCreateOptions());
             System.Path = "/system/main";
             System.RunState = ProcessRunState.Running;
 
+            // Initialize scheduler
             Scheduler.Setup(followupTask);
             Scheduler.Start();
 
+            // If we ever get here, Scheduler as not able to switch to followupTask.
             Panic.Error("Should never get here");
         }
 
+        /// <summary>
+        /// Create an empty Process structure. It will not registered or started.
+        /// </summary>
         public static Process CreateEmptyProcess(ProcessCreateOptions options)
         {
             var proc = new Process();
@@ -57,16 +69,10 @@ namespace Abanu.Kernel.Core.Processes
             return proc;
         }
 
+        /// <summary>
+        /// Holds the reference of every process
+        /// </summary>
         public static KList<Process> ProcessList;
-
-        public static Process GetProcess(int processID)
-        {
-            lock (ProcessList)
-                for (var i = 0; i < ProcessList.Count; i++)
-                    if (ProcessList[i].ProcessID == processID)
-                        return ProcessList[i];
-            return null;
-        }
 
         public static unsafe Process StartProcessFromBuffer(MemoryRegion region, uint argumentBufferSize = 0)
         {
@@ -190,10 +196,31 @@ namespace Abanu.Kernel.Core.Processes
             return kernelSectionHeaderArray;
         }
 
-        public static void KillProcess(int processID)
+        public static Process GetProcessByID(int processID)
+        {
+            lock (ProcessList)
+                for (var i = 0; i < ProcessList.Count; i++)
+                    if (ProcessList[i].ProcessID == processID)
+                        return ProcessList[i];
+            return null;
+        }
+
+        public static unsafe Process GetProcessByName(NullTerminatedString* name)
+        {
+            for (var i = 0; i < ProcessList.Count; i++)
+            {
+                var proc = ProcessList[i];
+                if (name->Equals(proc.Path))
+                    if (proc.RunState == ProcessRunState.Running)
+                        return proc;
+            }
+            return null;
+        }
+
+        public static void KillProcessByID(int processID)
         {
             KernelMessage.WriteLine("Killing process ID {0}", processID);
-            var proc = GetProcess(processID);
+            var proc = GetProcessByID(processID);
             if (proc == null)
                 return;
 
@@ -224,18 +251,9 @@ namespace Abanu.Kernel.Core.Processes
             return sym->Value;
         }
 
-        public static unsafe Process GetProcessByName(NullTerminatedString* name)
-        {
-            for (var i = 0; i < ProcessList.Count; i++)
-            {
-                var proc = ProcessList[i];
-                if (name->Equals(proc.Path))
-                    if (proc.RunState == ProcessRunState.Running)
-                        return proc;
-            }
-            return null;
-        }
-
+        /// <summary>
+        /// Dump the statistics of interest
+        /// </summary>
         public static unsafe void DumpStats()
         {
             for (var i = 0; i < ProcessList.Count; i++)

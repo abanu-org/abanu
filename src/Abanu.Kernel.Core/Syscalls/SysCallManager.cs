@@ -186,7 +186,7 @@ namespace Abanu.Kernel.Core.SysCalls
 
             var targetProc = ProcessManager.System;
             if (targetProcessID > 0)
-                targetProc = ProcessManager.GetProcess(targetProcessID);
+                targetProc = ProcessManager.GetProcessByID(targetProcessID);
             var tableTarget = targetProc.PageTable;
 
             var virtHead = VirtualPageManager.AllocatePages(
@@ -263,7 +263,7 @@ namespace Abanu.Kernel.Core.SysCalls
         {
             var procId = (int)args->Arg1;
             var currentProcId = Scheduler.GetCurrentThread().Process.ProcessID;
-            ProcessManager.KillProcess(procId);
+            ProcessManager.KillProcessByID(procId);
 
             if (procId == currentProcId)
                 Scheduler.ScheduleNextThread();

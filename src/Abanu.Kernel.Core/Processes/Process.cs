@@ -10,22 +10,46 @@ using Abanu.Kernel.Core.Scheduling;
 namespace Abanu.Kernel.Core.Processes
 {
 
+    /// <summary>
+    /// Represents a Process
+    /// </summary>
     public class Process : IDisposable
     {
 
+        /// <summary>
+        /// Unique Process Identifier
+        /// </summary>
         public int ProcessID;
+
         public ProcessRunState RunState;
+
         public KList<Thread> Threads;
         public KList<GlobalAllocation> GlobalAllocations;
+
+        /// <summary>
+        /// Determines if this the process has user or kernel privileges.
+        /// This may not be the same as <see cref="IsKernelProcess"/>.
+        /// </summary>
         public bool User;
+
+        /// <summary>
+        /// Path to executable
+        /// </summary>
         public string Path;
+
         public IPageTable PageTable;
-        public Service Service;
-        //public FifoQueue<byte> StdIn;
         internal Addr PageTableAllocAddr;
+
+        public Service Service;
+
         public IPageFrameAllocator UserPageAllocator;
+
         public Addr UserElfSectionsAddr;
 
+        /// <summary>
+        /// Determines if this process is a user process or a kernel process.
+        /// This may not be the same as <see cref="User"/>.
+        /// </summary>
         public bool IsKernelProcess => PageTable == PageManagement.PageTable.KernelTable;
 
         public Process()
@@ -34,6 +58,7 @@ namespace Abanu.Kernel.Core.Processes
             GlobalAllocations = new KList<GlobalAllocation>();
             //StdIn = new FifoQueue<byte>(256);
         }
+
         public void Dispose()
         {
             //Memory.FreeObject(StdIn);
@@ -44,7 +69,6 @@ namespace Abanu.Kernel.Core.Processes
 
         public void Start()
         {
-            //Service.Init();
             UninterruptibleMonitor.Enter(Threads);
             try
             {

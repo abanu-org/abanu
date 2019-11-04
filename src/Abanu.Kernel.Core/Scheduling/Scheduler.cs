@@ -33,6 +33,10 @@ namespace Abanu.Kernel.Core.Scheduling
 
         public static uint ClockTicks => (uint)clockTicks;
 
+        /// <summary>
+        /// Setup the <see cref="Scheduler"/>
+        /// </summary>
+        /// <param name="followupTask">After enabling Scheduling, the Kernel will continue with this task.</param>
         public static void Setup(ThreadStart followupTask)
         {
             try

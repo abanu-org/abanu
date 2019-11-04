@@ -5,6 +5,9 @@ namespace Abanu.Kernel.Core.Processes
 {
     public struct ProcessCreateOptions
     {
+        /// <summary>
+        /// Determines if the Process should run with user or kernel privileges
+        /// </summary>
         public bool User;
     }
 
