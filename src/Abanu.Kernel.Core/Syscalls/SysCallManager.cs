@@ -19,12 +19,6 @@ using static Abanu.Kernel.Core.Processes.Process;
 namespace Abanu.Kernel.Core.SysCalls
 {
 
-    public enum CallingType : byte
-    {
-        Sync,
-        Async,
-    }
-
     public static unsafe class SysCallManager
     {
 
@@ -47,26 +41,26 @@ namespace Abanu.Kernel.Core.SysCalls
 
         private static void SetCommands()
         {
-            SetCommand(SysCallTarget.RequestMemory, SysCallHandlers.Cmd_RequestMemory);
-            SetCommand(SysCallTarget.RequestMessageBuffer, SysCallHandlers.Cmd_RequestMessageBuffer);
-            SetCommand(SysCallTarget.WriteDebugMessage, SysCallHandlers.Cmd_WriteDebugMessage);
-            SetCommand(SysCallTarget.WriteDebugChar, SysCallHandlers.Cmd_WriteDebugChar);
-            SetCommand(SysCallTarget.SetThreadPriority, SysCallHandlers.Cmd_SetThreadPriority);
-            SetCommand(SysCallTarget.ThreadSleep, SysCallHandlers.Cmd_ThreadSleep);
-            SetCommand(SysCallTarget.RegisterService, SysCallHandlers.Cmd_RegisterService);
-            SetCommand(SysCallTarget.SetServiceStatus, SysCallHandlers.Cmd_SetServiceStatus);
-            SetCommand(SysCallTarget.RegisterInterrupt, SysCallHandlers.Cmd_RegisterInterrupt);
-            //SetCommand(SysCallTarget.ServiceFunc1, Cmd_CallServiceFunc1);
-            SetCommand(SysCallTarget.GetProcessIDForCommand, SysCallHandlers.Cmd_GetProcessIDForCommand);
-            SetCommand(SysCallTarget.GetProcessByName, SysCallHandlers.Cmd_GetProcessByName);
-            SetCommand(SysCallTarget.GetCurrentProcessID, SysCallHandlers.Cmd_GetCurrentProcessID);
-            SetCommand(SysCallTarget.KillProcess, SysCallHandlers.Cmd_KillProcess);
-            SetCommand(SysCallTarget.ServiceReturn, SysCallHandlers.Cmd_ServiceReturn);
-            SetCommand(SysCallTarget.GetPhysicalMemory, SysCallHandlers.Cmd_GetPhysicalMemory);
-            SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, SysCallHandlers.Cmd_TranslateVirtualToPhysicalAddress);
-            SetCommand(SysCallTarget.GetElfSectionsAddress, SysCallHandlers.Cmd_GetElfSectionsAddress);
-            SetCommand(SysCallTarget.GetFramebufferInfo, SysCallHandlers.Cmd_GetFramebufferInfo);
-            SetCommand(SysCallTarget.CreateMemoryProcess, SysCallHandlers.Cmd_CreateMemoryProcess);
+            SetCommand(SysCallTarget.RequestMemory, SysCallHandlers.RequestMemory);
+            SetCommand(SysCallTarget.RequestMessageBuffer, SysCallHandlers.RequestMessageBuffer);
+            SetCommand(SysCallTarget.WriteDebugMessage, SysCallHandlers.WriteDebugMessage);
+            SetCommand(SysCallTarget.WriteDebugChar, SysCallHandlers.WriteDebugChar);
+            SetCommand(SysCallTarget.SetThreadPriority, SysCallHandlers.SetThreadPriority);
+            SetCommand(SysCallTarget.ThreadSleep, SysCallHandlers.ThreadSleep);
+            SetCommand(SysCallTarget.RegisterService, SysCallHandlers.RegisterService);
+            SetCommand(SysCallTarget.SetServiceStatus, SysCallHandlers.SetServiceStatus);
+            SetCommand(SysCallTarget.RegisterInterrupt, SysCallHandlers.RegisterInterrupt);
+            //SetCommand(SysCallTarget.ServiceFunc1, CallServiceFunc1);
+            SetCommand(SysCallTarget.GetProcessIDForCommand, SysCallHandlers.GetProcessIDForCommand);
+            SetCommand(SysCallTarget.GetProcessByName, SysCallHandlers.GetProcessByName);
+            SetCommand(SysCallTarget.GetCurrentProcessID, SysCallHandlers.GetCurrentProcessID);
+            SetCommand(SysCallTarget.KillProcess, SysCallHandlers.KillProcess);
+            SetCommand(SysCallTarget.ServiceReturn, SysCallHandlers.ServiceReturn);
+            SetCommand(SysCallTarget.GetPhysicalMemory, SysCallHandlers.GetPhysicalMemory);
+            SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, SysCallHandlers.TranslateVirtualToPhysicalAddress);
+            SetCommand(SysCallTarget.GetElfSectionsAddress, SysCallHandlers.GetElfSectionsAddress);
+            SetCommand(SysCallTarget.GetFramebufferInfo, SysCallHandlers.GetFramebufferInfo);
+            SetCommand(SysCallTarget.CreateMemoryProcess, SysCallHandlers.CreateMemoryProcess);
         }
 
         private static void FunctionInterruptHandler(IDTStack* stack)

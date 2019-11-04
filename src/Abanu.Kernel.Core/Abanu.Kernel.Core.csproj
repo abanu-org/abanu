@@ -41,6 +41,7 @@
     <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Interrupts\IDTTaskStack.cs" />
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
+    <Compile Include="SysCalls\CallingType.cs" />
     <Compile Include="SysCalls\SysCallContext.cs" />
     <Compile Include="SysCalls\SysCallHandlers.cs" />
     <Compile Include="SysCalls\SysCallHandlerInfo.cs" />

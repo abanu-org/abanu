@@ -21,7 +21,7 @@ namespace Abanu.Kernel.Core.SysCalls
     internal static unsafe class SysCallHandlers
     {
 
-        internal static uint Cmd_ServiceReturn(SysCallContext* context, SystemMessage* args)
+        internal static uint ServiceReturn(SysCallContext* context, SystemMessage* args)
         {
             var servThread = Scheduler.GetCurrentThread();
             servThread.Status = ThreadStatus.Terminated;
@@ -42,7 +42,10 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_RegisteredService(SysCallContext* context, SystemMessage* args)
+        /// <summary>
+        /// Command is handled by another Service (up call)
+        /// </summary>
+        internal static uint RegisteredService(SysCallContext* context, SystemMessage* args)
         {
             var handler = SysCallManager.GetHandler(args->Target);
             var targetProcess = handler.Process;
@@ -53,7 +56,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_RequestMemory(SysCallContext* context, SystemMessage* args)
+        internal static uint RequestMemory(SysCallContext* context, SystemMessage* args)
         {
             var size = args->Arg1;
             size = KMath.AlignValueCeil(size, 4096);
@@ -64,7 +67,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        internal static uint Cmd_GetPhysicalMemory(SysCallContext* context, SystemMessage* args)
+        internal static uint GetPhysicalMemory(SysCallContext* context, SystemMessage* args)
         {
             var physAddr = args->Arg1;
             var pages = KMath.DivCeil(args->Arg2, 4096);
@@ -75,19 +78,19 @@ namespace Abanu.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        internal static uint Cmd_TranslateVirtualToPhysicalAddress(SysCallContext* context, SystemMessage* args)
+        internal static uint TranslateVirtualToPhysicalAddress(SysCallContext* context, SystemMessage* args)
         {
             var virtAddr = args->Arg1;
             return Scheduler.GetCurrentThread().Process.PageTable.GetPhysicalAddressFromVirtual(virtAddr);
         }
 
-        internal static uint Cmd_GetElfSectionsAddress(SysCallContext* context, SystemMessage* args)
+        internal static uint GetElfSectionsAddress(SysCallContext* context, SystemMessage* args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             return proc.UserElfSectionsAddr;
         }
 
-        internal static uint Cmd_GetFramebufferInfo(SysCallContext* context, SystemMessage* args)
+        internal static uint GetFramebufferInfo(SysCallContext* context, SystemMessage* args)
         {
             var virtAddr = args->Arg1;
             var virtPresent = (int*)virtAddr;
@@ -97,7 +100,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_RequestMessageBuffer(SysCallContext* context, SystemMessage* args)
+        internal static uint RequestMessageBuffer(SysCallContext* context, SystemMessage* args)
         {
             var size = args->Arg1;
             var targetProcessID = (int)args->Arg2;
@@ -140,7 +143,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return virtHead;
         }
 
-        internal static uint Cmd_WriteDebugMessage(SysCallContext* context, SystemMessage* args)
+        internal static uint WriteDebugMessage(SysCallContext* context, SystemMessage* args)
         {
             var msg = (NullTerminatedString*)args->Arg1;
             KernelMessage.WriteLine(msg);
@@ -148,14 +151,14 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_WriteDebugChar(SysCallContext* context, SystemMessage* args)
+        internal static uint WriteDebugChar(SysCallContext* context, SystemMessage* args)
         {
             var c = (char)args->Arg1;
             KernelMessage.Write(c);
             return 0;
         }
 
-        internal static uint Cmd_CreateMemoryProcess(SysCallContext* context, SystemMessage* args)
+        internal static uint CreateMemoryProcess(SysCallContext* context, SystemMessage* args)
         {
             var addr = args->Arg1;
             var size = args->Arg2;
@@ -165,7 +168,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_GetProcessByName(SysCallContext* context, SystemMessage* args)
+        internal static uint GetProcessByName(SysCallContext* context, SystemMessage* args)
         {
             var name = (NullTerminatedString*)args->Arg1;
 
@@ -176,12 +179,12 @@ namespace Abanu.Kernel.Core.SysCalls
             return unchecked((uint)-1);
         }
 
-        internal static uint Cmd_GetCurrentProcessID(SysCallContext* context, SystemMessage* args)
+        internal static uint GetCurrentProcessID(SysCallContext* context, SystemMessage* args)
         {
             return (uint)Scheduler.GetCurrentThread().Process.ProcessID;
         }
 
-        internal static uint Cmd_KillProcess(SysCallContext* context, SystemMessage* args)
+        internal static uint KillProcess(SysCallContext* context, SystemMessage* args)
         {
             var procId = (int)args->Arg1;
             var currentProcId = Scheduler.GetCurrentThread().Process.ProcessID;
@@ -192,14 +195,14 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_SetThreadPriority(SysCallContext* context, SystemMessage* args)
+        internal static uint SetThreadPriority(SysCallContext* context, SystemMessage* args)
         {
             Scheduler.SetThreadPriority((int)args->Arg1);
 
             return 0;
         }
 
-        internal static uint Cmd_ThreadSleep(SysCallContext* context, SystemMessage* args)
+        internal static uint ThreadSleep(SysCallContext* context, SystemMessage* args)
         {
             var time = args->Arg1;
             Scheduler.Sleep(time);
@@ -207,16 +210,16 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_RegisterService(SysCallContext* context, SystemMessage* args)
+        internal static uint RegisterService(SysCallContext* context, SystemMessage* args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
-                SysCallManager.SetCommand((SysCallTarget)args->Arg1, Cmd_RegisteredService, proc);
+                SysCallManager.SetCommand((SysCallTarget)args->Arg1, RegisteredService, proc);
 
             return 0;
         }
 
-        internal static uint Cmd_RegisterInterrupt(SysCallContext* context, SystemMessage* args)
+        internal static uint RegisterInterrupt(SysCallContext* context, SystemMessage* args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
@@ -227,7 +230,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_SetServiceStatus(SysCallContext* context, SystemMessage* args)
+        internal static uint SetServiceStatus(SysCallContext* context, SystemMessage* args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
@@ -236,7 +239,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint Cmd_GetProcessIDForCommand(SysCallContext* context, SystemMessage* args)
+        internal static uint GetProcessIDForCommand(SysCallContext* context, SystemMessage* args)
         {
             var handler = SysCallManager.GetHandler((SysCallTarget)args->Arg1);
             var proc = handler.Process;
