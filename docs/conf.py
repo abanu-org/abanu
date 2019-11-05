@@ -37,7 +37,7 @@ copyright = '2008-{}, Abanu Project & contributors'.format(
 )
 
 exclude_patterns = ['_build']
-default_role = 'samp'
+default_role = 'code'
 intersphinx_mapping = {
     'abanu': ('http://docs.abanu.io/en/latest/', None),
 }
@@ -70,3 +70,5 @@ autosectionlabel_prefix_document = True
 
 def setup(app):
     app.add_stylesheet('css/sphinx_prompt_css.css')
+
+pygments_style = 'sphinx'

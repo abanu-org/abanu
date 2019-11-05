@@ -39,7 +39,7 @@ To debug the kernel, run `./abctl debug qemu-kernel`
 Building on Windows
 ===================
 
-The Quick way
+The Quick way 
 -------------
 
 If you want only start run Abanu, just get the sources, open Abanu.sln in Visual Studio, compile whole solution launch the default project (`Abanu.Tools.Build`). However, this is
