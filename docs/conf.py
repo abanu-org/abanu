@@ -37,7 +37,7 @@ copyright = '2008-{}, Abanu Project & contributors'.format(
 )
 
 exclude_patterns = ['_build']
-default_role = 'obj'
+default_role = 'samp'
 intersphinx_mapping = {
     'abanu': ('http://docs.abanu.io/en/latest/', None),
 }
