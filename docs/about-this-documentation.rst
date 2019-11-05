@@ -208,7 +208,7 @@ Diagrams
 .. code-block:: rst
 
   .. graphviz::
- 
+
      digraph foo {
         "bar" -> "baz";
      }

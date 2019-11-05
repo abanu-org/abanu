@@ -1,15 +1,47 @@
-#########################
-Building Abanu on Windows
-#########################
+==============
+Building Abanu
+==============
 
 Abanu can be build platform independent. However, we support
-primary an unix build environment. For Windows Users, we offer a 
+primary an unix build environment. For Windows Users, we offer a
 Step by Step guide.
+
+Building on Linux
+=================
+
+You need some packages:
+
+* `git` version control system
+* `build-essential` Build tools
+* `wget` for downloading additional ressorces
+* `nasm` Assembler
+* `mtools` Creating FAT disk images
+* `grub-*` for creating boot images with bootloader. It will not affect your current system. We need the binaries for the disk creation.
+* `xorriso` Disk creation
+
+You can install them all via::
+  sudo apt-get install -y --no-install-recommends git get nasm qemu-system-x86 mtools xorriso grub-common grub-pc-bin grub-efi-amd64-bin grub-efi-ia32-bin
+
+If you want to debug Abanu, you also need `gdb`.
+
+Download and build:
+
+.. code-block:: sh
+
+  git clone --recursive https://github.com/abanu-org/abanu.git
+  cd abanu
+  make
+
+To run the kernel, just execute `./abctl run qemu x86-grub-vbe`.
+To debug the kernel, run `./abctl debug qemu-kernel`
+
+Building on Windows
+===================
 
 The Quick way
 -------------
 
-If you want only start run Abanu, just get the sources, open Abanu.sln in Visual Studio launch the default project. However, this is
+If you want only start run Abanu, just get the sources, open Abanu.sln in Visual Studio, compile whole solution launch the default project (``Abanu.Tools.Build``). However, this is
 only a shortcut. If you want debug Abanu, you may need the following steps.
 
 
@@ -22,11 +54,11 @@ Before installing any Linux distros for WSL, you must ensure that the "Windows S
 
 .. code-block:: powershell
 
-	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+   Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 
 2. Restart your computer when prompted.
 
-Visit Microsoft App Store, and Download the App `Debian <https://www.microsoft.com/en-us/p/debian/9msvkqc78pk6>`__ 
+Visit Microsoft App Store, and Download the App `Debian <https://www.microsoft.com/en-us/p/debian/9msvkqc78pk6>`__
 
 Populate the Debian System with Packages:
 
@@ -80,16 +112,16 @@ Run this commands in a WSL/Debian bash shell:
 
 .. code-block:: sh
 
-	# specify root folder for projects.
-	WINPROJDIR=$(cmd.exe /C "echo|set /p=%USERPROFILE%")/Documents/abanu-org
-	# normalize windows path
-	WINPROJDIR=$(wslpath -w $(wslpath -u $WINPROJDIR))
-	# create the windows project root
-	cmd.exe /C mkdir $WINPROJDIR
-	# create symbolic link
-	ln -s $(wslpath -u $WINPROJDIR) ~/
-	# Switch to new directory
-	cd ~/abanu-org
+  # specify root folder for projects.
+  WINPROJDIR=$(cmd.exe /C "echo|set /p=%USERPROFILE%")/Documents/abanu-org
+  # normalize windows path
+  WINPROJDIR=$(wslpath -w $(wslpath -u $WINPROJDIR))
+  # create the windows project root
+  cmd.exe /C mkdir $WINPROJDIR
+  # create symbolic link
+  ln -s $(wslpath -u $WINPROJDIR) ~/
+  # Switch to new directory
+  cd ~/abanu-org
 
 Now ``/home/<user>/abanu-org`` and ``C:\Users\<user>\Documents\abanu-org`` points to the same directory.
 
@@ -99,7 +131,7 @@ Download and build Abanu
 .. code-block:: sh
 
   git clone --recursive https://github.com/abanu-org/abanu.git
-  cd abanu 
+  cd abanu
   ./abctl configure packages
   ./abctl build all
 
