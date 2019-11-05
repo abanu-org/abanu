@@ -8,6 +8,7 @@ import sys
 import sphinx_rtd_theme
 from recommonmark.parser import CommonMarkParser
 
+sys.path.insert(0, os.path.abspath('sphinx'))
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.append(os.path.dirname(__file__))
 
@@ -19,6 +20,8 @@ extensions = [
     'sphinxcontrib.httpdomain',
     'sphinx_tabs.tabs',
     'sphinx-prompt',
+	 'rstFlatTable',
+	 'sphinx.ext.graphviz'
 ]
 templates_path = ['_templates']
 
