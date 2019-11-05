@@ -20,6 +20,7 @@ You need some packages:
 * `xorriso` Disk creation
 
 You can install them all via::
+
   sudo apt-get install -y --no-install-recommends git get nasm qemu-system-x86 mtools xorriso grub-common grub-pc-bin grub-efi-amd64-bin grub-efi-ia32-bin
 
 If you want to debug Abanu, you also need `gdb`.
@@ -41,7 +42,7 @@ Building on Windows
 The Quick way
 -------------
 
-If you want only start run Abanu, just get the sources, open Abanu.sln in Visual Studio, compile whole solution launch the default project (``Abanu.Tools.Build``). However, this is
+If you want only start run Abanu, just get the sources, open Abanu.sln in Visual Studio, compile whole solution launch the default project (`Abanu.Tools.Build`). However, this is
 only a shortcut. If you want debug Abanu, you may need the following steps.
 
 
@@ -107,7 +108,7 @@ Additional Tools for Windows:
 Share project directory
 -----------------------
 
-Because Visual Studio cannot open projects via ``\\$wsl``, you have to place the files on the windows drive and link that folder to the WSL home folder.
+Because Visual Studio cannot open projects via `\\$wsl`, you have to place the files on the windows drive and link that folder to the WSL home folder.
 Run this commands in a WSL/Debian bash shell:
 
 .. code-block:: sh
@@ -123,7 +124,7 @@ Run this commands in a WSL/Debian bash shell:
   # Switch to new directory
   cd ~/abanu-org
 
-Now ``/home/<user>/abanu-org`` and ``C:\Users\<user>\Documents\abanu-org`` points to the same directory.
+Now `/home/<user>/abanu-org` and `C:\Users\<user>\Documents\abanu-org` points to the same directory.
 
 Download and build Abanu
 ------------------------

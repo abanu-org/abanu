@@ -26,9 +26,9 @@ syntax.
 Filenames
 ---------
 
-Use only lowercase alphanumeric characters and ``-`` (minus) symbol.
+Use only lowercase alphanumeric characters and `-` (minus) symbol.
 
-Suffix filenames with the ``.rst`` extension, so GitHub can render them.
+Suffix filenames with the `.rst` extension, so GitHub can render them.
 
 
 Whitespaces
@@ -41,7 +41,7 @@ Indent with 2 spaces.
 
 Except:
 
-* ``toctree`` directive requires a 3 spaces indentation.
+* `toctree` directive requires a 3 spaces indentation.
 
 Blank lines
 ~~~~~~~~~~~
@@ -79,23 +79,23 @@ Headings
 
 * Please stick to this order of heading adornments:
 
-  1. ``=`` with overline for document title::
+  1. `=` with overline for document title::
 
        ==============
        Document title
        ==============
 
-  2. ``=`` for chapters::
+  2. `=` for chapters::
 
        Chapters
        ========
 
-  3. ``-`` for sections::
+  3. `-` for sections::
 
        Section
        -------
 
-  4. ``~`` for subsections::
+  4. `~` for subsections::
 
        Subsection
        ~~~~~~~~~~
@@ -113,7 +113,7 @@ There should be only one H1 in a document.
 Code blocks and text boxes
 --------------------------
 
-Use the ``code-block`` directive **and** specify the programming language. As
+Use the `code-block` directive **and** specify the programming language. As
 an example:
 
 .. code-block:: rst
@@ -141,7 +141,7 @@ will look like:
 Links and references
 --------------------
 
-Use links and references footnotes with the ``target-notes`` directive.
+Use links and references footnotes with the `target-notes` directive.
 As an example:
 
 .. code-block:: rst
@@ -200,7 +200,7 @@ Table as flat list
       - Cell
       - Cell
 
-``:header-rows:`` defines the number of header rows. Skip this line, if you do not need a header.
+`:header-rows:` defines the number of header rows. Skip this line, if you do not need a header.
 
 Diagrams
 --------
@@ -225,7 +225,7 @@ Troubleshooting
 
 .. rubric:: Why is my document not linked within the table of contents?
 
-- put the filename into index.rst. Omit the ``.rst`` extension.
+- put the filename into index.rst. Omit the `.rst` extension.
 - The document requires at least one section. Section names are the label that are used for the table of content.
 
 .. rubric:: After committing, the documentation will not update
@@ -237,7 +237,7 @@ Troubleshooting
 .. rubric:: Documentation is updating, but some content is missing or malformed
 
 - There might be some parsing errors or warnings.
-  Go to `Builds <http://readthedocs.org/projects/abanu/builds>`__ and click on ``Raw view``.
+  Go to `Builds <http://readthedocs.org/projects/abanu/builds>`__ and click on `Raw view`.
   Check the build output for warnings and fix them.
 
 
