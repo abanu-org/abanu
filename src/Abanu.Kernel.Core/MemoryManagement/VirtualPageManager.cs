@@ -21,25 +21,10 @@ namespace Abanu.Kernel.Core.MemoryManagement
         private static IPageFrameAllocator IdentityAllocator;
         private static IPageFrameAllocator GlobalAllocator;
 
-        //private static Addr _startVirtAddr;
-        //private static Addr _nextVirtAddr;
-
-        //private static Addr _identityStartVirtAddr;
-        //private static Addr _identityNextVirtAddr;
-
         public static void Setup()
         {
-            //_startVirtAddr = Address.VirtMapStart;
-            //_nextVirtAddr = _startVirtAddr;
-
-            //lockObj = new object();
-            //LockCount = 0;
-
             NormalAllocator = CreateAllocatorStage1();
             NormalAllocator = CreateAllocatorStage2();
-
-            //_identityStartVirtAddr = Address.IdentityMapStart;
-            //_identityNextVirtAddr = _identityStartVirtAddr;
 
             var allocator2 = new VirtualInitialPageAllocator(false) { DebugName = "VirtIdentityInitial" };
             allocator2.Setup(new MemoryRegion(Address.IdentityMapStart, 60 * 1024 * 1024), AddressSpaceKind.Virtual);
@@ -151,28 +136,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
             }
         }
 
-        //internal static unsafe Addr AllocatePages(uint pages)
-        //{
-        //    Addr virt = _nextVirtAddr;
-        //    var head = PhysicalPageManager.AllocatePages(pages);
-        //    if (head == null)
-        //        return Addr.Zero;
-
-        //    var p = head;
-        //    for (var i = 0; i < pages; i++)
-        //    {
-        //        PageTable.KernelTable.MapVirtualAddressToPhysical(_nextVirtAddr, PhysicalPageManager.GetAddress(p));
-        //        _nextVirtAddr += 4096;
-        //        p = PhysicalPageManager.NextCompoundPage(p);
-        //    }
-        //    PageTable.KernelTable.Flush();
-        //    return virt;
-        //}
-
         private const bool AddProtectedRegions = false;
-
-        //private static object lockObj;
-        //public static int LockCount = 0;
 
         public static unsafe Addr AllocatePages(uint pages, AllocatePageOptions options = default)
         {
@@ -196,9 +160,6 @@ namespace Abanu.Kernel.Core.MemoryManagement
             if (AddProtectedRegions)
                 pages += 2;
 
-            //lock (lockObj)
-            //{
-            //    LockCount++;
             var physHead = PhysicalPageManager.AllocatePages(pages, options);
             if (physHead == null)
                 return Addr.Zero;
@@ -223,9 +184,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
             if (AddProtectedRegions)
                 virtHead = NormalAllocator.NextCompoundPage(virtHead);
 
-            //LockCount--;
             return NormalAllocator.GetAddress(virtHead);
-            //}
         }
 
         /// <summary>
@@ -264,9 +223,6 @@ namespace Abanu.Kernel.Core.MemoryManagement
             if (AddProtectedRegions)
                 pages += 2;
 
-            //lock (lockObj)
-            //{
-            //    LockCount++;
             var physHead = PhysicalPageManager.AllocatePages(pages, options);
             if (physHead == null)
                 return Addr.Zero;
@@ -291,9 +247,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
             if (AddProtectedRegions)
                 virtHead = GlobalAllocator.NextCompoundPage(virtHead);
 
-            //LockCount--;
             return GlobalAllocator.GetAddress(virtHead);
-            //}
         }
 
         internal static unsafe void FreeAddr(Addr addr)

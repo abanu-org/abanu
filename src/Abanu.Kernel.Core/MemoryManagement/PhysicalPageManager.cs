@@ -27,24 +27,24 @@ namespace Abanu.Kernel.Core.MemoryManagement
             Default = allocator;
 
             ClearKernelReserved();
-            //UnmapUnsedPages();
+
+            // This is only for diagnostics
+            UnmapUnsedPages();
             SelfTest();
         }
 
-        //private static void UnmapUnsedPages()
-        //{
-        //    KernelMessage.WriteLine("Unmap unused pages...");
-        //    var maxVirtPages = Address.MaximumMemory / 4096;
-        //    for (uint pageNum = 0; pageNum < maxVirtPages; pageNum++)
-        //    {
-        //        var addr = pageNum * 4096;
-        //        if (!KernelMemoryMapManager.Header->Used.ContainsVirtual(addr))
-        //        {
-        //            //KernelMessage.WriteLine("{0:X8}", addr);
-        //            PageTable.KernelTable.UnMap(addr, true); //TODO: Flush later
-        //        }
-        //    }
-        //}
+        private static void UnmapUnsedPages()
+        {
+            KernelMessage.WriteLine("Unmap unused pages...");
+            var maxVirtPages = Address.MaximumMemory / 4096;
+            for (uint pageNum = 0; pageNum < maxVirtPages; pageNum++)
+            {
+                var addr = pageNum * 4096;
+                if (!KernelMemoryMapManager.Header->Used.ContainsVirtual(addr))
+                    PageTable.KernelTable.UnMap(addr);
+            }
+            PageTable.KernelTable.Flush();
+        }
 
         private static void ClearKernelReserved()
         {

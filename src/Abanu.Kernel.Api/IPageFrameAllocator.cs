@@ -57,25 +57,6 @@ namespace Abanu.Kernel.Core
 
     }
 
-    public struct AllocatePageOptions
-    {
-        public bool Continuous;
-        public string DebugName;
-        public PageAllocationPool Pool;
-        //public IPageTable Target1;
-        //public IPageTable Target2;
-
-        public static AllocatePageOptions Default;
-
-    }
-
-    public enum PageAllocationPool
-    {
-        Normal,
-        Identity,
-        Global,
-    }
-
     public struct PageFrameAllocatorTraceOptions
     {
         public bool Enabled;

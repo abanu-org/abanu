@@ -9,6 +9,9 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel.Core.MemoryManagement
 {
 
+    /// <summary>
+    /// Heap Memory Manager
+    /// </summary>
     public static class Memory
     {
 
@@ -16,7 +19,6 @@ namespace Abanu.Kernel.Core.MemoryManagement
         {
             kmallocAllocator = new KernelAllocator();
 
-            // TODO: CRITICAL: KMath.AlignValueCeil --> DivCeil!
             var ptr = (byte*)VirtualPageManager.AllocatePages(KMath.AlignValueCeil(Allocator.headSize, 4096));
             for (var i = 0; i < Allocator.headSize; i++)
                 *(ptr + i) = 0;
@@ -39,6 +41,10 @@ namespace Abanu.Kernel.Core.MemoryManagement
 
         private static Allocator kmallocAllocator;
 
+        /// <summary>
+        /// Allocates Kernel Memory from Heap
+        /// </summary>
+        /// <param name="n">Size in bytes.</param>
         public static unsafe Addr Allocate(USize n)
         {
             return kmallocAllocator.malloc(n);
@@ -132,10 +138,10 @@ namespace Abanu.Kernel.Core.MemoryManagement
 
         public static unsafe Addr MapVirtualPages(Page* pages, uint count, ulong flags, Pgprot_t protection)
         {
-            return Addr.Zero;
+            throw new NotImplementedException();
         }
 
-        public static unsafe void InitialKernelProtect()
+        internal static unsafe void InitialKernelProtect()
         {
             SetInitialWriteProtection();
             SetInitialExecutionProtection();
@@ -154,16 +160,11 @@ namespace Abanu.Kernel.Core.MemoryManagement
             PageTable.KernelTable.SetWritable(BootInfoMemoryType.GDT);
             PageTable.KernelTable.SetWritable(BootInfoMemoryType.PageTable);
             PageTable.KernelTable.SetWritable(BootInfoMemoryType.InitialStack);
-            //PageTable.KernelTable.InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelElfVirt);
             PageTable.KernelTable.SetWritable(BootInfoMemoryType.KernelBssSegment);
             PageTable.KernelTable.SetWritable(BootInfoMemoryType.KernelDataSegment);
-            //PageTable.KernelTable.InitialKernelProtect_MakeWritable_ByMapType(BootInfoMemoryType.KernelROdataSegment);
             PageTableExtensions.SetWritable(PageTable.KernelTable, Address.GCInitialMemory, Address.GCInitialMemorySize);
 
-            //KernelMessage.WriteLine("Reload CR3 to {0:X8}", PageTable.AddrPageDirectory);
             PageTable.KernelTable.Flush();
-
-            //KernelMessage.WriteLine("Set CR0.WP");
             PageTable.KernelTable.EnableKernelWriteProtection();
         }
 
@@ -173,11 +174,8 @@ namespace Abanu.Kernel.Core.MemoryManagement
             {
                 var code = BootInfo.GetMap(BootInfoMemoryType.KernelTextSegment);
                 var codeReg = new LinkedMemoryRegion(new MemoryRegion(code->Start, code->Size));
-                //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
-                //var otherReg = new LinkedMemoryRegion(new MemoryRegion(0, 10124 * 1024 * 60), &codeReg);
 
                 PageTable.KernelTable.SetExecutionProtectionForAllInitialPages(&codeReg);
-                //InitialKernelProtect_MakeExecutable_ByMapType(BootInfoMemoryType.KernelTextSegment);
             }
         }
 

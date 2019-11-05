@@ -5,6 +5,9 @@ using System;
 
 namespace Abanu.Kernel.Core.Boot
 {
+    /// <summary>
+    /// Defined Memory Ranges
+    /// </summary>
     public enum BootInfoMemoryType : byte
     {
         Unknown = 0,

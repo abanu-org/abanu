@@ -11,10 +11,14 @@ using Abanu.Kernel.Core.PageManagement;
 
 namespace Abanu.Kernel.Core.MemoryManagement
 {
+    /// <summary>
+    /// Extension methods for the <see cref="IPageTable"/> interface
+    /// </summary>
     public static unsafe class PageTableExtensions
     {
         /// <summary>
         /// Sync specific mappings with another table.
+        /// The virtual and physical Addresses in both table will be the same.
         /// </summary>
         public static void MapCopy(this IPageTable table, IPageTable fromTable, BootInfoMemoryType type, bool present = true, bool flush = false)
         {
@@ -22,6 +26,10 @@ namespace Abanu.Kernel.Core.MemoryManagement
             table.MapCopy(fromTable, mm->Start, mm->Size, present, flush);
         }
 
+        /// <summary>
+        /// Sync specific mappings with another table.
+        /// The virtual and physical Addresses in both table will be the same.
+        /// </summary>
         public static void MapCopy(this IPageTable table, IPageTable fromTable, KernelMemoryMap* mm, bool present = true, bool flush = false)
         {
             table.MapCopy(fromTable, mm->Start, mm->Size, present, flush);

@@ -6,6 +6,10 @@ using Abanu.Kernel.Core.PageManagement;
 
 namespace Abanu.Kernel.Core.MemoryManagement
 {
+    /// <summary>
+    /// Manages Memory Ranges.
+    /// Determines which ranges are reserved or free to use.
+    /// </summary>
     public static unsafe class KernelMemoryMapManager
     {
 

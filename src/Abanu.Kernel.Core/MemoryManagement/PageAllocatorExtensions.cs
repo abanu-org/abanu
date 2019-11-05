@@ -7,6 +7,9 @@ using Abanu.Kernel.Core.MemoryManagement.PageAllocators;
 namespace Abanu.Kernel.Core.MemoryManagement
 {
 
+    /// <summary>
+    /// Extension methods for the <see cref="IPageFrameAllocator"/> interface
+    /// </summary>
     public static unsafe class PageAllocatorExtensions
     {
 
@@ -37,6 +40,9 @@ namespace Abanu.Kernel.Core.MemoryManagement
             DeviceManager.Serial1.Write('\n');
         }
 
+        /// <summary>
+        /// Dump statistics of interest.
+        /// </summary>
         public static void DumpStats(this IPageFrameAllocator allocator)
         {
             KernelMessage.WriteLine("Stats for {0}", allocator.DebugName);

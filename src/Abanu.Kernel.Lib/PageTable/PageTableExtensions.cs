@@ -90,6 +90,7 @@ namespace Abanu.Kernel.Core.PageManagement
 
         /// <summary>
         /// Sync specific mappings with another table.
+        /// The virtual and physical Addresses in both table will be the same.
         /// </summary>
         public static void MapCopy(this IPageTable table, IPageTable fromTable, Addr virtAddr, USize length, bool present = true, bool flush = false)
         {
@@ -109,7 +110,7 @@ namespace Abanu.Kernel.Core.PageManagement
         }
 
         /// <summary>
-        /// Sync specific mappings with another table.
+        /// Sync specific mappings with another table, but to another virtual destination address.
         /// </summary>
         public static void MapCopy(this IPageTable table, IPageTable fromTable, Addr srcVirtAddr, Addr destVirtAddr, USize length, bool present = true, bool flush = false)
         {
@@ -129,6 +130,9 @@ namespace Abanu.Kernel.Core.PageManagement
                 table.Flush();
         }
 
+        /// <summary>
+        /// Get the physical address of the pagetable.
+        /// </summary>
         public static Addr GetPageTablePhysAddr(this IPageTable table)
         {
             return PageTable.KernelTable.GetPhysicalAddressFromVirtual(table.VirtAddr);

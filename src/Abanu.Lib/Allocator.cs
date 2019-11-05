@@ -56,6 +56,9 @@ namespace Abanu
         public malloc_data Data;
     }
 
+    /// <summary>
+    /// Simple Heap Memory Allocator
+    /// </summary>
     public unsafe abstract class Allocator
     {
 

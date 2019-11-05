@@ -2,11 +2,15 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using Abanu.Kernel.Core.Boot;
 
 namespace Abanu.Kernel.Core.MemoryManagement
 {
 
+    /// <summary>
+    /// Defined Memory Ranges
+    /// </summary>
     public struct KernelMemoryMap
     {
         public Addr Start;
@@ -28,6 +32,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
             AddressSpaceKind = addressSpaceKind;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ContainsAddr(Addr addr)
         {
             return Start <= addr && addr < Start + Size;
@@ -98,6 +103,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(Addr addr)
         {
             for (var i = 0; i < Count; i++)
@@ -106,6 +112,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ContainsVirtual(Addr addr)
         {
             for (var i = 0; i < Count; i++)
