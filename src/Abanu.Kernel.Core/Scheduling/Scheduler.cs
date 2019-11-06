@@ -371,9 +371,9 @@ namespace Abanu.Kernel.Core.Scheduling
             uint stackStateOffset = 8;
             stackStateOffset += argBufSize;
 
-            uint cS = 0x08;
+            uint cS = KnownSegments.KernelCode;
             if (thread.User)
-                cS = 0x1B;
+                cS = KnownSegments.UserCode;
 
             var stateSize = thread.User ? IDTTaskStack.Size : IDTStack.Size;
 
@@ -408,7 +408,7 @@ namespace Abanu.Kernel.Core.Scheduling
             if (thread.User)
             {
                 // Never set this values for Non-User, otherwise you will override stack informations.
-                stackState->TASK_SS = 0x23;
+                stackState->TASK_SS = KnownSegments.UserData;
                 stackState->TASK_ESP = (uint)stackBottom - (uint)stackStateOffset;
 
                 proc.PageTable.MapCopy(PageTable.KernelTable, thread.KernelStack, thread.KernelStackSize);
@@ -424,7 +424,7 @@ namespace Abanu.Kernel.Core.Scheduling
             stackState->Stack.EIP = options.MethodAddr;
             stackState->Stack.EBP = (uint)(stackBottom - (int)stackStateOffset).ToInt32();
 
-            thread.DataSelector = thread.User ? 0x23u : 0x10u;
+            thread.DataSelector = thread.User ? KnownSegments.UserData : KnownSegments.KernelData;
 
             UninterruptibleMonitor.Enter(proc.Threads);
             try
@@ -594,7 +594,7 @@ namespace Abanu.Kernel.Core.Scheduling
                 Native.Nop();
             }
 
-            uint fsSegment = 0x0;
+            uint fsSegment = KnownSegments.UserThreadStorage;
 
             InterruptReturn(stackStateAddr, pageDirAddr, dataSelector, fsSegment);
         }

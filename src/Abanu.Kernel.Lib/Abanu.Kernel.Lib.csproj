@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Boot\BootInfoHeader.cs" />
+    <Compile Include="KnownSegments.cs" />
     <Compile Include="PageTable\PageTableExtensions.cs" />
     <Compile Include="PerformanceCounter.cs" />
     <Compile Include="X86_EFlags.cs" />

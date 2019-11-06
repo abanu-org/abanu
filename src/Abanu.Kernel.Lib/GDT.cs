@@ -42,26 +42,77 @@ namespace Abanu.Kernel.Core
             GdtTable->Clear();
             GdtTable->AdressOfEntries = GdtTableAddress + DescriptorTable.StructSize;
 
-            //Null segment
-            var nullEntry = DescriptorTableEntry.CreateNullDescriptor();
-            GdtTable->AddEntry(nullEntry);
+            // 0 - Null segment
+            var entry = DescriptorTableEntry.CreateNullDescriptor();
+            GdtTable->AddEntry(entry);
 
-            //code segment
-            var codeEntry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
-            codeEntry.CodeSegment_Readable = true;
-            codeEntry.PriviligeRing = 0;
-            codeEntry.Present = true;
-            codeEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            // 1 - code segment
+            entry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
+            entry.CodeSegment_Readable = true;
+            entry.PriviligeRing = 0;
+            entry.Present = true;
+            entry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
             //codeEntry.CodeSegment_Confirming = true;
-            GdtTable->AddEntry(codeEntry);
+            GdtTable->AddEntry(entry);
 
-            //data segment
-            var dataEntry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
-            dataEntry.DataSegment_Writable = true;
-            dataEntry.PriviligeRing = 0;
-            dataEntry.Present = true;
-            dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            GdtTable->AddEntry(dataEntry);
+            // 2 - data segment
+            entry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
+            entry.DataSegment_Writable = true;
+            entry.PriviligeRing = 0;
+            entry.Present = true;
+            entry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            GdtTable->AddEntry(entry);
+
+            // 3 - reserved
+            entry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
+            entry.DataSegment_Writable = true;
+            entry.PriviligeRing = 0;
+            entry.Present = true;
+            entry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            GdtTable->AddEntry(entry);
+
+            //  4 - kernel thread storage
+            entry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
+            entry.DataSegment_Writable = true;
+            entry.PriviligeRing = 0;
+            entry.Present = true;
+            entry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            GdtTable->AddEntry(entry);
+
+            // 5 - reserved
+            entry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
+            entry.DataSegment_Writable = true;
+            entry.PriviligeRing = 0;
+            entry.Present = true;
+            entry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            GdtTable->AddEntry(entry);
+
+            // ---
+
+            // 6 - user code segment
+            entry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
+            entry.CodeSegment_Readable = true;
+            entry.PriviligeRing = 3;
+            entry.Present = true;
+            entry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            entry.CodeSegment_Confirming = false;
+            GdtTable->AddEntry(entry);
+
+            // 7 - user data segment
+            entry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
+            entry.DataSegment_Writable = true;
+            entry.PriviligeRing = 3;
+            entry.Present = true;
+            entry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            GdtTable->AddEntry(entry);
+
+            // 8 - thread storage segment for FS register
+            entry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
+            entry.DataSegment_Writable = true;
+            entry.PriviligeRing = 3;
+            entry.Present = true;
+            entry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
+            GdtTable->AddEntry(entry);
 
             Flush();
 
@@ -82,26 +133,9 @@ namespace Abanu.Kernel.Core
                 TssTable->AdressOfEntries = TssAddr + TaskStateSegmentTable.StructSize;
             }
 
-            //code segment
-            var codeEntry = DescriptorTableEntry.CreateCode(0, 0xFFFFFFFF);
-            codeEntry.CodeSegment_Readable = true;
-            codeEntry.PriviligeRing = 3;
-            codeEntry.Present = true;
-            codeEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            codeEntry.CodeSegment_Confirming = false;
-            GdtTable->AddEntry(codeEntry);
-
-            //data segment
-            var dataEntry = DescriptorTableEntry.CreateData(0, 0xFFFFFFFF);
-            dataEntry.DataSegment_Writable = true;
-            dataEntry.PriviligeRing = 3;
-            dataEntry.Present = true;
-            dataEntry.AddressMode = DescriptorTableEntry.EAddressMode.Bits32;
-            GdtTable->AddEntry(dataEntry);
-
             if (KConfig.UseTaskStateSegment)
             {
-                //TSS
+                // 9 - TSS
                 Tss = AddTSS();
                 //tss->esp0 = kernelStackPointer;
                 Tss->SS0 = 0x10;
@@ -141,9 +175,9 @@ namespace Abanu.Kernel.Core
 
         public static void LoadTaskRegister()
         {
-            ushort ts = 0x28;
+            ushort ts = KnownSegments.KernelTSS;
             if (KConfig.UseUserMode)
-                ts |= 0x3;
+                ts |= KnownSegments.UserTSS;
             LoadTaskRegister(ts);
         }
 
@@ -166,9 +200,11 @@ namespace Abanu.Kernel.Core
         public static void Flush()
         {
             Native.Lgdt(GdtTableAddress);
-            Native.SetSegments(0x10, 0x10, 0x10, 0x10, 0x10);
+            var dataSegment = KnownSegments.KernelData;
+            Native.SetSegments(dataSegment, dataSegment, KnownSegments.UserThreadStorage, dataSegment, dataSegment);
             Native.FarJump();
         }
+
     }
 
     /// <summary>

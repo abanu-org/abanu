@@ -26,8 +26,8 @@ namespace Abanu.Kernel.Core
         private static unsafe void ProcessInterrupt(uint stackStatePointer)
         {
             // Switch to Kernel segments
-            ushort dataSelector = 0x10;
-            Native.SetSegments(dataSelector, dataSelector, dataSelector, dataSelector, dataSelector);
+            ushort dataSelector = KnownSegments.KernelData;
+            Native.SetSegments(dataSelector, dataSelector, KnownSegments.KernelThreadStorage, dataSelector, dataSelector);
 
             // Switch to Kernel Adresse space
             var block = (InterruptControlBlock*)Address.InterruptControlBlock;
@@ -111,7 +111,7 @@ namespace Abanu.Kernel.Core
                 Native.SetCR3(pageTableAddr);
 
             // Switch to original segments
-            Native.SetSegments(dataSelector, dataSelector, dataSelector, dataSelector, 0x10);
+            Native.SetSegments(dataSelector, dataSelector, KnownSegments.UserThreadStorage, dataSelector, KnownSegments.KernelData);
 
             // ISR is completed. The upper ISR stub will re-enable interrupts and resume the original process
         }
