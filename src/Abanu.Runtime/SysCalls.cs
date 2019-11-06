@@ -97,6 +97,11 @@ namespace Abanu.Runtime
             return (int)MessageManager.Send(SysCallTarget.GetCurrentProcessID);
         }
 
+        public static int GetCurrentThreadID()
+        {
+            return (int)MessageManager.Send(SysCallTarget.GetCurrentThreadID);
+        }
+
         public static void KillProcess(int processID)
         {
             MessageManager.Send(SysCallTarget.KillProcess, (uint)processID);

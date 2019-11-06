@@ -32,6 +32,7 @@ namespace Abanu.Kernel
         GetElfSectionsAddress = 45,
         GetFramebufferInfo = 46,
         GetCurrentProcessID = 47,
+        GetCurrentThreadID = 48,
 
         SetServiceStatus = 50,
         RegisterService = 51,

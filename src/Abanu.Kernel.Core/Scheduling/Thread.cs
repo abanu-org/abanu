@@ -59,7 +59,7 @@ namespace Abanu.Kernel.Core.Scheduling
         /// <summary>
         /// Unique Thread Identifier
         /// </summary>
-        public uint ThreadID;
+        public int ThreadID;
 
         /// <summary>
         /// If true, this thread will be debugged.

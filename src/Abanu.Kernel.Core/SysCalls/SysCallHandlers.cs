@@ -188,6 +188,11 @@ namespace Abanu.Kernel.Core.SysCalls
             return (uint)Scheduler.GetCurrentThread().Process.ProcessID;
         }
 
+        internal static uint GetCurrentThreadID(SysCallContext* context, SystemMessage* args)
+        {
+            return (uint)Scheduler.GetCurrentThread().ThreadID;
+        }
+
         internal static uint KillProcess(SysCallContext* context, SystemMessage* args)
         {
             var procId = (int)args->Arg1;

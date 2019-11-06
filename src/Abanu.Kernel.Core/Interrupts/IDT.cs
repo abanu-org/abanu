@@ -56,7 +56,7 @@ namespace Abanu.Kernel.Core
             // Get interrupt info for the IRQ
             var interruptInfo = IDTManager.Handlers[irq];
             if (KConfig.Log.Interrupts && interruptInfo.Trace && thread != null)
-                KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, thread.ThreadID, stack->EIP, stack->ESP);
+                KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, (uint)thread.ThreadID, stack->EIP, stack->ESP);
 
             // Some statistics
 

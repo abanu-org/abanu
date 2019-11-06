@@ -35,7 +35,7 @@ namespace Abanu.Kernel.Core.Scheduling
 
         private static Thread[] Threads;
 
-        private static uint CurrentThreadID;
+        private static int CurrentThreadID;
 
         private static int clockTicks = 0;
 
@@ -56,7 +56,7 @@ namespace Abanu.Kernel.Core.Scheduling
                 CurrentThreadID = 0;
                 clockTicks = 0;
 
-                for (uint i = 0; i < ThreadCapacity; i++)
+                for (int i = 0; i < ThreadCapacity; i++)
                 {
                     Threads[i] = new Thread() { ThreadID = i };
                 }
@@ -182,13 +182,13 @@ namespace Abanu.Kernel.Core.Scheduling
             SwitchToThread(nextThreadID);
         }
 
-        private static void ScheduleNextThread(uint currentThreadID)
+        private static void ScheduleNextThread(int currentThreadID)
         {
             var nextThreadID = GetNextThread(currentThreadID);
             SwitchToThread(nextThreadID);
         }
 
-        private static void ThreadEntry(uint threadID)
+        private static void ThreadEntry(int threadID)
         {
             var thread = Threads[threadID];
         }
@@ -213,7 +213,7 @@ namespace Abanu.Kernel.Core.Scheduling
             }
         }
 
-        private static void TerminateThread(uint threadID)
+        private static void TerminateThread(int threadID)
         {
             var thread = Threads[threadID];
 
@@ -227,9 +227,9 @@ namespace Abanu.Kernel.Core.Scheduling
         /// <summary>
         /// Calculate what thread should be scheduled now.
         /// </summary>
-        private static uint GetNextThread(uint currentThreadID)
+        private static int GetNextThread(int currentThreadID)
         {
-            uint threadID = currentThreadID;
+            int threadID = currentThreadID;
 
             if (currentThreadID == 0)
                 currentThreadID = 1;
@@ -471,7 +471,7 @@ namespace Abanu.Kernel.Core.Scheduling
                 var th = Threads[i];
                 if (th.CanScheduled == canScheduled && th.Status != ThreadStatus.Empty)
                 {
-                    KernelMessage.Write("ThreadID={0} Status={1}", th.ThreadID, (uint)th.Status);
+                    KernelMessage.Write("ThreadID={0} Status={1}", (uint)th.ThreadID, (uint)th.Status);
                     if (th.DebugName != null)
                         KernelMessage.Write(" DebugName=" + th.DebugName);
                     if (th.Process != null && th.Process.Path != null)
@@ -492,7 +492,7 @@ namespace Abanu.Kernel.Core.Scheduling
         /// <summary>
         /// Saves the current thread state, so we can switch to another thread.
         /// </summary>
-        public static unsafe void SaveThreadState(uint threadID, IntPtr stackState)
+        public static unsafe void SaveThreadState(int threadID, IntPtr stackState)
         {
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
 
@@ -515,7 +515,7 @@ namespace Abanu.Kernel.Core.Scheduling
 
             if (KConfig.Log.TaskSwitch)
             {
-                KernelMessage.Write("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, EIP={3:X8}", threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->Stack.EIP);
+                KernelMessage.Write("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, EIP={3:X8}", (uint)threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->Stack.EIP);
                 if (thread.User)
                     KernelMessage.WriteLine(" ESP={0:X8}", thread.StackState->TASK_ESP);
                 else
@@ -531,14 +531,14 @@ namespace Abanu.Kernel.Core.Scheduling
             return Threads[GetCurrentThreadID()];
         }
 
-        public static uint GetCurrentThreadID()
+        public static int GetCurrentThreadID()
         {
             return CurrentThreadID;
 
             //return Native.GetFS();
         }
 
-        private static void SetThreadID(uint threadID)
+        private static void SetThreadID(int threadID)
         {
             CurrentThreadID = threadID;
 
@@ -549,7 +549,7 @@ namespace Abanu.Kernel.Core.Scheduling
         /// Switch to a specific thread.
         /// This method will not return!
         /// </summary>
-        public static unsafe void SwitchToThread(uint threadID)
+        public static unsafe void SwitchToThread(int threadID)
         {
             var thread = Threads[threadID];
             var proc = thread.Process;
@@ -594,11 +594,13 @@ namespace Abanu.Kernel.Core.Scheduling
                 Native.Nop();
             }
 
-            InterruptReturn(stackStateAddr, dataSelector, pageDirAddr);
+            uint fsSegment = 0x0;
+
+            InterruptReturn(stackStateAddr, pageDirAddr, dataSelector, fsSegment);
         }
 
         [DllImport("x86/Abanu.InterruptReturn.o", EntryPoint = "InterruptReturn")]
-        private static extern void InterruptReturn(uint stackStatePointer, uint dataSegment, uint pageTableAddr);
+        private static extern void InterruptReturn(uint stackStatePointer, uint pageTableAddr, uint dataSegment, uint gs);
 
         private static uint FindEmptyThreadSlot()
         {
