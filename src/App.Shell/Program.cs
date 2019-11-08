@@ -22,68 +22,75 @@ namespace Abanu.Kernel
 
         public static unsafe void Main()
         {
-            ApplicationRuntime.Init();
-
-            //var result = MessageManager.Send(SysCallTarget.ServiceFunc1, 55);
-
-            SysCalls.WriteDebugChar('=');
-            SysCalls.WriteDebugChar('/');
-            SysCalls.WriteDebugChar('*');
-
-            var conStream = File.Open("/dev/console");
-
-            var con = new ConsoleClient(conStream);
-
-            con.Reset();
-            con.SetForegroundColor(7);
-            con.SetBackgroundColor(0);
-            con.ApplyDefaultColor();
-            con.Clear();
-            con.SetCursor(0, 0);
-            con.Write("kl\n");
-
-            for (uint i = 0; i < ApplicationRuntime.ElfSections.SectionHeaderCount; i++)
+            try
             {
-                var section = ApplicationRuntime.ElfSections.GetSectionHeader(i);
-                var name = ApplicationRuntime.ElfSections.GeSectionName(section);
-                con.WriteLine(name);
-            }
+                ApplicationRuntime.Init();
 
-            using (var kbStream = File.Open("/dev/keyboard"))
-            {
-                while (true)
+                //var result = MessageManager.Send(SysCallTarget.ServiceFunc1, 55);
+
+                SysCalls.WriteDebugChar('=');
+                SysCalls.WriteDebugChar('/');
+                SysCalls.WriteDebugChar('*');
+
+                var conStream = File.Open("/dev/console");
+
+                var con = new ConsoleClient(conStream);
+
+                con.Reset();
+                con.SetForegroundColor(7);
+                con.SetBackgroundColor(0);
+                con.ApplyDefaultColor();
+                con.Clear();
+                con.SetCursor(0, 0);
+                con.Write("kl\n");
+
+                for (uint i = 0; i < ApplicationRuntime.ElfSections.SectionHeaderCount; i++)
                 {
-                    SysCalls.ThreadSleep(0);
-
-                    var num = kbStream.ReadByte();
-                    if (num >= 0)
-                    {
-                        var key = (byte)num;
-
-                        // F9
-                        if (key == 0x43)
-                        {
-                            StartProc("DSPSRV.BIN");
-                            continue;
-                        }
-
-                        // F10
-                        if (key == 0x44)
-                        {
-                            StartProc("GUIDEMO.BIN");
-                            continue;
-                        }
-
-                        var s = key.ToString("x");
-                        //for (var i = 0; i < s.Length; i++)
-                        //    SysCalls.WriteDebugChar(s[i]);
-                        //SysCalls.WriteDebugChar(' ');
-                        for (var i = 0; i < s.Length; i++)
-                            con.Write(s[i]);
-                        con.Write(' ');
-                    }
-                    //SysCalls.WriteDebugChar('?');
+                    var section = ApplicationRuntime.ElfSections.GetSectionHeader(i);
+                    var name = ApplicationRuntime.ElfSections.GeSectionName(section);
+                    con.WriteLine(name);
                 }
+
+                using (var kbStream = File.Open("/dev/keyboard"))
+                {
+                    while (true)
+                    {
+                        SysCalls.ThreadSleep(0);
+
+                        var num = kbStream.ReadByte();
+                        if (num >= 0)
+                        {
+                            var key = (byte)num;
+
+                            // F9
+                            if (key == 0x43)
+                            {
+                                StartProc("DSPSRV.BIN");
+                                continue;
+                            }
+
+                            // F10
+                            if (key == 0x44)
+                            {
+                                StartProc("GUIDEMO.BIN");
+                                continue;
+                            }
+
+                            var s = key.ToString("x");
+                            //for (var i = 0; i < s.Length; i++)
+                            //    SysCalls.WriteDebugChar(s[i]);
+                            //SysCalls.WriteDebugChar(' ');
+                            for (var i = 0; i < s.Length; i++)
+                                con.Write(s[i]);
+                            con.Write(' ');
+                        }
+                        //SysCalls.WriteDebugChar('?');
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -99,14 +106,13 @@ namespace Abanu.Kernel
             Console.WriteLine("Length: " + length.ToString());
 
             var targetProcessStartProc = SysCalls.GetProcessIDForCommand(SysCallTarget.CreateMemoryProcess);
-            var fileBuf = SysCalls.RequestMessageBuffer((uint)length, targetProcessStartProc);
+            var fileBuf = ApplicationRuntime.RequestMessageBuffer(length, targetProcessStartProc);
 
             var transferBuf = SysCalls.RequestMessageBuffer(4096, fileServiceProc);
 
             var handle = SysCalls.OpenFile(nameBuf, name);
-            uint pos = 0;
+            int pos = 0;
 
-            var filePtr = (byte*)fileBuf.Start;
             var transferPtr = (byte*)transferBuf.Start;
             SysCalls.SetThreadPriority(30);
             while (true)
@@ -125,14 +131,13 @@ namespace Abanu.Kernel
 
                 for (var i = 0; i < gotBytes; i++)
                 {
-                    filePtr[pos++] = transferPtr[i];
+                    fileBuf.SetByte(pos++, transferPtr[i]);
                 }
-                //Console.Write(".");
             }
             SysCalls.SetThreadPriority(0);
 
             Console.WriteLine("CreateProc...");
-            SysCalls.CreateMemoryProcess(fileBuf, (uint)length);
+            SysCalls.CreateMemoryProcess(fileBuf.Region, (uint)length);
         }
 
         public static void OnDispatchError(Exception ex)

@@ -16,6 +16,8 @@ namespace Abanu.Runtime
         private int _Size;
         public int Size => _Size;
 
+        private MemoryAllocation() { }
+
         internal unsafe MemoryAllocation(Addr start, int size)
         {
             BytePtr = (byte*)start;
@@ -60,6 +62,7 @@ namespace Abanu.Runtime
 
             BytePtr[offset] = value;
         }
+
 
         public unsafe void Write(byte[] sourceArray, int sourceIndex, int destinationIndex, int count)
         {

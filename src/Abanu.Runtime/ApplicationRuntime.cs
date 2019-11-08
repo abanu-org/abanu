@@ -110,7 +110,7 @@ namespace Abanu.Runtime
 
         public static MemoryAllocation RequestMessageBuffer(int size, int targetProcessID)
         {
-            var buf = SysCalls.RequestMessageBuffer(4096, targetProcessID);
+            var buf = SysCalls.RequestMessageBuffer((uint)size, targetProcessID);
             return new MemoryAllocation(buf);
         }
 
