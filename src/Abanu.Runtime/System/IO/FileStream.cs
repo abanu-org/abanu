@@ -9,41 +9,29 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Abanu.Kernel;
 using Abanu.Kernel.Core;
 using Abanu.Runtime;
 using Mosa.Runtime.x86;
 
-namespace Abanu.Kernel
+namespace System.IO
 {
-
-    public static class File
-    {
-
-        public static Stream Open(string path)
-        {
-            var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
-            var buf = SysCalls.RequestMessageBuffer(4096, targetProcessId);
-            var handle = SysCalls.OpenFile(buf, path);
-            return new FileStream(handle);
-        }
-
-    }
 
     public class FileStream : Stream
     {
 
         private FileHandle Handle;
 
-        private MemoryRegion ReadBuffer;
-        private MemoryRegion WriteBuffer;
+        private MemoryAllocation ReadBuffer;
+        private MemoryAllocation WriteBuffer;
 
         internal FileStream(FileHandle handle)
         {
             Handle = handle;
             // TODO: Store Target in FileHandle
             var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
-            ReadBuffer = SysCalls.RequestMessageBuffer(4096, targetProcessId);
-            WriteBuffer = SysCalls.RequestMessageBuffer(4096, targetProcessId);
+            ReadBuffer = ApplicationRuntime.RequestMessageBuffer(4096, targetProcessId);
+            WriteBuffer = ApplicationRuntime.RequestMessageBuffer(4096, targetProcessId);
         }
 
         protected override void Dispose(bool disposing)
@@ -77,7 +65,7 @@ namespace Abanu.Kernel
                 count = buffer.Length - offset;
 
             var buf = (byte*)ReadBuffer.Start;
-            var gotBytes = SysCalls.ReadFile(Handle, ReadBuffer);
+            var gotBytes = SysCalls.ReadFile(Handle, ReadBuffer.Region);
             for (var i = 0; i < gotBytes; i++)
                 buffer[i] = buf[i];
 
@@ -119,7 +107,7 @@ namespace Abanu.Kernel
             for (var i = 0; i < count; i++)
                 buf[i] = buffer[i + offset];
 
-            SysCalls.WriteFile(Handle, WriteBuffer);
+            SysCalls.WriteFile(Handle, WriteBuffer.Region);
         }
 
         public override unsafe void WriteByte(byte value)

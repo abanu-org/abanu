@@ -3,6 +3,7 @@
 
 using System.Runtime.InteropServices;
 using System.Threading;
+using Abanu.Kernel;
 using Abanu.Kernel.Core;
 using Abanu.Kernel.Core.Elf;
 using Mosa.Runtime;
@@ -105,6 +106,12 @@ namespace Abanu.Runtime
             // if its nowhere used. Than the Compiler doesn't know about that Reference
             // and the Compilation will fail
             Mosa.Runtime.x86.Internal.ExceptionHandler();
+        }
+
+        public static MemoryAllocation RequestMessageBuffer(int size, int targetProcessID)
+        {
+            var buf = SysCalls.RequestMessageBuffer(4096, targetProcessID);
+            return new MemoryAllocation(buf);
         }
 
     }

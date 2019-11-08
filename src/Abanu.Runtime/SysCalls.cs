@@ -19,9 +19,9 @@ namespace Abanu.Runtime
             return MessageManager.Send(SysCallTarget.RequestMemory, size);
         }
 
-        public static uint GetProcessIDForCommand(SysCallTarget target)
+        public static int GetProcessIDForCommand(SysCallTarget target)
         {
-            return MessageManager.Send(SysCallTarget.GetProcessIDForCommand, (uint)target);
+            return (int)MessageManager.Send(SysCallTarget.GetProcessIDForCommand, (uint)target);
         }
 
         public static uint GetPhysicalMemory(Addr physAddr, USize size)
@@ -34,9 +34,9 @@ namespace Abanu.Runtime
             return MessageManager.Send(SysCallTarget.TranslateVirtualToPhysicalAddress, virtAddr);
         }
 
-        public static MemoryRegion RequestMessageBuffer(uint size, uint targetProcessID)
+        public static MemoryRegion RequestMessageBuffer(uint size, int targetProcessID)
         {
-            return new MemoryRegion(MessageManager.Send(SysCallTarget.RequestMessageBuffer, size, targetProcessID), size);
+            return new MemoryRegion(MessageManager.Send(SysCallTarget.RequestMessageBuffer, size, (uint)targetProcessID), size);
         }
 
         public static void SetThreadPriority(int priority)

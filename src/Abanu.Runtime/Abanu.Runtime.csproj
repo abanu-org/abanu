@@ -69,10 +69,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="MemoryAllocation.cs" />
     <Compile Include="ApplicationRuntime.cs" />
     <Compile Include="Console.cs" />
+    <Compile Include="System\IO\File.cs" />
     <Compile Include="FileReader.cs" />
-    <Compile Include="FileStream.cs" />
+    <Compile Include="System\IO\FileStream.cs" />
     <Compile Include="FileWriter.cs" />
     <Compile Include="RuntimeAllocator.cs" />
     <Compile Include="RuntimeMemory.cs" />
