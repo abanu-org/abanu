@@ -29,14 +29,9 @@ namespace Abanu.Kernel
             SysCalls.WriteDebugChar('/');
             SysCalls.WriteDebugChar('*');
 
-            var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
-            var buf = SysCalls.RequestMessageBuffer(4096, targetProcessId);
-            var keyboardHandle = SysCalls.OpenFile(buf, "/dev/keyboard");
+            var conStream = File.Open("/dev/console");
 
-            var consoleHandle = SysCalls.OpenFile(buf, "/dev/console");
-
-            var consoleFile = new FileStream(consoleHandle);
-            var con = new ConsoleClient(consoleFile);
+            var con = new ConsoleClient(conStream);
 
             con.Reset();
             con.SetForegroundColor(7);
@@ -53,18 +48,16 @@ namespace Abanu.Kernel
                 con.WriteLine(name);
             }
 
-            while (true)
+            using (var kbStream = File.Open("/dev/keyboard"))
             {
-                SysCalls.ThreadSleep(0);
-
-                //SysCalls.WriteDebugChar('~');
-                var gotBytes = SysCalls.ReadFile(keyboardHandle, buf);
-                if (gotBytes > 0)
+                while (true)
                 {
-                    for (var byteIdx = 0; byteIdx < gotBytes; byteIdx++)
+                    SysCalls.ThreadSleep(0);
+
+                    var num = kbStream.ReadByte();
+                    if (num >= 0)
                     {
-                        var bufPtr = (byte*)buf.Start;
-                        var key = bufPtr[byteIdx];
+                        var key = (byte)num;
 
                         // F9
                         if (key == 0x43)
@@ -88,8 +81,8 @@ namespace Abanu.Kernel
                             con.Write(s[i]);
                         con.Write(' ');
                     }
+                    //SysCalls.WriteDebugChar('?');
                 }
-                //SysCalls.WriteDebugChar('?');
             }
         }
 

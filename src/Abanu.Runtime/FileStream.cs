@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -15,26 +16,118 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel
 {
 
-    public class FileStream : IBuffer
+    public static class File
+    {
+
+        public static Stream Open(string path)
+        {
+            var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
+            var buf = SysCalls.RequestMessageBuffer(4096, targetProcessId);
+            var handle = SysCalls.OpenFile(buf, path);
+            return new FileStream(handle);
+        }
+
+    }
+
+    public class FileStream : Stream
     {
 
         private FileHandle Handle;
 
-        public FileStream(FileHandle handle)
+        private MemoryRegion ReadBuffer;
+        private MemoryRegion WriteBuffer;
+
+        internal FileStream(FileHandle handle)
         {
             Handle = handle;
+            // TODO: Store Target in FileHandle
+            var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
+            ReadBuffer = SysCalls.RequestMessageBuffer(4096, targetProcessId);
+            WriteBuffer = SysCalls.RequestMessageBuffer(4096, targetProcessId);
         }
 
-        public unsafe SSize Read(byte* buf, USize count)
+        protected override void Dispose(bool disposing)
         {
-            return SysCalls.ReadFile(Handle, new MemoryRegion(buf, count));
+            if (disposing)
+            {
+                // TODO: Free Memory
+            }
         }
 
-        public unsafe SSize Write(byte* buf, USize count)
+        public override bool CanRead => throw new NotSupportedException();
+
+        public override bool CanSeek => throw new NotSupportedException();
+
+        public override bool CanWrite => throw new NotSupportedException();
+
+        public override long Length => throw new NotSupportedException();
+
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+        public override void Flush()
         {
-            return SysCalls.WriteFile(Handle, new MemoryRegion(buf, count));
         }
 
+        public override unsafe int Read(byte[] buffer, int offset, int count)
+        {
+            if (count > ReadBuffer.Size)
+                count = (int)ReadBuffer.Size;
+
+            if (offset + count > buffer.Length)
+                count = buffer.Length - offset;
+
+            var buf = (byte*)ReadBuffer.Start;
+            var gotBytes = SysCalls.ReadFile(Handle, ReadBuffer);
+            for (var i = 0; i < gotBytes; i++)
+                buffer[i] = buf[i];
+
+            return gotBytes;
+        }
+
+        public override unsafe int ReadByte()
+        {
+            var buf = (byte*)ReadBuffer.Start;
+            var gotBytes = SysCalls.ReadFile(Handle, new MemoryRegion(buf, 1));
+            if (gotBytes >= 1)
+            {
+                return buf[0];
+            }
+            else
+                return -1;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override unsafe void Write(byte[] buffer, int offset, int count)
+        {
+            if (count > WriteBuffer.Size)
+                count = (int)WriteBuffer.Size;
+
+            if (offset + count > buffer.Length)
+                count = buffer.Length - offset;
+
+            var buf = (byte*)WriteBuffer.Start;
+
+            for (var i = 0; i < count; i++)
+                buf[i] = buffer[i + offset];
+
+            SysCalls.WriteFile(Handle, WriteBuffer);
+        }
+
+        public override unsafe void WriteByte(byte value)
+        {
+            var buf = (byte*)WriteBuffer.Start;
+            buf[0] = value;
+            var writtenBytes = SysCalls.WriteFile(Handle, new MemoryRegion(buf, 1));
+        }
     }
 
 }

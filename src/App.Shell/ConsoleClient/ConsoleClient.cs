@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,15 +17,12 @@ namespace Abanu.Kernel
     public class ConsoleClient
     {
 
-        public unsafe ConsoleClient(IBuffer file)
-        {
-            var targetProcessId = SysCalls.GetProcessIDForCommand(SysCallTarget.OpenFile);
-            buf = SysCalls.RequestMessageBuffer(4096, targetProcessId); // TODO: Wrap this in Stream!
-            File = file;
-        }
+        private Stream Stream;
 
-        private IBuffer File;
-        private MemoryRegion buf;
+        public ConsoleClient(Stream stream)
+        {
+            Stream = stream;
+        }
 
         private void SendCommand()
         {
@@ -45,19 +43,11 @@ namespace Abanu.Kernel
 
         private unsafe void SendByte(char data)
         {
-            // FUTURE: File.Write(data);
-
-            // TODO: wrap in stream
-            var b = (byte*)buf.Start;
-            *b = (byte)data;
-            File.Write(b, 1);
+            Stream.WriteByte((byte)data);
         }
 
         private void SendBytes(string data)
         {
-            // FUTURE: File.Write(data);
-
-            // TODO: wrap in stream
             for (var i = 0; i < data.Length; i++)
             {
                 SendByte(data[i]);
