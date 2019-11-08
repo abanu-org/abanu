@@ -19,8 +19,6 @@ namespace Abanu.Kernel
     public static class Program
     {
 
-        private static ThreadLocal<uint> Local;
-
         public static unsafe void Main()
         {
             ApplicationRuntime.Init();
@@ -47,10 +45,6 @@ namespace Abanu.Kernel
             con.Clear();
             con.SetCursor(0, 0);
             con.Write("kl\n");
-
-            Local = new ThreadLocal<uint>();
-            Local.Value = 0xFF998877;
-            con.WriteLine("TLS: " + Local.Value.ToString("x"));
 
             for (uint i = 0; i < ApplicationRuntime.ElfSections.SectionHeaderCount; i++)
             {

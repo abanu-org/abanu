@@ -56,6 +56,8 @@ namespace Abanu.Kernel.Core.Scheduling
         /// </summary>
         internal uint DataSelector;
 
+        internal Addr ThreadLocalStorageBaseAddr;
+
         /// <summary>
         /// Unique Thread Identifier
         /// </summary>

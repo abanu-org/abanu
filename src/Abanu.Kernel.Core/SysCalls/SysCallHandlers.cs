@@ -222,6 +222,7 @@ namespace Abanu.Kernel.Core.SysCalls
         internal static uint SetThreadStorageSegmentBase(SysCallContext* context, SystemMessage* args)
         {
             var addr = args->Arg1;
+            Scheduler.GetCurrentThread().ThreadLocalStorageBaseAddr = addr;
             GDT.SetThreadStorageSegmentBase(addr);
 
             return 0;

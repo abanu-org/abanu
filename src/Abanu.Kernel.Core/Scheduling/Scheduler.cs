@@ -594,9 +594,9 @@ namespace Abanu.Kernel.Core.Scheduling
                 Native.Nop();
             }
 
-            uint fsSegment = KnownSegments.UserThreadStorage;
+            GDT.SetThreadStorageSegmentBase(thread.ThreadLocalStorageBaseAddr);
 
-            InterruptReturn(stackStateAddr, pageDirAddr, dataSelector, fsSegment);
+            InterruptReturn(stackStateAddr, pageDirAddr, dataSelector, KnownSegments.UserThreadStorage);
         }
 
         [DllImport("x86/Abanu.InterruptReturn.o", EntryPoint = "InterruptReturn")]
