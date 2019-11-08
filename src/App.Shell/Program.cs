@@ -135,7 +135,7 @@ namespace Abanu.Kernel
             SysCalls.CreateMemoryProcess(fileBuf, (uint)length);
         }
 
-        public static unsafe void OnDispatchError(Exception ex)
+        public static void OnDispatchError(Exception ex)
         {
             Console.WriteLine(ex.Message);
         }

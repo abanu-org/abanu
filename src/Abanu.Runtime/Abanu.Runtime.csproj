@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="ConsoleClient.cs" />
     <Compile Include="MemoryAllocation.cs" />
     <Compile Include="ApplicationRuntime.cs" />
     <Compile Include="Console.cs" />

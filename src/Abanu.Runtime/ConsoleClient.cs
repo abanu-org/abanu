@@ -17,11 +17,12 @@ namespace Abanu.Kernel
     public class ConsoleClient
     {
 
-        private Stream Stream;
+        private Stream _Stream;
+        public Stream OutputStream => _Stream;
 
         public ConsoleClient(Stream stream)
         {
-            Stream = stream;
+            _Stream = stream;
         }
 
         private void SendCommand()
@@ -43,7 +44,7 @@ namespace Abanu.Kernel
 
         private unsafe void SendByte(char data)
         {
-            Stream.WriteByte((byte)data);
+            _Stream.WriteByte((byte)data);
         }
 
         private void SendBytes(string data)

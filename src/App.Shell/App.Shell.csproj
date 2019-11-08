@@ -77,7 +77,6 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="Program.cs" />
-    <Compile Include="ConsoleClient\ConsoleClient.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
