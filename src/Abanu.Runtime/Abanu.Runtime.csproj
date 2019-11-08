@@ -77,6 +77,10 @@
     <Compile Include="RuntimeAllocator.cs" />
     <Compile Include="RuntimeMemory.cs" />
     <Compile Include="SysCalls.cs" />
+    <Compile Include="System\Threading\LocalDataStoreSlot.cs" />
+    <Compile Include="System\Threading\Thread.cs" />
+    <Compile Include="System\Threading\ThreadLocal.cs" />
+    <Compile Include="ThreadLocalStorageBlock.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

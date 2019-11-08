@@ -33,6 +33,7 @@ namespace Abanu.Kernel
         GetFramebufferInfo = 46,
         GetCurrentProcessID = 47,
         GetCurrentThreadID = 48,
+        SetThreadStorageSegmentBase = 49,
 
         SetServiceStatus = 50,
         RegisterService = 51,

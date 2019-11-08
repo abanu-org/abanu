@@ -50,6 +50,7 @@ namespace Abanu.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.WriteDebugChar, SysCallHandlers.WriteDebugChar);
             SetCommand(SysCallTarget.SetThreadPriority, SysCallHandlers.SetThreadPriority);
             SetCommand(SysCallTarget.ThreadSleep, SysCallHandlers.ThreadSleep);
+            SetCommand(SysCallTarget.SetThreadStorageSegmentBase, SysCallHandlers.SetThreadStorageSegmentBase);
             SetCommand(SysCallTarget.RegisterService, SysCallHandlers.RegisterService);
             SetCommand(SysCallTarget.SetServiceStatus, SysCallHandlers.SetServiceStatus);
             SetCommand(SysCallTarget.RegisterInterrupt, SysCallHandlers.RegisterInterrupt);

@@ -14,7 +14,7 @@ namespace Abanu.Runtime
     // Pure calls. This is no Framework. No helpers!
     public static unsafe class SysCalls
     {
-        public static uint RequestMemory(uint size)
+        public static Addr RequestMemory(uint size)
         {
             return MessageManager.Send(SysCallTarget.RequestMemory, size);
         }
@@ -100,6 +100,11 @@ namespace Abanu.Runtime
         public static int GetCurrentThreadID()
         {
             return (int)MessageManager.Send(SysCallTarget.GetCurrentThreadID);
+        }
+
+        public static void SetThreadStorageSegmentBase(Addr addr)
+        {
+            MessageManager.Send(SysCallTarget.SetThreadStorageSegmentBase, addr);
         }
 
         public static void KillProcess(int processID)

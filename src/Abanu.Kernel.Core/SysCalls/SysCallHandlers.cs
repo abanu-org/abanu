@@ -219,6 +219,14 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
+        internal static uint SetThreadStorageSegmentBase(SysCallContext* context, SystemMessage* args)
+        {
+            var addr = args->Arg1;
+            GDT.SetThreadStorageSegmentBase(addr);
+
+            return 0;
+        }
+
         internal static uint RegisterService(SysCallContext* context, SystemMessage* args)
         {
             var proc = Scheduler.GetCurrentThread().Process;

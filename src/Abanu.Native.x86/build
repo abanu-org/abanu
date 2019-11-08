@@ -21,6 +21,12 @@ cp CpuCyclesSinceBoot.o ../../bin/$ARCH/Abanu.CpuCyclesSinceBoot.o
 nasm -f bin ReadFlags.s -o ReadFlags.o
 cp ReadFlags.o ../../bin/$ARCH/Abanu.ReadFlags.o
 
+nasm -f bin GetThreadLocalStorage.s -o GetThreadLocalStorage.o
+cp GetThreadLocalStorage.o ../../bin/$ARCH/Abanu.GetThreadLocalStorage.o
+
+nasm -f bin SetThreadLocalStorage.s -o SetThreadLocalStorage.o
+cp SetThreadLocalStorage.o ../../bin/$ARCH/Abanu.SetThreadLocalStorage.o
+
 nasm -f bin LoadTaskRegister.s -o LoadTaskRegister.o
 cp LoadTaskRegister.o ../../bin/$ARCH/Abanu.LoadTaskRegister.o
 

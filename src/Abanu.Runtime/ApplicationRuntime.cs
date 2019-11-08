@@ -1,8 +1,12 @@
 ﻿// This file is part of Abanu, an Operating System written in C#. Web: https://www.abanu.org
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 
+using System.Runtime.InteropServices;
+using System.Threading;
 using Abanu.Kernel.Core;
 using Abanu.Kernel.Core.Elf;
+using Mosa.Runtime;
+using Mosa.Runtime.x86;
 
 namespace Abanu.Runtime
 {
@@ -33,12 +37,35 @@ namespace Abanu.Runtime
             _CurrentProcessID = 0;
 
             RuntimeMemory.SetupEarlyStartup();
+            InitThreadLocalStorage();
             InitializAssembly();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
             RuntimeMemory.SetupAllocator();
 
             ElfSections = *((ElfSections*)SysCalls.GetElfSectionsAddress());
             ElfSections.Init();
+        }
+
+        private static unsafe void InitThreadLocalStorage()
+        {
+            // Position 0 is reserved for ThreadLocalStorageBlock
+            Thread.NextSlotPosition = Addr.Size;
+            InitCurrentThread();
+        }
+
+        private static unsafe void InitCurrentThread()
+        {
+            var tls = (ThreadLocalStorageBlock*)SysCalls.RequestMemory(4096);
+            tls->ThreadID = SysCalls.GetCurrentThreadID();
+            var th = new Thread(tls);
+            tls->ThreadPtr = (uint)(void*)Intrinsic.GetObjectAddress(th);
+            SysCalls.SetThreadStorageSegmentBase(tls->ThreadPtr);
+        }
+
+        internal static unsafe ThreadLocalStorageBlock* GetThreadLocalStorageBlock()
+        {
+            var addr = (void*)Thread.GetThreadLocalStorage(0);
+            return (ThreadLocalStorageBlock*)addr;
         }
 
         public static unsafe void Exit()

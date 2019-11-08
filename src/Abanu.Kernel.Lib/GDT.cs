@@ -173,6 +173,13 @@ namespace Abanu.Kernel.Core
         [DllImport("x86/Abanu.LoadTaskRegister.o", EntryPoint = "LoadTaskRegister")]
         private static extern void LoadTaskRegister(ushort taskSegmentSelector);
 
+        public static void SetThreadStorageSegmentBase(Addr addr)
+        {
+            var entry = GdtTable->GetEntry(8);
+            entry->BaseAddress = addr;
+
+        }
+
         public static void LoadTaskRegister()
         {
             ushort ts = KnownSegments.KernelTSS;
@@ -270,10 +277,10 @@ namespace Abanu.Kernel.Core
             Entries[index] = source;
         }
 
-        public DescriptorTableEntry GetEntry(ushort index)
+        public DescriptorTableEntry* GetEntry(ushort index)
         {
             Assert.InRange(index, Length);
-            return *(Entries + index);
+            return Entries + index;
         }
     }
 

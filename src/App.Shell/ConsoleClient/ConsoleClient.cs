@@ -115,6 +115,7 @@ namespace Abanu.Kernel
         public void WriteLine(string msg)
         {
             SendBytes(msg);
+            Write("\n");
         }
 
         public void SetForegroundColor(byte color)
