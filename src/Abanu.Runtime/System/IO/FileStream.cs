@@ -38,7 +38,8 @@ namespace System.IO
         {
             if (disposing)
             {
-                // TODO: Free Memory
+                ReadBuffer.Dispose();
+                WriteBuffer.Dispose();
             }
         }
 
@@ -81,7 +82,9 @@ namespace System.IO
                 return buf[0];
             }
             else
+            {
                 return -1;
+            }
         }
 
         public override long Seek(long offset, SeekOrigin origin)

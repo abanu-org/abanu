@@ -106,29 +106,31 @@ namespace Abanu.Kernel
 
             var transferBuf = new byte[4096];
 
-            var handle = File.Open(name);
-            int pos = 0;
-
-            SysCalls.SetThreadPriority(30);
-            while (true)
+            using (var handle = File.Open(name))
             {
-                var gotBytes = handle.Read(transferBuf, 0, transferBuf.Length);
+                int pos = 0;
 
-                if (gotBytes <= 0)
-                    break;
+                SysCalls.SetThreadPriority(30);
+                while (true)
+                {
+                    var gotBytes = handle.Read(transferBuf, 0, transferBuf.Length);
 
-                fileBuf.Write(transferBuf, 0, pos, gotBytes);
-                pos += gotBytes;
+                    if (gotBytes <= 0)
+                        break;
 
-                //for (var i = 0; i < gotBytes; i++)
-                //{
-                //    fileBuf.SetByte(pos++, transferBuf[i]);
-                //}
+                    fileBuf.Write(transferBuf, 0, pos, gotBytes);
+                    pos += gotBytes;
+
+                    //for (var i = 0; i < gotBytes; i++)
+                    //{
+                    //    fileBuf.SetByte(pos++, transferBuf[i]);
+                    //}
+                }
+                SysCalls.SetThreadPriority(0);
+
+                Console.WriteLine("CreateProc...");
+                SysCalls.CreateMemoryProcess(fileBuf.Region, (uint)length);
             }
-            SysCalls.SetThreadPriority(0);
-
-            Console.WriteLine("CreateProc...");
-            SysCalls.CreateMemoryProcess(fileBuf.Region, (uint)length);
         }
 
         public static void OnDispatchError(Exception ex)

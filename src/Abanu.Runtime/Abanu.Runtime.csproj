@@ -74,6 +74,7 @@
     <Compile Include="MemoryAllocation.cs" />
     <Compile Include="ApplicationRuntime.cs" />
     <Compile Include="Console.cs" />
+    <Compile Include="RuntimeElfSectionCollection.cs" />
     <Compile Include="System\IO\File.cs" />
     <Compile Include="FileReader.cs" />
     <Compile Include="System\IO\FileStream.cs" />

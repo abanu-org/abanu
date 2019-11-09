@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -13,26 +12,10 @@ using Abanu.Kernel.Core;
 using Abanu.Kernel.Core.Elf;
 using Abanu.Runtime;
 
+#pragma warning disable CA1001 // IDisposable
+
 namespace Abanu.Kernel
 {
-
-    public class RuntimeElfSectionCollection : List<RuntimeElfSection>
-    {
-        internal RuntimeElfSectionCollection(int sectionCount) : base(sectionCount) { }
-
-        public RuntimeElfSection this[string name]
-        {
-            get
-            {
-                for (var i = 0; i < Count; i++)
-                    if (this[i].Name == name)
-                        return this[i];
-
-                throw new Exception("Section " + name + " not found");
-            }
-        }
-    }
-
     public class RuntimeElfSection
     {
         private string _Name;
@@ -46,7 +29,7 @@ namespace Abanu.Kernel
             Header = header;
             _Data = new MemoryAllocation(physAddr, (int)header->Size)
             {
-                Disposable = false
+                Disposable = false,
             };
         }
 

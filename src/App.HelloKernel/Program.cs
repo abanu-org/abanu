@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Abanu.Kernel.Core;
 using Abanu.Runtime;
@@ -36,7 +37,7 @@ namespace Abanu.Kernel
             while (true)
             {
                 //Serial.Write(port, (byte)'M');
-                SysCalls.ThreadSleep(0);
+                Thread.Sleep(0);
             }
         }
 
