@@ -39,10 +39,9 @@ namespace Abanu.Kernel
             if (column >= Columns || row >= Rows)
                 return;
 
-            var fontSec = ApplicationRuntime.ElfSections.GetSectionHeader("consolefont.regular");
-            var fontSecAddr = ApplicationRuntime.ElfSections.GetSectionPhysAddr(fontSec);
+            var fontSecAddr = ApplicationRuntime.ElfSections["consolefont.regular"];
 
-            var fontHeader = (PSF1Header*)fontSecAddr;
+            var fontHeader = (PSF1Header*)fontSecAddr.Data.Start;
 
             //KernelMemory.DumpToConsole(fontSecAddr, 20);
 
@@ -52,7 +51,7 @@ namespace Abanu.Kernel
 
             var charSize = bytesPerRow * rows;
 
-            var charMem = (byte*)(fontSecAddr + sizeof(PSF1Header));
+            var charMem = (byte*)(fontSecAddr.Data.Start + sizeof(PSF1Header));
             //KernelMemory.DumpToConsole((uint)charMem, 20);
 
             var foreColor = GetNativeColor(foregroundColor);

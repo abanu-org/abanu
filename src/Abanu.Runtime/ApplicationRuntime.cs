@@ -1,6 +1,7 @@
 ﻿// This file is part of Abanu, an Operating System written in C#. Web: https://www.abanu.org
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Abanu.Kernel;
@@ -33,18 +34,31 @@ namespace Abanu.Runtime
             }
         }
 
-        public static unsafe void Init()
+        public static void Init()
         {
             _CurrentProcessID = 0;
 
             RuntimeMemory.SetupEarlyStartup();
-            InitThreadLocalStorage();
-            InitializAssembly();
-            //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
             RuntimeMemory.SetupAllocator();
+            InitializAssembly();
+            SetupElfSections();
+            InitThreadLocalStorage();
+            //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
+        }
 
-            ElfSections = *((ElfSections*)SysCalls.GetElfSectionsAddress());
-            ElfSections.Init();
+        private static unsafe void SetupElfSections()
+        {
+            ElfSectionsInternal = *((ElfSections*)SysCalls.GetElfSectionsAddress());
+            ElfSectionsInternal.Init();
+
+            ElfSections = new RuntimeElfSectionCollection((int)ElfSectionsInternal.SectionHeaderCount);
+            for (uint i = 0; i < ElfSectionsInternal.SectionHeaderCount; i++)
+            {
+                var section = ElfSectionsInternal.GetSectionHeader(i);
+                var name = ElfSectionsInternal.GeSectionName(section);
+                var sec = new RuntimeElfSection(NullTerminatedString.ToString(name), section, ElfSectionsInternal.GetSectionPhysAddr(section));
+                ElfSections.Add(sec);
+            }
         }
 
         private static unsafe void InitThreadLocalStorage()
@@ -83,7 +97,7 @@ namespace Abanu.Runtime
 
         private static void InitializAssembly()
         {
-            Mosa.Runtime.StartUp.InitializeAssembly();
+            StartUp.InitializeAssembly();
         }
 
         /// <summary>
@@ -96,7 +110,8 @@ namespace Abanu.Runtime
 
         #endregion
 
-        public static ElfSections ElfSections;
+        private static ElfSections ElfSectionsInternal;
+        public static RuntimeElfSectionCollection ElfSections;
 
         private static void Dummy()
         {

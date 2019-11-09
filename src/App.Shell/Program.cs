@@ -20,7 +20,7 @@ namespace Abanu.Kernel
     public static class Program
     {
 
-        public static unsafe void Main()
+        public static void Main()
         {
             try
             {
@@ -44,12 +44,8 @@ namespace Abanu.Kernel
                 con.SetCursor(0, 0);
                 con.Write("kl\n");
 
-                for (uint i = 0; i < ApplicationRuntime.ElfSections.SectionHeaderCount; i++)
-                {
-                    var section = ApplicationRuntime.ElfSections.GetSectionHeader(i);
-                    var name = ApplicationRuntime.ElfSections.GeSectionName(section);
-                    con.WriteLine(name);
-                }
+                for (int i = 0; i < ApplicationRuntime.ElfSections.Count; i++)
+                    con.WriteLine(ApplicationRuntime.ElfSections[i].Name);
 
                 using (var kbStream = File.Open("/dev/keyboard"))
                 {
@@ -94,7 +90,7 @@ namespace Abanu.Kernel
             }
         }
 
-        private static unsafe void StartProc(string name)
+        private static void StartProc(string name)
         {
             var fileServiceProc = SysCalls.GetProcessIDForCommand(SysCallTarget.GetFileLength);
             var nameBuf = SysCalls.RequestMessageBuffer(4096, fileServiceProc);
@@ -108,31 +104,26 @@ namespace Abanu.Kernel
             var targetProcessStartProc = SysCalls.GetProcessIDForCommand(SysCallTarget.CreateMemoryProcess);
             var fileBuf = ApplicationRuntime.RequestMessageBuffer(length, targetProcessStartProc);
 
-            var transferBuf = SysCalls.RequestMessageBuffer(4096, fileServiceProc);
+            var transferBuf = new byte[4096];
 
-            var handle = SysCalls.OpenFile(nameBuf, name);
+            var handle = File.Open(name);
             int pos = 0;
 
-            var transferPtr = (byte*)transferBuf.Start;
             SysCalls.SetThreadPriority(30);
             while (true)
             {
-                var gotBytes = SysCalls.ReadFile(handle, transferBuf);
-
-                //Console.Write(gotBytes.ToString());
-
-                //if (gotBytes == 132)
-                //{
-                //    name.IndexOf("");
-                //}
+                var gotBytes = handle.Read(transferBuf, 0, transferBuf.Length);
 
                 if (gotBytes <= 0)
                     break;
 
-                for (var i = 0; i < gotBytes; i++)
-                {
-                    fileBuf.SetByte(pos++, transferPtr[i]);
-                }
+                fileBuf.Write(transferBuf, 0, pos, gotBytes);
+                pos += gotBytes;
+
+                //for (var i = 0; i < gotBytes; i++)
+                //{
+                //    fileBuf.SetByte(pos++, transferBuf[i]);
+                //}
             }
             SysCalls.SetThreadPriority(0);
 

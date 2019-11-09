@@ -24,6 +24,7 @@ namespace Abanu.Runtime
             _Start = start;
             _Size = size;
             _Region = new MemoryRegion(start, (uint)size);
+            Disposable = true;
         }
 
         internal unsafe MemoryAllocation(MemoryRegion region)
@@ -32,14 +33,19 @@ namespace Abanu.Runtime
             _Start = region.Start;
             _Size = (int)region.Size;
             _Region = region;
+            Disposable = true;
         }
 
         private MemoryRegion _Region;
         public MemoryRegion Region => _Region;
 
+        internal bool Disposable;
         private bool Disposed;
         public void Dispose()
         {
+            if (!Disposable)
+                return;
+
             if (Disposed)
                 return;
             // TODO: Implement
@@ -73,7 +79,10 @@ namespace Abanu.Runtime
                 throw new ArgumentOutOfRangeException();
 
             for (var i = 0; i < count; i++)
-                BytePtr[destinationIndex + i] = sourceArray[sourceIndex + i];
+                BytePtr[destinationIndex++] = sourceArray[sourceIndex++];
+
+            //for (var i = 0; i < count; i++)
+            //    BytePtr[destinationIndex + i] = sourceArray[sourceIndex + i];
         }
 
         public unsafe void Read(int sourceIndex, byte[] destinationArray, int destinationIndex, int count)
@@ -85,7 +94,10 @@ namespace Abanu.Runtime
                 throw new ArgumentOutOfRangeException();
 
             for (var i = 0; i < count; i++)
-                destinationArray[destinationIndex + i] = BytePtr[sourceIndex + i];
+                destinationArray[destinationIndex++] = BytePtr[sourceIndex++];
+
+            //for (var i = 0; i < count; i++)
+            //    destinationArray[destinationIndex + i] = BytePtr[sourceIndex + i];
         }
 
     }
