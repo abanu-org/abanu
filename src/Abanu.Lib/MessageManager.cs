@@ -13,7 +13,7 @@ using Abanu.Kernel;
 namespace Abanu.Runtime
 {
 
-    public unsafe delegate void OnMessageReceivedDelegate(ref SystemMessage msg);
+    public unsafe delegate void OnMessageReceivedDelegate(in SystemMessage msg);
     public delegate void OnExceptionDelegate(Exception ex);
     //public unsafe delegate void OnInterruptReceivedDelegate(InterruptMessage* msg);
 
@@ -29,7 +29,7 @@ namespace Abanu.Runtime
             try
             {
                 if (OnMessageReceived != null)
-                    OnMessageReceived(ref msg);
+                    OnMessageReceived(msg);
             }
             catch (Exception ex)
             {

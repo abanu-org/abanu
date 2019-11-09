@@ -75,27 +75,27 @@ namespace Abanu.Kernel
         }
 
         private static MemoryRegion GetProcessByNameBuffer;
-        public static unsafe void MessageReceived(ref SystemMessage msg)
+        public static unsafe void MessageReceived(in SystemMessage msg)
         {
             switch (msg.Target)
             {
                 case SysCallTarget.OpenFile:
-                    Cmd_OpenFile(ref msg);
+                    Cmd_OpenFile(msg);
                     break;
                 case SysCallTarget.GetFileLength:
-                    Cmd_GetFileLength(ref msg);
+                    Cmd_GetFileLength(msg);
                     break;
                 case SysCallTarget.WriteFile:
-                    Cmd_WriteFile(ref msg);
+                    Cmd_WriteFile(msg);
                     break;
                 case SysCallTarget.ReadFile:
-                    Cmd_ReadFile(ref msg);
+                    Cmd_ReadFile(msg);
                     break;
                 case SysCallTarget.CreateFifo:
-                    Cmd_CreateFiFo(ref msg);
+                    Cmd_CreateFiFo(msg);
                     break;
                 case SysCallTarget.Interrupt:
-                    Cmd_Interrupt(ref msg);
+                    Cmd_Interrupt(msg);
                     break;
                 case SysCallTarget.TmpDebug:
                     if (msg.Arg1 == 1)
@@ -289,7 +289,7 @@ namespace Abanu.Kernel
             return null;
         }
 
-        public static unsafe void Cmd_Interrupt(ref SystemMessage msg)
+        public static unsafe void Cmd_Interrupt(in SystemMessage msg)
         {
             var code = Native.In8(0x60);
 
@@ -308,7 +308,7 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
-        public static unsafe void Cmd_CreateFiFo(ref SystemMessage msg)
+        public static unsafe void Cmd_CreateFiFo(in SystemMessage msg)
         {
             var path = NullTerminatedString.ToString((byte*)msg.Arg1);
 
@@ -326,7 +326,7 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
-        public static unsafe void Cmd_CreateMemoryFile(ref SystemMessage msg)
+        public static unsafe void Cmd_CreateMemoryFile(in SystemMessage msg)
         {
             var start = msg.Arg1;
             var length = msg.Arg2;
@@ -348,7 +348,7 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
-        public static unsafe void Cmd_GetFileLength(ref SystemMessage msg)
+        public static unsafe void Cmd_GetFileLength(in SystemMessage msg)
         {
             var path = NullTerminatedString.ToString((byte*)msg.Arg1);
 
@@ -376,7 +376,7 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, (uint)file.Length));
         }
 
-        public static unsafe void Cmd_OpenFile(ref SystemMessage msg)
+        public static unsafe void Cmd_OpenFile(in SystemMessage msg)
         {
 
             //var addr = msg->Arg1;
@@ -419,7 +419,7 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, openFile.Handle));
         }
 
-        public static unsafe void Cmd_ReadFile(ref SystemMessage msg)
+        public static unsafe void Cmd_ReadFile(in SystemMessage msg)
         {
             if (TraceFileIO)
                 Console.WriteLine("Read Handle: " + msg.Arg1.ToString("X"));
@@ -438,7 +438,7 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, gotBytes));
         }
 
-        public static unsafe void Cmd_WriteFile(ref SystemMessage msg)
+        public static unsafe void Cmd_WriteFile(in SystemMessage msg)
         {
             if (TraceFileIO)
                 Console.WriteLine("Write Handle: " + msg.Arg1.ToString("X"));
