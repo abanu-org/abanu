@@ -39,11 +39,12 @@ namespace Abanu.Runtime
             _CurrentProcessID = 0;
 
             RuntimeMemory.SetupEarlyStartup();
-            RuntimeMemory.SetupAllocator();
-            InitializAssembly();
-            SetupElfSections();
             InitThreadLocalStorage();
+            InitializAssembly();
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
+            RuntimeMemory.SetupAllocator();
+
+            SetupElfSections();
         }
 
         private static unsafe void SetupElfSections()
@@ -60,7 +61,6 @@ namespace Abanu.Runtime
                 ElfSections.Add(sec);
             }
         }
-
         private static unsafe void InitThreadLocalStorage()
         {
             // Position 0 is reserved for ThreadLocalStorageBlock
