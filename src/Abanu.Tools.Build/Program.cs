@@ -77,6 +77,8 @@ namespace Abanu.Tools.Build
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/DebugFunction1.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.DebugFunction1.o");
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/SysCall.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.SysCall.o");
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/ReadFlags.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.ReadFlags.o");
+                Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/SetThreadLocalStorage.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.SetThreadLocalStorage.o");
+                Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/GetThreadLocalStorage.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.GetThreadLocalStorage.o");
                 Exec("${nasm} -f bin ${ABANU_PROJDIR}/src/Abanu.Native.${ABANU_ARCH}/CpuCyclesSinceBoot.s -o ${ABANU_BINDIR}/${ABANU_ARCH}/Abanu.CpuCyclesSinceBoot.o");
             }
             return null;
