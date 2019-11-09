@@ -30,9 +30,9 @@ namespace Abanu.Kernel
             }
         }
 
-        public static unsafe void MessageReceived(SystemMessage* msg)
+        public static unsafe void MessageReceived(ref SystemMessage msg)
         {
-            MessageManager.Send(SysCallTarget.ServiceReturn, msg->Arg1 + 10);
+            MessageManager.Send(SysCallTarget.ServiceReturn, msg.Arg1 + 10);
         }
 
     }

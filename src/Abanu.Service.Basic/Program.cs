@@ -75,30 +75,30 @@ namespace Abanu.Kernel
         }
 
         private static MemoryRegion GetProcessByNameBuffer;
-        public static unsafe void MessageReceived(SystemMessage* msg)
+        public static unsafe void MessageReceived(ref SystemMessage msg)
         {
-            switch (msg->Target)
+            switch (msg.Target)
             {
                 case SysCallTarget.OpenFile:
-                    Cmd_OpenFile(msg);
+                    Cmd_OpenFile(ref msg);
                     break;
                 case SysCallTarget.GetFileLength:
-                    Cmd_GetFileLength(msg);
+                    Cmd_GetFileLength(ref msg);
                     break;
                 case SysCallTarget.WriteFile:
-                    Cmd_WriteFile(msg);
+                    Cmd_WriteFile(ref msg);
                     break;
                 case SysCallTarget.ReadFile:
-                    Cmd_ReadFile(msg);
+                    Cmd_ReadFile(ref msg);
                     break;
                 case SysCallTarget.CreateFifo:
-                    Cmd_CreateFiFo(msg);
+                    Cmd_CreateFiFo(ref msg);
                     break;
                 case SysCallTarget.Interrupt:
-                    Cmd_Interrupt(msg);
+                    Cmd_Interrupt(ref msg);
                     break;
                 case SysCallTarget.TmpDebug:
-                    if (msg->Arg1 == 1)
+                    if (msg.Arg1 == 1)
                     {
                         var procID = SysCalls.GetProcessByName(GetProcessByNameBuffer, "App.Shell");
 
@@ -289,7 +289,7 @@ namespace Abanu.Kernel
             return null;
         }
 
-        public static unsafe void Cmd_Interrupt(SystemMessage* msg)
+        public static unsafe void Cmd_Interrupt(ref SystemMessage msg)
         {
             var code = Native.In8(0x60);
 
@@ -308,9 +308,9 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
-        public static unsafe void Cmd_CreateFiFo(SystemMessage* msg)
+        public static unsafe void Cmd_CreateFiFo(ref SystemMessage msg)
         {
-            var path = NullTerminatedString.ToString((byte*)msg->Arg1);
+            var path = NullTerminatedString.ToString((byte*)msg.Arg1);
 
             var fifo = new FifoFile()
             {
@@ -326,10 +326,10 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
-        public static unsafe void Cmd_CreateMemoryFile(SystemMessage* msg)
+        public static unsafe void Cmd_CreateMemoryFile(ref SystemMessage msg)
         {
-            var start = msg->Arg1;
-            var length = msg->Arg2;
+            var start = msg.Arg1;
+            var length = msg.Arg2;
             var data = (char*)start;
 
             var path = new string(data);
@@ -348,9 +348,9 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
-        public static unsafe void Cmd_GetFileLength(SystemMessage* msg)
+        public static unsafe void Cmd_GetFileLength(ref SystemMessage msg)
         {
-            var path = NullTerminatedString.ToString((byte*)msg->Arg1);
+            var path = NullTerminatedString.ToString((byte*)msg.Arg1);
 
             if (TraceFileIO)
             {
@@ -376,7 +376,7 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, (uint)file.Length));
         }
 
-        public static unsafe void Cmd_OpenFile(SystemMessage* msg)
+        public static unsafe void Cmd_OpenFile(ref SystemMessage msg)
         {
 
             //var addr = msg->Arg1;
@@ -384,7 +384,7 @@ namespace Abanu.Kernel
             //var path = str->ToString();
 
             //var path = ((NullTerminatedString*)msg->Arg1)->ToString();
-            var path = NullTerminatedString.ToString((byte*)msg->Arg1);
+            var path = NullTerminatedString.ToString((byte*)msg.Arg1);
 
             if (TraceFileIO)
             {
@@ -419,12 +419,12 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, openFile.Handle));
         }
 
-        public static unsafe void Cmd_ReadFile(SystemMessage* msg)
+        public static unsafe void Cmd_ReadFile(ref SystemMessage msg)
         {
             if (TraceFileIO)
-                Console.WriteLine("Read Handle: " + msg->Arg1.ToString("X"));
+                Console.WriteLine("Read Handle: " + msg.Arg1.ToString("X"));
 
-            var openFile = FindOpenFile((int)msg->Arg1);
+            var openFile = FindOpenFile((int)msg.Arg1);
             if (openFile == null)
             {
                 Console.WriteLine("Handle not found");
@@ -432,18 +432,18 @@ namespace Abanu.Kernel
                 return;
             }
 
-            var data = (byte*)msg->Arg2;
-            var length = msg->Arg3;
+            var data = (byte*)msg.Arg2;
+            var length = msg.Arg3;
             var gotBytes = openFile.Buffer.Read(data, length);
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, gotBytes));
         }
 
-        public static unsafe void Cmd_WriteFile(SystemMessage* msg)
+        public static unsafe void Cmd_WriteFile(ref SystemMessage msg)
         {
             if (TraceFileIO)
-                Console.WriteLine("Write Handle: " + msg->Arg1.ToString("X"));
+                Console.WriteLine("Write Handle: " + msg.Arg1.ToString("X"));
 
-            var openFile = FindOpenFile((int)msg->Arg1);
+            var openFile = FindOpenFile((int)msg.Arg1);
             if (openFile == null)
             {
                 Console.WriteLine("Handle not found");
@@ -451,8 +451,8 @@ namespace Abanu.Kernel
                 return;
             }
 
-            var data = (byte*)msg->Arg2;
-            var length = msg->Arg3;
+            var data = (byte*)msg.Arg2;
+            var length = msg.Arg3;
             var gotBytes = openFile.Buffer.Write(data, length);
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, gotBytes));
         }
