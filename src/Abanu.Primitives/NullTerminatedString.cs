@@ -148,6 +148,11 @@ namespace Abanu
             return new string((sbyte*)str->Bytes);
         }
 
+        public static string ToString(in NullTerminatedString str)
+        {
+            return new string((sbyte*)str.Bytes);
+        }
+
         public static string ToString(byte* str)
         {
             return new string((sbyte*)str);
