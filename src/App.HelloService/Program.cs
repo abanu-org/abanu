@@ -18,7 +18,7 @@ namespace Abanu.Kernel
     public static class Program
     {
 
-        public static unsafe void Main()
+        public static void Main()
         {
             ApplicationRuntime.Init();
 
@@ -30,7 +30,7 @@ namespace Abanu.Kernel
             }
         }
 
-        public static unsafe void MessageReceived(in SystemMessage msg)
+        public static void MessageReceived(in SystemMessage msg)
         {
             MessageManager.Send(SysCallTarget.ServiceReturn, msg.Arg1 + 10);
         }

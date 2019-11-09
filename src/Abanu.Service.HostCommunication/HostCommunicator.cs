@@ -9,7 +9,7 @@ namespace Abanu.Kernel
     public static class HostCommunicator
     {
 
-        public unsafe struct MessageHeader
+        public struct MessageHeader
         {
             public int MsgId;
             public MessageCommand Command;
@@ -50,7 +50,7 @@ namespace Abanu.Kernel
         }
 
         private static int lastMessageId = 0;
-        public static unsafe FileHandle OpenFile(string path)
+        public static FileHandle OpenFile(string path)
         {
             var msgId = ++lastMessageId;
             WriteHeader(new MessageHeader { Command = MessageCommand.OpenFile, MsgId = msgId });
@@ -59,7 +59,7 @@ namespace Abanu.Kernel
             return ReadResultInt32(msgId);
         }
 
-        public static unsafe int GetFileLenth(string path)
+        public static int GetFileLenth(string path)
         {
             var msgId = ++lastMessageId;
             WriteHeader(new MessageHeader { Command = MessageCommand.GetFileLength, MsgId = msgId });
@@ -148,55 +148,55 @@ namespace Abanu.Kernel
             Write((uint)data);
         }
 
-        public static unsafe void WriteArg(string data)
+        public static void WriteArg(string data)
         {
             WriteArgStart((uint)data.Length);
             for (var i = 0; i < data.Length; i++)
                 Write((byte)data[i]);
         }
 
-        public static unsafe void WriteEnd()
+        public static void WriteEnd()
         {
             Write((byte)LineType.End);
         }
 
-        private static unsafe void WriteDataStart(uint dataLength)
+        private static void WriteDataStart(uint dataLength)
         {
             Write((byte)LineType.Data);
             Write(dataLength);
         }
 
-        private static unsafe void WriteArgStart(uint argSize)
+        private static void WriteArgStart(uint argSize)
         {
             Write((byte)LineType.Arg);
             Write(argSize);
         }
 
-        public static unsafe void WriteData(byte data)
+        public static void WriteData(byte data)
         {
             Write(data);
         }
 
-        private static unsafe void Write(uint data)
+        private static void Write(uint data)
         {
             var bytes = BitConversion.GetBytes(data);
             Write(bytes);
             RuntimeMemory.FreeObject(bytes);
         }
 
-        private static unsafe void Write(byte[] data)
+        private static void Write(byte[] data)
         {
             for (var i = 0; i < data.Length; i++)
                 Write(data[i]);
         }
 
-        private static unsafe void Write(string data)
+        private static void Write(string data)
         {
             for (var i = 0; i < data.Length; i++)
                 Write((byte)data[i]);
         }
 
-        private static unsafe void Write(byte data)
+        private static void Write(byte data)
         {
             Serial.Write(Serial.COM2, data);
         }

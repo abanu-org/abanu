@@ -24,7 +24,7 @@ namespace Abanu.Kernel
 
         private const bool TraceFileIO = false;
 
-        public static unsafe void Main()
+        public static void Main()
         {
             ApplicationRuntime.Init();
 
@@ -69,13 +69,13 @@ namespace Abanu.Kernel
             }
         }
 
-        public static unsafe void OnDispatchError(Exception ex)
+        public static void OnDispatchError(Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
 
         private static MemoryRegion GetProcessByNameBuffer;
-        public static unsafe void MessageReceived(in SystemMessage msg)
+        public static void MessageReceived(in SystemMessage msg)
         {
             switch (msg.Target)
             {

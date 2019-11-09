@@ -48,7 +48,7 @@ namespace Abanu.Kernel
             }
         }
 
-        public static unsafe void OnDispatchError(Exception ex)
+        public static void OnDispatchError(Exception ex)
         {
             Console.WriteLine(ex.Message);
         }

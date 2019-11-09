@@ -26,7 +26,7 @@ namespace Abanu.Kernel
     public static class Program
     {
 
-        public static unsafe void Main()
+        public static void Main()
         {
             ApplicationRuntime.Init();
 
