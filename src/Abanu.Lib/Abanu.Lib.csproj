@@ -81,6 +81,7 @@
     <Compile Include="MemoryRegionExtensions.cs" />
     <Compile Include="MessageManager.cs" />
     <Compile Include="Serial.cs" />
+    <Compile Include="StreamExtensions.cs" />
     <Compile Include="Tests\BinaryBuddyAllocator_TestImplementation.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />

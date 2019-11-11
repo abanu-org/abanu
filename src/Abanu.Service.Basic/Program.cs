@@ -126,75 +126,159 @@ namespace Abanu.Kernel
         /// <summary>
         /// General purpose Fifo
         /// </summary>
-        internal class FifoStream : IBuffer, IDisposable
+        internal class FifoStream : Stream
         {
             private byte[] Data;
             private int WritePosition;
             private int ReadPosition;
-            public int Length;
+
+            private long _Length;
+            public override long Length => _Length;
+
+            public override bool CanRead => throw new NotImplementedException("NotImpelmented: CanRead");
+
+            public override bool CanSeek => throw new NotImplementedException("NotImpelmented: CanSeek");
+
+            public override bool CanWrite => throw new NotImplementedException("NotImpelmented: CanWrite");
+
+            public override long Position { get => throw new NotImplementedException("NotImpelmented: GetPosition"); set => throw new NotImplementedException("NotImpelmented: SetPosition"); }
 
             public FifoStream(int capacity)
             {
                 Data = new byte[capacity];
+                _Length = 0;
             }
 
-            public unsafe SSize Read(byte* buf, USize count)
+            protected override void Dispose(bool disposing)
             {
-                if (Length == 0)
+                RuntimeMemory.FreeObject(Data);
+            }
+
+            public override void Flush()
+            {
+
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                if (_Length == 0)
                     return 0;
 
-                var cnt = Math.Min(count, Length);
+                var cnt = (int)Math.Min(count, Length);
                 for (var i = 0; i < cnt; i++)
                 {
-                    buf[i] = Data[ReadPosition++];
+                    buffer[i] = Data[ReadPosition++];
                     if (ReadPosition >= Data.Length)
                         ReadPosition = 0;
-                    Length--;
+                    _Length--;
                 }
 
                 return cnt;
             }
 
-            public unsafe SSize Write(byte* buf, USize count)
+            public override int ReadByte()
+            {
+                if (_Length == 0)
+                    return -1;
+
+                var cnt = (int)Math.Min(1, Length);
+                for (var i = 0; i < cnt; i++)
+                {
+                    var result = Data[ReadPosition++];
+                    if (ReadPosition >= Data.Length)
+                        ReadPosition = 0;
+                    _Length--;
+                    return result;
+                }
+
+                return -1;
+            }
+
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                throw new NotImplementedException("NotImpelmented: seek");
+            }
+
+            public override void SetLength(long value)
+            {
+                throw new NotImplementedException("NotImpelmented: SetLength");
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
             {
                 for (var i = 0; i < count; i++)
                 {
-                    Data[WritePosition++] = buf[i];
+                    Data[WritePosition++] = buffer[i];
                     if (WritePosition >= Data.Length)
                         WritePosition = 0;
-                    Length++;
+                    _Length++;
                 }
-                return (uint)count;
             }
 
-            public void Dispose()
+            public override void WriteByte(byte value)
             {
-                RuntimeMemory.FreeObject(Data);
+                for (var i = 0; i < 1; i++)
+                {
+                    Data[WritePosition++] = value;
+                    if (WritePosition >= Data.Length)
+                        WritePosition = 0;
+                    _Length++;
+                }
             }
         }
 
-        internal class FifoFile : IBuffer, IDisposable
+        internal class FifoFile : Stream
         {
-            private IBuffer Data;
+            private Stream Data;
 
             public FifoFile()
             {
                 Data = new FifoStream(256);
             }
 
-            public void Dispose()
+            public override bool CanRead => Data.CanRead;
+
+            public override bool CanSeek => Data.CanSeek;
+
+            public override bool CanWrite => Data.CanWrite;
+
+            public override long Length => Data.Length;
+
+            public override long Position { get => Data.Position; set => Data.Position = value; }
+
+            public override void Flush()
             {
-                RuntimeMemory.FreeObject(Data);
+                Data.Flush();
             }
 
-            public unsafe SSize Read(byte* buf, USize count)
+            public override int Read(byte[] buffer, int offset, int count)
             {
-                return Data.Read(buf, count);
+                return Data.Read(buffer, offset, count);
             }
 
-            public unsafe SSize Write(byte* buf, USize count)
+            public override int ReadByte()
             {
-                return Data.Write(buf, count);
+                return Data.ReadByte();
+            }
+
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                return Data.Seek(offset, origin);
+            }
+
+            public override void SetLength(long value)
+            {
+                Data.SetLength(value);
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                Data.Write(buffer, offset, count);
+            }
+
+            public override void WriteByte(byte value)
+            {
+                Data.WriteByte(value);
             }
         }
 
@@ -203,7 +287,7 @@ namespace Abanu.Kernel
             public FileHandle Handle;
             public string Path;
             public int ProcessId;
-            public IBuffer Buffer;
+            public Stream Buffer;
         }
 
         private static List<OpenFile> OpenFiles;
@@ -221,44 +305,44 @@ namespace Abanu.Kernel
 
         internal class VfsFile
         {
-            public IBuffer Buffer;
+            public Stream Buffer;
             public string Path;
             public int Length;
         }
 
-        internal class StreamWrapper : IBuffer
-        {
+        //internal class StreamWrapper : IBuffer
+        //{
 
-            private Stream Stream;
-            private byte[] tmpBuf;
+        //    private Stream Stream;
+        //    private byte[] tmpBuf;
 
-            public StreamWrapper(Stream stream)
-            {
-                Stream = stream;
-                tmpBuf = new byte[4096];
-            }
+        //    public StreamWrapper(Stream stream)
+        //    {
+        //        Stream = stream;
+        //        tmpBuf = new byte[4096];
+        //    }
 
-            public unsafe SSize Read(byte* buf, USize count)
-            {
-                var bytes = Stream.Read(tmpBuf, 0, (int)count);
-                for (var i = 0; i < bytes; i++)
-                    buf[i] = tmpBuf[i];
-                return bytes;
-            }
+        //    public unsafe SSize Read(byte* buf, USize count)
+        //    {
+        //        var bytes = Stream.Read(tmpBuf, 0, (int)count);
+        //        for (var i = 0; i < bytes; i++)
+        //            buf[i] = tmpBuf[i];
+        //        return bytes;
+        //    }
 
-            public unsafe SSize Write(byte* buf, USize count)
-            {
-                if (count > tmpBuf.Length)
-                    throw new NotImplementedException();
+        //    public unsafe SSize Write(byte* buf, USize count)
+        //    {
+        //        if (count > tmpBuf.Length)
+        //            throw new NotImplementedException();
 
-                for (var i = 0; i < count; i++)
-                    tmpBuf[i] = buf[i];
+        //        for (var i = 0; i < count; i++)
+        //            tmpBuf[i] = buf[i];
 
-                Stream.Write(tmpBuf, 0, (int)count);
+        //        Stream.Write(tmpBuf, 0, (int)count);
 
-                return (SSize)count;
-            }
-        }
+        //        return (SSize)count;
+        //    }
+        //}
 
         private static List<VfsFile> Files;
 
@@ -274,11 +358,10 @@ namespace Abanu.Kernel
                 if (node != null)
                 {
                     var stream = (Stream)node.Open(FileAccess.Read, FileShare.Read);
-                    var buf = new StreamWrapper(stream);
                     var file = new VfsFile
                     {
                         Path = path,
-                        Buffer = buf,
+                        Buffer = stream,
                         Length = (int)stream.Length,
                     };
                     Files.Add(file);
@@ -303,7 +386,7 @@ namespace Abanu.Kernel
                 MessageManager.Send(new SystemMessage(SysCallTarget.TmpDebug, 1));
             }
 
-            KeyBoardFifo.Buffer.Write(&code, 1);
+            KeyBoardFifo.Buffer.WriteByte(code);
 
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
@@ -434,8 +517,8 @@ namespace Abanu.Kernel
 
             var data = (byte*)msg.Arg2;
             var length = msg.Arg3;
-            var gotBytes = openFile.Buffer.Read(data, length);
-            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, gotBytes));
+            var gotBytes = openFile.Buffer.Read(data, (int)length);
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, (uint)gotBytes));
         }
 
         public static unsafe void Cmd_WriteFile(in SystemMessage msg)
@@ -453,8 +536,8 @@ namespace Abanu.Kernel
 
             var data = (byte*)msg.Arg2;
             var length = msg.Arg3;
-            var gotBytes = openFile.Buffer.Write(data, length);
-            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, gotBytes));
+            openFile.Buffer.Write(data, (int)length);
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, length));
         }
 
     }
