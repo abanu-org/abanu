@@ -58,6 +58,13 @@ namespace Abanu.Kernel
                         {
                             var key = (byte)num;
 
+                            // F8
+                            if (key == 0x42)
+                            {
+                                StartProc("CHELLO.BIN");
+                                continue;
+                            }
+
                             // F9
                             if (key == 0x43)
                             {

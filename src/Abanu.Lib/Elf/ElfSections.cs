@@ -143,6 +143,14 @@ namespace Abanu.Kernel.Core.Elf
                 return section->Addr;
         }
 
+        //public uint GetSectionPhysAddr(string sectionName)
+        //{
+        //    var section = GetSectionHeader(sectionName);
+        //    if (section == null)
+        //        return 0;
+        //    return GetSectionPhysAddr(section);
+        //}
+
         public uint TotalFileSize
         {
             get

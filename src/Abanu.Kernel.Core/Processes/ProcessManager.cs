@@ -119,6 +119,9 @@ namespace Abanu.Kernel.Core.Processes
 
             var tmpKernelElfHeaders = SetupElfHeader(proc, elf);
 
+            // TEMP: TODO: Use Program Headers!
+            bool isNativeC = false;
+
             // Setup ELF Sections
             for (uint i = 0; i < elf.SectionHeaderCount; i++)
             {
@@ -130,6 +133,37 @@ namespace Abanu.Kernel.Core.Processes
                 var srcAddr = elf.GetSectionPhysAddr(section);
 
                 if (size == 0)
+                    continue;
+
+                // TODO: Use Program Headers!
+                if (virtAddr > 0 && virtAddr < 0x10000)
+                    continue;
+                if (name->Equals(".eh_frame_hdr"))
+                {
+                    isNativeC = true;
+                    continue;
+                }
+                if (name->Equals(".eh_frame"))
+                    continue;
+                if (name->Equals(".dynamic"))
+                    continue;
+                if (name->Equals(".comment"))
+                    continue;
+                if (name->Equals(".debug_aranges"))
+                    continue;
+                if (name->Equals(".debug_info"))
+                    continue;
+                if (name->Equals(".debug_abbrev"))
+                    continue;
+                if (name->Equals(".debug_line"))
+                    continue;
+                if (name->Equals(".debug_str"))
+                    continue;
+                if (name->Equals(".symtab") && isNativeC)
+                    continue;
+                if (name->Equals(".strtab") && isNativeC)
+                    continue;
+                if (name->Equals(".shstrtab") && isNativeC)
                     continue;
 
                 if (virtAddr == Addr.Zero)
@@ -235,7 +269,12 @@ namespace Abanu.Kernel.Core.Processes
 
         private static unsafe Addr GetMainEntryPointFromElf(ElfSections elf)
         {
-            return GetEntryPointFromElf(elf, "Abanu.Kernel.Program::Main()");
+            var addr = GetEntryPointFromElf(elf, "Abanu.Kernel.Program::Main()");
+            if (addr == Addr.Zero)
+            {
+                addr = elf.GetSectionHeader(".text")->Addr;
+            }
+            return addr;
         }
 
         private static unsafe Addr GetDispatchEntryPointFromElf(ElfSections elf)
