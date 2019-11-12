@@ -23,8 +23,8 @@ namespace Abanu.Kernel.Core.MemoryManagement
             for (var i = 0; i < Allocator.headSize; i++)
                 *(ptr + i) = 0;
             kmallocAllocator.List_heads = (malloc_meta**)ptr;
-            ManagedMemoy.UseAllocator = true;
-            KernelMessage.WriteLine("EarlyBootBytesUsed: {0} bytes", ManagedMemoy.EarlyBootBytesUsed);
+            ManagedMemory.UseAllocator = true;
+            KernelMessage.WriteLine("EarlyBootBytesUsed: {0} bytes", ManagedMemory.EarlyBootBytesUsed);
 
             KernelMessage.WriteLine("Memory free: {0} MB", PhysicalPageManager.FreePages * 4096 / 1024 / 1024);
         }

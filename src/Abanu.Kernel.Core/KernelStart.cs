@@ -30,7 +30,7 @@ namespace Abanu.Kernel.Core
             try
             {
 
-                ManagedMemoy.InitializeGCMemory();
+                ManagedMemory.InitializeGCMemory();
 
                 // Initialize static fields
                 StartUp.InitializeAssembly();

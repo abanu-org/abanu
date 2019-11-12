@@ -9,7 +9,7 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel.Core.MemoryManagement
 {
 
-    internal static class ManagedMemoy
+    internal static class ManagedMemory
     {
 
         public static void InitializeGCMemory()

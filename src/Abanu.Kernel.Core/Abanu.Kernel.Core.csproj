@@ -41,6 +41,7 @@
     <Compile Include="Interrupts\IDTStack.cs" />
     <Compile Include="Interrupts\IDTTaskStack.cs" />
     <Compile Include="Interrupts\InterruptControlBlock.cs" />
+    <Compile Include="MemoryManagement\ManagedMemory.cs" />
     <Compile Include="SysCalls\SysCallCallingType.cs" />
     <Compile Include="SysCalls\SysCallContext.cs" />
     <Compile Include="SysCalls\SysCallHandlers.cs" />
@@ -81,7 +82,6 @@
     <Compile Include="KernelStart.cs" />
     <Compile Include="MemoryManagement\Memory.cs" />
     <Compile Include="Elf\KernelElf.cs" />
-    <Compile Include="MemoryManagement\ManagedMemoy.cs" />
     <Compile Include="Diagnostics\Panic.cs" />
     <Compile Include="Interrupts\PIC.cs" />
     <Compile Include="External\NativeCalls.cs" />

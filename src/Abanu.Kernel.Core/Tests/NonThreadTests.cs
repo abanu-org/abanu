@@ -15,12 +15,12 @@ namespace Abanu.Kernel.Core
             var ar = new KList<uint>();
             ar.Add(44);
             ar.Add(55);
-            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
+            KernelMessage.WriteLine("CNT: {0}", ManagedMemory.AllocationCount);
             foreach (var num in ar)
             {
                 KernelMessage.WriteLine("VAL: {0}", num);
             }
-            KernelMessage.WriteLine("CNT: {0}", ManagedMemoy.AllocationCount);
+            KernelMessage.WriteLine("CNT: {0}", ManagedMemory.AllocationCount);
             ar.Destroy();
 
             KernelMessage.WriteLine("Phys Pages free: {0}", PhysicalPageManager.FreePages);

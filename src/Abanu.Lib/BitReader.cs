@@ -189,6 +189,20 @@ namespace Abanu.Kernel
             // ret
         }
 
+        //public static unsafe void Test(ref byte value)
+        //{
+        //    byte* ptr;
+        //    ptr = (byte*)value;
+
+        //    byte p = value;
+        //}
+
+        //public static unsafe ref byte Test(byte* value)
+        //{
+        //    return ref *value;
+
+        //}
+
         /// <summary>
         /// Reinterprets the given location as a reference to a value of type <typeparamref name="T"/>.
         /// </summary>
