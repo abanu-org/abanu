@@ -1,5 +1,7 @@
 #include <stddef.h>
 
+int a = 0xFF334455;
+
 void _start()
 {
     char text[] = "Hello, world!\n";

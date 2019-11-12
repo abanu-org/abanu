@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gcc -fPIC -m32 -gdwarf -Og -nostdlib -ffreestanding main.c
+gcc -fPIC -m32 -gdwarf -Og -nostdlib -ffreestanding -Wl,--section-start=.text=0xA0000000 main.c -o c-hello-world.bin
