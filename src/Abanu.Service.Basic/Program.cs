@@ -310,40 +310,6 @@ namespace Abanu.Kernel
             public int Length;
         }
 
-        //internal class StreamWrapper : IBuffer
-        //{
-
-        //    private Stream Stream;
-        //    private byte[] tmpBuf;
-
-        //    public StreamWrapper(Stream stream)
-        //    {
-        //        Stream = stream;
-        //        tmpBuf = new byte[4096];
-        //    }
-
-        //    public unsafe SSize Read(byte* buf, USize count)
-        //    {
-        //        var bytes = Stream.Read(tmpBuf, 0, (int)count);
-        //        for (var i = 0; i < bytes; i++)
-        //            buf[i] = tmpBuf[i];
-        //        return bytes;
-        //    }
-
-        //    public unsafe SSize Write(byte* buf, USize count)
-        //    {
-        //        if (count > tmpBuf.Length)
-        //            throw new NotImplementedException();
-
-        //        for (var i = 0; i < count; i++)
-        //            tmpBuf[i] = buf[i];
-
-        //        Stream.Write(tmpBuf, 0, (int)count);
-
-        //        return (SSize)count;
-        //    }
-        //}
-
         private static List<VfsFile> Files;
 
         internal static VfsFile FindFile(string path)
@@ -372,7 +338,7 @@ namespace Abanu.Kernel
             return null;
         }
 
-        public static unsafe void Cmd_Interrupt(in SystemMessage msg)
+        public static void Cmd_Interrupt(in SystemMessage msg)
         {
             var code = Native.In8(0x60);
 
