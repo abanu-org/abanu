@@ -1,5 +1,8 @@
 #!/bin/sh
 
-gcc -fPIC -m32 -gdwarf -Og -nostdlib -ffreestanding -Wl,--section-start=.text=0xA0000000 main.c -o c-hello-world.bin
+gcc -fPIC -m32 -gdwarf -Og -nostdlib -nostdinc -ffreestanding \
+	-I/home/sebastian/abanu-org/abanu-libc/opt/libc/i686-abanu/include \
+	-I/home/sebastian/abanu-org/abanu-toolchain/opt/gcc-8.2.0-cross/lib/gcc/i686-elf/8.2.0/include \
+	-Wl,--section-start=.text=0xA0000000 -o c-hello-world.bin main.c
 
 cp c-hello-world.bin ../../../os/
