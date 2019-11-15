@@ -6,7 +6,8 @@ ROOTDIR=$(dirname $0)
 export PATH=/home/sebastian/abanu-org/abanu-toolchain/opt/gcc-8.2.0-cross/bin:"$PATH"
 
 target_install_dir=/home/sebastian/abanu-org/abanu-libc/opt/libc/i686-abanu
-i686-elf-gcc -nostdlib -static $target_install_dir/lib/crt0.o main.c -I $target_install_dir/include -L $target_install_dir/lib -lc -lm
+i686-elf-gcc -fPIC -m32 -gdwarf -Og -nostdlib -static $target_install_dir/lib/crt0.o main.c -I $target_install_dir/include -L $target_install_dir/lib -lc -lm \
+-Wl,--section-start=.text=0xA0000000 -o c-hello-world.bin
 
 # i686-elf-gcc -fPIC -m32 -gdwarf -Og -nostdlib -nostdinc -ffreestanding -static \
 # 	-I/home/sebastian/abanu-org/abanu-libc/opt/libc/i686-abanu/include \
