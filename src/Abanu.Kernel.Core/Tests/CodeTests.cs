@@ -11,6 +11,48 @@ namespace Abanu.Kernel.Core
             Ulongtest1();
             Ulongtest2();
             InlineTest();
+
+            StructRef1();
+            StructRef2();
+            StructRef3();
+            SizeOf();
+        }
+
+        private static unsafe void StructRef1()
+        {
+            var reg = new MemoryRegion(0x33, 0x44);
+            var regPtr = &reg;
+            ref MemoryRegion m = ref StructRef1_test(regPtr);
+            KernelMessage.WriteLine("Struct {0:X8} {1:X8}", m.Start, m.Size);
+        }
+
+        private static unsafe ref MemoryRegion StructRef1_test(MemoryRegion* refPtr)
+        {
+            return ref Abanu.Kernel.Unsafe.As<MemoryRegion, MemoryRegion>(ref *refPtr);
+        }
+
+        private static unsafe void StructRef2()
+        {
+            var reg = new MemoryRegion(0x55, 0x66);
+            ref MemoryRegion m = ref Abanu.Kernel.Unsafe.AsRef<MemoryRegion>(&reg);
+            KernelMessage.WriteLine("Struct2 {0:X8} {1:X8}", m.Start, m.Size);
+        }
+
+        private static unsafe void StructRef3()
+        {
+            var reg = new MemoryRegion(0x77, 0x88);
+            ref MemoryRegion m = ref Abanu.Kernel.Unsafe.AsRef<MemoryRegion>(&reg);
+            var ptr = Abanu.Kernel.Unsafe.AsPointer(ref m);
+            var ptr2 = (MemoryRegion*)ptr;
+            KernelMessage.WriteLine("Struct2 {0:X8} {1:X8}", ptr2->Start, ptr2->Size);
+        }
+
+        private static unsafe void SizeOf()
+        {
+            //var size3 = Abanu.Kernel.Unsafe.SizeOf<MemoryRegion>();
+            //var size1 = Abanu.Kernel.Unsafe.SizeOf<int>();
+            //var size2 = Abanu.Kernel.Unsafe.SizeOf<byte>();
+            //KernelMessage.WriteLine("Size {0:X8} {1:X8} {2:X8}", size1, size2, size3);
         }
 
         private static void Ulongtest1()

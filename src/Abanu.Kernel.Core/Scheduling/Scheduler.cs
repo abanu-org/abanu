@@ -541,8 +541,6 @@ namespace Abanu.Kernel.Core.Scheduling
         private static void SetThreadID(int threadID)
         {
             CurrentThreadID = threadID;
-
-            //Native.SetFS(threadID);
         }
 
         /// <summary>

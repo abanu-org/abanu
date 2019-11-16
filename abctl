@@ -343,7 +343,8 @@ function debug {
 				-drive file=${ABANU_OSDIR}/Abanu.OS.Core.${ABANU_ARCH}.img,index=0,media=disk,format=raw \
 				-drive file=${rootdisk},index=1,media=disk,format=raw,copy-on-read=off,cache=none \
 				-drive file=${ABANU_TMPDIR}/network-disk.img,index=2,media=disk,format=raw,copy-on-read=off,cache=none \
-				-kernel os/Abanu.OS.Image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
+				-kernel os/Abanu.OS.Image.${ABANU_ARCH}.bin -serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256 \
+				2> /dev/null
 			;;
 
 		qemu-attach-unix)
@@ -390,7 +391,9 @@ function debug {
 				-drive file=${disk},index=0,media=disk,format=raw \
 				-drive file=${rootdisk},index=1,media=disk,format=raw,copy-on-read=off,cache=none \
 				-drive file=${ABANU_TMPDIR}/network-disk.img,index=2,media=disk,format=raw,copy-on-read=off,cache=none \
-				-serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256
+				-serial file:${ABANU_LOGDIR}/kernel.log -serial tcp::2244,server,nowait,reconnect=100 -S -gdb stdio -d pcall,cpu_reset,guest_errors${DEBUG_INTERRUPTS} -D ${ABANU_LOGDIR}/emulator.log -m 256 \
+				2> /dev/null
+
 			;;
 
 		*)

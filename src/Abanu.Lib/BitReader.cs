@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Mosa.Runtime;
 
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
@@ -150,7 +151,7 @@ namespace Abanu.Kernel
     // The implementations of most the methods in this file are provided as intrinsics.
     // In CoreCLR, the body of the functions are replaced by the EE with unsafe code. See see getILIntrinsicImplementationForUnsafe for details.
 
-    internal static unsafe class Unsafe
+    public static unsafe class Unsafe
     {
         /// <summary>
         /// Reads a value of type <typeparamref name="T"/> from the given location.
@@ -159,34 +160,39 @@ namespace Abanu.Kernel
         //[Intrinsic]
         public static T Read<T>(void* source)
         {
-            //return Unsafe.As<byte, T>(ref *(byte*)source);
-            throw new NotImplementedException();
+            return Unsafe.As<byte, T>(ref *(byte*)source);
+            //throw new NotImplementedException();
         }
 
         /// <summary>
         /// Returns the size of an object of the given type parameter.
         /// </summary>
         //[Intrinsic]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int SizeOf<T>()
-        {
-            throw new PlatformNotSupportedException();
+        //[MethodImpl(MethodImplOptions.NoInlining)]
+        //public static unsafe int SizeOf<T>()
+        //{
+        //    return SizeOf2<T>(default);
+        //}
 
-            // sizeof !!0
-            // ret
-        }
+        //[MethodImpl(MethodImplOptions.NoInlining)]
+        //public static unsafe int SizeOf2<T>(T value)
+        //{
+        //    return Intrinsic.SizeOf<T>(value); // TODO: Avoid providing fake value
+
+        //    // sizeof !!0
+        //    // ret
+        //}
 
         /// <summary>
         /// Reinterprets the given reference as a reference to a value of type <typeparamref name="TTo"/>.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //[Intrinsic]
-        public static ref TTo As<TFrom, TTo>(ref TFrom source)
+        //[MethodImpl(MethodImplOptions.InternalCall)]
+        //public static extern Pointer GetObjectAddress<T>(T obj) where T : class;
+        public static unsafe ref TTo As<TFrom, TTo>(ref TFrom source)
         {
-            throw new PlatformNotSupportedException();
-
-            // ldarg.0
-            // ret
+            return ref Intrinsic.CastRef<TFrom, TTo>(ref source);
         }
 
         //public static unsafe void Test(ref byte value)
@@ -216,10 +222,10 @@ namespace Abanu.Kernel
         /// Returns a pointer to the given by-ref parameter.
         /// </summary>
         //[Intrinsic]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void* AsPointer<T>(ref T value)
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static unsafe void* AsPointer<T>(ref T value)
         {
-            throw new PlatformNotSupportedException();
+            return Intrinsic.RefToPointer(ref value);
 
             // ldarg.0
             // conv.u
