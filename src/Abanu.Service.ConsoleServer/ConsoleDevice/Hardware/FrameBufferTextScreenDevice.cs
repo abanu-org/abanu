@@ -39,7 +39,9 @@ namespace Abanu.Kernel
             if (column >= Columns || row >= Rows)
                 return;
 
-            var fontSecAddr = ApplicationRuntime.ElfSections["consolefont.regular"];
+            //var fontSecAddr = ApplicationRuntime.ElfSections["consolefont.regular"];
+            RuntimeElfSection fontSecAddr = null;
+            return;
 
             var fontHeader = (PSF1Header*)fontSecAddr.Data.Start;
 

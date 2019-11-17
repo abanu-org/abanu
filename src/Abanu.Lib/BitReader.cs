@@ -168,11 +168,11 @@ namespace Abanu.Kernel
         /// Returns the size of an object of the given type parameter.
         /// </summary>
         //[Intrinsic]
-        //[MethodImpl(MethodImplOptions.NoInlining)]
-        //public static unsafe int SizeOf<T>()
-        //{
-        //    return SizeOf2<T>(default);
-        //}
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static unsafe int SizeOf<T>()
+        {
+            throw new NotImplementedException();
+        }
 
         //[MethodImpl(MethodImplOptions.NoInlining)]
         //public static unsafe int SizeOf2<T>(T value)

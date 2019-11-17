@@ -119,52 +119,19 @@ namespace Abanu.Kernel.Core.Processes
 
             var tmpKernelElfHeaders = SetupElfHeader(proc, elf);
 
-            // TEMP: TODO: Use Program Headers!
-            bool isNativeC = false;
-
             // Setup ELF Sections
-            for (uint i = 0; i < elf.SectionHeaderCount; i++)
+            for (uint i = 0; i < elf.ProgramHeaderCount; i++)
             {
-                var section = elf.GetSectionHeader(i);
-                var name = elf.GeSectionName(section);
+                var section = elf.GetProgramHeader(i);
 
-                var size = section->Size;
-                var virtAddr = section->Addr;
-                var srcAddr = elf.GetSectionPhysAddr(section);
+                var size = section->MemSz;
+                var virtAddr = section->VAddr;
+                var srcAddr = elf.GetProgramPhysAddr(section);
 
                 if (size == 0)
                     continue;
 
-                // TODO: Use Program Headers!
-                if (virtAddr > 0 && virtAddr < 0x10000)
-                    continue;
-                if (name->Equals(".eh_frame_hdr"))
-                {
-                    isNativeC = true;
-                    continue;
-                }
-                if (name->Equals(".eh_frame"))
-                    continue;
-                if (name->Equals(".dynamic"))
-                    continue;
-                if (name->Equals(".comment"))
-                    continue;
-                if (name->Equals(".debug_aranges"))
-                    continue;
-                if (name->Equals(".debug_info"))
-                    continue;
-                if (name->Equals(".debug_abbrev"))
-                    continue;
-                if (name->Equals(".debug_line"))
-                    continue;
-                if (name->Equals(".debug_str"))
-                    continue;
-                if (name->Equals(".symtab") && isNativeC)
-                    continue;
-                if (name->Equals(".strtab") && isNativeC)
-                    continue;
-                if (name->Equals(".shstrtab") && isNativeC)
-                    continue;
+                KernelMessage.WriteLine("Setup Program Section VAddr {0:X8} SrcAddr {1:X8} Size {2:X8}", virtAddr, srcAddr, size);
 
                 if (virtAddr == Addr.Zero)
                 {
@@ -173,17 +140,10 @@ namespace Abanu.Kernel.Core.Processes
                     virtAddr = mem;
                 }
 
-                var sb = new StringBuffer();
-                sb.Append("Map section ");
-                sb.Append(name);
-                sb.Append(" virt={0:X8} src={1:X8} size={2:X8}", virtAddr, srcAddr, size);
-                KernelMessage.WriteLine(sb);
-                //MemoryOperation.Copy4(elf.GetSectionPhysAddr(section), section->Addr, section->Size);
-
                 // Map the Sections
                 proc.PageTable.MapCopy(PageTable.KernelTable, srcAddr, virtAddr, size);
-                if (name->Equals(".text"))
-                    proc.PageTable.SetExecutable(virtAddr, size);
+                //if (name->Equals(".text"))
+                //    proc.PageTable.SetExecutable(virtAddr, size);
 
             }
             KernelMessage.WriteLine("proc sections are ready");

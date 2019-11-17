@@ -10,11 +10,15 @@ namespace Abanu.Kernel.Core.Elf
 
     public unsafe struct ElfSections
     {
+        public uint PhyOffset;
+
+        public ElfProgramHeader* ProgramHeaderArray;
+        public uint ProgramHeaderCount;
 
         public ElfSectionHeader* SectionHeaderArray;
         public uint SectionHeaderCount;
+
         public uint StringTableSectionHeaderIndex;
-        public uint PhyOffset;
 
         public ElfSectionHeader* SymTab;
         public ElfSectionHeader* StrTab;
@@ -34,6 +38,8 @@ namespace Abanu.Kernel.Core.Elf
             var helper = new ElfSections
             {
                 PhyOffset = elfStart,
+                ProgramHeaderArray = (ElfProgramHeader*)(elfStart + elfHeader->PhOff),
+                ProgramHeaderCount = elfHeader->PhNum,
                 SectionHeaderArray = (ElfSectionHeader*)(elfStart + elfHeader->ShOff),
                 SectionHeaderCount = elfHeader->ShNum,
                 StringTableSectionHeaderIndex = elfHeader->ShStrNdx,
@@ -112,6 +118,11 @@ namespace Abanu.Kernel.Core.Elf
             return &SectionHeaderArray[index];
         }
 
+        public ElfProgramHeader* GetProgramHeader(uint index)
+        {
+            return &ProgramHeaderArray[index];
+        }
+
         public int GetSectionHeaderIndexByName(string name)
         {
             for (uint i = 0; i < SectionHeaderCount; i++)
@@ -141,6 +152,14 @@ namespace Abanu.Kernel.Core.Elf
                 return section->Offset + PhyOffset;
             else
                 return section->Addr;
+        }
+
+        public uint GetProgramPhysAddr(ElfProgramHeader* section)
+        {
+            if (PhyOffset > 0)
+                return section->Offset + PhyOffset;
+            else
+                return section->VAddr;
         }
 
         //public uint GetSectionPhysAddr(string sectionName)

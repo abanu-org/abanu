@@ -44,23 +44,24 @@ namespace Abanu.Runtime
             //Mosa.Runtime.StartUp.InitializeRuntimeMetadata();
             RuntimeMemory.SetupAllocator();
 
-            SetupElfSections();
+            //SetupElfSections();
         }
 
-        private static unsafe void SetupElfSections()
-        {
-            ElfSectionsInternal = *((ElfSections*)SysCalls.GetElfSectionsAddress());
-            ElfSectionsInternal.Init();
+        //private static unsafe void SetupElfSections()
+        //{
+        //    ElfSectionsInternal = *((ElfSections*)SysCalls.GetElfSectionsAddress());
+        //    ElfSectionsInternal.Init();
 
-            ElfSections = new RuntimeElfSectionCollection((int)ElfSectionsInternal.SectionHeaderCount);
-            for (uint i = 0; i < ElfSectionsInternal.SectionHeaderCount; i++)
-            {
-                var section = ElfSectionsInternal.GetSectionHeader(i);
-                var name = ElfSectionsInternal.GeSectionName(section);
-                var sec = new RuntimeElfSection(NullTerminatedString.ToString(name), section, ElfSectionsInternal.GetSectionPhysAddr(section));
-                ElfSections.Add(sec);
-            }
-        }
+        //    ElfSections = new RuntimeElfSectionCollection((int)ElfSectionsInternal.SectionHeaderCount);
+        //    for (uint i = 0; i < ElfSectionsInternal.SectionHeaderCount; i++)
+        //    {
+        //        var section = ElfSectionsInternal.GetSectionHeader(i);
+        //        var name = ElfSectionsInternal.GeSectionName(section);
+        //        var sec = new RuntimeElfSection(NullTerminatedString.ToString(name), section, ElfSectionsInternal.GetSectionPhysAddr(section));
+        //        ElfSections.Add(sec);
+        //    }
+        //}
+
         private static unsafe void InitThreadLocalStorage()
         {
             // Position 0 is reserved for ThreadLocalStorageBlock
@@ -110,8 +111,8 @@ namespace Abanu.Runtime
 
         #endregion
 
-        private static ElfSections ElfSectionsInternal;
-        public static RuntimeElfSectionCollection ElfSections;
+        //private static ElfSections ElfSectionsInternal;
+        //public static RuntimeElfSectionCollection ElfSections;
 
         private static void Dummy()
         {

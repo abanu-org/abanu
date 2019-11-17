@@ -44,8 +44,8 @@ namespace Abanu.Kernel
                 con.SetCursor(0, 0);
                 con.Write("kl\n");
 
-                for (int i = 0; i < ApplicationRuntime.ElfSections.Count; i++)
-                    con.WriteLine(ApplicationRuntime.ElfSections[i].Name);
+                //for (int i = 0; i < ApplicationRuntime.ElfSections.Count; i++)
+                //    con.WriteLine(ApplicationRuntime.ElfSections[i].Name);
 
                 using (var kbStream = File.Open("/dev/keyboard"))
                 {

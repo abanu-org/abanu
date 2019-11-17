@@ -161,6 +161,8 @@ namespace Abanu.Kernel.Loader
             OriginalKernelElf = new ElfSections
             {
                 PhyOffset = kernelElfHeaderAddr,
+                ProgramHeaderArray = (ElfProgramHeader*)(kernelElfHeaderAddr + kernelElfHeader->PhOff),
+                ProgramHeaderCount = kernelElfHeader->PhNum,
                 SectionHeaderArray = (ElfSectionHeader*)(kernelElfHeaderAddr + kernelElfHeader->ShOff),
                 SectionHeaderCount = kernelElfHeader->ShNum,
                 StringTableSectionHeaderIndex = kernelElfHeader->ShStrNdx,

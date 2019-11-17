@@ -1,26 +1,21 @@
 ﻿// This file is part of Abanu, an Operating System written in C#. Web: https://www.abanu.org
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 
-using System;
 using System.Runtime.InteropServices;
-using Mosa.Runtime.x86;
 
 namespace Abanu.Kernel.Core.Elf
 {
-
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ElfSectionHeader
+    public struct ElfProgramHeader
     {
-        public uint Name;
         public uint Type;
-        public uint Flags;
-        public uint Addr;
         public uint Offset;
-        public uint Size;
-        public uint Link;
-        public uint Info;
-        public uint AddrAlign;
-        public uint EntrySize;
+        public uint VAddr;
+        public uint PAddr;
+        public uint FileSz;
+        public uint MemSz;
+        public uint Flags;
+        public uint Align;
     }
 
 }

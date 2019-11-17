@@ -1,5 +1,8 @@
 b *0x0
 
+file os/c-hello-world.bin
+b *0xa0000000
+
 #hbreak Abanu.Kernel.Core.Start::Main()
 #hbreak Abanu.Kernel.Core.IDTManager::SetTableEntries()
 #hbreak src/Abanu.Kernel.Core/Start.cs:63
