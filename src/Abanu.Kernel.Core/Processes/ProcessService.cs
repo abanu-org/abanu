@@ -31,12 +31,13 @@ namespace Abanu.Kernel.Core.Processes
 
         // TODO: Code duplication! Both SwitchToThreadMethod are very similar.
 
-        public unsafe void SwitchToThreadMethod(SysCallContext* context, SystemMessage* args)
+        public unsafe void SwitchToThreadMethod(ref SysCallContext context, ref SystemMessage args)
         {
             var th = CreateThread(DefaultDispatchEntryPoint, SystemMessage.Size);
-            th.DebugSystemMessage = *args;
+            var argsPtr = (SystemMessage*)Unsafe.AsPointer(ref args);
+            th.DebugSystemMessage = *argsPtr;
             var argAddr = (SystemMessage*)th.GetArgumentAddr(0);
-            argAddr[0] = *args;
+            argAddr[0] = *argsPtr;
             SwitchToThread(context, th);
         }
 
@@ -45,9 +46,9 @@ namespace Abanu.Kernel.Core.Processes
             return Scheduler.CreateThread(Process, new ThreadStartOptions(methodAddr) { ArgumentBufferSize = argumentBufferSize, DebugName = "ServiceCall" });
         }
 
-        public static unsafe void SwitchToThread(SysCallContext* context, Thread th)
+        public static unsafe void SwitchToThread(in SysCallContext context, Thread th)
         {
-            if (context->CallingType == SysCallCallingType.Sync)
+            if (context.CallingType == SysCallCallingType.Sync)
             {
                 var cThread = Scheduler.GetCurrentThread();
 

@@ -15,12 +15,12 @@ using Mosa.Runtime.x86;
 
 namespace Abanu.Kernel.Core.Interrupts
 {
-    public unsafe delegate void InterruptHandler(ref IDTStack stack);
+    public delegate void InterruptHandler(ref IDTStack stack);
 
     /// <summary>
     /// IDT
     /// </summary>
-    public static unsafe class IDTManager
+    public static class IDTManager
     {
 
         #region Data Members
@@ -49,9 +49,9 @@ namespace Abanu.Kernel.Core.Interrupts
         /// </summary>
         private static Addr IDTAddr;
 
-        public static InterruptControlBlock* ControlBlock;
+        public static unsafe InterruptControlBlock* ControlBlock;
 
-        public static void Setup()
+        public static unsafe void Setup()
         {
             KernelMessage.WriteLine("Setup IDT");
             Enabled = false;
@@ -115,7 +115,7 @@ namespace Abanu.Kernel.Core.Interrupts
             Start();
         }
 
-        private static void InitControlBlock()
+        private static unsafe void InitControlBlock()
         {
             var p = PhysicalPageManager.AllocatePageAddr(new AllocatePageOptions { Continuous = true });
             PageTable.KernelTable.Map(Address.InterruptControlBlock, p, 4096, flush: true);
@@ -195,7 +195,7 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Sets the IDT.
         /// </summary>
-        private static void SetTableEntries()
+        private static unsafe void SetTableEntries()
         {
             // Clear out IDT table
             Mosa.Runtime.Internal.MemoryClear(new Pointer((void*)IDTAddr) + 6, Offset.TotalSize * 256);

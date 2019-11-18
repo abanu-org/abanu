@@ -16,7 +16,7 @@ namespace Abanu.Kernel.Core
     /// <summary>
     /// Interrupt Descriptor Table
     /// </summary>
-    public static unsafe class IDT
+    public static class IDT
     {
 
         /// <summary>

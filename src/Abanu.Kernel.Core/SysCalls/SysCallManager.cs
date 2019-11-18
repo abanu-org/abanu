@@ -123,7 +123,7 @@ namespace Abanu.Kernel.Core.SysCalls
                 Debug.Nop();
             }
 
-            stack.EAX = info.Handler(&ctx, &args);
+            stack.EAX = info.Handler(ref ctx, ref args);
         }
 
         private static SysCallHandlerInfo[] Commands;
@@ -165,6 +165,6 @@ namespace Abanu.Kernel.Core.SysCalls
 
     }
 
-    public unsafe delegate uint DSysCallInfoHandler(SysCallContext* context, SystemMessage* args);
+    public delegate uint DSysCallInfoHandler(ref SysCallContext context, ref SystemMessage args);
 
 }

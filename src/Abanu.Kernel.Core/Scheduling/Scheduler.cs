@@ -496,9 +496,6 @@ namespace Abanu.Kernel.Core.Scheduling
         {
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
             var stackStatePtr = (IDTStack*)Unsafe.AsPointer(ref stackState);
-            //IDTStack* stackStatePtr;
-            //fixed (IDTStack* ptr = &stackState)
-            //    stackStatePtr = ptr;
 
             var thread = Threads[threadID];
 

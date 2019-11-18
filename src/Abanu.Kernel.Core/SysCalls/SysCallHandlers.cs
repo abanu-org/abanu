@@ -20,12 +20,12 @@ namespace Abanu.Kernel.Core.SysCalls
 {
     /// <summary>
     /// Implementation of Kernel side handlers.
-    /// User side handlers will be handled via <see cref="RegisteredService(SysCallContext*, SystemMessage*)"/>
+    /// User side handlers will be handled via <see cref="RegisteredService(ref SysCallContext, ref SystemMessage)"/>
     /// </summary>
     internal static unsafe class SysCallHandlers
     {
 
-        internal static uint ServiceReturn(SysCallContext* context, SystemMessage* args)
+        internal static uint ServiceReturn(ref SysCallContext context, ref SystemMessage args)
         {
             var servThread = Scheduler.GetCurrentThread();
             servThread.Status = ThreadStatus.Terminated;
@@ -38,7 +38,7 @@ namespace Abanu.Kernel.Core.SysCalls
                 parent.ChildThread = null;
 
                 if (parent.StackState != null)
-                    parent.StackState->Stack.EAX = args->Arg1;
+                    parent.StackState->Stack.EAX = args.Arg1;
 
                 Scheduler.SwitchToThread(parent.ThreadID);
             }
@@ -49,20 +49,20 @@ namespace Abanu.Kernel.Core.SysCalls
         /// <summary>
         /// Command is handled by another Service (up call)
         /// </summary>
-        internal static uint RegisteredService(SysCallContext* context, SystemMessage* args)
+        internal static uint RegisteredService(ref SysCallContext context, ref SystemMessage args)
         {
-            var handler = SysCallManager.GetHandler(args->Target);
+            var handler = SysCallManager.GetHandler(args.Target);
             var targetProcess = handler.Process;
             if (targetProcess.Service != null)
-                targetProcess.Service.SwitchToThreadMethod(context, args);
+                targetProcess.Service.SwitchToThreadMethod(ref context, ref args);
 
             // Will reach only, if callingMethod==Action
             return 0;
         }
 
-        internal static uint RequestMemory(SysCallContext* context, SystemMessage* args)
+        internal static uint RequestMemory(ref SysCallContext context, ref SystemMessage args)
         {
-            var size = args->Arg1;
+            var size = args.Arg1;
             size = KMath.AlignValueCeil(size, 4096);
             var proc = Scheduler.GetCurrentThread().Process;
             var map = PhysicalPageManager.AllocateRegion(size);
@@ -71,10 +71,10 @@ namespace Abanu.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        internal static uint GetPhysicalMemory(SysCallContext* context, SystemMessage* args)
+        internal static uint GetPhysicalMemory(ref SysCallContext context, ref SystemMessage args)
         {
-            var physAddr = args->Arg1;
-            var pages = KMath.DivCeil(args->Arg2, 4096);
+            var physAddr = args.Arg1;
+            var pages = KMath.DivCeil(args.Arg2, 4096);
             KernelMessage.WriteLine("Got Request for {0:X8} pages at Physical Addr {1:X8}", pages, physAddr);
             var proc = Scheduler.GetCurrentThread().Process;
             var virtAddr = proc.UserPageAllocator.AllocatePagesAddr(pages);
@@ -82,21 +82,21 @@ namespace Abanu.Kernel.Core.SysCalls
             return virtAddr;
         }
 
-        internal static uint TranslateVirtualToPhysicalAddress(SysCallContext* context, SystemMessage* args)
+        internal static uint TranslateVirtualToPhysicalAddress(ref SysCallContext context, ref SystemMessage args)
         {
-            var virtAddr = args->Arg1;
+            var virtAddr = args.Arg1;
             return Scheduler.GetCurrentThread().Process.PageTable.GetPhysicalAddressFromVirtual(virtAddr);
         }
 
-        internal static uint GetElfSectionsAddress(SysCallContext* context, SystemMessage* args)
+        internal static uint GetElfSectionsAddress(ref SysCallContext context, ref SystemMessage args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             return proc.UserElfSectionsAddr;
         }
 
-        internal static uint GetFramebufferInfo(SysCallContext* context, SystemMessage* args)
+        internal static uint GetFramebufferInfo(ref SysCallContext context, ref SystemMessage args)
         {
-            var virtAddr = args->Arg1;
+            var virtAddr = args.Arg1;
             var virtPresent = (int*)virtAddr;
             *virtPresent = Boot.BootInfo.Header->FBPresent ? 1 : 0;
             var virtInfo = (BootInfoFramebufferInfo*)(virtAddr + 4);
@@ -104,10 +104,10 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint RequestMessageBuffer(SysCallContext* context, SystemMessage* args)
+        internal static uint RequestMessageBuffer(ref SysCallContext context, ref SystemMessage args)
         {
-            var size = args->Arg1;
-            var targetProcessID = (int)args->Arg2;
+            var size = args.Arg1;
+            var targetProcessID = (int)args.Arg2;
             var pages = KMath.DivCeil(size, 4096);
 
             var currentProc = Scheduler.GetCurrentThread().Process;
@@ -147,34 +147,34 @@ namespace Abanu.Kernel.Core.SysCalls
             return virtHead;
         }
 
-        internal static uint WriteDebugMessage(SysCallContext* context, SystemMessage* args)
+        internal static uint WriteDebugMessage(ref SysCallContext context, ref SystemMessage args)
         {
-            var msg = (NullTerminatedString*)args->Arg1;
+            var msg = (NullTerminatedString*)args.Arg1;
             KernelMessage.WriteLine(msg);
 
             return 0;
         }
 
-        internal static uint WriteDebugChar(SysCallContext* context, SystemMessage* args)
+        internal static uint WriteDebugChar(ref SysCallContext context, ref SystemMessage args)
         {
-            var c = (char)args->Arg1;
+            var c = (char)args.Arg1;
             KernelMessage.Write(c);
             return 0;
         }
 
-        internal static uint CreateMemoryProcess(SysCallContext* context, SystemMessage* args)
+        internal static uint CreateMemoryProcess(ref SysCallContext context, ref SystemMessage args)
         {
-            var addr = args->Arg1;
-            var size = args->Arg2;
+            var addr = args.Arg1;
+            var size = args.Arg2;
             ProcessManager.StartProcessFromBuffer(new MemoryRegion(addr, size));
             //ProcessManager.StartProcess("App.Shell");
 
             return 0;
         }
 
-        internal static uint GetProcessByName(SysCallContext* context, SystemMessage* args)
+        internal static uint GetProcessByName(ref SysCallContext context, ref SystemMessage args)
         {
-            var name = (NullTerminatedString*)args->Arg1;
+            var name = (NullTerminatedString*)args.Arg1;
 
             var proc = ProcessManager.GetProcessByName(name);
             if (proc != null)
@@ -183,19 +183,19 @@ namespace Abanu.Kernel.Core.SysCalls
             return unchecked((uint)-1);
         }
 
-        internal static uint GetCurrentProcessID(SysCallContext* context, SystemMessage* args)
+        internal static uint GetCurrentProcessID(ref SysCallContext context, ref SystemMessage args)
         {
             return (uint)Scheduler.GetCurrentThread().Process.ProcessID;
         }
 
-        internal static uint GetCurrentThreadID(SysCallContext* context, SystemMessage* args)
+        internal static uint GetCurrentThreadID(ref SysCallContext context, ref SystemMessage args)
         {
             return (uint)Scheduler.GetCurrentThread().ThreadID;
         }
 
-        internal static uint KillProcess(SysCallContext* context, SystemMessage* args)
+        internal static uint KillProcess(ref SysCallContext context, ref SystemMessage args)
         {
-            var procId = (int)args->Arg1;
+            var procId = (int)args.Arg1;
             var currentProcId = Scheduler.GetCurrentThread().Process.ProcessID;
             ProcessManager.KillProcessByID(procId);
 
@@ -204,62 +204,62 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint SetThreadPriority(SysCallContext* context, SystemMessage* args)
+        internal static uint SetThreadPriority(ref SysCallContext context, ref SystemMessage args)
         {
-            Scheduler.SetThreadPriority((int)args->Arg1);
+            Scheduler.SetThreadPriority((int)args.Arg1);
 
             return 0;
         }
 
-        internal static uint ThreadSleep(SysCallContext* context, SystemMessage* args)
+        internal static uint ThreadSleep(ref SysCallContext context, ref SystemMessage args)
         {
-            var time = args->Arg1;
+            var time = args.Arg1;
             Scheduler.Sleep(time);
 
             return 0;
         }
 
-        internal static uint SetThreadStorageSegmentBase(SysCallContext* context, SystemMessage* args)
+        internal static uint SetThreadStorageSegmentBase(ref SysCallContext context, ref SystemMessage args)
         {
-            var addr = args->Arg1;
+            var addr = args.Arg1;
             Scheduler.GetCurrentThread().ThreadLocalStorageBaseAddr = addr;
             GDT.SetThreadStorageSegmentBase(addr);
 
             return 0;
         }
 
-        internal static uint RegisterService(SysCallContext* context, SystemMessage* args)
+        internal static uint RegisterService(ref SysCallContext context, ref SystemMessage args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
-                SysCallManager.SetCommand((SysCallTarget)args->Arg1, RegisteredService, proc);
+                SysCallManager.SetCommand((SysCallTarget)args.Arg1, RegisteredService, proc);
 
             return 0;
         }
 
-        internal static uint RegisterInterrupt(SysCallContext* context, SystemMessage* args)
+        internal static uint RegisterInterrupt(ref SysCallContext context, ref SystemMessage args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
             {
-                IDTManager.SetInterruptHandler(args->Arg1, InterruptHandlers.Service, proc.Service);
+                IDTManager.SetInterruptHandler(args.Arg1, InterruptHandlers.Service, proc.Service);
             }
 
             return 0;
         }
 
-        internal static uint SetServiceStatus(SysCallContext* context, SystemMessage* args)
+        internal static uint SetServiceStatus(ref SysCallContext context, ref SystemMessage args)
         {
             var proc = Scheduler.GetCurrentThread().Process;
             if (proc.Service != null)
-                proc.Service.Status = (ServiceStatus)args->Arg1;
+                proc.Service.Status = (ServiceStatus)args.Arg1;
 
             return 0;
         }
 
-        internal static uint GetProcessIDForCommand(SysCallContext* context, SystemMessage* args)
+        internal static uint GetProcessIDForCommand(ref SysCallContext context, ref SystemMessage args)
         {
-            var handler = SysCallManager.GetHandler((SysCallTarget)args->Arg1);
+            var handler = SysCallManager.GetHandler((SysCallTarget)args.Arg1);
             var proc = handler.Process;
             if (proc == null)
                 proc = ProcessManager.System;

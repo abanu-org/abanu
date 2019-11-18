@@ -13,7 +13,7 @@ using Mosa.Runtime.x86;
 namespace Abanu.Kernel.Core.Interrupts
 {
 
-    internal static unsafe class InterruptHandlers
+    internal static class InterruptHandlers
     {
 
         private static void Error(ref IDTStack stack, string message)
@@ -46,7 +46,7 @@ namespace Abanu.Kernel.Core.Interrupts
             }
         }
 
-        internal static void Service(ref IDTStack stack)
+        internal static unsafe void Service(ref IDTStack stack)
         {
             var handler = IDTManager.Handlers[stack.Interrupt];
             if (handler.Service == null)
@@ -66,7 +66,7 @@ namespace Abanu.Kernel.Core.Interrupts
             };
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, ref stack);
-            handler.Service.SwitchToThreadMethod(&ctx, &msg);
+            handler.Service.SwitchToThreadMethod(ref ctx, ref msg);
         }
 
         /// <summary>
