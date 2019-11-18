@@ -15,7 +15,7 @@ using Mosa.Runtime.x86;
 
 namespace Abanu.Kernel.Core.Interrupts
 {
-    public unsafe delegate void InterruptHandler(IDTStack* stack);
+    public unsafe delegate void InterruptHandler(ref IDTStack stack);
 
     /// <summary>
     /// IDT

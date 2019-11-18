@@ -71,33 +71,33 @@ namespace Abanu.Kernel.Core.SysCalls
         /// <summary>
         /// Syscall interrupt handler for synchronous calls.
         /// </summary>
-        private static void FunctionInterruptHandler(IDTStack* stack)
+        private static void FunctionInterruptHandler(ref IDTStack stack)
         {
-            InterruptHandler(stack, SysCallCallingType.Sync);
+            InterruptHandler(ref stack, SysCallCallingType.Sync);
         }
 
         /// <summary>
         /// Syscall interrupt handler for asynchronous calls.
         /// </summary>
-        private static void ActionInterruptHandler(IDTStack* stack)
+        private static void ActionInterruptHandler(ref IDTStack stack)
         {
-            InterruptHandler(stack, SysCallCallingType.Async);
+            InterruptHandler(ref stack, SysCallCallingType.Async);
         }
 
         /// <summary>
         /// Syscall interrupt handler. Dispatcher for every SysCall.
         /// </summary>
-        private static void InterruptHandler(IDTStack* stack, SysCallCallingType callingMethod)
+        private static void InterruptHandler(ref IDTStack stack, SysCallCallingType callingMethod)
         {
             var args = new SystemMessage
             {
-                Target = (SysCallTarget)stack->EAX,
-                Arg1 = stack->EBX,
-                Arg2 = stack->ECX,
-                Arg3 = stack->EDX,
-                Arg4 = stack->ESI,
-                Arg5 = stack->EDI,
-                Arg6 = stack->EBP,
+                Target = (SysCallTarget)stack.EAX,
+                Arg1 = stack.EBX,
+                Arg2 = stack.ECX,
+                Arg3 = stack.EDX,
+                Arg4 = stack.ESI,
+                Arg5 = stack.EDI,
+                Arg6 = stack.EBP,
             };
 
             var commandNum = GetCommandNum(args.Target);
@@ -105,7 +105,7 @@ namespace Abanu.Kernel.Core.SysCalls
             if (KConfig.Log.SysCall)
                 KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
 
-            Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
+            Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, ref stack);
 
             var info = Commands[commandNum];
             if (info == null)
@@ -123,7 +123,7 @@ namespace Abanu.Kernel.Core.SysCalls
                 Debug.Nop();
             }
 
-            stack->EAX = info.Handler(&ctx, &args);
+            stack.EAX = info.Handler(&ctx, &args);
         }
 
         private static SysCallHandlerInfo[] Commands;

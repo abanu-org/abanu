@@ -16,39 +16,39 @@ namespace Abanu.Kernel.Core.Interrupts
     internal static unsafe class InterruptHandlers
     {
 
-        private static void Error(IDTStack* stack, string message)
+        private static void Error(ref IDTStack stack, string message)
         {
-            Panic.ESP = stack->ESP;
-            Panic.EBP = stack->EBP;
-            Panic.EIP = stack->EIP;
-            Panic.EAX = stack->EAX;
-            Panic.EBX = stack->EBX;
-            Panic.ECX = stack->ECX;
-            Panic.EDX = stack->EDX;
-            Panic.EDI = stack->EDI;
-            Panic.ESI = stack->ESI;
-            Panic.CS = stack->CS;
-            Panic.ErrorCode = stack->ErrorCode;
-            Panic.EFLAGS = stack->EFLAGS;
-            Panic.Interrupt = stack->Interrupt;
+            Panic.ESP = stack.ESP;
+            Panic.EBP = stack.EBP;
+            Panic.EIP = stack.EIP;
+            Panic.EAX = stack.EAX;
+            Panic.EBX = stack.EBX;
+            Panic.ECX = stack.ECX;
+            Panic.EDX = stack.EDX;
+            Panic.EDI = stack.EDI;
+            Panic.ESI = stack.ESI;
+            Panic.CS = stack.CS;
+            Panic.ErrorCode = stack.ErrorCode;
+            Panic.EFLAGS = stack.EFLAGS;
+            Panic.Interrupt = stack.Interrupt;
             Panic.CR2 = Native.GetCR2();
             Panic.FS = Native.GetFS();
             Panic.Error(message);
         }
 
-        internal static void Undefined(IDTStack* stack)
+        internal static void Undefined(ref IDTStack stack)
         {
-            var handler = IDTManager.Handlers[stack->Interrupt];
+            var handler = IDTManager.Handlers[stack.Interrupt];
             if (handler.NotifyUnhandled)
             {
                 handler.NotifyUnhandled = false;
-                KernelMessage.WriteLine("Unhandled Interrupt {0}", stack->Interrupt);
+                KernelMessage.WriteLine("Unhandled Interrupt {0}", stack.Interrupt);
             }
         }
 
-        internal static void Service(IDTStack* stack)
+        internal static void Service(ref IDTStack stack)
         {
-            var handler = IDTManager.Handlers[stack->Interrupt];
+            var handler = IDTManager.Handlers[stack.Interrupt];
             if (handler.Service == null)
             {
                 KernelMessage.WriteLine("handler.Service == null");
@@ -62,106 +62,106 @@ namespace Abanu.Kernel.Core.Interrupts
 
             var msg = new SystemMessage(SysCallTarget.Interrupt)
             {
-                Arg1 = stack->Interrupt,
+                Arg1 = stack.Interrupt,
             };
 
-            Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, (IntPtr)stack);
+            Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, ref stack);
             handler.Service.SwitchToThreadMethod(&ctx, &msg);
         }
 
         /// <summary>
         /// Interrupt 0
         /// </summary>
-        internal static void DivideError(IDTStack* stack)
+        internal static void DivideError(ref IDTStack stack)
         {
-            Error(stack, "Divide Error");
+            Error(ref stack, "Divide Error");
         }
 
         /// <summary>
         /// Interrupt 4
         /// </summary>
-        internal static void ArithmeticOverflowException(IDTStack* stack)
+        internal static void ArithmeticOverflowException(ref IDTStack stack)
         {
-            Error(stack, "Arithmetic Overflow Exception");
+            Error(ref stack, "Arithmetic Overflow Exception");
         }
 
         /// <summary>
         /// Interrupt 5
         /// </summary>
-        internal static void BoundCheckError(IDTStack* stack)
+        internal static void BoundCheckError(ref IDTStack stack)
         {
-            Error(stack, "Bound Check Error");
+            Error(ref stack, "Bound Check Error");
         }
 
         /// <summary>
         /// Interrupt 6
         /// </summary>
-        internal static void InvalidOpcode(IDTStack* stack)
+        internal static void InvalidOpcode(ref IDTStack stack)
         {
-            Error(stack, "Invalid Opcode");
+            Error(ref stack, "Invalid Opcode");
         }
 
         /// <summary>
         /// Interrupt 7
         /// </summary>
-        internal static void CoProcessorNotAvailable(IDTStack* stack)
+        internal static void CoProcessorNotAvailable(ref IDTStack stack)
         {
-            Error(stack, "Co-processor Not Available");
+            Error(ref stack, "Co-processor Not Available");
         }
 
         /// <summary>
         /// Interrupt 8
         /// </summary>
-        internal static void DoubleFault(IDTStack* stack)
+        internal static void DoubleFault(ref IDTStack stack)
         {
             //TODO: Analyze Double Fault
-            Error(stack, "Double Fault");
+            Error(ref stack, "Double Fault");
         }
 
         /// <summary>
         /// Interrupt 9
         /// </summary>
-        internal static void CoProcessorSegmentOverrun(IDTStack* stack)
+        internal static void CoProcessorSegmentOverrun(ref IDTStack stack)
         {
-            Error(stack, "Co-processor Segment Overrun");
+            Error(ref stack, "Co-processor Segment Overrun");
         }
 
         /// <summary>
         /// Interrupt 10
         /// </summary>
-        internal static void InvalidTSS(IDTStack* stack)
+        internal static void InvalidTSS(ref IDTStack stack)
         {
-            Error(stack, "Invalid TSS");
+            Error(ref stack, "Invalid TSS");
         }
 
         /// <summary>
         /// Interrupt 11
         /// </summary>
-        internal static void SegmentNotPresent(IDTStack* stack)
+        internal static void SegmentNotPresent(ref IDTStack stack)
         {
-            Error(stack, "Segment Not Present");
+            Error(ref stack, "Segment Not Present");
         }
 
         /// <summary>
         /// Interrupt 12
         /// </summary>
-        internal static void StackException(IDTStack* stack)
+        internal static void StackException(ref IDTStack stack)
         {
-            Error(stack, "Stack Exception");
+            Error(ref stack, "Stack Exception");
         }
 
         /// <summary>
         /// Interrupt 13
         /// </summary>
-        internal static void GeneralProtectionException(IDTStack* stack)
+        internal static void GeneralProtectionException(ref IDTStack stack)
         {
-            Error(stack, "General Protection Exception");
+            Error(ref stack, "General Protection Exception");
         }
 
         /// <summary>
         /// Interrupt 14
         /// </summary>
-        internal static void PageFault(IDTStack* stack)
+        internal static void PageFault(ref IDTStack stack)
         {
             // Check if Null Pointer Exception
             // Otherwise handle as Page Fault
@@ -170,22 +170,22 @@ namespace Abanu.Kernel.Core.Interrupts
 
             if ((cr2 >> 5) < 0x1000)
             {
-                Error(stack, "Null Pointer Exception");
+                Error(ref stack, "Null Pointer Exception");
             }
 
             if (cr2 >= 0xF0000000u)
             {
-                Error(stack, "Invalid Access Above 0xF0000000");
+                Error(ref stack, "Invalid Access Above 0xF0000000");
                 return;
             }
 
-            Error(stack, "Not mapped");
+            Error(ref stack, "Not mapped");
 
             // var physicalpage = PageFrameManager.AllocatePage(PageFrameRequestFlags.Default);
 
             // if (physicalpage == null)
             // {
-            //     Error(stack, "Out of Memory");
+            //     Error(ref stack, "Out of Memory");
             //     return;
             // }
 
@@ -195,23 +195,23 @@ namespace Abanu.Kernel.Core.Interrupts
         /// <summary>
         /// Interrupt 16
         /// </summary>
-        internal static void CoProcessorError(IDTStack* stack)
+        internal static void CoProcessorError(ref IDTStack stack)
         {
-            Error(stack, "Co-Processor Error");
+            Error(ref stack, "Co-Processor Error");
         }
 
         /// <summary>
         /// Interrupt 19
         /// </summary>
-        internal static void SIMDFloatinPointException(IDTStack* stack)
+        internal static void SIMDFloatinPointException(ref IDTStack stack)
         {
-            Error(stack, "SIMD Floating-Point Exception");
+            Error(ref stack, "SIMD Floating-Point Exception");
         }
 
         /// <summary>
         /// Interrupt 32
         /// </summary>
-        internal static void ClockTimer(IDTStack* stack)
+        internal static void ClockTimer(ref IDTStack stack)
         {
             //Screen.Goto(15, 5);
             //Screen.Write(IDTManager.RaisedCount);
@@ -219,10 +219,10 @@ namespace Abanu.Kernel.Core.Interrupts
             // to clock events...
 
             // at least, call scheduler. Keep in mind, it may not return because of thread switching
-            Scheduler.ClockInterrupt(new IntPtr(stack));
+            Scheduler.ClockInterrupt(ref stack);
         }
 
-        internal static void Keyboard(IDTStack* stack)
+        internal static void Keyboard(ref IDTStack stack)
         {
             //Screen.Goto(15, 5);
             //Screen.Write(IDTManager.RaisedCount);
@@ -289,7 +289,7 @@ namespace Abanu.Kernel.Core.Interrupts
             }
         }
 
-        internal static void TermindateCurrentThread(IDTStack* stack)
+        internal static void TermindateCurrentThread(ref IDTStack stack)
         {
             Scheduler.TerminateCurrentThread();
         }

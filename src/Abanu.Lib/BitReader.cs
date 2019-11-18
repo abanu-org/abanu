@@ -188,7 +188,7 @@ namespace Abanu.Kernel
         /// </summary>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //[Intrinsic]
-        //[MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         //public static extern Pointer GetObjectAddress<T>(T obj) where T : class;
         public static unsafe ref TTo As<TFrom, TTo>(ref TFrom source)
         {
@@ -212,7 +212,7 @@ namespace Abanu.Kernel
         /// <summary>
         /// Reinterprets the given location as a reference to a value of type <typeparamref name="T"/>.
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static ref T AsRef<T>(void* source)
         {
             return ref Unsafe.As<byte, T>(ref *(byte*)source);

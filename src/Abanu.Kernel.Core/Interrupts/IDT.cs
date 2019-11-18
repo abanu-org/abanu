@@ -22,8 +22,8 @@ namespace Abanu.Kernel.Core
         /// <summary>
         /// Entry point into the ISR (Interrupt Service Routine)
         /// </summary>
-        /// <param name="stackStatePointer">Pointer to the ISR stack</param>
-        private static unsafe void ProcessInterrupt(uint stackStatePointer)
+        /// <param name="stack">Pointer to the ISR stack</param>
+        private static unsafe void ProcessInterrupt(ref IDTStack stack)
         {
             // Switch to Kernel segments
             ushort dataSelector = KnownSegments.KernelData;
@@ -34,8 +34,7 @@ namespace Abanu.Kernel.Core
             Native.SetCR3(block->KernelPageTableAddr);
 
             // Get the IRQ
-            var stack = (IDTStack*)stackStatePointer;
-            var irq = stack->Interrupt;
+            var irq = stack.Interrupt;
 
             // Get the pagetable address of the interrupted process
             uint pageTableAddr = 0;
@@ -56,7 +55,7 @@ namespace Abanu.Kernel.Core
             // Get interrupt info for the IRQ
             var interruptInfo = IDTManager.Handlers[irq];
             if (KConfig.Log.Interrupts && interruptInfo.Trace && thread != null)
-                KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, (uint)thread.ThreadID, stack->EIP, stack->ESP);
+                KernelMessage.WriteLine("Interrupt {0}, Thread {1}, EIP={2:X8} ESP={3:X8}", irq, (uint)thread.ThreadID, stack.EIP, stack.ESP);
 
             // Some statistics
 
@@ -90,7 +89,7 @@ namespace Abanu.Kernel.Core
             // Invoke handlers
 
             if (interruptInfo.PreHandler != null)
-                interruptInfo.PreHandler(stack);
+                interruptInfo.PreHandler(ref stack);
 
             if (interruptInfo.Handler == null)
             {
@@ -101,7 +100,7 @@ namespace Abanu.Kernel.Core
 
             }
 
-            interruptInfo.Handler(stack);
+            interruptInfo.Handler(ref stack);
 
             // Important! Otherwise we will get any more interrupts of this kind
             PIC.SendEndOfInterrupt(irq);

@@ -116,7 +116,7 @@ namespace Abanu.Kernel.Core.Scheduling
         {
         }
 
-        public static void ClockInterrupt(IntPtr stackSate)
+        public static void ClockInterrupt(ref IDTStack stackSate)
         {
             Interlocked.Increment(ref clockTicks);
 
@@ -140,7 +140,7 @@ namespace Abanu.Kernel.Core.Scheduling
             }
 
             // Save current stack state
-            SaveThreadState(currentThreadID, stackSate);
+            SaveThreadState(currentThreadID, ref stackSate);
 
             ScheduleNextThread(currentThreadID);
         }
@@ -492,9 +492,13 @@ namespace Abanu.Kernel.Core.Scheduling
         /// <summary>
         /// Saves the current thread state, so we can switch to another thread.
         /// </summary>
-        public static unsafe void SaveThreadState(int threadID, IntPtr stackState)
+        public static unsafe void SaveThreadState(int threadID, ref IDTStack stackState)
         {
             //Assert.True(threadID < MaxThreads, "SaveThreadState(): invalid thread id > max");
+            var stackStatePtr = (IDTStack*)Unsafe.AsPointer(ref stackState);
+            //IDTStack* stackStatePtr;
+            //fixed (IDTStack* ptr = &stackState)
+            //    stackStatePtr = ptr;
 
             var thread = Threads[threadID];
 
@@ -506,16 +510,16 @@ namespace Abanu.Kernel.Core.Scheduling
             if (thread.User)
             {
                 Assert.IsSet(thread.StackState, "thread.StackState is null");
-                *thread.StackState = *(IDTTaskStack*)stackState;
+                *thread.StackState = *(IDTTaskStack*)stackStatePtr;
             }
             else
             {
-                thread.StackState = (IDTTaskStack*)stackState;
+                thread.StackState = (IDTTaskStack*)stackStatePtr;
             }
 
             if (KConfig.Log.TaskSwitch)
             {
-                KernelMessage.Write("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, EIP={3:X8}", (uint)threadID, (uint)stackState, (uint)thread.StackState, thread.StackState->Stack.EIP);
+                KernelMessage.Write("Task {0}: Stored ThreadState from {1:X8} stored at {2:X8}, EIP={3:X8}", (uint)threadID, (uint)stackStatePtr, (uint)thread.StackState, thread.StackState->Stack.EIP);
                 if (thread.User)
                     KernelMessage.WriteLine(" ESP={0:X8}", thread.StackState->TASK_ESP);
                 else
