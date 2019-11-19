@@ -22,10 +22,10 @@ namespace Abanu.Kernel.Core.SysCalls
     /// Implementation of Kernel side handlers.
     /// User side handlers will be handled via <see cref="RegisteredService(ref SysCallContext, ref SystemMessage)"/>
     /// </summary>
-    internal static unsafe class SysCallHandlers
+    internal static class SysCallHandlers
     {
 
-        internal static uint ServiceReturn(ref SysCallContext context, ref SystemMessage args)
+        internal static unsafe uint ServiceReturn(ref SysCallContext context, ref SystemMessage args)
         {
             var servThread = Scheduler.GetCurrentThread();
             servThread.Status = ThreadStatus.Terminated;
@@ -94,7 +94,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return proc.UserElfSectionsAddr;
         }
 
-        internal static uint GetFramebufferInfo(ref SysCallContext context, ref SystemMessage args)
+        internal static unsafe uint GetFramebufferInfo(ref SysCallContext context, ref SystemMessage args)
         {
             var virtAddr = args.Arg1;
             var virtPresent = (int*)virtAddr;
@@ -147,7 +147,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return virtHead;
         }
 
-        internal static uint WriteDebugMessage(ref SysCallContext context, ref SystemMessage args)
+        internal static unsafe uint WriteDebugMessage(ref SysCallContext context, ref SystemMessage args)
         {
             var msg = (NullTerminatedString*)args.Arg1;
             KernelMessage.WriteLine(msg);
@@ -172,7 +172,7 @@ namespace Abanu.Kernel.Core.SysCalls
             return 0;
         }
 
-        internal static uint GetProcessByName(ref SysCallContext context, ref SystemMessage args)
+        internal static unsafe uint GetProcessByName(ref SysCallContext context, ref SystemMessage args)
         {
             var name = (NullTerminatedString*)args.Arg1;
 
