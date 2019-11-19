@@ -6,7 +6,7 @@ using Abanu.Kernel.Core.PageManagement;
 
 namespace Abanu.Kernel.Core.Boot
 {
-    public static unsafe class BootInfo
+    public static class BootInfo
     {
 
         /// <summary>
@@ -16,13 +16,13 @@ namespace Abanu.Kernel.Core.Boot
 
         public static bool Present;
 
-        public static void SetupStage1()
+        public static unsafe void SetupStage1()
         {
             Header = (BootInfoHeader*)Address.KernelBootInfo;
             ApplyAddresses();
         }
 
-        public static void SetupStage2()
+        public static unsafe void SetupStage2()
         {
             if (Header->Magic != BootInfoHeader.BootInfoMagic)
             {
@@ -43,7 +43,7 @@ namespace Abanu.Kernel.Core.Boot
             }
         }
 
-        private static void ApplyAddresses()
+        private static unsafe void ApplyAddresses()
         {
             GDT.KernelSetup(GetMap(BootInfoMemoryType.GDT)->Start);
             PageTable.ConfigureType(Header->PageTableType);
@@ -53,7 +53,7 @@ namespace Abanu.Kernel.Core.Boot
         /// <summary>
         /// Gets a known memory region by type
         /// </summary>
-        public static BootInfoMemory* GetMap(BootInfoMemoryType type)
+        public static unsafe BootInfoMemory* GetMap(BootInfoMemoryType type)
         {
             var mapLen = Header->MemoryMapLength;
             for (uint i = 0; i < mapLen; i++)

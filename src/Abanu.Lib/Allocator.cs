@@ -317,7 +317,7 @@ namespace Abanu
             }
         }
 
-        public void free(void* ptr)
+        public void free(Addr ptr)
         {
             if (ptr == null)
                 return;
@@ -341,7 +341,7 @@ namespace Abanu
             }
         }
 
-        public void* malloc(size_t size)
+        public Addr malloc(size_t size)
         {
             if (size == 0)
                 return null;

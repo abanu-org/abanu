@@ -46,7 +46,7 @@ namespace Abanu.Kernel.Core.Interrupts
             }
         }
 
-        internal static unsafe void Service(ref IDTStack stack)
+        internal static void Service(ref IDTStack stack)
         {
             var handler = IDTManager.Handlers[stack.Interrupt];
             if (handler.Service == null)

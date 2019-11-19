@@ -10,17 +10,17 @@ namespace Abanu.Kernel.Core
     [Serializable]
     public struct FileHandle
     {
-        private unsafe int _value; // Do not rename (binary serialization)
+        private int _value; // Do not rename (binary serialization)
 
         public static readonly FileHandle Zero;
 
         [NonVersionable]
-        public unsafe FileHandle(int value)
+        public FileHandle(int value)
         {
             _value = value;
         }
 
-        public unsafe override bool Equals(object obj)
+        public override bool Equals(object obj)
         {
             if (obj is FileHandle)
             {
@@ -29,19 +29,19 @@ namespace Abanu.Kernel.Core
             return false;
         }
 
-        public unsafe override int GetHashCode()
+        public override int GetHashCode()
         {
             return (int)_value;
         }
 
         [NonVersionable]
-        public unsafe uint ToUInt32()
+        public uint ToUInt32()
         {
             return (uint)_value;
         }
 
         [NonVersionable]
-        public unsafe int ToInt32()
+        public int ToInt32()
         {
             return _value;
         }
@@ -53,13 +53,13 @@ namespace Abanu.Kernel.Core
         }
 
         [NonVersionable]
-        public static unsafe implicit operator uint(FileHandle value)
+        public static implicit operator uint(FileHandle value)
         {
             return (uint)value._value;
         }
 
         [NonVersionable]
-        public static unsafe implicit operator int(FileHandle value)
+        public static implicit operator int(FileHandle value)
         {
             return value._value;
         }
@@ -71,12 +71,12 @@ namespace Abanu.Kernel.Core
         }
 
         [NonVersionable]
-        public static unsafe bool operator !=(FileHandle value1, FileHandle value2)
+        public static bool operator !=(FileHandle value1, FileHandle value2)
         {
             return value1._value != value2._value;
         }
 
-        public unsafe override string ToString()
+        public override string ToString()
         {
             return _value.ToString();
         }

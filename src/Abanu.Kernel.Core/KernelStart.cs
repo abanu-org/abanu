@@ -120,7 +120,7 @@ namespace Abanu.Kernel.Core
         private static ProcessService Serv;
         private static ProcessService FileServ;
 
-        private static unsafe void StartupStage2()
+        private static void StartupStage2()
         {
             try
             {

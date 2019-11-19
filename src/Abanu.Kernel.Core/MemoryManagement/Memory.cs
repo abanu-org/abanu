@@ -45,7 +45,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
         /// Allocates Kernel Memory from Heap
         /// </summary>
         /// <param name="n">Size in bytes.</param>
-        public static unsafe Addr Allocate(USize n)
+        public static Addr Allocate(USize n)
         {
             return kmallocAllocator.malloc(n);
         }
@@ -53,7 +53,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
         /// <summary>
         /// kmalloc is the normal method of allocating memory for objects smaller than page size in the kernel.
         /// </summary>
-        public static unsafe Addr Allocate(USize n, GFP flags)
+        public static Addr Allocate(USize n, GFP flags)
         {
             //if (VirtualPageManager.LockCount != 0)
             //{
@@ -106,7 +106,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
         /// <summary>
         /// free previously allocated memory
         /// </summary>
-        public static unsafe void Free(Addr address)
+        public static void Free(Addr address)
         {
             kmallocAllocator.free(address);
         }
@@ -114,9 +114,9 @@ namespace Abanu.Kernel.Core.MemoryManagement
         /// <summary>
         /// free previously allocated memory
         /// </summary>
-        public static unsafe void Free(IntPtr address)
+        public static void Free(IntPtr address)
         {
-            kmallocAllocator.free((void*)address);
+            kmallocAllocator.free(address);
         }
 
         public static unsafe void FreeObject(object obj)
@@ -141,7 +141,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
             throw new NotImplementedException();
         }
 
-        internal static unsafe void InitialKernelProtect()
+        internal static void InitialKernelProtect()
         {
             SetInitialWriteProtection();
             SetInitialExecutionProtection();
