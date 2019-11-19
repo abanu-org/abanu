@@ -65,7 +65,7 @@ namespace Abanu.Kernel.Core
         }
 
         [NonVersionable]
-        public static unsafe bool operator ==(FileHandle value1, FileHandle value2)
+        public static bool operator ==(FileHandle value1, FileHandle value2)
         {
             return value1._value == value2._value;
         }

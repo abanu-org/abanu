@@ -12,7 +12,7 @@ namespace Abanu.Kernel.Core.Elf
     /// <summary>
     /// Holds a reference to the Kernel's ELF sections
     /// </summary>
-    public static unsafe class KernelElf
+    public static class KernelElf
     {
         public static ElfSections Main;
         public static ElfSections Native;
@@ -43,7 +43,7 @@ namespace Abanu.Kernel.Core.Elf
             return ElfSections.FromAddress(elfStart);
         }
 
-        public static unsafe ElfSections FromSectionName(string name)
+        public static ElfSections FromSectionName(string name)
         {
 
             bool success;
