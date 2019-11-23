@@ -71,6 +71,52 @@ namespace Abanu.Kernel.Core.SysCalls
             return virtAddr;
         }
 
+        internal static uint Sbrk(ref SysCallContext context, ref SystemMessage args)
+        {
+            var size = args.Arg1;
+            //size = KMath.AlignValueCeil(size, 4096);
+
+            KernelMessage.WriteLine("sbrk({0:X8})", size);
+
+            var proc = Scheduler.GetCurrentThread().Process;
+
+            if (proc.CurrentBrk == 0)
+            {
+                proc.CurrentBrk = proc.BrkBase;
+                //size -= proc.BrkBase;
+                size -= 0x70000000;
+            }
+
+            var procTable = Scheduler.GetCurrentThread().Process.PageTable;
+            var alignedBreak = KMath.AlignValueCeil(proc.CurrentBrk, 4096);
+
+            var minPages = KMath.DivFloor(size, 4096);
+            for (var i = 0; i < minPages; i++)
+            {
+                var p = PhysicalPageManager.AllocatePageAddr();
+                procTable.Map(alignedBreak, p, PhysicalPageManager.GetAllocatorByAddr(p));
+                proc.CurrentBrk += 4096;
+                size -= 4096;
+                alignedBreak += 4096;
+            }
+
+            alignedBreak = KMath.AlignValueCeil(proc.CurrentBrk, 4096);
+            var breakReminder = alignedBreak - proc.CurrentBrk;
+
+            if (size <= breakReminder)
+            {
+                proc.CurrentBrk += size;
+            }
+            else
+            {
+                var p = PhysicalPageManager.AllocatePageAddr();
+                procTable.Map(alignedBreak, p, PhysicalPageManager.GetAllocatorByAddr(p));
+                proc.CurrentBrk += size;
+            }
+
+            return proc.CurrentBrk;
+        }
+
         internal static uint GetPhysicalMemory(ref SysCallContext context, ref SystemMessage args)
         {
             var physAddr = args.Arg1;
@@ -191,6 +237,24 @@ namespace Abanu.Kernel.Core.SysCalls
         internal static uint GetCurrentThreadID(ref SysCallContext context, ref SystemMessage args)
         {
             return (uint)Scheduler.GetCurrentThread().ThreadID;
+        }
+
+        internal static uint GetRemoteProcessID(ref SysCallContext context, ref SystemMessage args)
+        {
+            var pThread = Scheduler.GetCurrentThread().ParentThread;
+            if (pThread == null)
+                return unchecked((uint)-1);
+
+            return (uint)pThread.Process.ProcessID;
+        }
+
+        internal static uint GetRemoteThreadID(ref SysCallContext context, ref SystemMessage args)
+        {
+            var pThread = Scheduler.GetCurrentThread().ParentThread;
+            if (pThread == null)
+                return unchecked((uint)-1);
+
+            return (uint)pThread.ThreadID;
         }
 
         internal static uint KillProcess(ref SysCallContext context, ref SystemMessage args)

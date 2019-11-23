@@ -148,6 +148,33 @@ namespace Abanu.Kernel.Core.Processes
             }
             KernelMessage.WriteLine("proc sections are ready");
 
+            for (uint i = 0; i < elf.SectionHeaderCount; i++)
+            {
+                var section = elf.GetSectionHeader(i);
+
+                var size = section->Size;
+                var virtAddr = section->Addr;
+                var srcAddr = elf.GetSectionPhysAddr(section);
+
+                if (size == 0)
+                    continue;
+
+                var name = elf.GetSectionName(section);
+                if (virtAddr == Addr.Zero)
+                {
+                }
+                else
+                {
+                    if (name->Equals(".bss"))
+                    {
+                        MemoryOperation.Clear(srcAddr, size);
+                        proc.BrkBase = virtAddr + size;
+                        KernelMessage.WriteLine("sbrk_base: {0:X8}", proc.BrkBase);
+                    }
+                }
+
+            }
+
             // Detect Thread-Main
             var entryPoint = GetMainEntryPointFromElf(elf);
             KernelMessage.WriteLine("EntryPoint: {0:X8}", entryPoint);

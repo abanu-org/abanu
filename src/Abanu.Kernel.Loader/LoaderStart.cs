@@ -186,7 +186,7 @@ namespace Abanu.Kernel.Loader
             for (uint i = 0; i < secLength; i++)
             {
                 var sec = OriginalKernelElf.GetSectionHeader(i);
-                var name = OriginalKernelElf.GeSectionName(sec);
+                var name = OriginalKernelElf.GetSectionName(sec);
                 var sb = new StringBuffer(name);
                 KernelMessage.WriteLine(sb);
             }

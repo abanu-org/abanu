@@ -14,7 +14,7 @@ namespace Abanu.Kernel.Core.Interrupts
     /// Holds informations for the ISR
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct InterruptControlBlock
+    public ref struct InterruptControlBlock
     {
         /// <summary>
         /// Holds the address of the Kernel Page Table, so the ISR can switch the address space

@@ -52,11 +52,15 @@ namespace Abanu.Kernel.Core.Processes
         /// </summary>
         public bool IsKernelProcess => PageTable == PageManagement.PageTable.KernelTable;
 
+        internal uint CurrentBrk = 0;
+        internal uint BrkBase;
+
         public Process()
         {
             Threads = new KList<Thread>(1);
             GlobalAllocations = new KList<GlobalAllocation>();
             //StdIn = new FifoQueue<byte>(256);
+            CurrentBrk = 0;
         }
 
         public void Dispose()

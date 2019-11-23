@@ -40,6 +40,8 @@ namespace Abanu.Kernel.Core.Diagnostics
         {
             Native.Cli();
 
+            KernelMessage.WriteLine("Kernel Panic: {0}", message);
+
             //Screen.Goto(0, 0);
             //Screen.Color = 11;
             //Screen.Write(message);
@@ -71,8 +73,6 @@ namespace Abanu.Kernel.Core.Diagnostics
             Screen.NextLine();
             Screen.NextLine();
             DumpStackTrace();
-
-            KernelMessage.WriteLine("Kernel Panic: {0}", message);
 
             while (true)
             {

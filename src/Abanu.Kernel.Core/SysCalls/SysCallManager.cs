@@ -45,6 +45,7 @@ namespace Abanu.Kernel.Core.SysCalls
         private static void SetCommands()
         {
             SetCommand(SysCallTarget.RequestMemory, SysCallHandlers.RequestMemory);
+            SetCommand(SysCallTarget.Sbrk, SysCallHandlers.Sbrk);
             SetCommand(SysCallTarget.RequestMessageBuffer, SysCallHandlers.RequestMessageBuffer);
             SetCommand(SysCallTarget.WriteDebugMessage, SysCallHandlers.WriteDebugMessage);
             SetCommand(SysCallTarget.WriteDebugChar, SysCallHandlers.WriteDebugChar);
@@ -59,6 +60,8 @@ namespace Abanu.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.GetProcessByName, SysCallHandlers.GetProcessByName);
             SetCommand(SysCallTarget.GetCurrentProcessID, SysCallHandlers.GetCurrentProcessID);
             SetCommand(SysCallTarget.GetCurrentThreadID, SysCallHandlers.GetCurrentThreadID);
+            SetCommand(SysCallTarget.GetRemoteProcessID, SysCallHandlers.GetRemoteProcessID);
+            SetCommand(SysCallTarget.GetRemoteThreadID, SysCallHandlers.GetRemoteThreadID);
             SetCommand(SysCallTarget.KillProcess, SysCallHandlers.KillProcess);
             SetCommand(SysCallTarget.ServiceReturn, SysCallHandlers.ServiceReturn);
             SetCommand(SysCallTarget.GetPhysicalMemory, SysCallHandlers.GetPhysicalMemory);
@@ -103,7 +106,7 @@ namespace Abanu.Kernel.Core.SysCalls
             var commandNum = GetCommandNum(args.Target);
 
             if (KConfig.Log.SysCall)
-                KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1} arg2={2} arg3={3} arg4={4} arg5={5} arg6={6}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
+                KernelMessage.WriteLine("Got SysCall cmd={0} arg1={1:X8} arg2={2:X8} arg3={3:X8} arg4={4:X8} arg5={5:X8} arg6={6:X8}", (uint)args.Target, args.Arg1, args.Arg2, args.Arg3, args.Arg4, args.Arg5, args.Arg6);
 
             Scheduler.SaveThreadState(Scheduler.GetCurrentThread().ThreadID, ref stack);
 
@@ -123,7 +126,12 @@ namespace Abanu.Kernel.Core.SysCalls
                 Debug.Nop();
             }
 
-            stack.EAX = info.Handler(ref ctx, ref args);
+            var result = info.Handler(ref ctx, ref args);
+
+            if (KConfig.Log.SysCall)
+                KernelMessage.WriteLine("Result of Syscall cmd={0}: {1:X8}", (uint)args.Target, result);
+
+            stack.EAX = result;
         }
 
         private static SysCallHandlerInfo[] Commands;
@@ -135,6 +143,9 @@ namespace Abanu.Kernel.Core.SysCalls
             {
                 debug = true;
             }
+
+            if (proc != null)
+                KernelMessage.WriteLine("Register Command {0} for Process {1}", (uint)command, (uint)proc.ProcessID);
 
             Commands[(uint)command] = new SysCallHandlerInfo
             {

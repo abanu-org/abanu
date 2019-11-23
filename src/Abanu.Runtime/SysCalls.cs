@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 
 using System;
+using System.Runtime.InteropServices;
 using Abanu.Kernel;
 using Abanu.Kernel.Core;
 
@@ -100,6 +101,16 @@ namespace Abanu.Runtime
         public static int GetCurrentThreadID()
         {
             return (int)MessageManager.Send(SysCallTarget.GetCurrentThreadID);
+        }
+
+        public static int GetRemoteProcessID()
+        {
+            return (int)MessageManager.Send(SysCallTarget.GetRemoteProcessID);
+        }
+
+        public static int GetRemoteThreadID()
+        {
+            return (int)MessageManager.Send(SysCallTarget.GetRemoteThreadID);
         }
 
         public static void SetThreadStorageSegmentBase(Addr addr)

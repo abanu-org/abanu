@@ -43,6 +43,7 @@ namespace Abanu.Kernel
             SysCalls.RegisterService(SysCallTarget.ReadFile);
             SysCalls.RegisterService(SysCallTarget.WriteFile);
             SysCalls.RegisterService(SysCallTarget.GetFileLength);
+            SysCalls.RegisterService(SysCallTarget.FStat);
 
             var targetProcID = SysCalls.GetProcessIDForCommand(SysCallTarget.GetProcessByName);
             GetProcessByNameBuffer = SysCalls.RequestMessageBuffer(4096, targetProcID);
@@ -84,6 +85,9 @@ namespace Abanu.Kernel
                     break;
                 case SysCallTarget.GetFileLength:
                     Cmd_GetFileLength(msg);
+                    break;
+                case SysCallTarget.FStat:
+                    Cmd_FStat(msg);
                     break;
                 case SysCallTarget.WriteFile:
                     Cmd_WriteFile(msg);
@@ -292,6 +296,39 @@ namespace Abanu.Kernel
 
         private static List<OpenFile> OpenFiles;
 
+        private static OpenFile FindOpenFileWithDefault(FileHandle handle)
+        {
+
+            switch (handle.ToInt32())
+            {
+                case 0:
+                case 1:
+                case 2:
+                    return EnsurePredefinedHandleIsOpen(handle, "/dev/console");
+            }
+
+            return FindOpenFile(handle);
+        }
+
+        private static OpenFile EnsurePredefinedHandleIsOpen(FileHandle handle, string path)
+        {
+            var remoteProcessID = SysCalls.GetRemoteProcessID();
+            for (var i = 0; i < OpenFiles.Count; i++)
+                if (OpenFiles[i].ProcessId == remoteProcessID && OpenFiles[i].Handle == handle)
+                    return OpenFiles[i];
+
+            var file = FindFile(path);
+            var openFile = new OpenFile()
+            {
+                Handle = handle,
+                Path = path,
+                ProcessId = remoteProcessID,
+                Buffer = file.Buffer,
+            };
+            OpenFiles.Add(openFile);
+            return openFile;
+        }
+
         private static OpenFile FindOpenFile(FileHandle handle)
         {
             for (var i = 0; i < OpenFiles.Count; i++)
@@ -425,6 +462,55 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, (uint)file.Length));
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        private struct Stat
+        {
+            public int Dev;
+            public ulong Ino;
+            public int Mode;
+            public int Nlink;
+            public int Uid;
+            public int Gid;
+            public int Rdev;
+            public int Size;
+            public int Blksize;
+            public int Blocks;
+            public int Atime;
+            public int Mtime;
+            public int Ctime;
+        }
+
+        public static unsafe void Cmd_FStat(in SystemMessage msg)
+        {
+            var fd = msg.Arg1;
+            var stat = (Stat*)msg.Arg2;
+
+            if (TraceFileIO)
+            {
+                Console.Write("Get FStat: ");
+                Console.WriteLine(fd.ToString());
+            }
+
+            //var file = FindFile(path);
+            //if (file == null)
+            //{
+            //    Console.Write("File not found: ");
+            //    //Console.WriteLine(length.ToString("X"));
+            //    Console.WriteLine(path.Length.ToString("X"));
+            //    Console.WriteLine(path);
+            //    Console.WriteLine(">>");
+            //    MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, unchecked((uint)-1)));
+            //    return;
+            //}
+
+            stat->Size = 0;
+
+            //if (TraceFileIO)
+            //    Console.WriteLine("File Size: " + ((uint)file.Length).ToString("X"));
+
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, 0));
+        }
+
         public static unsafe void Cmd_OpenFile(in SystemMessage msg)
         {
 
@@ -457,7 +543,7 @@ namespace Abanu.Kernel
             {
                 Handle = ++lastHandle,
                 Path = path,
-                ProcessId = -1,
+                ProcessId = SysCalls.GetRemoteProcessID(),
                 Buffer = file.Buffer,
             };
             OpenFiles.Add(openFile);
@@ -473,7 +559,7 @@ namespace Abanu.Kernel
             if (TraceFileIO)
                 Console.WriteLine("Read Handle: " + msg.Arg1.ToString("X"));
 
-            var openFile = FindOpenFile((int)msg.Arg1);
+            var openFile = FindOpenFileWithDefault((int)msg.Arg1);
             if (openFile == null)
             {
                 Console.WriteLine("Handle not found");
@@ -492,7 +578,7 @@ namespace Abanu.Kernel
             if (TraceFileIO)
                 Console.WriteLine("Write Handle: " + msg.Arg1.ToString("X"));
 
-            var openFile = FindOpenFile((int)msg.Arg1);
+            var openFile = FindOpenFileWithDefault((int)msg.Arg1);
             if (openFile == null)
             {
                 Console.WriteLine("Handle not found");

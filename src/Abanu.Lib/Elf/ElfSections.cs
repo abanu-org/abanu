@@ -108,7 +108,7 @@ namespace Abanu.Kernel.Core.Elf
             return (NullTerminatedString*)(GetSectionPhysAddr(section) + offset);
         }
 
-        public NullTerminatedString* GeSectionName(ElfSectionHeader* section)
+        public NullTerminatedString* GetSectionName(ElfSectionHeader* section)
         {
             return GetStringByOffset(StringTableSectionHeader, section->Name);
         }
@@ -128,7 +128,7 @@ namespace Abanu.Kernel.Core.Elf
             for (uint i = 0; i < SectionHeaderCount; i++)
             {
                 var sec = GetSectionHeader(i);
-                var secName = GeSectionName(sec);
+                var secName = GetSectionName(sec);
                 if (secName->Equals(name))
                     return (int)i;
             }

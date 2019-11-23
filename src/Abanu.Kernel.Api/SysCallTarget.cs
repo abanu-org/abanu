@@ -17,12 +17,14 @@ namespace Abanu.Kernel
         RequestMemory = 21,
         GetPhysicalMemory = 22,
         TranslateVirtualToPhysicalAddress = 23,
+        Sbrk = 24,
 
         OpenFile = 30,
         ReadFile = 31,
         WriteFile = 32,
         CreateFifo = 33,
         GetFileLength = 34,
+        FStat = 35,
 
         CreateMemoryProcess = 40,
         SetThreadPriority = 41,
@@ -41,6 +43,9 @@ namespace Abanu.Kernel
 
         WriteDebugMessage = 60,
         WriteDebugChar = 61,
+
+        GetRemoteProcessID = 70,
+        GetRemoteThreadID = 71,
 
         //ServiceFunc1 = 100,
 

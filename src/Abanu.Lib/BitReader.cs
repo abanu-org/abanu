@@ -146,6 +146,23 @@ namespace Abanu.Kernel
 
     }
 
+    public static unsafe class UnsafeHelper
+    {
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static ref T AsRef<T>(IntPtr source)
+        {
+            return ref Unsafe.AsRef<T>((void*)source);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static ref T AsRef<T>(Addr source)
+        {
+            return ref Unsafe.AsRef<T>(source);
+        }
+
+    }
+
     // https://github.com/dotnet/coreclr/blob/master/src/System.Private.CoreLib/shared/Internal/Runtime/CompilerServices/Unsafe.cs
 
     // The implementations of most the methods in this file are provided as intrinsics.
@@ -216,6 +233,15 @@ namespace Abanu.Kernel
         public static ref T AsRef<T>(void* source)
         {
             return ref Unsafe.As<byte, T>(ref *(byte*)source);
+        }
+
+        /// <summary>
+        /// Reinterprets the given location as a reference to a value of type <typeparamref name="T"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static ref T AsRef<T>(in T source)
+        {
+            return ref Intrinsic.CastRefFromStruct(in source);
         }
 
         /// <summary>
