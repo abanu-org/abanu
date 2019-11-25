@@ -302,6 +302,7 @@ namespace Abanu.Kernel
             switch (handle.ToInt32())
             {
                 case 0:
+                    return EnsurePredefinedHandleIsOpen(handle, "/dev/keyboard");
                 case 1:
                 case 2:
                     return EnsurePredefinedHandleIsOpen(handle, "/dev/console");
@@ -562,7 +563,7 @@ namespace Abanu.Kernel
             var openFile = FindOpenFileWithDefault((int)msg.Arg1);
             if (openFile == null)
             {
-                Console.WriteLine("Handle not found");
+                Console.WriteLine("Handle not found: " + msg.Arg1.ToString());
                 MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
                 return;
             }
@@ -581,7 +582,7 @@ namespace Abanu.Kernel
             var openFile = FindOpenFileWithDefault((int)msg.Arg1);
             if (openFile == null)
             {
-                Console.WriteLine("Handle not found");
+                Console.WriteLine("Handle not found: " + msg.Arg1.ToString());
                 MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
                 return;
             }

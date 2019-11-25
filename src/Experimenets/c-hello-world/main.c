@@ -32,5 +32,12 @@ void main()
 	while (1)
 	{
 		//printf("Hello, World!");
+		char c = getchar();
+		if (c != -1)
+		{
+			printf("char: ");
+			putchar(c);
+			printf(".");
+		}
 	}
 }

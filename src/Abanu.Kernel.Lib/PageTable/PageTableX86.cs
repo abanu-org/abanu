@@ -227,6 +227,27 @@ namespace Abanu.Kernel.Core.PageManagement
             Flush();
         }
 
+        public override void SetReadonly(uint virtAddr, uint size)
+        {
+            //KernelMessage.WriteLine("Protect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
+            var pages = KMath.DivCeil(size, 4096);
+            for (var i = 0; i < pages; i++)
+            {
+                var entry = GetTableEntry(virtAddr);
+                entry->Writable = false;
+
+                virtAddr += 4096;
+            }
+
+            Flush();
+        }
+
+        public override bool IsMapped(Addr virtualAddress)
+        {
+            var entry = GetTableEntry(virtualAddress);
+            return entry->Present && entry->PhysicalAddress > 0;
+        }
+
         [StructLayout(LayoutKind.Explicit, Pack = 1, Size = 4)]
         public unsafe struct PageDirectoryEntry
         {

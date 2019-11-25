@@ -47,7 +47,11 @@ namespace Abanu.Kernel.Core.PageManagement
 
         void SetExecutable(uint virtAddr, uint size);
 
+        void SetReadonly(uint virtAddr, uint size);
+
         Addr GetPhysicalAddressFromVirtual(Addr virtualAddress);
+
+        bool IsMapped(Addr virtualAddress);
 
     }
 

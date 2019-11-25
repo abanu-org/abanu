@@ -273,6 +273,21 @@ namespace Abanu.Kernel.Core.PageManagement
             Flush();
         }
 
+        public override void SetReadonly(uint virtAddr, uint size)
+        {
+            //KernelMessage.WriteLine("Protect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
+            var pages = KMath.DivCeil(size, 4096);
+            for (var i = 0; i < pages; i++)
+            {
+                var entry = GetTableEntry(virtAddr);
+                entry->Writable = false;
+
+                virtAddr += 4096;
+            }
+
+            Flush();
+        }
+
         public unsafe override void SetExecutable(uint virtAddr, uint size)
         {
             //KernelMessage.WriteLine("Unprotect Memory: Start={0:X}, End={1:X}", virtAddr, virtAddr + size);
@@ -286,6 +301,12 @@ namespace Abanu.Kernel.Core.PageManagement
             }
 
             Flush();
+        }
+
+        public override bool IsMapped(Addr virtualAddress)
+        {
+            var entry = GetTableEntry(virtualAddress);
+            return entry->Present && entry->PhysicalAddress > 0;
         }
 
         public const byte MAXPHYS = 52;

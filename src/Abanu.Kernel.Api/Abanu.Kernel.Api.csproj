@@ -56,6 +56,7 @@
     <Compile Include="IBufferReader.cs" />
     <Compile Include="IPageTable.cs" />
     <Compile Include="Drawing\ISurface.cs" />
+    <Compile Include="KMath.cs" />
     <Compile Include="PageAllocationPool.cs" />
     <Compile Include="PageTableType.cs" />
     <Compile Include="ServiceStatus.cs" />

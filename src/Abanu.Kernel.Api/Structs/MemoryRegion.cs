@@ -50,6 +50,20 @@ namespace Abanu.Kernel.Core
             return FromLocation(Start, addr);
         }
 
+        public MemoryRegion FitToPageFloor()
+        {
+            var start = KMath.AlignValueFloor(Start, 4096);
+            var end = KMath.AlignValueCeil(Start + Size, 4096);
+            return FromLocation(start, end);
+        }
+
+        public MemoryRegion FitToPageCeil()
+        {
+            var start = KMath.AlignValueCeil(Start, 4096);
+            var end = KMath.AlignValueCeil(Start + Size, 4096);
+            return FromLocation(start, end);
+        }
+
     }
 
     public unsafe struct LinkedMemoryRegion

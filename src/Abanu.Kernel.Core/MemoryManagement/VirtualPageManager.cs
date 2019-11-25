@@ -56,7 +56,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
             //return multi;
         }
 
-        public static IPageFrameAllocator CreateAllocatorStage2()
+        private static IPageFrameAllocator CreateAllocatorStage2()
         {
             var allocator = new VirtualBuddyPageAllocator() { DebugName = "VirtBuddy" };
             allocator.Setup(new MemoryRegion(Address.VirtMapStart + (32 * 1024 * 1024), 32 * 1024 * 1024), AddressSpaceKind.Virtual);
@@ -68,7 +68,7 @@ namespace Abanu.Kernel.Core.MemoryManagement
 
         private const bool SelfTestDump = false;
 
-        public static unsafe void SelfTest(IPageFrameAllocator allocator)
+        private static unsafe void SelfTest(IPageFrameAllocator allocator)
         {
             if (SelfTestDump)
                 allocator.DumpPages();

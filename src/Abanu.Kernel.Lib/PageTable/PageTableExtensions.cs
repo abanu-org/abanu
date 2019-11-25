@@ -137,6 +137,7 @@ namespace Abanu.Kernel.Core.PageManagement
         {
             return PageTable.KernelTable.GetPhysicalAddressFromVirtual(table.VirtAddr);
         }
+
     }
 
 }

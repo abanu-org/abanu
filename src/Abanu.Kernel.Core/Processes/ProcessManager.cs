@@ -124,24 +124,31 @@ namespace Abanu.Kernel.Core.Processes
             {
                 var section = elf.GetProgramHeader(i);
 
-                var size = section->MemSz;
+                var memSize = section->MemSz;
+                var fileSize = section->FileSz;
                 var virtAddr = section->VAddr;
                 var srcAddr = elf.GetProgramPhysAddr(section);
 
-                if (size == 0)
+                if (memSize == 0)
                     continue;
 
-                KernelMessage.WriteLine("Setup Program Section VAddr {0:X8} SrcAddr {1:X8} Size {2:X8}", virtAddr, srcAddr, size);
+                KernelMessage.WriteLine("Setup Program Section VAddr {0:X8} SrcAddr {1:X8} Size {2:X8}", virtAddr, srcAddr, memSize);
 
                 if (virtAddr == Addr.Zero)
                 {
-                    var mem = allocator.AllocatePagesAddr(KMath.DivCeil(size, 4096));
+                    var mem = allocator.AllocatePagesAddr(KMath.DivCeil(memSize, 4096));
                     tmpKernelElfHeaders[i].Addr = mem;
                     virtAddr = mem;
                 }
 
                 // Map the Sections
-                proc.PageTable.MapCopy(PageTable.KernelTable, srcAddr, virtAddr, size);
+                proc.PageTable.MapCopy(PageTable.KernelTable, srcAddr, virtAddr, memSize);
+                if (i == 0) // TODO: Flags
+                    proc.PageTable.SetReadonly(virtAddr, memSize);
+
+                if (memSize > fileSize)
+                    MemoryOperation.Clear(srcAddr + fileSize, memSize - fileSize);
+
                 //if (name->Equals(".text"))
                 //    proc.PageTable.SetExecutable(virtAddr, size);
 

@@ -84,6 +84,8 @@ namespace Abanu.Kernel.Core.PageManagement
 
         public abstract void Flush(Addr virtAddr);
 
+        public abstract void SetReadonly(uint virtAddr, uint size);
+
         public abstract void SetWritable(uint virtAddr, uint size);
 
         public virtual void SetExecutable(uint virtAddr, uint size)
@@ -91,6 +93,9 @@ namespace Abanu.Kernel.Core.PageManagement
         }
 
         public abstract Addr GetPhysicalAddressFromVirtual(Addr virtualAddress);
+
+        public abstract bool IsMapped(Addr virtualAddress);
+
     }
 
 }

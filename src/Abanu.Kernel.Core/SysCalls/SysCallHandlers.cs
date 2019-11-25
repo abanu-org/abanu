@@ -76,45 +76,44 @@ namespace Abanu.Kernel.Core.SysCalls
             var size = args.Arg1;
             //size = KMath.AlignValueCeil(size, 4096);
 
-            KernelMessage.WriteLine("sbrk({0:X8})", size);
-
             var proc = Scheduler.GetCurrentThread().Process;
 
             if (proc.CurrentBrk == 0)
             {
                 proc.CurrentBrk = proc.BrkBase;
                 //size -= proc.BrkBase;
-                size -= 0x70000000;
+                //size -= 0x70000000;
             }
+
+            KernelMessage.WriteLine("sbrk({0:X8}). Current={1:X8} New={2:X8}", size, proc.CurrentBrk, proc.CurrentBrk + size);
 
             var procTable = Scheduler.GetCurrentThread().Process.PageTable;
-            var alignedBreak = KMath.AlignValueCeil(proc.CurrentBrk, 4096);
 
-            var minPages = KMath.DivFloor(size, 4096);
-            for (var i = 0; i < minPages; i++)
+            var region = MemoryRegion.FromLocation(proc.CurrentBrk, proc.CurrentBrk + size);
+            region = region.FitToPageFloor();
+
+            var pages = region.Size / 4096;
+            var virtAddr = region.Start;
+            for (var i = 0; i < pages; i++)
             {
-                var p = PhysicalPageManager.AllocatePageAddr();
-                procTable.Map(alignedBreak, p, PhysicalPageManager.GetAllocatorByAddr(p));
-                proc.CurrentBrk += 4096;
-                size -= 4096;
-                alignedBreak += 4096;
+                if (!procTable.IsMapped(virtAddr))
+                {
+                    KernelMessage.WriteLine("sbrk: Map {0:X8}", virtAddr);
+                    var p = PhysicalPageManager.AllocatePageAddr();
+                    procTable.Map(virtAddr, p);
+                }
+                else
+                {
+                    KernelMessage.WriteLine("sbrk: Map {0:X8}: Already mapped", virtAddr);
+                }
+                virtAddr += 4096;
             }
 
-            alignedBreak = KMath.AlignValueCeil(proc.CurrentBrk, 4096);
-            var breakReminder = alignedBreak - proc.CurrentBrk;
+            proc.CurrentBrk += size;
 
-            if (size <= breakReminder)
-            {
-                proc.CurrentBrk += size;
-            }
-            else
-            {
-                var p = PhysicalPageManager.AllocatePageAddr();
-                procTable.Map(alignedBreak, p, PhysicalPageManager.GetAllocatorByAddr(p));
-                proc.CurrentBrk += size;
-            }
+            KernelMessage.WriteLine("new brk: {0:X8}", proc.CurrentBrk);
 
-            return proc.CurrentBrk;
+            return proc.CurrentBrk - size;
         }
 
         internal static uint GetPhysicalMemory(ref SysCallContext context, ref SystemMessage args)
