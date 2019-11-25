@@ -1,1 +1,4 @@
 printf '\x31\xc0\xc3' | dd of=test_blob bs=1 seek=100 count=3 conv=notrunc
+
+stdin/stdout control:
+man tcsetpgrp
