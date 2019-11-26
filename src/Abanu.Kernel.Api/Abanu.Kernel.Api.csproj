@@ -61,6 +61,7 @@
     <Compile Include="PageTableType.cs" />
     <Compile Include="ServiceStatus.cs" />
     <Compile Include="Drawing\SurfaceDeviceType.cs" />
+    <Compile Include="Structs\Stat.cs" />
     <Compile Include="SysCallTarget.cs" />
     <Compile Include="Structs\FileHandle.cs" />
     <Compile Include="Structs\MemoryRegion.cs" />

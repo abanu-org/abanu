@@ -84,6 +84,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="FileSystem\FifoFile.cs" />
+    <Compile Include="FileSystem\FifoStream.cs" />
+    <Compile Include="Service.cs" />
     <Compile Include="InitHAL.cs" />
     <Compile Include="HAL\Hardware.cs" />
     <Compile Include="HAL\X86IOPortRead.cs" />
@@ -91,7 +94,9 @@
     <Compile Include="HAL\X86IOPortWrite.cs" />
     <Compile Include="HostCommunicator.cs" />
     <Compile Include="IOPort.cs" />
+    <Compile Include="FileSystem\OpenFile.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="FileSystem\VfsFile.cs" />
   </ItemGroup>
   <Import Project="..\ressources\SharedProjectSettings.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
