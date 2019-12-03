@@ -8,7 +8,9 @@ namespace Abanu.Kernel
 
     internal class VfsFile
     {
+        // TODO: Shared. Consider converting to Block-Device.
         public Stream Buffer;
+
         public string Path;
         public int Length;
     }

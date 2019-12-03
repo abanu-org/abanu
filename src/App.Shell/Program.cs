@@ -136,7 +136,8 @@ namespace Abanu.Kernel
                 SysCalls.SetThreadPriority(0);
 
                 Console.WriteLine("CreateProc...");
-                SysCalls.CreateMemoryProcess(fileBuf.Region, (uint)length);
+                var procId = SysCalls.CreateMemoryProcess(fileBuf.Region, (uint)length);
+                SysCalls.StartProcess(procId);
             }
         }
 

@@ -26,7 +26,7 @@ namespace Abanu.Kernel
         GetFileLength = 34,
         FStat = 35,
 
-        CreateMemoryProcess = 40,
+        CreateMemoryProcess = 40, // called from Service. Hooked in Kernel
         SetThreadPriority = 41,
         ThreadSleep = 42,
         GetProcessByName = 43,
@@ -40,6 +40,9 @@ namespace Abanu.Kernel
         SetServiceStatus = 50,
         RegisterService = 51,
         RegisterInterrupt = 52,
+
+        CreateProcessFromFile = 55, // called from app. Hooked in Service
+        StartProcess = 56, // called from app or service. Hooked in Kernel.
 
         WriteDebugMessage = 60,
         WriteDebugChar = 61,

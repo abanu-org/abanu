@@ -63,6 +63,7 @@ namespace Abanu.Kernel.Core.SysCalls
             SetCommand(SysCallTarget.GetRemoteProcessID, SysCallHandlers.GetRemoteProcessID);
             SetCommand(SysCallTarget.GetRemoteThreadID, SysCallHandlers.GetRemoteThreadID);
             SetCommand(SysCallTarget.KillProcess, SysCallHandlers.KillProcess);
+            SetCommand(SysCallTarget.StartProcess, SysCallHandlers.StartProcess);
             SetCommand(SysCallTarget.ServiceReturn, SysCallHandlers.ServiceReturn);
             SetCommand(SysCallTarget.GetPhysicalMemory, SysCallHandlers.GetPhysicalMemory);
             SetCommand(SysCallTarget.TranslateVirtualToPhysicalAddress, SysCallHandlers.TranslateVirtualToPhysicalAddress);

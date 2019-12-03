@@ -21,6 +21,7 @@ namespace Abanu.Kernel
     {
 
         private static VfsFile KeyBoardFifo;
+
         private const bool TraceFileIO = false;
         private static List<OpenFile> OpenFiles;
 
@@ -29,31 +30,33 @@ namespace Abanu.Kernel
             Files = new List<VfsFile>();
             OpenFiles = new List<OpenFile>();
 
+            Files.Add(new VfsFile { Path = "/dev/null", Buffer = new NullStream() });
+
             KeyBoardFifo = new VfsFile { Path = "/dev/keyboard", Buffer = new FifoFile() };
             Files.Add(KeyBoardFifo);
+
             Files.Add(new VfsFile { Path = "/dev/console", Buffer = new FifoFile() });
         }
 
-        private static OpenFile FindOpenFileWithDefault(FileHandle handle)
+        private static OpenFile FindOpenFileWithDefault(int processID, FileHandle handle)
         {
 
             switch (handle.ToInt32())
             {
                 case 0:
-                    return EnsurePredefinedHandleIsOpen(handle, "/dev/keyboard");
+                    return EnsurePredefinedHandleIsOpen(processID, handle, "/dev/keyboard");
                 case 1:
                 case 2:
-                    return EnsurePredefinedHandleIsOpen(handle, "/dev/console");
+                    return EnsurePredefinedHandleIsOpen(processID, handle, "/dev/console");
             }
 
             return FindOpenFile(handle);
         }
 
-        private static OpenFile EnsurePredefinedHandleIsOpen(FileHandle handle, string path)
+        private static OpenFile EnsurePredefinedHandleIsOpen(int processID, FileHandle handle, string path)
         {
-            var remoteProcessID = SysCalls.GetRemoteProcessID();
             for (var i = 0; i < OpenFiles.Count; i++)
-                if (OpenFiles[i].ProcessId == remoteProcessID && OpenFiles[i].Handle == handle)
+                if (OpenFiles[i].ProcessId == processID && OpenFiles[i].Handle == handle)
                     return OpenFiles[i];
 
             var file = FindFile(path);
@@ -61,7 +64,7 @@ namespace Abanu.Kernel
             {
                 Handle = handle,
                 Path = path,
-                ProcessId = remoteProcessID,
+                ProcessId = processID,
                 Buffer = file.Buffer,
             };
             OpenFiles.Add(openFile);
@@ -124,6 +127,35 @@ namespace Abanu.Kernel
             KeyBoardFifo.Buffer.WriteByte(code);
 
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
+        }
+
+        public static void Cmd_CreateStandartInputOutput(in SystemMessage msg)
+        {
+            var processID = (int)msg.Arg1;
+
+            CreateStandartInputOutput(processID, 0);
+            CreateStandartInputOutput(processID, 1);
+            CreateStandartInputOutput(processID, 2);
+
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
+        }
+
+        private static void CreateStandartInputOutput(int processID, FileHandle defaultHandle)
+        {
+            var file = FindFile("/dev/null");
+            var openFile = new OpenFile()
+            {
+                Handle = defaultHandle,
+                Path = "/proc/" + processID + "/" + defaultHandle.ToInt32().ToString(),
+                ProcessId = processID,
+                Buffer = file.Buffer,
+            };
+            OpenFiles.Add(openFile);
+        }
+
+        private static void SetStandartInputOutput(int processID, FileHandle defaultHandle, string targetPath)
+        {
+            OpenFile(processID, targetPath, defaultHandle);
         }
 
         public static unsafe void Cmd_CreateFiFo(in SystemMessage msg)
@@ -214,6 +246,30 @@ namespace Abanu.Kernel
         {
             var path = NullTerminatedString.ToString((byte*)msg.Arg1);
 
+            var processID = SysCalls.GetRemoteProcessID();
+
+            var openFile = OpenFile(processID, path);
+            if (openFile == null)
+                return;
+
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, openFile.Handle));
+        }
+
+        public static unsafe void Cmd_CreateProcessFromFile(in SystemMessage msg)
+        {
+            var path = NullTerminatedString.ToString((byte*)msg.Arg1);
+
+            // buffer....
+            MemoryRegion buf;
+
+            var procID = SysCalls.CreateMemoryProcess(buf, buf.Size);
+            SysCalls.CreateMemoryProcess(buf, buf.Size);
+
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
+        }
+
+        public static OpenFile OpenFile(int processID, string path, FileHandle handle = default)
+        {
             if (TraceFileIO)
             {
                 Console.Write("Open File: ");
@@ -228,14 +284,17 @@ namespace Abanu.Kernel
                 Console.WriteLine(path);
                 Console.WriteLine(">>");
                 MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, FileHandle.Zero));
-                return;
+                return null;
             }
+
+            if (handle == default)
+                handle = ++lastHandle;
 
             var openFile = new OpenFile()
             {
-                Handle = ++lastHandle,
-                Path = path,
-                ProcessId = SysCalls.GetRemoteProcessID(),
+                Handle = handle,
+                Path = "/proc/" + processID + "/" + handle.ToInt32().ToString(),
+                ProcessId = processID,
                 Buffer = file.Buffer,
             };
             OpenFiles.Add(openFile);
@@ -243,7 +302,7 @@ namespace Abanu.Kernel
             if (TraceFileIO)
                 Console.WriteLine("Created Handle: " + ((uint)openFile.Handle).ToString("X"));
 
-            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn, openFile.Handle));
+            return openFile;
         }
 
         public static unsafe void Cmd_ReadFile(in SystemMessage msg)
@@ -251,7 +310,9 @@ namespace Abanu.Kernel
             if (TraceFileIO)
                 Console.WriteLine("Read Handle: " + msg.Arg1.ToString("X"));
 
-            var openFile = FindOpenFileWithDefault((int)msg.Arg1);
+            var remoteProcessID = SysCalls.GetRemoteProcessID();
+
+            var openFile = FindOpenFileWithDefault(remoteProcessID, (int)msg.Arg1);
             if (openFile == null)
             {
                 Console.WriteLine("Handle not found: " + msg.Arg1.ToString());
@@ -270,7 +331,9 @@ namespace Abanu.Kernel
             if (TraceFileIO)
                 Console.WriteLine("Write Handle: " + msg.Arg1.ToString("X"));
 
-            var openFile = FindOpenFileWithDefault((int)msg.Arg1);
+            var remoteProcessID = SysCalls.GetRemoteProcessID();
+
+            var openFile = FindOpenFileWithDefault(remoteProcessID, (int)msg.Arg1);
             if (openFile == null)
             {
                 Console.WriteLine("Handle not found: " + msg.Arg1.ToString());

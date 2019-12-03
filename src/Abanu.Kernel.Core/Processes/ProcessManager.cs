@@ -74,7 +74,7 @@ namespace Abanu.Kernel.Core.Processes
         /// </summary>
         public static KList<Process> ProcessList;
 
-        public static unsafe Process StartProcessFromBuffer(MemoryRegion region, uint argumentBufferSize = 0)
+        public static unsafe Process CreateProcessFromBuffer(MemoryRegion region, uint argumentBufferSize = 0)
         {
             KernelMessage.WriteLine("StartProcessFromBuffer at {0:X8} size {1:X8}", region.Start, region.Size);
             var cs = region.Checksum();
@@ -82,16 +82,16 @@ namespace Abanu.Kernel.Core.Processes
 
             // TODO: Copy Buffer!!
             var elf = KernelElf.FromAddress(region.Start);
-            return StartProcessFromElf(elf, "memory", argumentBufferSize);
+            return CreateProcessFromElf(elf, "memory", argumentBufferSize);
         }
 
-        public static unsafe Process StartProcess(string path, uint argumentBufferSize = 0)
+        public static unsafe Process CreateProcess(string path, uint argumentBufferSize = 0)
         {
             var elf = KernelElf.FromSectionName(path);
-            return StartProcessFromElf(elf, path, argumentBufferSize);
+            return CreateProcessFromElf(elf, path, argumentBufferSize);
         }
 
-        private static unsafe Process StartProcessFromElf(ElfSections elf, string path, uint argumentBufferSize = 0)
+        private static unsafe Process CreateProcessFromElf(ElfSections elf, string path, uint argumentBufferSize = 0)
         {
             var proc = CreateEmptyProcess(new ProcessCreateOptions() { User = true });
             KernelMessage.WriteLine("Create proc: {0}, PID: {1}", path, proc.ProcessID);
@@ -198,8 +198,8 @@ namespace Abanu.Kernel.Core.Processes
                 AllowUserModeIOPort = true,
                 DebugName = "UserProcMainThread",
             });
-            KernelMessage.WriteLine("Starting {0} on Thread {1}", path, mainThread.ThreadID);
-            proc.Start();
+
+            KernelMessage.WriteLine("Created Process {0} ProcessID={1}", path, proc.ProcessID);
 
             return proc;
         }
@@ -243,6 +243,16 @@ namespace Abanu.Kernel.Core.Processes
                         return proc;
             }
             return null;
+        }
+
+        public static void StartProcessByID(int processID)
+        {
+            KernelMessage.WriteLine("Starting process ID {0}", processID);
+            var proc = GetProcessByID(processID);
+            if (proc == null)
+                return;
+
+            proc.Start();
         }
 
         public static void KillProcessByID(int processID)

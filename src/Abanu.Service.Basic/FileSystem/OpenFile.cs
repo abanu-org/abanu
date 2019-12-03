@@ -7,6 +7,9 @@ using Abanu.Kernel.Core;
 namespace Abanu.Kernel
 {
 
+    /// <summary>
+    /// Holds state informations about an open file.
+    /// </summary>
     internal class OpenFile
     {
         public FileHandle Handle;

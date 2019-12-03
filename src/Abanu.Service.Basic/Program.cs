@@ -116,6 +116,7 @@ namespace Abanu.Kernel
                     MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
                     break;
             }
+            MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
     }

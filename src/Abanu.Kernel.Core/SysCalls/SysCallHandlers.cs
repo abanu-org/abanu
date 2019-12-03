@@ -211,10 +211,12 @@ namespace Abanu.Kernel.Core.SysCalls
         {
             var addr = args.Arg1;
             var size = args.Arg2;
-            ProcessManager.StartProcessFromBuffer(new MemoryRegion(addr, size));
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            var proc = ProcessManager.CreateProcessFromBuffer(new MemoryRegion(addr, size));
+#pragma warning restore CA2000 // Dispose objects before losing scope
             //ProcessManager.StartProcess("App.Shell");
 
-            return 0;
+            return (uint)proc.ProcessID;
         }
 
         internal static unsafe uint GetProcessByName(ref SysCallContext context, ref SystemMessage args)
@@ -264,6 +266,14 @@ namespace Abanu.Kernel.Core.SysCalls
 
             if (procId == currentProcId)
                 Scheduler.ScheduleNextThread();
+            return 0;
+        }
+
+        internal static uint StartProcess(ref SysCallContext context, ref SystemMessage args)
+        {
+            var procId = (int)args.Arg1;
+            ProcessManager.StartProcessByID(procId);
+
             return 0;
         }
 

@@ -151,9 +151,14 @@ namespace Abanu.Runtime
             return (int)MessageManager.Send(SysCallTarget.CreateFifo, buf.Start);
         }
 
-        public static void CreateMemoryProcess(MemoryRegion buf, uint size)
+        public static int CreateMemoryProcess(MemoryRegion buf, uint size)
         {
-            MessageManager.Send(SysCallTarget.CreateMemoryProcess, buf.Start, size);
+            return (int)MessageManager.Send(SysCallTarget.CreateMemoryProcess, buf.Start, size);
+        }
+
+        public static void StartProcess(int processID)
+        {
+            MessageManager.Send(SysCallTarget.StartProcess, (uint)processID);
         }
 
         public static void WriteDebugChar(char c)

@@ -85,6 +85,7 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="FileSystem\FifoFile.cs" />
+    <Compile Include="FileSystem\NullStream.cs" />
     <Compile Include="FileSystem\FifoStream.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="InitHAL.cs" />

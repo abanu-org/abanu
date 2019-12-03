@@ -78,7 +78,10 @@ namespace Abanu.Kernel.Core.Processes
             {
                 RunState = ProcessRunState.Running;
                 for (var i = 0; i < Threads.Count; i++)
+                {
+                    KernelMessage.WriteLine("Starting {0}, ProcessID={1} on Thread {2}", Path, (uint)ProcessID, (uint)Threads[0].ThreadID);
                     Threads[i].Start();
+                }
             }
             finally
             {

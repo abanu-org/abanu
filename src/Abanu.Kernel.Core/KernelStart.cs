@@ -19,6 +19,8 @@ using Abanu.Kernel.Core.Tasks;
 using Mosa.Runtime;
 using Mosa.Runtime.x86;
 
+#pragma warning disable CA2000 // Dispose objects before losing scope
+
 namespace Abanu.Kernel.Core
 {
 
@@ -132,8 +134,9 @@ namespace Abanu.Kernel.Core
 
                     // Start some applications
 
-                    var fileProc = ProcessManager.StartProcess("Service.Basic");
+                    var fileProc = ProcessManager.CreateProcess("Service.Basic");
                     FileServ = fileProc.Service;
+                    fileProc.Start();
 
                     KernelMessage.WriteLine("Waiting for Service");
                     while (FileServ.Status != ServiceStatus.Ready)
@@ -142,7 +145,8 @@ namespace Abanu.Kernel.Core
                     }
                     KernelMessage.WriteLine("Service Ready");
 
-                    var conProc = ProcessManager.StartProcess("Service.ConsoleServer");
+                    var conProc = ProcessManager.CreateProcess("Service.ConsoleServer");
+                    conProc.Start();
                     var conServ = conProc.Service;
                     KernelMessage.WriteLine("Waiting for ConsoleServer");
                     while (conServ.Status != ServiceStatus.Ready)
@@ -163,16 +167,19 @@ namespace Abanu.Kernel.Core
                     //// TODO: Optimize Registration
                     //SysCallManager.SetCommandProcess(SysCallTarget.HostCommunication_CreateProcess, procHostCommunication);
 
-                    var proc = ProcessManager.StartProcess("App.HelloService");
+                    var proc = ProcessManager.CreateProcess("App.HelloService");
                     Serv = proc.Service;
+                    proc.Start();
 
-                    var p2 = ProcessManager.StartProcess("App.HelloKernel");
+                    var p2 = ProcessManager.CreateProcess("App.HelloKernel");
+                    p2.Start();
                     //p2.Threads[0].SetArgument(0, 0x90);
                     //p2.Threads[0].SetArgument(4, 0x94);
                     //p2.Threads[0].SetArgument(8, 0x98);
                     p2.Threads[0].Debug = true;
 
-                    var p3 = ProcessManager.StartProcess("App.Shell");
+                    var p3 = ProcessManager.CreateProcess("App.Shell");
+                    p3.Start();
 
                     ProcessManager.System.Threads[0].Status = ThreadStatus.Terminated;
                 }
