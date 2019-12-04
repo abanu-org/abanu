@@ -161,6 +161,17 @@ namespace Abanu.Runtime
             MessageManager.Send(SysCallTarget.StartProcess, (uint)processID);
         }
 
+        public static void CreateStandartInputOutput(int processID)
+        {
+            MessageManager.Send(SysCallTarget.CreateStandartInputOutput, (uint)processID);
+        }
+
+        public static void SetStandartInputOutput(int processID, FileHandle defaultHandle, string targetPath, MemoryRegion buf)
+        {
+            NullTerminatedString.Set((byte*)buf.Start, targetPath);
+            MessageManager.Send(SysCallTarget.SetStandartInputOutput, (uint)processID, defaultHandle, buf.Start);
+        }
+
         public static void WriteDebugChar(char c)
         {
             MessageManager.Send(SysCallTarget.WriteDebugChar, (byte)c);

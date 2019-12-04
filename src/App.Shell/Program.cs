@@ -137,6 +137,11 @@ namespace Abanu.Kernel
 
                 Console.WriteLine("CreateProc...");
                 var procId = SysCalls.CreateMemoryProcess(fileBuf.Region, (uint)length);
+                var cmdProcId_SetStandartInputOutput = SysCalls.GetProcessIDForCommand(SysCallTarget.SetStandartInputOutput);
+                var buf2 = SysCalls.RequestMessageBuffer(4096, cmdProcId_SetStandartInputOutput);
+
+                SysCalls.SetStandartInputOutput(procId, FileHandle.StandaradInput, "/dev/null", buf2);
+
                 SysCalls.StartProcess(procId);
             }
         }

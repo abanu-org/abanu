@@ -25,6 +25,8 @@ namespace Abanu.Kernel
         CreateFifo = 33,
         GetFileLength = 34,
         FStat = 35,
+        CreateStandartInputOutput = 36,
+        SetStandartInputOutput = 37,
 
         CreateMemoryProcess = 40, // called from Service. Hooked in Kernel
         SetThreadPriority = 41,

@@ -133,9 +133,9 @@ namespace Abanu.Kernel
         {
             var processID = (int)msg.Arg1;
 
-            CreateStandartInputOutput(processID, 0);
-            CreateStandartInputOutput(processID, 1);
-            CreateStandartInputOutput(processID, 2);
+            CreateStandartInputOutput(processID, FileHandle.StandaradInput);
+            CreateStandartInputOutput(processID, FileHandle.StandaradOutput);
+            CreateStandartInputOutput(processID, FileHandle.StandaradError);
 
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
@@ -151,6 +151,14 @@ namespace Abanu.Kernel
                 Buffer = file.Buffer,
             };
             OpenFiles.Add(openFile);
+        }
+
+        public static unsafe void Cmd_SetStandartInputOutput(in SystemMessage msg)
+        {
+            var procId = (int)msg.Arg1;
+            var handle = (FileHandle)(int)msg.Arg2;
+            var path = NullTerminatedString.ToString((byte*)msg.Arg3);
+            SetStandartInputOutput(procId, handle, path);
         }
 
         private static void SetStandartInputOutput(int processID, FileHandle defaultHandle, string targetPath)
@@ -268,6 +276,12 @@ namespace Abanu.Kernel
             MessageManager.Send(new SystemMessage(SysCallTarget.ServiceReturn));
         }
 
+        /// <summary>
+        /// Opens a file
+        /// </summary>
+        /// <param name="processID">Owner of the handle</param>
+        /// <param name="path">File to open</param>
+        /// <param name="handle">force specific handle number</param>
         public static OpenFile OpenFile(int processID, string path, FileHandle handle = default)
         {
             if (TraceFileIO)

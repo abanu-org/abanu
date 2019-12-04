@@ -333,6 +333,12 @@ namespace Abanu.Kernel.Core.SysCalls
         internal static uint GetProcessIDForCommand(ref SysCallContext context, ref SystemMessage args)
         {
             var handler = SysCallManager.GetHandler((SysCallTarget)args.Arg1);
+            if (handler == null)
+            {
+                KernelMessage.WriteLine("GetProcessIDForCommand {0}: UNKNOWN", args.Arg1);
+                return unchecked((uint)-1);
+            }
+
             var proc = handler.Process;
             if (proc == null)
                 proc = ProcessManager.System;

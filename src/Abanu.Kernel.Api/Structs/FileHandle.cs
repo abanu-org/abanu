@@ -14,6 +14,10 @@ namespace Abanu.Kernel.Core
 
         public static readonly FileHandle Zero;
 
+        public static FileHandle StandaradInput => new FileHandle(0);
+        public static FileHandle StandaradOutput => new FileHandle(1);
+        public static FileHandle StandaradError => new FileHandle(2);
+
         [NonVersionable]
         public FileHandle(int value)
         {

@@ -35,6 +35,8 @@ namespace Abanu.Kernel
             SysCalls.RegisterService(SysCallTarget.WriteFile);
             SysCalls.RegisterService(SysCallTarget.GetFileLength);
             SysCalls.RegisterService(SysCallTarget.FStat);
+            SysCalls.RegisterService(SysCallTarget.CreateStandartInputOutput);
+            SysCalls.RegisterService(SysCallTarget.SetStandartInputOutput);
 
             var targetProcID = SysCalls.GetProcessIDForCommand(SysCallTarget.GetProcessByName);
             GetProcessByNameBuffer = SysCalls.RequestMessageBuffer(4096, targetProcID);
@@ -88,6 +90,12 @@ namespace Abanu.Kernel
                     break;
                 case SysCallTarget.CreateFifo:
                     Service.Cmd_CreateFiFo(msg);
+                    break;
+                case SysCallTarget.CreateStandartInputOutput:
+                    Service.Cmd_CreateStandartInputOutput(msg);
+                    break;
+                case SysCallTarget.SetStandartInputOutput:
+                    Service.Cmd_SetStandartInputOutput(msg);
                     break;
                 case SysCallTarget.Interrupt:
                     Service.Cmd_Interrupt(msg);
