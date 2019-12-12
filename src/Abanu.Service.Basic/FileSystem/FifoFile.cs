@@ -11,6 +11,7 @@ namespace Abanu.Kernel
 
         public FifoFile()
         {
+            //Data = new BlockingStream(new FifoStream(256));
             Data = new FifoStream(256);
         }
 

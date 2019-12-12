@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="FileSystem\BlockingStream.cs" />
     <Compile Include="FileSystem\FifoFile.cs" />
     <Compile Include="FileSystem\NullStream.cs" />
     <Compile Include="FileSystem\FifoStream.cs" />

@@ -47,6 +47,13 @@ namespace Abanu.Kernel
                 //for (int i = 0; i < ApplicationRuntime.ElfSections.Count; i++)
                 //    con.WriteLine(ApplicationRuntime.ElfSections[i].Name);
 
+                var cmdProcId_CreateFifo = SysCalls.GetProcessIDForCommand(SysCallTarget.CreateFifo);
+                var buf3 = SysCalls.RequestMessageBuffer(4096, cmdProcId_CreateFifo);
+                SysCalls.CreateFifo(buf3, "/tmp/tmp_fifo");
+#pragma warning disable CA2000 // Dispose objects before losing scope
+                var kbStream2 = File.Open("/tmp/tmp_fifo");
+#pragma warning restore CA2000 // Dispose objects before losing scope
+
                 using (var kbStream = File.Open("/dev/keyboard"))
                 {
                     while (true)
@@ -84,7 +91,10 @@ namespace Abanu.Kernel
                             //    SysCalls.WriteDebugChar(s[i]);
                             //SysCalls.WriteDebugChar(' ');
                             for (var i = 0; i < s.Length; i++)
+                            {
                                 con.Write(s[i]);
+                                kbStream2.WriteByte(64);
+                            }
                             con.Write(' ');
                         }
                         //SysCalls.WriteDebugChar('?');
@@ -139,8 +149,7 @@ namespace Abanu.Kernel
                 var procId = SysCalls.CreateMemoryProcess(fileBuf.Region, (uint)length);
                 var cmdProcId_SetStandartInputOutput = SysCalls.GetProcessIDForCommand(SysCallTarget.SetStandartInputOutput);
                 var buf2 = SysCalls.RequestMessageBuffer(4096, cmdProcId_SetStandartInputOutput);
-
-                SysCalls.SetStandartInputOutput(procId, FileHandle.StandaradInput, "/dev/null", buf2);
+                SysCalls.SetStandartInputOutput(procId, FileHandle.StandaradInput, "/tmp/tmp_fifo", buf2);
 
                 SysCalls.StartProcess(procId);
             }
